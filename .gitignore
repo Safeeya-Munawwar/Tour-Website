@@ -6,3 +6,4 @@
 .env.test
 
 *.mp4
+frontend/public/*.mp4
