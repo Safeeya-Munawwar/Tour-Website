@@ -263,7 +263,7 @@ const About = () => {
             className="w-full mb-4 rounded-lg shadow-md object-cover break-inside h-52"
           />
           <video
-            src="/about-travellers.mp4"
+            src="/about-travellers.MP4"
             autoPlay
             loop
             muted
@@ -287,7 +287,7 @@ const About = () => {
             className="w-full mb-4 rounded-lg shadow-md object-cover break-inside h-72"
           />
           <video
-            src="/travellers1.mp4"
+            src="/travellers1.MP4"
             autoPlay
             loop
             muted
