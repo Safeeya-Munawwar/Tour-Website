@@ -24,7 +24,7 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-10">
         {/* Logo & Description */}
         <div className="flex flex-col items-center md:items-start space-y-3 md:col-span-1">
-          <img src="/Logo.PNG" alt="NetLanka Tours" className="w-28" />
+          <img src="/Logo.png" alt="NetLanka Tours" className="w-28" />
           <p className="text-gray-400 text-sm text-center md:text-left leading-relaxed">
             Discover Sri Lanka like never before with NetLanka Tours. Exclusive
             journeys, expert guides, and unforgettable memories.

@@ -23,6 +23,8 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const testimonials = [
   {
@@ -104,6 +106,8 @@ const Contact = () => {
   }, []);
 
   return (
+   <>
+   <Navbar/>
     <div className="font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
@@ -468,6 +472,7 @@ const Contact = () => {
         </div>
       </section>
     </div>
+    <Footer/></>
   );
 };
 
