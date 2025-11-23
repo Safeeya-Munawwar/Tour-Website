@@ -9,8 +9,6 @@ import {
   FaQuoteLeft,
   FaBullseye,
 } from "react-icons/fa";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 const CountUp = ({ end, duration = 2000, startAnimation }) => {
   const [count, setCount] = useState(0);
@@ -65,8 +63,6 @@ const About = () => {
   }, []);
 
   return (
-   <>
-   <Navbar/>
     <div className="font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
@@ -393,7 +389,6 @@ const About = () => {
         </div>
       </section>
     </div>
-    <Footer/></>
   );
 };
 

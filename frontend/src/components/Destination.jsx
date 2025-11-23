@@ -3,42 +3,42 @@ import React from "react";
 export default function Destination() {
   const destinations = [
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/colombo.PNG",
       subtitle: "Evening City View",
       title: "Colombo",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/10.jpeg",
       subtitle: "Sigiriya Lion Rock View",
       title: "Sigiriya",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/kandy1.PNG",
       subtitle: "Temple of the Tooth",
       title: "Kandy",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/galle.PNG",
       subtitle: "Galle Fort",
       title: "Galle",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/ella.PNG",
       subtitle: "Nine Arch Bridge",
       title: "Ella",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/hiriketiya.PNG",
       subtitle: "Sunset View",
       title: "Trincomalee",
     },
     {
-      img: "/mnt/data/e88161c6-1edc-4ea9-a7eb-03b77ae6d175.png",
+      img: "/images/beach.PNG",
       subtitle: "Shiva Statue",
       title: "Jaffna",
     },
+  
   ];
-
   return (
     <section className="w-full  bg-slate-100 py-24">
       <div className="max-w-7xl mx-auto px-6">

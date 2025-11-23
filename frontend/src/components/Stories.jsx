@@ -2,26 +2,26 @@ import React from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
 export default function Stories() {
-  const stories = [
+           const stories = [
     {
-      img: "/img1.jpg",
+      img: "/images/experience.PNG",
       title: "Sri Lanka’s Hidden Gems: A Journey Off the Beaten Path",
       date: "November 10, 2025",
     },
     {
-      img: "/img2.jpg",
+      img: "/images/home5.PNG",
       title:
         "Exploring Sri Lanka’s Cultural Triangle: Ancient Cities and Timeless Heritage",
       date: "November 10, 2025",
     },
     {
-      img: "/img3.jpg",
+      img: "/images/home8.PNG",
       title:
         "Sri Lanka Hill Country Adventure: Tea, Trekking, and Scenic Wonders",
       date: "November 10, 2025",
     },
-  ];
 
+  ];
   return (
     <section className="w-full py-20 bg-gray-100">
       

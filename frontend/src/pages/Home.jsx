@@ -16,9 +16,8 @@ import Footer from '../components/Footer'
 export default function Home() {
   return (
     <div>
-      <Navbar/>
+     
       <Header/>
-      
       <VideoSection videoSrc="/tr1.mp4"/>
       <Stats/>
       <Tours/>
@@ -26,12 +25,10 @@ export default function Home() {
       <Call/>
       <Why/>
       <Destination/>
-     
-      
       <Video1/>
       <Stories/>
-       <Testimonials/>
-       <Footer/>
+      <Testimonials/>
+    
      
     </div>
   )

@@ -44,8 +44,8 @@ export default function Call() {
 
               {/* Phone row */}
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-black text-white shadow">
-                  <FaPhone size={20} aria-hidden="true" />
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#2E5B84] text-white shadow">
+                  <FaPhone size={20} aria-hidden="true" className="text-white" />
                 </div>
 
                 <div>

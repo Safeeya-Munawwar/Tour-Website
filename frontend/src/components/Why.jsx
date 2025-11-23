@@ -6,22 +6,22 @@ import { FiPhoneCall } from "react-icons/fi";
 export default function Why() {
   const items = [
     {
-      icon: <FaRegGem size={40} className="text-gray-500" />,
+      icon: <FaRegGem size={40} className="text-[#2E5B84]" />,
       title: "Experienced",
       desc: "With years of expertise, we craft authentic Sri Lankan journeys filled with culture, comfort, and care.",
     },
     {
-      icon: <LuMedal size={40} className="text-gray-500" />,
+      icon: <LuMedal size={40} className="text-[#2E5B84]" />,
       title: "Awarded",
       desc: "Recognized for excellence in Sri Lankan travel, we proudly deliver award-winning experiences.",
     },
     {
-      icon: <FaMoneyBillWave size={40} className="text-gray-500" />,
+      icon: <FaMoneyBillWave size={40} className="text-[#2E5B84]" />,
       title: "Cheap",
       desc: "Enjoy unforgettable Sri Lankan adventures at affordable prices without compromising quality.",
     },
     {
-      icon: <FiPhoneCall size={40} className="text-gray-500" />,
+      icon: <FiPhoneCall size={40} className="text-[#2E5B84]" />,
       title: "24/7 Service",
       desc: "Our dedicated team is available 24/7 to ensure your Sri Lankan journey runs smoothly anytime.",
     },

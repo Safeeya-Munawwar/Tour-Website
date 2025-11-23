@@ -28,42 +28,32 @@ export default function VideoSection({ videoSrc }) {
   }, []);
 
   return (
-    <section className="w-full bg-white py-20">
-      <div className="max-w-[1350px] mx-auto px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-8">
+    <section className="w-full bg-white py-16 md:py-32">
+      <div className="max-w-[1350px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-8">
 
         {/* LEFT TEXT */}
         <div className="lg:col-span-6">
-          <div className="max-w-[680px]">
+          <div className="max-w-[680px] mx-auto lg:mx-0">
 
             <div
-              className="text-lg tracking-widest uppercase mb-6"
-              style={{ color: "#9aa0a6", letterSpacing: "2px" }}
+              className="text-lg sm:text-sm tracking-widest uppercase mb-6 text-gray-400"
+              style={{ letterSpacing: "2px" }}
             >
               About Travelers Choice To Ceylon
             </div>
 
             <h1
-              className="font-extrabold leading-tight mb-6 text-4xl md:text-5xl"
+              className="font-extrabold leading-tight mb-6 text-4xl sm:text-5xl md:text-6xl"
               style={{
-               
-                lineHeight: 0.95,
+                lineHeight: 1.1,
                 color: "#111827",
                 letterSpacing: "-1px",
-                fontStyle: "inherit"
               }}
             >
               Explore Sri Lanka
             </h1>
 
-            <p
-              className="text-lg"
-              style={{
-                color: "#6b7280",
-                maxWidth: "640px",
-                fontSize: "16px",
-                lineHeight: 1.9,
-              }}
-            >
+            <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
               Experience the true beauty of Sri Lanka with our friendly and
               professional vehicle and driver guide services. From smooth airport
               transfers to personalized day tours and custom itineraries, we’re
@@ -74,18 +64,11 @@ export default function VideoSection({ videoSrc }) {
           </div>
         </div>
 
-        {/* RIGHT: WIDER VIDEO CARD */}
+        {/* RIGHT VIDEO */}
         <div className="lg:col-span-6 flex justify-center lg:justify-end">
           <div
             ref={containerRef}
-            className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)]"
-            style={{
-              width: "720px",     // ⬅ increased width
-              height: "460px",    // ⬅ adjusted height to keep proportion
-              borderRadius: "14px",
-              overflow: "hidden",
-              border: "1px solid rgba(0,0,0,0.06)",
-            }}
+            className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]"
           >
             <video
               ref={videoRef}
@@ -93,15 +76,11 @@ export default function VideoSection({ videoSrc }) {
               muted
               loop
               playsInline
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
+              className="w-full h-full object-cover block"
             />
           </div>
         </div>
+
       </div>
     </section>
   );
