@@ -66,13 +66,13 @@ export default function Navbar() {
         <nav className="hidden md:flex justify-center gap-10 text-white font-semibold text-[14px] tracking-widest mt-2">
           {menuItems.map((item, idx) => (
             <div key={idx} className="relative">
-              <button
-                onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
-                className="flex items-center gap-1 py-2 px-1 hover:opacity-70 whitespace-nowrap"
-              >
-                {item.name}
-                {item.dropdown && <IoChevronDown className="text-[13px]" />}
-              </button>
+            <button
+  onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
+  className={`flex items-center gap-1 py-0 px-1 whitespace-nowrap nav-link ${window.location.pathname === "/" + item.name.toLowerCase().replace(/\s+/g, "-")? "active": "" }`}>
+  {item.name}
+  {item.dropdown && <IoChevronDown className="text-[13px] mt-[1px] text-right" />}
+</button>
+
 
               {/* Desktop Dropdown */}
               {openMenu === idx && item.dropdown && (

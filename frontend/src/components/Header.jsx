@@ -23,15 +23,37 @@ export default function Header() {
           spirit of sri lanka travel ...
         </p>
 
-        {/* Buttons */}
-        <div className="mt-20 flex justify-center gap-6 flex-wrap ">
-          <button className="bg-[#2f748d] text-white uppercase px-7 py-2 rounded-full font-light flex items-center gap-2 hover:brightness-110 transition">
-            Curated Itineraries <Check className="w-5 h-5" />
-          </button>
-          <button className="bg-[#b32e48] text-white uppercase px-7 py-2 rounded-full font-light flex items-center gap-2 hover:brightness-110 transition">
-            Tailormade Experiences <Settings className="w-5 h-5" />
-          </button>
-        </div>
+    {/* Buttons */}
+<div className="mt-20 flex justify-center gap-6 flex-wrap ">
+
+  {/* Blue Gradient Button */}
+ <button
+  className="
+    bg-[#487898]
+    hover:bg-[#0c3956]
+    text-white uppercase px-7 py-2 rounded-full
+    font-light flex items-center gap-2
+    transition
+  "
+>
+  Curated Itineraries <Check className="w-5 h-5" />
+</button>
+
+  {/* Red Custom Gradient Button */}
+  <button
+    className="
+      bg-[#ce2a40]
+    hover:bg-[#ef0530]
+    text-white uppercase px-7 py-2 rounded-full
+    font-light flex items-center gap-2
+    transition
+    "
+  >
+    Tailormade Experiences <Settings className="w-5 h-5" />
+  </button>
+
+</div>
+
       </div>
     </header>
   );

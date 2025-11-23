@@ -1,0 +1,261 @@
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import "swiper/css";
+import "swiper/css/navigation";
+
+export default function Testimonials() {
+  const bigReviews = [
+    {
+      name: "Nisha Maniam",
+      time: "3 weeks ago",
+      review:
+        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
+      avatar: "N",
+    },
+     {
+      name: "Nisha Maniam",
+      time: "3 weeks ago",
+      review:
+        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
+      avatar: "N",
+    },
+     {
+      name: "Nisha Maniam",
+      time: "3 weeks ago",
+      review:
+        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
+      avatar: "N",
+    },
+  ];
+
+  const smallReviews = [
+    {
+      name: "Gita A",
+      time: "1 month ago",
+      review:
+        "Damith & Sam — The Best You Could Ever Ask For ❤️🇱🇰 We don’t think we could have asked for a better tour guide...",
+      img: "/inroom.jpg",
+    },
+    {
+      name: "Afia J",
+      time: "1 month ago",
+      review:
+        "An unforgettable trip with the best tour company. We absolutely loved our time in Sri Lanka...",
+      img: "/inroom.jpg",
+    },
+    {
+      name: "Bilal M",
+      time: "1 month ago",
+      review:
+        "Excellent experience. We had such a wonderful trip. Very well organized...",
+      img: "/inroom.jpg",
+    },
+     {
+      name: "Afia J",
+      time: "1 month ago",
+      review:
+        "An unforgettable trip with the best tour company. We absolutely loved our time in Sri Lanka...",
+      img: "/inroom.jpg",
+    },
+    {
+      name: "Bilal M",
+      time: "1 month ago",
+      review:
+        "Excellent experience. We had such a wonderful trip. Very well organized...",
+      img: "/inroom.jpg",
+    },
+  ];
+
+  return (
+    <section className="w-full py-24 bg-white font-sans">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20">
+
+        {/* LEFT CONTENT */}
+        <div>
+          <p className="text-sm font-semibold tracking-widest text-gray-500">
+            TESTIMONIALS
+          </p>
+
+          <h2 className="text-5xl font-extrabold text-gray-900 mt-4 leading-tight">
+            Message From <br /> Adventurers
+          </h2>
+
+          <p className="text-gray-600 mt-6 text-lg leading-relaxed max-w-md">
+            Every journey leaves a story behind. From misty mountains to golden shores,
+            our adventures in Sri Lanka reminded us how travel connects hearts,
+            cultures, and unforgettable moments.
+          </p>
+        </div>
+
+        {/* GOOGLE REVIEW BIG CARD */}
+        <div className="relative">
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            navigation={{ prevEl: ".g-prev", nextEl: ".g-next" }}
+            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            loop={true}
+            slidesPerView={1}
+            className="rounded-2xl shadow-lg"
+          >
+            {bigReviews.map((item, i) => (
+              <SwiperSlide key={i}>
+                <div className="bg-[#f7f7f7] p-10 rounded-2xl">
+                  {/* user */}
+                  <div className="flex flex-col items-center text-center mb-4">
+                    <div className="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold relative">
+                      {item.avatar}
+                      <span className="absolute -bottom-1 right-2 text-white bg-[#4285F4] px-1 py-[1px] text-xs rounded-full">
+                        G
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold mt-3">{item.name}</h3>
+                    <p className="text-gray-500 text-sm">{item.time}</p>
+                  </div>
+
+                  {/* stars */}
+                  <div className="flex justify-center gap-1 text-yellow-400 mb-4">
+                    {[...Array(5)].map((_, s) => (
+                      <FaStar key={s} />
+                    ))}
+                  </div>
+
+                  {/* review */}
+                  <p className="text-gray-700 text-center leading-relaxed">
+                    {item.review}
+                  </p>
+
+                  <p className="mt-4 text-center text-blue-600 cursor-pointer font-medium">
+                    Read more
+                  </p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* arrows */}
+          <button className="g-prev absolute left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
+            <FaChevronLeft />
+          </button>
+          <button className="g-next absolute right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
+            <FaChevronRight />
+          </button>
+        </div>
+      </div>
+
+      {/* GOOGLE score */}
+      <p className="text-center mt-14 text-gray-700 text-lg">
+        Google rating score:{" "}
+        <span className="font-bold text-black">5.0</span> of 5, based on{" "}
+        <span className="font-bold">124 reviews</span>
+      </p>
+
+{/* BOTTOM TRIPADVISOR SECTION */}
+<div className="max-w-7xl mx-auto px-6 mt-20">
+  <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
+
+    {/* LEFT STATIC TRIPADVISOR SUMMARY */}
+    <div className="flex flex-col items-center lg:items-start">
+      <h3 className="text-xl font-bold text-black uppercase tracking-wide">
+        Excellent
+      </h3>
+
+      <div className="flex gap-2 mt-2">
+        {[...Array(5)].map((_, i) => (
+          <img
+            key={i}
+            src="/f.svg"
+            className="w-8 h-8"
+          />
+        ))}
+      </div>
+
+      <p className="mt-2 text-gray-700">
+        Based on <span className="font-bold">271 reviews</span>
+      </p>
+
+      <div className="flex items-center gap-2 mt-3">
+        <img
+          src="/logo4.svg"
+          className="w-32 h-20"
+        />
+      </div>
+    </div>
+
+   {/* RIGHT SIDE SWIPER */}
+<div className="relative lg:col-span-3">
+  <Swiper
+    modules={[Navigation, Autoplay]}
+    navigation={{ prevEl: ".trip-prev", nextEl: ".trip-next" }}
+    loop={true}
+    autoplay={{ delay: 2500, disableOnInteraction: false }}
+    spaceBetween={28}
+    slidesPerView={1.1}
+    breakpoints={{
+      640: { slidesPerView: 1.5 },
+      1024: { slidesPerView: 2.5 },
+      1280: { slidesPerView: 3 },
+    }}
+  >
+    {smallReviews.map((item, i) => (
+      <SwiperSlide key={i}>
+        <div className="bg-white p-6 rounded-3xl shadow-md border border-gray-200 min-h-[260px] h-full flex flex-col">
+
+          {/* TOP ROW */}
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={item.img}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+
+            <div>
+              <h4 className="font-semibold text-lg text-gray-900">
+                {item.name}
+              </h4>
+              <p className="text-gray-400 text-sm">{item.time}</p>
+            </div>
+
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/6e/TripAdvisor_Logo_circle-green.svg"
+              className="w-6 h-6 ml-auto"
+            />
+          </div>
+
+          {/* GREEN RATING */}
+          <div className="flex gap-1 text-green-600 text-lg mb-3">
+            {[...Array(5)].map((_, i) => (
+              <FaStar key={i} />
+            ))}
+          </div>
+
+          {/* REVIEW TEXT — flex-1 makes all cards equal height */}
+          <p className="text-gray-700 text-sm leading-relaxed line-clamp-4 flex-1">
+            {item.review}
+          </p>
+
+          <p className="text-gray-500 font-medium mt-2 cursor-pointer">
+            Read more
+          </p>
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+
+  {/* ARROWS */}
+  <button className="trip-prev absolute left-[-20px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full flex items-center justify-center">
+    <FaChevronLeft />
+  </button>
+
+  <button className="trip-next absolute right-[-20px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full flex items-center justify-center">
+    <FaChevronRight />
+  </button>
+</div>
+
+  </div>
+</div>
+
+    </section>
+  );
+}
