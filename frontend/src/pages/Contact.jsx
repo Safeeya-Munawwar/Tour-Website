@@ -108,7 +108,7 @@ const Contact = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/contact-header.jpg')" }}
+        style={{ backgroundImage: "url('/tower.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
 
@@ -178,19 +178,19 @@ const Contact = () => {
       <h3 className="text-lg font-semibold mb-3">Social Media</h3>
 
       <div className="flex items-center gap-4 text-2xl">
-        <a className="hover:text-yellow-600 transition" href="#">
+        <a className="hover:text-yellow-600 transition" href="fb.com">
           <FaFacebookF />
         </a>
-        <a className="hover:text-yellow-600 transition" href="#">
+        <a className="hover:text-yellow-600 transition" href="insta.com">
           <FaInstagram />
         </a>
-        <a className="hover:text-yellow-600 transition" href="#">
+        <a className="hover:text-yellow-600 transition" href="tik.com">
           <FaTiktok />
         </a>
-        <a className="hover:text-yellow-600 transition" href="#">
+        <a className="hover:text-yellow-600 transition" href="trip.com">
           <FaTripadvisor />
         </a>
-        <a className="hover:text-yellow-600 transition" href="#">
+        <a className="hover:text-yellow-600 transition" href="google.com">
           <FaGoogle />
         </a>
       </div>
