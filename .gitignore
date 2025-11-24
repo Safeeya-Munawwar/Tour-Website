@@ -4,6 +4,3 @@
 .env.development
 .env.production
 .env.test
-
-*.mp4
-frontend/public/*.mp4

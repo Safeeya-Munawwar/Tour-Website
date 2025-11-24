@@ -9,7 +9,6 @@ import {
   FaEnvelope,
   FaClock,
   FaMapMarkerAlt,
-  FaStar,
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa";
@@ -23,30 +22,6 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-const testimonials = [
-  {
-    name: "nisha Maniam",
-    time: "3 weeks ago",
-    rating: 5,
-    message: `Excellent Service!
-  Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive to every detail. He explained everything clearly and made sure we were comfortable throughout the journey. We are glad to meet Mr Damith and Mr Sam.
-  All the hotels arranged were really good, and the overall experience exceeded our expectations. We’ll definitely return and book with this agent again!`,
-  },
-  {
-    name: "Pravina Subramaniam",
-    time: "3 weeks ago",
-    rating: 5,
-    message: `Our Sri Lanka trip was an unforgettable experience, thanks to our amazing guide and excellent service. From the very beginning, everything was well organised and handled in a very professional manner. ...`,
-  },
-  {
-    name: "Kalai Arasi Malar Vannan",
-    time: "1 month ago",
-    rating: 5,
-    message: `Our trip around Sri Lanka wouldn’t have been the same without our amazing guide, Damith, and our driver, Sam. They truly went above and beyond...`,
-  },
-  // Add more testimonials here
-];
 
 const tripadvisorReviews = [
   {
@@ -93,11 +68,6 @@ const tripadvisorReviews = [
 
 const Contact = () => {
   const [showText, setShowText] = useState(false);
-  const [expanded, setExpanded] = useState({});
-
-  const toggleReadMore = (index) => {
-    setExpanded((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
@@ -108,7 +78,7 @@ const Contact = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/tower.jpg')" }}
+        style={{ backgroundImage: "url('/45.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
 
@@ -258,101 +228,11 @@ const Contact = () => {
             >
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
             </svg>
-          </div>
+          </div> 
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto py-12 px-6 lg:px-0 flex flex-col lg:flex-row gap-12">
-        {/* Left Side */}
-        <div className="lg:w-1/2 space-y-6">
-          <p className="text-lg text-gray-500 uppercase tracking-wider">
-            TESTIMONIALS
-          </p>
-
-          <h1 className="text-6xl font-bold">Message From Adventurers</h1>
-          <p className="text-base text-gray-700">
-            Every journey leaves a story behind. From misty mountains to golden
-            shores, our adventures in Sri Lanka reminded us how travel connects
-            hearts, cultures, and unforgettable moments.
-          </p>
-        </div>
-
-        {/* Right Side - Swiper Carousel */}
-        <div className="lg:w-1/2 relative">
-          <Swiper
-            spaceBetween={20}
-            slidesPerView={1}
-            autoplay={{ delay: 6000, disableOnInteraction: false }}
-            pagination={{ clickable: true }}
-            navigation={{
-              nextEl: ".swiper-button-next-custom",
-              prevEl: ".swiper-button-prev-custom",
-            }}
-            modules={[Autoplay, Pagination, Navigation]}
-          >
-            {testimonials.map((testi, idx) => (
-              <SwiperSlide key={idx}>
-                <div className="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center space-y-4">
-                  {/* Profile Circle */}
-                  <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-bold text-xl overflow-hidden">
-                    {testi.profile ? (
-                      <img
-                        src={testi.profile}
-                        alt={testi.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      testi.name.charAt(0).toUpperCase()
-                    )}
-                  </div>
-
-                  {/* Name & Time */}
-                  <h3 className="font-semibold text-lg">{testi.name}</h3>
-                  <p className="text-sm text-gray-400">{testi.time}</p>
-
-                  {/* Stars */}
-                  <div className="flex gap-1 text-yellow-500 justify-center">
-                    {[...Array(testi.rating)].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
-                  </div>
-
-                  {/* Message with Read More */}
-                  <p className="text-gray-700 mt-2">
-                    {expanded[idx]
-                      ? testi.message
-                      : testi.message.length > 150
-                      ? testi.message.slice(0, 150) + "..."
-                      : testi.message}
-                  </p>
-                  {testi.message.length > 150 && (
-                    <button
-                      onClick={() => toggleReadMore(idx)}
-                      className="text-blue-600 font-semibold mt-1"
-                    >
-                      {expanded[idx] ? "Read less" : "Read more"}
-                    </button>
-                  )}
-                </div>
-              </SwiperSlide>
-            ))}
-
-            {/* Custom Navigation Buttons */}
-            <div className="swiper-button-prev-custom absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full text-black cursor-pointer">
-              <FaArrowLeft />
-            </div>
-            <div className="swiper-button-next-custom absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full text-black cursor-pointer">
-              <FaArrowRight />
-            </div>
-          </Swiper>
-          <p className="text-black text-center">
-            <span className="text-black font-bold">Google</span> rating score:
-            <span className="text-black font-bold">5.0</span> of 5, based on
-            <span className="text-black font-bold">124</span> reviews
-          </p>
-        </div>
-      </section>
-
+ 
       <section className="max-w-7xl mx-auto mt-2 mb-8 ml-8 mr-8 p-8 lg:mt-4 lg:mb-16 lg:ml-16 lg:mr-16 flex flex-col lg:flex-row gap-12">
         {/* Left Side */}
         <div className="lg:w-1/3 flex flex-col items-center text-center space-y-6 justify-center">
