@@ -27,7 +27,7 @@ export default function TourDetail() {
             rounded-r-[45%] 
             relative
           "
-        >
+        > 
           <img
             src="/d1.jpg"
             alt="Anuradhapura"

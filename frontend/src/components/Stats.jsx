@@ -32,7 +32,7 @@ export default function Stats() {
     <div
       className="w-full bg-cover bg-center bg-fixed relative flex items-center py-16 md:py-20"
       style={{
-        backgroundImage: "url('/12.jpg')",
+        backgroundImage: "url('/images/12.jpg')",
       }}
     >
       <div className="absolute inset-0 bg-black/50"></div>

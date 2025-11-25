@@ -58,22 +58,23 @@ const OurCommunity = () => {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* ---------------------------- HERO SECTION ---------------------------- */}
+      {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/community-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
+
         <div
-          className={`absolute bottom-10 right-10 w-[500px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[420px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
             Our Journey <br />
             From Passion to Excellence
           </h2>
-          <div className="w-[2px] bg-white h-12"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 

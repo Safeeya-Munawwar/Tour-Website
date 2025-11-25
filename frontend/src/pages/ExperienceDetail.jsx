@@ -56,12 +56,12 @@ export const experiences = [
       },
     ],
     gallery: [
-      "/images/gallery1.jpg",
-      "/images/gallery2.jpg",
-      "/images/gallery3.jpg",
-      "/images/gallery4.jpg",
-      "/images/gallery5.jpg",
-      "/images/gallery6.jpg",
+      "/images/yoga1.jpg",
+      "/images/yoga2.jpg",
+      "/images/yoga3.jpg",
+      "/images/yoga4.jpg",
+      "/images/yoga5.jpg",
+      "/images/yoga6.jpg",
     ],
     tips: [
       "Find places with qualified yoga teachers",
@@ -377,55 +377,97 @@ export default function ExperienceDetail() {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* ---------------------------- HERO ---------------------------- */}
+      {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
           backgroundImage: `url('${
             experience.heroImg || "/images/info5.JPEG"
           }')`,
           backgroundPosition: "center 20%",
-          backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+
         <div
-          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[400px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
             {experience.title}
           </h2>
-          <div className="w-[2px] bg-white h-12"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
       {/* ---------------------------- MAIN SECTION ---------------------------- */}
-      <section className="max-w-7xl mx-auto px-6 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div>
+      <section
+        className="
+    relative 
+    flex flex-col md:flex-row 
+    w-full overflow-hidden bg-white
+
+    h-auto md:h-screen      /* mobile auto height, desktop full screen */
+    pt-10 md:pt-0
+  "
+      >
+        {/* LEFT IMAGE WRAPPER */}
+        <div
+          className="
+      w-full md:w-1/2 
+      h-[320px] sm:h-[380px] md:h-full
+      overflow-hidden 
+      rounded-br-[40%] md:rounded-r-[45%] 
+      relative
+    "
+        >
           <img
             src={experience.mainImg}
             alt={experience.title}
-            className="w-full h-auto rounded-xl shadow-lg object-cover"
+            className="
+        absolute inset-0 
+        w-full h-full 
+        object-cover object-center
+      "
           />
         </div>
-        <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+
+        {/* RIGHT TEXT SECTION */}
+        <div
+          className="
+      w-full md:w-1/2 
+      flex flex-col 
+      text-center 
+      space-y-4 sm:space-y-6 
+      justify-center 
+      px-6 sm:px-10 md:px-20 
+      mt-6 sm:mt-10 md:mt-20 
+      pb-10
+    "
+        >
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
             {experience.title}
           </h2>
 
-          <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+          <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
             {experience.mainDesc}
           </p>
-          <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+
+          <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
             {experience.subDesc}
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          {/* BUTTONS */}
+          <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4">
             <button
               onClick={() => navigate(`/experience`)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2"
+              className="
+          bg-blue-600 hover:bg-blue-700 
+          text-white font-semibold 
+          px-6 py-3 rounded-lg 
+          transition flex items-center gap-2
+        "
             >
               Explore More
               <ArrowRight className="w-4 h-4" />
@@ -433,7 +475,14 @@ export default function ExperienceDetail() {
 
             <button
               onClick={() => navigate("/tailor-made-tours")}
-              className="bg-[#ce2a40] hover:bg-[#ef0530] text-white uppercase px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg transition-colors duration-300 justify-center"
+              className="
+          bg-[#ce2a40] hover:bg-[#ef0530] 
+          text-white uppercase px-6 py-3 
+          rounded-lg font-semibold 
+          flex items-center gap-2 
+          shadow-lg transition-colors duration-300 
+          justify-center
+        "
             >
               Tailor-make a Tour
               <Calendar className="w-4 h-4" />
@@ -443,7 +492,7 @@ export default function ExperienceDetail() {
       </section>
 
       {/* ---------------------------- SUB EXPERIENCES ---------------------------- */}
-      <section className="max-w-7xl mx-auto px-6 py-8">
+      <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
             Where you can experience
@@ -501,56 +550,56 @@ export default function ExperienceDetail() {
       </section>
 
       {/* ---------------------------- TIPS & RELATED TOURS ---------------------------- */}
-      <section className="max-w-7xl mx-auto px-32 mt-16 grid grid-cols-1 lg:grid-cols-2 gap-20 pb-20">
+      <section className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-32 mt-10 lg:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 pb-20">
         {/* Left - Tips + Button */}
-        <div className="flex flex-col justify-between bg-[#b4c5df] p-8 rounded-xl shadow-md">
+        <div className="flex flex-col justify-between bg-[#b4c5df] p-6 sm:p-8 rounded-xl shadow-md">
           <div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
               Tips to Remember
             </h3>
-            <ul className="list-disc list-inside space-y-3 text-gray-700">
+            <ul className="list-disc list-inside space-y-2 sm:space-y-3 text-gray-700 text-sm sm:text-base">
               {experience.tips.map((tip, idx) => (
                 <li key={idx}>{tip}</li>
               ))}
             </ul>
           </div>
 
-          <div className="mt-8 flex justify-center lg:justify-center">
+          <div className="mt-6 sm:mt-8 flex justify-center">
             <button
               onClick={() => navigate("/tailor-made-tours")}
               className="
           bg-[#ce2a40] hover:bg-[#ef0530]
-          text-white uppercase px-6 py-3 rounded-full font-semibold flex items-center gap-2 text-sm
+          text-white uppercase px-4 sm:px-6 py-2 sm:py-3 
+          rounded-full font-semibold flex items-center gap-2 text-sm sm:text-base
           shadow-lg transition-colors duration-300
           justify-center
         "
             >
               Start Planning Your Trip
-              <Calendar className="w-4" />
+              <Calendar className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
           </div>
         </div>
 
         {/* Right - Related Tours */}
-        <div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="">
+          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
             Related Tours & Itineraries
           </h3>
-          <p className="list-disc list-inside space-y-3 text-gray-700 text-center mb-6">
+          <p className="text-gray-700 text-sm sm:text-base text-center mb-6">
             Discover similar journeys and curated itineraries that include this
             unforgettable experience.
           </p>
 
           <Swiper
             modules={[Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={2}
+            spaceBetween={16} // smaller gap on mobile
+            slidesPerView={1} // default mobile
             loop
             autoplay={{ delay: 3000 }}
             breakpoints={{
-              0: { slidesPerView: 1 },
-              640: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
+              640: { slidesPerView: 1, spaceBetween: 16 },
+              768: { slidesPerView: 2, spaceBetween: 20 },
             }}
           >
             {otherExperiences.map((exp, idx) => (
@@ -559,16 +608,18 @@ export default function ExperienceDetail() {
                   <img
                     src={exp.heroImg}
                     alt={exp.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-40 sm:h-48 object-cover"
                   />
-                  <div className="p-4">
-                    <h4 className="text-lg font-semibold text-gray-900">
+                  <div className="p-4 sm:p-5">
+                    <h4 className="text-lg sm:text-xl font-semibold text-gray-900">
                       {exp.title}
                     </h4>
-                    <p className="text-sm text-gray-600 mt-2">{exp.subtitle}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+                      {exp.subtitle}
+                    </p>
                     <a
                       href={`/experience/${exp.slug}`}
-                      className="mt-3 inline-block text-[#8C1F28] font-semibold text-sm hover:underline"
+                      className="mt-2 sm:mt-3 inline-block text-[#8C1F28] font-semibold text-xs sm:text-sm hover:underline"
                     >
                       Read more
                     </a>

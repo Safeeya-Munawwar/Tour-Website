@@ -87,7 +87,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
-            <img src="/logo.png" alt="Logo" className="w-[170px] opacity-95" />
+            <img src="/images/logo.png" alt="Logo" className="w-[170px] opacity-95" />
           </div>
 
           {/* Right actions */}

@@ -8,84 +8,84 @@ export default function RoundTour() {
       days: "07 Days | 06 Nights",
       desc:
         "A perfect blend of cultural wonders, scenic mountains, wildlife encounters, and golden beaches. Ideal for first-time visitors!",
-      img: "/images/rt1.jpg",
+      img: "/images/history.PNG",
     },
     {
       title: "Cultural Heritage Round Tour",
       days: "05 Days | 04 Nights",
       desc:
         "Travel through Sri Lanka’s Cultural Triangle — Sigiriya, Polonnaruwa, Anuradhapura & Kandy — where ancient civilizations still whisper.",
-      img: "/images/rt2.jpg",
+      img: "/images/culture.jpg",
     },
     {
       title: "Hill Country & Tea Trails Tour",
       days: "06 Days | 05 Nights",
       desc:
         "Mist-covered mountains, waterfalls, scenic train rides, tea plantations, and cool climates — experience the magical highlands.",
-      img: "/images/rt3.jpg",
+      img: "/images/experience-header.jpg",
     },
     {
       title: "South Coast Discovery Tour",
       days: "04 Days | 03 Nights",
       desc:
         "Relax along Sri Lanka’s southern beaches while exploring Galle Fort, whale watching, and lush coastal landscapes.",
-      img: "/images/rt4.jpg",
+      img: "/images/galle.PNG",
     },
     {
       title: "Wildlife & Adventure Round Tour",
       days: "08 Days | 07 Nights",
       desc:
         "For the adrenaline seekers — safari parks, jungle trails, waterfalls, and thrilling outdoor adventures across Sri Lanka.",
-      img: "/images/rt5.jpg",
+      img: "/images/wildlife.jpg",
     },
     {
       title: "Luxury Sri Lanka Round Tour",
       days: "10 Days | 09 Nights",
       desc:
         "Indulge in premium resorts, private experiences, fine dining, and curated luxury escapes throughout the island.",
-      img: "/images/rt6.jpg",
+      img: "/images/journey-3b.PNG",
     },
     {
       title: "Northern Heritage Round Tour",
       days: "07 Days | 06 Nights",
       desc:
         "Explore Jaffna culture, untouched islands, colonial relics, vibrant cuisine, and serene coastal landscapes of the North.",
-      img: "/images/rt7.jpg",
+      img: "/images/arugambay.PNG",
     },
     {
       title: "Nature & Wellness Retreat Tour",
       days: "06 Days | 05 Nights",
       desc:
         "A journey of relaxation — Ayurveda treatments, forest resorts, healing traditions, and breathtaking nature escapes.",
-      img: "/images/rt8.jpg",
+      img: "/images/ayurveda.jpg",
     },
     {
       title: "East Coast Round Tour",
       days: "05 Days | 04 Nights",
       desc:
         "Pristine turquoise beaches of Trincomalee & Pasikudah with water activities, temples, and marine life encounters.",
-      img: "/images/rt9.jpg",
+      img: "/images/trincomalee.PNG",
     },
     {
       title: "Family Fun Round Tour",
       days: "08 Days | 07 Nights",
       desc:
         "Kid-friendly activities, wildlife, beaches, cultural shows, and scenic sightseeing — fun for the entire family.",
-      img: "/images/rt10.jpg",
+      img: "/images/yoga5.jpg",
     },
     {
       title: "Budget-Friendly Explorer Tour",
       days: "06 Days | 05 Nights",
       desc:
         "Affordable yet unforgettable — community stays, local food experiences, and beautiful hidden gems.",
-      img: "/images/rt11.jpg",
+      img: "/images/adventure.jpg",
     },
     {
       title: "Photography Round Tour",
       days: "09 Days | 08 Nights",
       desc:
         "For shutterbugs — landscapes, wildlife, stilt fishermen, temples, tea trails, and sunrise points curated for photography lovers.",
-      img: "/images/rt12.jpg",
+      img: "/images/gallery14.PNG",
     },
   ];
 
@@ -101,7 +101,7 @@ export default function RoundTour() {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/d2.jpg')" }}
+        style={{ backgroundImage: "url('/images/d2.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
 

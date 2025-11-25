@@ -6,7 +6,7 @@ export default function Header() {
     <header
       className="w-full h-[600px] sm:h-[650px] md:h-[750px] relative flex flex-col items-center justify-center"
       style={{
-        backgroundImage: `url('/12.jpg')`,
+        backgroundImage: `url('/images/12.jpg')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

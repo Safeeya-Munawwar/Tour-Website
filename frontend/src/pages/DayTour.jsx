@@ -9,7 +9,7 @@ export default function DayTour() {
       location: "Anuradhapura",
       desc:
         "Explore Sri Lanka’s first capital and its ancient stupas, monasteries, stone carvings, and sacred Bodhi Tree—one of the world’s oldest recorded trees.",
-      img: "/images/a.jpg",
+      img: "/images/history.PNG",
     },
     {
       id: 2,
@@ -17,7 +17,7 @@ export default function DayTour() {
       location: "Belihuloya",
       desc:
         "A peaceful getaway ideal for nature lovers—featuring waterfalls, river bathing, trekking routes, and lush forest surroundings.",
-      img: "/images/b.jpg",
+      img: "/images/belihuloya-santani.jpg",
     },
     {
       id: 3,
@@ -25,7 +25,7 @@ export default function DayTour() {
       location: "Colombo",
       desc:
         "Experience the blend of colonial-era architecture, vibrant markets, temples, museums, modern malls, and the scenic Galle Face promenade.",
-      img: "/images/c.jpg",
+      img: "/images/colombo.PNG",
     },
     {
       id: 4,
@@ -33,7 +33,7 @@ export default function DayTour() {
       location: "Galle",
       desc:
         "Explore the UNESCO-listed Dutch Fort with its charming streets, lighthouse views, museums, artisan shops, and oceanfront bastions.",
-      img: "/images/galle.jpg",
+      img: "/images/galle.PNG",
     },
     {
       id: 5,
@@ -41,7 +41,7 @@ export default function DayTour() {
       location: "Kandy",
       desc:
         "Visit the Temple of the Sacred Tooth Relic, royal palace ruins, botanical gardens, and enjoy panoramic hill-country views.",
-      img: "/images/kandy.jpg",
+      img: "/images/kandy.PNG",
     },
     {
       id: 6,
@@ -57,7 +57,7 @@ export default function DayTour() {
       location: "Dambulla",
       desc:
         "Discover Sri Lanka’s largest cave temple complex, filled with ancient statues, mural paintings, and Buddhist history.",
-      img: "/images/dambulla.jpg",
+      img: "/images/culture.jpg",
     },
     {
       id: 8,
@@ -65,7 +65,7 @@ export default function DayTour() {
       location: "Nuwara Eliya",
       desc:
         "Enjoy cool climates, visit tea plantations, explore colonial bungalows, waterfalls, and serene lakes in Sri Lanka’s ‘Little England’.",
-      img: "/images/nuwara.jpg",
+      img: "/images/nuwaraeliya.PNG",
     },
     {
       id: 9,
@@ -73,7 +73,7 @@ export default function DayTour() {
       location: "Mirissa",
       desc:
         "Embark on an unforgettable boat excursion to observe blue whales, dolphins, turtles, and other marine life in the Indian Ocean.",
-      img: "/images/mirissa.jpg",
+      img: "/images/mirissa.PNG",
     },
     {
       id: 10,
@@ -97,7 +97,7 @@ export default function DayTour() {
       location: "Trincomalee",
       desc:
         "A perfect mix of history and coastal beauty, featuring Koneswaram Temple, Fort Frederick, hot springs, and stunning crystal-clear beaches.",
-      img: "/images/trinco.jpg",
+      img: "/images/trincomalee.PNG",
     },
   ];
 
@@ -112,7 +112,7 @@ export default function DayTour() {
       {/* HERO */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/d1.jpg')" }}
+        style={{ backgroundImage: "url('/images/d1.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
 

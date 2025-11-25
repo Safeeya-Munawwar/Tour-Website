@@ -73,20 +73,23 @@ const About = () => {
     <div className="font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/about-header.jpg')" }}
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        style={{
+          backgroundImage: "url('/images/about-header.jpg')",
+        }}
       >
-        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+
         <div
-          className={`absolute bottom-10 right-10 w-[380px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[340px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
             Discover Sri Lanka <br />
             With Us...
           </h2>
-          <div className="w-[2px] bg-white h-12"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
@@ -348,12 +351,12 @@ const About = () => {
       </section>
 
       {/* ---------------------------- GALLERY ---------------------------- */}
-      <section className="mt-20 max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-[#1a1a1a] mb-12">
+      <section className="mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-[#1a1a1a] mb-8 sm:mb-12">
           Captured Moments with Our Clients
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {[
             "/images/gallery1.PNG",
             "/images/gallery2.PNG",
@@ -375,10 +378,7 @@ const About = () => {
             "/images/gallery15.PNG",
           ].map((item, i) =>
             item.endsWith(".MP4") ? (
-              <div
-                key={i}
-                className="w-full aspect-square overflow-hidden rounded-lg"
-              >
+              <div key={i} className="w-full">
                 <video
                   src={item}
                   autoPlay
@@ -389,10 +389,7 @@ const About = () => {
                 />
               </div>
             ) : (
-              <div
-                key={i}
-                className="w-full aspect-square overflow-hidden rounded-lg"
-              >
+              <div key={i} className="w-full">
                 <img
                   src={item}
                   alt={`Gallery ${i + 1}`}
@@ -408,28 +405,36 @@ const About = () => {
       <Testimonials />
 
       {/* ---------------------------- CUSTOM TOUR CTA ---------------------------- */}
-      <section className="relative -mt-8 lg:-mt-28">
-        <div className="flex flex-col lg:flex-row items-center lg:items-stretch relative h-[600px] lg:h-[800px]">
-          {/* Left Side - Text Centered */}
-          <div className="lg:w-1/2 flex flex-col justify-center items-center text-center px-6 z-10 space-y-4">
-            <h2 className="text-lg md:text-3xl font-semibold text-[#1a1a1a]">
+      <section className="relative -mt-4 sm:-mt-8 lg:-mt-28">
+        <div
+          className="flex flex-col lg:flex-row items-center lg:items-stretch relative 
+                  h-auto lg:h-[800px]"
+        >
+          {/* Left Side – Text */}
+          <div
+            className="w-full lg:w-1/2 flex flex-col justify-center items-center text-center 
+                    px-4 sm:px-6 py-10 sm:py-14 lg:py-0 z-10 space-y-2 sm:space-y-4"
+          >
+            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
               Looking for an
             </h2>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a]">
+
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
               Exclusive Customized Tour?
             </h2>
-            <h2 className="text-lg md:text-3xl font-semibold text-[#1a1a1a]">
+
+            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
               No Problem
             </h2>
 
-            {/* Connect with Us - Red */}
+            {/* CTA Button */}
             <div className="mt-4">
               <a
                 href="/contact"
                 className="
             bg-[#ce2a40] hover:bg-[#ef0530]
-            text-white uppercase px-6 py-3 rounded-full font-semibold flex items-center gap-2 text-sm
-            shadow-lg transition-colors duration-300
+            text-white uppercase px-6 py-3 rounded-full font-semibold 
+            flex items-center gap-2 text-sm shadow-lg transition-colors duration-300
             justify-center
           "
               >
@@ -439,12 +444,12 @@ const About = () => {
             </div>
           </div>
 
-          {/* Right Side - Full Image */}
-          <div className="lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
+          {/* Right Side – Image */}
+          <div className="w-full lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
             <img
               src="/images/sigiriya-art.PNG"
               alt="Sigiriya Art"
-              className="h-full w-full object-cover"
+              className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-full object-cover"
             />
           </div>
         </div>

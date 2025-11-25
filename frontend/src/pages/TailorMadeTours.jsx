@@ -120,24 +120,24 @@ const TailorMadeTours = () => {
     <div className="font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
           backgroundImage: "url('/images/tailor-made-tour-header.jpg')",
-          backgroundPosition: "center 50%",
         }}
       >
-        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+
         <div
-          className={`absolute bottom-10 right-10 w-[560px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[480px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
             Experience Sri Lanka,
             <br />
             Exactly The Way You Imagine…
           </h2>
-          <div className="w-[2px] bg-white h-12"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
@@ -161,31 +161,33 @@ const TailorMadeTours = () => {
       </section>
 
       {/* ---------------------------- PLAN YOUR TRIP SECTION ---------------------------- */}
-      <section className="max-w-7xl mx-auto px-20 py-4 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <section className="max-w-7xl mx-auto px-5 md:px-20 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left Side - Form */}
-        <div className="lg:col-span-1">
-          <div className="bg-blue-600 text-white rounded-t-xl px-6 py-6 mb-6">
-            <h3 className="text-2xl font-bold text-center">Plan Your Trip</h3>
+        <div className="lg:col-span-1 w-full">
+          <div className="bg-blue-600 text-white rounded-t-xl px-6 py-5 mb-6">
+            <h3 className="text-xl md:text-2xl font-bold text-center">
+              Plan Your Trip
+            </h3>
           </div>
-          <p className="text-gray-500 mb-6 px-5 text-center">
+
+          <p className="text-gray-500 mb-6 px-3 text-center text-sm md:text-base">
             Please note that your information is saved on our server as you
             enter it.
           </p>
 
-          <div className="max-w-2xl mx-auto px-5">
+          <div className="max-w-xl mx-auto px-3 md:px-5">
             {/* Step 1: Personal Info */}
             {step === 1 && (
               <form className="space-y-4">
-                <div className="flex justify-center space-x-4 mb-4 items-center">
-                  <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    1
-                  </span>
-                  <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    2
-                  </span>
-                  <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    3
-                  </span>
+                <div className="flex justify-center space-x-3 mb-4 items-center">
+                  {[1, 2, 3].map((n) => (
+                    <span
+                      key={n}
+                      className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold"
+                    >
+                      {n}
+                    </span>
+                  ))}
                 </div>
 
                 <div>
@@ -275,7 +277,7 @@ const TailorMadeTours = () => {
 
                 <button
                   onClick={handleNext}
-                  className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition-colors"
+                  className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
                 >
                   Next
                 </button>
@@ -331,11 +333,11 @@ const TailorMadeTours = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row justify-between gap-4">
                   <button
                     type="button"
                     onClick={handlePrev}
-                    className="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-md hover:bg-gray-400 transition-colors"
+                    className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
                   >
                     Previous
                   </button>
@@ -343,7 +345,7 @@ const TailorMadeTours = () => {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="bg-blue-500 text-white font-bold py-3 px-6 rounded-md hover:bg-[#283d9e] transition-colors"
+                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
                   >
                     Next
                   </button>
@@ -407,48 +409,48 @@ const TailorMadeTours = () => {
         </div>
 
         {/* Right Side - Contact & Service Info */}
-        <div className="lg:col-span-2 px-12 py-20">
-          <h3 className="text-4xl font-bold mb-4 text-center pb-3">
+        <div className="lg:col-span-2 px-4 md:px-12 py-10 md:py-20">
+          <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center">
             The Best Call You’ll Make Today
           </h3>
 
-          <div className="flex justify-center items-center space-x-10 mb-4 pb-3">
+          <div className="flex flex-col sm:flex-row justify-center items-center text-center sm:text-left space-y-6 sm:space-y-0 sm:space-x-10 mb-6">
             {/* WhatsApp */}
-            <div className="flex items-center space-x-2 text-green-600 text-xl md:text-1xl font-semibold">
-              <div className="bg-green-600 text-white rounded-full p-3 flex items-center justify-center">
-                <FaWhatsapp className="w-5 h-5 md:w-5 md:h-5" />
+            <div className="flex items-center space-x-2 text-green-600 text-xl font-semibold">
+              <div className="bg-green-600 text-white rounded-full p-3">
+                <FaWhatsapp className="w-5 h-5" />
               </div>
               <span>(+94) 777 300 852</span>
             </div>
 
             {/* Phone */}
-            <div className="flex items-center space-x-2 text-blue-600 text-xl md:text-1xl font-semibold">
-              <div className="bg-blue-600 text-white rounded-full p-3 flex items-center justify-center">
-                <FaPhoneAlt className="w-5 h-5 md:w-5 md:h-5" />
+            <div className="flex items-center space-x-2 text-blue-600 text-xl font-semibold">
+              <div className="bg-blue-600 text-white rounded-full p-3">
+                <FaPhoneAlt className="w-5 h-5" />
               </div>
               <span>(+94) 777 300 852</span>
             </div>
           </div>
 
-          <p className="text-gray-500 text-center text-lg">
+          <p className="text-gray-500 text-center text-base md:text-lg">
             We are here to support you 24 hours a day. If you’re travelling and
             need emergency assistance.
           </p>
 
-          <div className="mt-20">
-            <h3 className="text-4xl font-bold mb-8 text-center pb-3">
+          <div className="mt-16">
+            <h3 className="text-3xl md:text-4xl font-bold mb-10 text-center">
               How Our Service Works?
             </h3>
 
-            <div className="flex flex-col md:flex-row justify-center items-center gap-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 place-items-center">
               {/* Step 1 */}
               <div className="flex flex-col items-center text-center max-w-xs">
                 <img
                   src="/images/browse.PNG"
-                  alt="Browse"
+                  alt="browse"
                   className="w-20 h-20 mb-4"
                 />
-                <p className="text-gray-700">
+                <p className="text-gray-700 text-sm md:text-base">
                   Browse our website for luxury travel ideas and holiday
                   inspiration.
                 </p>
@@ -458,12 +460,12 @@ const TailorMadeTours = () => {
               <div className="flex flex-col items-center text-center max-w-xs">
                 <img
                   src="/images/phone.PNG"
-                  alt="Call"
+                  alt="phone"
                   className="w-20 h-20 mb-4"
                 />
-                <p className="text-gray-700">
-                  Call us on +94 777 300 852 or enquire online about the holiday
-                  you want.
+                <p className="text-gray-700 text-sm md:text-base">
+                  Call us or message via WhatsApp to start customizing your
+                  holiday.
                 </p>
               </div>
 
@@ -471,12 +473,11 @@ const TailorMadeTours = () => {
               <div className="flex flex-col items-center text-center max-w-xs">
                 <img
                   src="/images/book.PNG"
-                  alt="Book"
+                  alt="paper"
                   className="w-20 h-20 mb-4"
                 />
-                <p className="text-gray-700">
-                  Receive your bespoke holiday quote, then book online or over
-                  the phone.
+                <p className="text-gray-700 text-sm md:text-base">
+                  We finalize your itinerary and handle everything for you.
                 </p>
               </div>
             </div>
@@ -490,16 +491,17 @@ const TailorMadeTours = () => {
       </section>
 
       {/* ------------------------------ REVIEWS ------------------------------ */}
-      <section>
-        <p className="text-sm text-center md:text-lg font-semibold tracking-widest text-gray-500 mb-4">
+      <section className="px-4 md:px-0">
+        <p className="text-sm text-center md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
           SEE WHAT OUR GUESTS ARE SAYING ABOUT US
         </p>
-        <h2 className="text-4xl text-center md:text-5xl font-extrabold text-gray-900 mb-6">
+
+        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mb-6">
           Don’t Take Our Word for It
         </h2>
 
         <div
-          className="relative bg-cover bg-center py-20"
+          className="relative bg-cover bg-center py-14 md:py-20"
           style={{
             backgroundImage: "url('/images/team-header.jpg')",
             backgroundPosition: "center 50%",
@@ -508,30 +510,37 @@ const TailorMadeTours = () => {
         >
           <div className="absolute inset-0 bg-black/40"></div>
 
-          <div className="relative max-w-7xl mx-auto px-6">
+          <div className="relative max-w-7xl mx-auto px-4 md:px-6">
             <Swiper
               modules={[Autoplay]}
-              spaceBetween={30}
-              slidesPerView={2}
+              spaceBetween={20}
               autoplay={{ delay: 5000 }}
               breakpoints={{
                 0: { slidesPerView: 1 },
+                768: { slidesPerView: 1 },
                 1024: { slidesPerView: 2 },
               }}
             >
               {testimonials.map((t, idx) => (
                 <SwiperSlide key={idx} className="flex">
-                  <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 shadow-lg flex-1 flex flex-col justify-center items-center text-center h-[500px]">
-                    <h4 className="text-xl font-bold mb-2">{t.title}</h4>
-                    <p className="text-gray-700 mb-4 overflow-auto">{t.text}</p>
-                    <h5 className="font-semibold">{t.name}</h5>
-                    <div>
-                      <img
-                        src={t.rating}
-                        alt="rating"
-                        className="mt-2 mx-auto"
-                      />
-                    </div>
+                  <div className="bg-white/70 backdrop-blur-md rounded-xl p-5 md:p-6 shadow-lg flex-1 flex flex-col justify-center items-center text-center min-h-[380px] md:min-h-[500px]">
+                    <h4 className="text-lg md:text-xl font-bold mb-2">
+                      {t.title}
+                    </h4>
+
+                    <p className="text-gray-700 text-sm md:text-base mb-4 overflow-auto max-h-[180px] md:max-h-none">
+                      {t.text}
+                    </p>
+
+                    <h5 className="font-semibold text-sm md:text-base">
+                      {t.name}
+                    </h5>
+
+                    <img
+                      src={t.rating}
+                      alt="rating"
+                      className="mt-3 mx-auto w-32 md:w-auto"
+                    />
                   </div>
                 </SwiperSlide>
               ))}
@@ -541,21 +550,23 @@ const TailorMadeTours = () => {
       </section>
 
       {/* ------------------------------ REVIEWS ------------------------------ */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="flex justify-center gap-6 mb-8">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        {/* Review Icons */}
+        <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-8 flex-wrap">
           <img
             src="/images/tripadvisor.PNG"
             alt="Tripadvisor Review"
-            className="w-55 h-50"
+            className="w-32 sm:w-56 h-auto"
           />
           <img
             src="/images/trustpilot.PNG"
             alt="Trustpilot Review"
-            className="w-55 h-48"
+            className="w-32 sm:w-56 h-auto"
           />
         </div>
 
-        <p className="text-base text-center md:text-lg text-gray-600 leading-relaxed">
+        {/* Main Text */}
+        <p className="text-sm sm:text-base text-center text-gray-600 leading-relaxed">
           NetLanka Tours and our team of friendly consultants work tirelessly to
           create exciting Sri Lanka tailor-made holidays for guests who want to
           tour this beautiful island. Whether you are looking to explore Sri
@@ -568,8 +579,9 @@ const TailorMadeTours = () => {
           landscapes in one tour.
         </p>
 
+        {/* Expandable Content */}
         {showFull && (
-          <div className="text-base text-center md:text-lg text-gray-600 leading-relaxed mt-6 space-y-4">
+          <div className="text-sm sm:text-base text-center text-gray-600 leading-relaxed mt-4 sm:mt-6 space-y-4">
             <p>
               If any of our prepared itineraries are not meeting your
               requirements, we will gladly make alterations to cater to your
@@ -578,69 +590,72 @@ const TailorMadeTours = () => {
               preferences and yet managed to successfully come up with an ideal
               itinerary, meeting their needs. We talk to each group of
               travellers personally to determine what they will and will not
-              like to do during their holiday. Depending on that, we carefully
-              curate the best possible Sri Lanka tailor-made tour packages for
-              them.
+              like to do during their holiday.
             </p>
+
             <p>
               From pick up at the airport to each destination transfer to each
               tour attraction transfer to drop back to the airport, NetLanka
               Tours will transport you in an ultra-comfortable, luxury
-              air-conditioned vehicle. Road trips in Sri Lanka will be a breeze
-              with our range of supreme vehicles available at your disposal.
-              Depending on the number of passengers travelling with you, we will
-              advise the type of car or van that would make your tour of Sri
-              Lanka a smooth and comfortable journey.
+              air-conditioned vehicle. Depending on the number of passengers
+              travelling with you, we will advise the type of car or van that
+              would make your tour of Sri Lanka a smooth and comfortable
+              journey.
             </p>
+
             <p>
               NetLanka Tours has a wide network of accommodation options for
               your tailor-made Sri Lanka tour. We specialize in selecting the
               most comfortable and luxurious holiday resorts across the country.
-              Standard of accommodation is something we do not compromise on
-              when preparing your holiday itinerary in Sri Lanka. So whether you
-              are coming on a honeymoon, with your children and parents or just
-              a group of friends and colleagues, we can assure that at the end
-              of an adventurous day, you will have luxury at its best when you
-              return to your hotel to relax and unwind.
+              Whether it's a honeymoon, family tour, or group trip, we ensure
+              your stay is relaxing and top-tier.
             </p>
           </div>
         )}
 
-        {/* ------------------- TOGGLE BUTTON ------------------- */}
-        <div className="mt-4 flex justify-center pb-7">
+        {/* Read More Button */}
+        <div className="mt-3 sm:mt-4 flex justify-center pb-4 sm:pb-7">
           <span
             onClick={() => setShowFull(!showFull)}
             className="cursor-pointer text-blue-600 font-semibold flex items-center space-x-2 hover:underline"
           >
-            <span>{showFull ? "SHOW LESS ⌃" : "READ MORE"}</span>
+            <span>{showFull ? "SHOW LESS" : "READ MORE"}</span>
             {showFull ? <FaChevronUp /> : <FaChevronDown />}
           </span>
         </div>
       </section>
 
       {/* ---------------------------- CUSTOM TOUR CTA ---------------------------- */}
-      <section className="relative -mt-8 lg:-mt-28">
-        <div className="flex flex-col lg:flex-row items-center lg:items-stretch relative h-[600px] lg:h-[800px]">
-          {/* Left Side - Text Centered */}
-          <div className="lg:w-1/2 flex flex-col justify-center items-center text-center px-6 z-10 space-y-4">
-            <h2 className="text-lg md:text-3xl font-semibold text-[#1a1a1a]">
+      <section className="relative -mt-4 sm:-mt-8 lg:-mt-28">
+        <div
+          className="flex flex-col lg:flex-row items-center lg:items-stretch relative 
+                  h-auto lg:h-[800px]"
+        >
+          {/* Left Side – Text */}
+          <div
+            className="w-full lg:w-1/2 flex flex-col justify-center items-center text-center 
+                    px-4 sm:px-6 py-10 sm:py-14 lg:py-0 z-10 space-y-2 sm:space-y-4"
+          >
+            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
               Looking for an
             </h2>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a]">
+
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
               Exclusive Customized Tour?
             </h2>
-            <h2 className="text-lg md:text-3xl font-semibold text-[#1a1a1a]">
+
+            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
               No Problem
             </h2>
 
-            {/* Connect with Us - Red */}
+            {/* CTA Button */}
             <div className="mt-4">
               <a
                 href="/contact"
                 className="
             bg-[#ce2a40] hover:bg-[#ef0530]
-            text-white uppercase px-6 py-3 rounded-full font-semibold flex items-center gap-2 text-sm
-            shadow-lg transition-colors duration-300
+            text-white uppercase px-6 py-3 rounded-full font-semibold 
+            flex items-center gap-2 text-sm shadow-lg transition-colors duration-300
             justify-center
           "
               >
@@ -650,12 +665,12 @@ const TailorMadeTours = () => {
             </div>
           </div>
 
-          {/* Right Side - Full Image */}
-          <div className="lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
+          {/* Right Side – Image */}
+          <div className="w-full lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
             <img
               src="/images/sigiriya-art.PNG"
               alt="Sigiriya Art"
-              className="h-full w-full object-cover"
+              className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-full object-cover"
             />
           </div>
         </div>

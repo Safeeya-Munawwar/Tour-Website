@@ -1,6 +1,6 @@
 import React from "react";
 
-    const packages = [
+const packages = [
   {
     title: "Sri Lanka at a Glance",
     days: "08 Days | 07 Nights",
@@ -46,7 +46,6 @@ export default function Tours() {
   return (
     <section className="w-full bg-[#F5F7FA] py-16">
       <div className="max-w-7xl mx-auto px-4">
-        
         {/* Subtitle */}
         <p className="text-center text-gray-500 text-lg font-semibold tracking-wide">
           ITINERARIES
@@ -78,8 +77,8 @@ export default function Tours() {
                 </h3>
 
                 <p className="text-gray-500 mt-2">{pkg.days}</p>
-<button
-  className="
+                <button
+                  className="
     mt-5 
     bg-gradient-to-r from-[#73A5C6] to-[#2E5B84]
     hover:from-[#82B3D2] hover:to-[#254A6A]
@@ -89,16 +88,14 @@ export default function Tours() {
     flex items-center gap-2 mx-auto 
     transition
   "
->
-  Book Now
-  <span className="text-lg">▸</span>
-</button>
-
+                >
+                  Book Now
+                  <span className="text-lg">▸</span>
+                </button>
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

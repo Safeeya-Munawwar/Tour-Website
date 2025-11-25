@@ -1,12 +1,9 @@
-// src/components/CallToAction.jsx
 import React from "react";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
-
 
 export default function Call() {
   return (
     <section className="relative bg-zinc-100">
-
       <div className="mx-6 md:mx-12 lg:mx-20 py-16">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-10">
@@ -14,7 +11,7 @@ export default function Call() {
             <div className="flex-shrink-0 w-full md:w-1/3 flex justify-center md:justify-start">
               <div className="w-64 h-64 md:w-96 md:h-96 rounded-full overflow-hidden shadow-lg">
                 <img
-                  src="/12.jpg"
+                  src="/images/12.jpg"
                   alt="Traveler"
                   className="w-full h-full object-cover"
                 />
@@ -45,7 +42,11 @@ export default function Call() {
               {/* Phone row */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#2E5B84] text-white shadow">
-                  <FaPhone size={20} aria-hidden="true" className="text-white" />
+                  <FaPhone
+                    size={20}
+                    aria-hidden="true"
+                    className="text-white"
+                  />
                 </div>
 
                 <div>
@@ -62,8 +63,6 @@ export default function Call() {
           </div>
         </div>
       </div>
-
-     
 
       {/* Floating WhatsApp button */}
       <a

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import { FiCheckCircle, FiXCircle, FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
+import { FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
 
 const slides = [
   { image: "/40.jpg", title: "Kuttam Pokuna", desc: "Ancient royal bathing ponds in Anuradhapura." },
