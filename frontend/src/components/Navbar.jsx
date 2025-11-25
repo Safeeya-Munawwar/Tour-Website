@@ -14,7 +14,7 @@ export default function Navbar() {
     { name: "DESTINATIONS" },
     {
       name: "TOURS",
-      dropdown: ["City Tours", "Round Tours"],
+      dropdown: ["Day Tours", "Round Tours"],
     },
     {
       name: "OUR STORY",
@@ -36,8 +36,8 @@ export default function Navbar() {
         return "/destinations";
       case "TOURS":
         return "/tours";
-      case "City Tours":
-        return "/city-tours";
+      case "Day Tours":
+        return "/day-tours";
       case "Round Tours":
         return "/round-tours";
       case "OUR STORY":
