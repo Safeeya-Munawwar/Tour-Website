@@ -51,7 +51,7 @@ export default function Blog() {
         <div className="absolute inset-0 bg-black/30"></div>
 
         <div
-          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[280px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >

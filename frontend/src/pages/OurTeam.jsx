@@ -48,13 +48,10 @@ const OurTeam = () => {
         className="w-full h-[400px] md:h-[560px] bg-cover relative flex items-center justify-center text-white"
         style={{
           backgroundImage: "url('/images/team-header.jpg')",
-          backgroundPosition: "center 10%",
-          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center 50%",
         }}
       >
         <div className="absolute inset-0 bg-black/10"></div>
-
-        {/* Text Box at Bottom-Right */}
         <div
           className={`absolute bottom-10 right-10 w-[600px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
@@ -81,17 +78,13 @@ const OurTeam = () => {
 
         {/* Right Text */}
         <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-          {/* Subtitle */}
           <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500">
             MEET THE EXPERTS
           </p>
-
-          {/* Heading */}
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
             Our Team
           </h2>
 
-          {/* Optional Gold Accent */}
           <div className="w-16 h-[2px] bg-[#D4AF37] mt-2 mb-4"></div>
 
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-lg">

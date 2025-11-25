@@ -16,7 +16,7 @@ import DayTour from "./pages/DayTour";
 import RoundTour from "./pages/RoundTour";
 import TourDetail from "./pages/TourDetail";
 import RoundTourDetail from "./pages/RoundTourDetail";
-
+import TailorMadeTours from "./pages/TailorMadeTours";
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,6 +40,7 @@ function App() {
 
 
 
+          <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
         </Routes>
       </main>
       <Footer />

@@ -58,14 +58,14 @@ const OurCommunity = () => {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* HERO HEADER */}
+      {/* ---------------------------- HERO SECTION ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/galle3.JPG')" }}
+        style={{ backgroundImage: "url('/images/community-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
         <div
-          className={`absolute bottom-10 right-10 w-[600px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[500px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -73,22 +73,20 @@ const OurCommunity = () => {
             Our Journey <br />
             From Passion to Excellence
           </h2>
+          <div className="w-[2px] bg-white h-12"></div>
         </div>
       </div>
 
       {/* ---------------------------- COMMUNITY INTRO ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-10 text-center space-y-4">
-        {/* Subtitle */}
         <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
           OUR JOURNEY
         </p>
 
-        {/* Heading */}
         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
           From Passion to Excellence
         </h2>
 
-        {/* Description */}
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
           NetLanka Tours has grown from a small, passionate team into a trusted
           travel partner for travelers worldwide. Explore the milestones that
@@ -96,11 +94,10 @@ const OurCommunity = () => {
           across Sri Lanka.
         </p>
 
-        {/* Optional Gold Accent Line */}
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </section>
 
-      {/* JOURNEY STORIES WITH AUTO-SLIDING CARDS */}
+      {/* -------------------- JOURNEY STORIES WITH AUTO-SLIDING CARDS ---------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
         {journeyStories.map((story, idx) => (
           <div
@@ -133,7 +130,7 @@ const OurCommunity = () => {
         ))}
       </section>
 
-      {/* CONTACT BUTTON */}
+      {/* ---------------------------- CONTACT BUTTON ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-8 flex flex-col items-center text-center">
         <h3 className="text-2xl font-bold text-[#1a1a1a] mb-1">
           Ready to Explore Sri Lanka?

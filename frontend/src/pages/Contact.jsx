@@ -12,13 +12,8 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa";
-// React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Swiper core and required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-
-// Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -78,16 +73,16 @@ const Contact = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/45.jpg')" }}
+        style={{ backgroundImage: "url('/images/contact-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
 
         <div
-          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[280px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-           <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
             Contact Us <br />
             Anytime…
           </h2>
@@ -98,19 +93,15 @@ const Contact = () => {
       {/* --------------------- CONTACT HEADER --------------------- */}
       <section className="w-full py-12">
         {" "}
-        {/* changed from py-20 to py-12 */}
         <div className="max-w-7xl mx-auto px-6 text-center">
-          {/* Small Title */}
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
             CONTACT
           </p>
 
-          {/* Big Title */}
           <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
             Get In Touch
           </h2>
 
-          {/* Description */}
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
             We’d love to hear from you! Reach out with any questions or travel
             dreams – our team is here to help you plan your perfect Sri Lankan
@@ -125,7 +116,6 @@ const Contact = () => {
       <section className="py-4 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* ---------------- LEFT SIDE ---------------- */}
         <div className="space-y-8">
-          {/* Contact Details */}
           <div className="space-y-4 text-gray-700">
             {/* Address */}
             <div className="flex items-start gap-4">
@@ -211,7 +201,6 @@ const Contact = () => {
 
       {/* ---------------- PREMIUM MAP SECTION ---------------- */}
       <section className="w-full mt-2 relative">
-        {/* Overlay for dark effect */}
         <div className="absolute inset-0 z-10 pointer-events-none"></div>
 
         <iframe
@@ -225,7 +214,6 @@ const Contact = () => {
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
 
-        {/* Custom Red Marker Overlay */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full z-20">
           <div className="w-8 h-8 bg-red-600 rounded-full border-2 border-yellow-500 shadow-lg flex items-center justify-center animate-bounce">
             <svg
@@ -283,7 +271,7 @@ const Contact = () => {
         <div className="lg:w-2/3 relative">
           <Swiper
             spaceBetween={20}
-            slidesPerView={3} // Show 3 cards per view
+            slidesPerView={3}
             autoplay={{ delay: 6000, disableOnInteraction: false }}
             pagination={{ clickable: true }}
             navigation={{
@@ -303,7 +291,7 @@ const Contact = () => {
                   {/* Tripadvisor Green Circle Icon Top-Right */}
                   <div
                     className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: "#2AC18C" }} // slightly darker Tripadvisor green
+                    style={{ backgroundColor: "#2AC18C" }}
                   >
                     <FaTripadvisor className="text-black w-4 h-4" />
                   </div>
