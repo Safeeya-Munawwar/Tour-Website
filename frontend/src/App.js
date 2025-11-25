@@ -11,8 +11,8 @@ import Contact from "./pages/Contact";
 import Destination from "./pages/Destination";
 import Blog from "./pages/Blog";
 import Experiences from "./pages/Experiences";
-import ExperienceDetail from "./pages/ExperienceDetail"; 
-
+import ExperienceDetail from "./pages/ExperienceDetail";
+import TailorMadeTours from "./pages/TailorMadeTours";
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -29,6 +29,7 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/experience" element={<Experiences />} />
           <Route path="/experience/:slug" element={<ExperienceDetail />} />
+          <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
         </Routes>
       </main>
       <Footer />

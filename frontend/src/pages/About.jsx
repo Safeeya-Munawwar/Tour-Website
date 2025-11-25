@@ -74,11 +74,11 @@ const About = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/41.JPG')" }}
+        style={{ backgroundImage: "url('/images/about-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/10"></div>
         <div
-          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[380px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -255,7 +255,7 @@ const About = () => {
           {/* Feature 3 */}
           <div className="flex flex-col items-center">
             <img
-              src="/images/tailor.svg"
+              src="/images/tailor.PNG"
               alt="Tailor Icon"
               className="w-24 h-24 mb-4"
             />

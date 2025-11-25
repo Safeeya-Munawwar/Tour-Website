@@ -45,12 +45,12 @@ const OurJourney = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/info2.jpg')" }}
+        style={{ backgroundImage: "url('/images/journey-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
 
         <div
-          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[400px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -133,7 +133,6 @@ const OurJourney = () => {
           bring Sri Lanka to life. From planning your perfect itinerary to
           offering insider tips, our experts ensure unforgettable adventures.
         </p>
-        {/* Centered Button */}
         <div className="flex justify-center mt-8">
           <a
             href="/our-team"

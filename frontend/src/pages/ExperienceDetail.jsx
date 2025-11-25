@@ -423,7 +423,6 @@ export default function ExperienceDetail() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            {/* Explore More - Blue */}
             <button
               onClick={() => navigate(`/experience`)}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2"
@@ -432,7 +431,6 @@ export default function ExperienceDetail() {
               <ArrowRight className="w-4 h-4" />
             </button>
 
-            {/* Tailor-make a Tour - Red with icon */}
             <button
               onClick={() => navigate("/tailor-made-tours")}
               className="bg-[#ce2a40] hover:bg-[#ef0530] text-white uppercase px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg transition-colors duration-300 justify-center"
@@ -544,7 +542,7 @@ export default function ExperienceDetail() {
           </p>
 
           <Swiper
-            modules={[Pagination, Autoplay]} // removed Navigation
+            modules={[Pagination, Autoplay]}
             spaceBetween={20}
             slidesPerView={2}
             loop
@@ -559,7 +557,7 @@ export default function ExperienceDetail() {
               <SwiperSlide key={idx}>
                 <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
                   <img
-                    src={exp.heroImg} // main display image
+                    src={exp.heroImg}
                     alt={exp.title}
                     className="w-full h-48 object-cover"
                   />
