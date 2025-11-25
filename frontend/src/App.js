@@ -10,6 +10,8 @@ import CommunityImpact from "./pages/CommunityImpact";
 import Contact from "./pages/Contact";
 import Destination from "./pages/Destination";
 import Blog from "./pages/Blog";
+import Experiences from "./pages/Experiences";
+import ExperienceDetail from "./pages/ExperienceDetail"; 
 
 function App() {
   return (
@@ -23,10 +25,10 @@ function App() {
           <Route path="/our-journey" element={<OurJourney />} />
           <Route path="/community-impact" element={<CommunityImpact />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/destinations" element={<Destination/>} />
-          <Route path="/blog" element={<Blog/>} />
-
-
+          <Route path="/destinations" element={<Destination />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/experience" element={<Experiences />} />
+          <Route path="/experience/:slug" element={<ExperienceDetail />} />
         </Routes>
       </main>
       <Footer />

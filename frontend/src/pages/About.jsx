@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Testimonials from "../components/Testimonials";
@@ -92,15 +92,24 @@ const About = () => {
 
       {/* ---------------------------- ABOUT CONTENT ---------------------------- */}
       <div className="max-w-6xl mx-auto py-20 px-6 text-center space-y-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-          About NetLanka Tours
-        </h1>
+        {/* Subtitle */}
+        <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
+          ABOUT NETLANKA TOURS
+        </p>
 
-        <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+        {/* Heading */}
+        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+          Discover Sri Lanka With Us
+        </h2>
+
+        <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
           NetLanka Tours is the present and future of destination management in
           Sri Lanka, where the most exciting tropical holidays happen in South
           Asia.
         </p>
+
+        {/* Gold Accent Line */}
+        <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
         <p className="text-base md:text-lg text-gray-600 leading-relaxed">
           Founded in 2010, we have built an unwavering reputation for offering
@@ -115,7 +124,7 @@ const About = () => {
 
         {/* ------------------- FULL DESCRIPTION ------------------- */}
         {showFull && (
-          <div className="text-base md:text-lg text-gray-600 leading-relaxed mt-4 space-y-4">
+          <div className="text-base md:text-lg text-gray-600 leading-relaxed mt-6 space-y-4">
             <p>
               We have over 1000 accommodation properties in our portfolio and
               they have been chosen for their excellence of service, special
@@ -260,6 +269,7 @@ const About = () => {
         {/* Centered Button */}
         <div className="flex justify-center mt-8">
           <button
+            onClick={() => navigate("/tailor-made-tours")}
             className="
         bg-[#ce2a40] hover:bg-[#ef0530]
         text-white uppercase px-6 py-3 rounded-full font-semibold flex items-center gap-2 text-sm
@@ -430,7 +440,7 @@ const About = () => {
           </div>
 
           {/* Right Side - Full Image */}
-          <div className="lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[50vw]">
+          <div className="lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
             <img
               src="/images/sigiriya-art.PNG"
               alt="Sigiriya Art"

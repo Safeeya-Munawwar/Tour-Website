@@ -87,7 +87,7 @@ const Contact = () => {
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl leading-snug text-right mr-4">
+           <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
             Contact Us <br />
             Anytime…
           </h2>
@@ -95,111 +95,119 @@ const Contact = () => {
         </div>
       </div>
 
- {/* --------------------- CONTACT HEADER --------------------- */}
-<section className="py-12 px-6 text-center max-w-3xl mx-auto">
-  {/* Small Title */}
-  <p className="text-sm tracking-widest text-yellow-600 uppercase">
-    Contact
-  </p>
+      {/* --------------------- CONTACT HEADER --------------------- */}
+      <section className="w-full py-12">
+        {" "}
+        {/* changed from py-20 to py-12 */}
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          {/* Small Title */}
+          <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
+            CONTACT
+          </p>
 
-  {/* Big Title */}
-  <h2 className="text-4xl md:text-5xl font-bold mt-3">Get In Touch</h2>
+          {/* Big Title */}
+          <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+            Get In Touch
+          </h2>
 
-  {/* Description */}
-  <p className="text-gray-600 mt-4 text-lg leading-relaxed">
-    We’d love to hear from you! Reach out with any questions or travel
-    dreams – our team is here to help you plan your perfect Sri Lankan
-    adventure with ease and care.
-  </p>
-</section>
+          {/* Description */}
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            We’d love to hear from you! Reach out with any questions or travel
+            dreams – our team is here to help you plan your perfect Sri Lankan
+            adventure with ease and care.
+          </p>
 
-<section className="py-4 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-  {/* ---------------- LEFT SIDE ---------------- */}
-  <div className="space-y-8">
-    {/* Contact Details */}
-    <div className="space-y-4 text-gray-700">
-      {/* Address */}
-      <div className="flex items-start gap-4">
-        <FaMapMarkerAlt className="text-yellow-600 text-2xl" />
-        <p>26/D/1 Galawila Rd, Homagama 10200</p>
-      </div>
+          <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
+        </div>
+      </section>
 
-      {/* Phone */}
-      <div className="flex items-start gap-4">
-        <FaPhoneAlt className="text-yellow-600 text-2xl" />
-        <p>+94 72 917 1089</p>
-      </div>
+      {/* ------------------- CONTACT FORM ------------------- */}
+      <section className="py-4 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* ---------------- LEFT SIDE ---------------- */}
+        <div className="space-y-8">
+          {/* Contact Details */}
+          <div className="space-y-4 text-gray-700">
+            {/* Address */}
+            <div className="flex items-start gap-4">
+              <FaMapMarkerAlt className="text-yellow-600 text-2xl" />
+              <p>26/D/1 Galawila Rd, Homagama 10200</p>
+            </div>
 
-      {/* Email */}
-      <div className="flex items-start gap-4">
-        <FaEnvelope className="text-yellow-600 text-2xl" />
-        <p>info@travelerschoicetoceylon.com</p>
-      </div>
+            {/* Phone */}
+            <div className="flex items-start gap-4">
+              <FaPhoneAlt className="text-yellow-600 text-2xl" />
+              <p>+94 72 917 1089</p>
+            </div>
 
-      {/* Time */}
-      <div className="flex items-start gap-4">
-        <FaClock className="text-yellow-600 text-2xl" />
-        <p>06:00 - 20:00 (UTC+5:30)</p>
-      </div>
-    </div>
+            {/* Email */}
+            <div className="flex items-start gap-4">
+              <FaEnvelope className="text-yellow-600 text-2xl" />
+              <p>info@travelerschoicetoceylon.com</p>
+            </div>
 
-    {/* Social Media */}
-    <div>
-      <h3 className="text-lg font-semibold mb-3">Social Media</h3>
+            {/* Time */}
+            <div className="flex items-start gap-4">
+              <FaClock className="text-yellow-600 text-2xl" />
+              <p>06:00 - 20:00 (UTC+5:30)</p>
+            </div>
+          </div>
 
-      <div className="flex items-center gap-4 text-2xl">
-        <a className="hover:text-yellow-600 transition" href="fb.com">
-          <FaFacebookF />
-        </a>
-        <a className="hover:text-yellow-600 transition" href="insta.com">
-          <FaInstagram />
-        </a>
-        <a className="hover:text-yellow-600 transition" href="tik.com">
-          <FaTiktok />
-        </a>
-        <a className="hover:text-yellow-600 transition" href="trip.com">
-          <FaTripadvisor />
-        </a>
-        <a className="hover:text-yellow-600 transition" href="google.com">
-          <FaGoogle />
-        </a>
-      </div>
-    </div>
-  </div>
+          {/* Social Media */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Social Media</h3>
 
-  {/* ---------------- RIGHT SIDE FORM ---------------- */}
-  <div className="bg-white shadow-lg rounded-xl p-8 space-y-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <input
-        type="text"
-        placeholder="First Name"
-        className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
-      />
-    </div>
+            <div className="flex items-center gap-4 text-2xl">
+              <a className="hover:text-yellow-600 transition" href="fb.com">
+                <FaFacebookF />
+              </a>
+              <a className="hover:text-yellow-600 transition" href="insta.com">
+                <FaInstagram />
+              </a>
+              <a className="hover:text-yellow-600 transition" href="tik.com">
+                <FaTiktok />
+              </a>
+              <a className="hover:text-yellow-600 transition" href="trip.com">
+                <FaTripadvisor />
+              </a>
+              <a className="hover:text-yellow-600 transition" href="google.com">
+                <FaGoogle />
+              </a>
+            </div>
+          </div>
+        </div>
 
-    <input
-      type="email"
-      placeholder="Email"
-      className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
-    />
+        {/* ---------------- RIGHT SIDE FORM ---------------- */}
+        <div className="bg-white shadow-lg rounded-xl p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input
+              type="text"
+              placeholder="First Name"
+              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
+            />
+          </div>
 
-    <textarea
-      placeholder="Message"
-      rows="5"
-      className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
-    ></textarea>
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
+          />
 
-    <button className="w-full bg-yellow-600 text-white py-3 rounded-lg font-semibold hover:bg-yellow-700 transition">
-      Send Message
-    </button>
-  </div>
-</section>
+          <textarea
+            placeholder="Message"
+            rows="5"
+            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-yellow-600"
+          ></textarea>
 
+          <button className="w-full bg-yellow-600 text-white py-3 rounded-lg font-semibold hover:bg-yellow-700 transition">
+            Send Message
+          </button>
+        </div>
+      </section>
 
       {/* ---------------- PREMIUM MAP SECTION ---------------- */}
       <section className="w-full mt-2 relative">
@@ -228,11 +236,10 @@ const Contact = () => {
             >
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
             </svg>
-          </div> 
+          </div>
         </div>
       </section>
 
- 
       <section className="max-w-7xl mx-auto mt-2 mb-8 ml-8 mr-8 p-8 lg:mt-4 lg:mb-16 lg:ml-16 lg:mr-16 flex flex-col lg:flex-row gap-12">
         {/* Left Side */}
         <div className="lg:w-1/3 flex flex-col items-center text-center space-y-6 justify-center">

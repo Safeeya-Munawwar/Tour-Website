@@ -1,17 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const teamMembers = [
   { image: "/images/user1.PNG", name: "John Doe", role: "Travel Consultant" },
   { image: "/images/user2.PNG", name: "Jane Smith", role: "Tour Specialist" },
   { image: "/images/user3.PNG", name: "Alice Lee", role: "Holiday Planner" },
-  { image: "/images/user4.PNG", name: "Mark Brown", role: "Customer Experience" },
+  {
+    image: "/images/user4.PNG",
+    name: "Mark Brown",
+    role: "Customer Experience",
+  },
   { image: "/images/user5.PNG", name: "Sara Wilson", role: "Booking Manager" },
   { image: "/images/user6.PNG", name: "David Kim", role: "Travel Advisor" },
   { image: "/images/user7.PNG", name: "Emily Clark", role: "Tour Coordinator" },
-  { image: "/images/user8.PNG", name: "Michael Johnson", role: "Destination Expert" },
-  { image: "/images/user9.PNG", name: "Olivia Martinez", role: "Holiday Planner" },
-  { image: "/images/user10.PNG", name: "Chris Evans", role: "Travel Consultant" },
-  { image: "/images/user11.PNG", name: "Sophia Patel", role: "Customer Relations" },
+  {
+    image: "/images/user8.PNG",
+    name: "Michael Johnson",
+    role: "Destination Expert",
+  },
+  {
+    image: "/images/user9.PNG",
+    name: "Olivia Martinez",
+    role: "Holiday Planner",
+  },
+  {
+    image: "/images/user10.PNG",
+    name: "Chris Evans",
+    role: "Travel Consultant",
+  },
+  {
+    image: "/images/user11.PNG",
+    name: "Sophia Patel",
+    role: "Customer Relations",
+  },
 ];
 
 const OurTeam = () => {
@@ -23,11 +43,14 @@ const OurTeam = () => {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/team-header.PNG')" }}
+        className="w-full h-[400px] md:h-[560px] bg-cover relative flex items-center justify-center text-white"
+        style={{
+          backgroundImage: "url('/images/team-header.jpg')",
+          backgroundPosition: "center 10%",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <div className="absolute inset-0 bg-black/10"></div>
 
@@ -57,23 +80,36 @@ const OurTeam = () => {
         </div>
 
         {/* Right Text */}
-        <div className="lg:w-1/2 space-y-6 text-left">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-            Our Team
-          </h2>
-          <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-            At NetLanka Tours, our shared passion is the beauty and mystery of Sri Lanka.
-            Our team, based in our office on the island, has firsthand knowledge of its wonders.
-            We’re more than just a digital presence; we’re real individuals offering profound insights
-            into Sri Lanka’s allure. Instead of wrestling with travel intricacies yourself,
-            trust our experts to craft a tailor-made Sri Lankan experience for you.
+        <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          {/* Subtitle */}
+          <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500">
+            MEET THE EXPERTS
           </p>
 
-          <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-            Get to know the voices behind your journey, from our travel specialists with
-            their favorite local recommendations to our committed board of directors and managers.
-            Whether you're reconnecting with us or seeking specific guidance, NetLanka Tours ensures
-            your Sri Lankan adventure is unparalleled.
+          {/* Heading */}
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+            Our Team
+          </h2>
+
+          {/* Optional Gold Accent */}
+          <div className="w-16 h-[2px] bg-[#D4AF37] mt-2 mb-4"></div>
+
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-lg">
+            At NetLanka Tours, our shared passion is the beauty and mystery of
+            Sri Lanka. Our team, based in our office on the island, has
+            firsthand knowledge of its wonders. We’re more than just a digital
+            presence; we’re real individuals offering profound insights into Sri
+            Lanka’s allure. Instead of wrestling with travel intricacies
+            yourself, trust our experts to craft a tailor-made Sri Lankan
+            experience for you.
+          </p>
+
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-lg">
+            Get to know the voices behind your journey, from our travel
+            specialists with their favorite local recommendations to our
+            committed board of directors and managers. Whether you're
+            reconnecting with us or seeking specific guidance, NetLanka Tours
+            ensures your Sri Lankan adventure is unparalleled.
           </p>
 
           {/* Scroll Button */}
@@ -117,7 +153,6 @@ const OurTeam = () => {
           </div>
         ))}
       </section>
-
     </div>
   );
 };

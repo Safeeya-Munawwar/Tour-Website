@@ -45,12 +45,12 @@ const OurJourney = () => {
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/journey-header.PNG')" }}
+        style={{ backgroundImage: "url('/images/info2.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
 
         <div
-          className={`absolute bottom-10 right-10 w-[600px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[440px] bg-black/80 text-white p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
