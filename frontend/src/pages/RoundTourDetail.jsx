@@ -5,11 +5,11 @@ import "swiper/css";
 import { FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
 
 const slides = [
-  { image: "/40.jpg", title: "Kuttam Pokuna", desc: "Ancient royal bathing ponds in Anuradhapura." },
-  { image: "/41.jpg", title: "Ruwanweliseya", desc: "A magnificent stupa with historical significance." },
-  { image: "/43.jpg", title: "Jethawanaramaya", desc: "Tallest stupa in Sri Lanka, a Buddhist landmark." },
-  { image: "/45.jpg", title: "Mirisavetiya", desc: "Historic temple with royal connections." },
-  { image: "/d1.jpg", title: "Brazen Temple", desc: "Ancient temple ruins with cultural heritage." },
+  { image: "/images/40.jpg", title: "Kuttam Pokuna", desc: "Ancient royal bathing ponds in Anuradhapura." },
+  { image: "/images/41.jpg", title: "Ruwanweliseya", desc: "A magnificent stupa with historical significance." },
+  { image: "/images/43.jpg", title: "Jethawanaramaya", desc: "Tallest stupa in Sri Lanka, a Buddhist landmark." },
+  { image: "/images/45.jpg", title: "Mirisavetiya", desc: "Historic temple with royal connections." },
+  { image: "/images/d1.jpg", title: "Brazen Temple", desc: "Ancient temple ruins with cultural heritage." },
 ];
 const itinerary = [
   { day: 1, title: "Arrival in Colombo", desc: "Transfer to hotel and relax." },
