@@ -179,7 +179,7 @@ const About = () => {
       {/* ------------------- FULL WIDTH IMAGE ABOVE ------------------- */}
       <div className="-mt-16 w-full">
         <img
-          src="/about-desc.jpg"
+          src="/images/about-desc.jpg"
           alt="About NetLanka Tours"
           className="w-full h-auto object-cover"
         />
