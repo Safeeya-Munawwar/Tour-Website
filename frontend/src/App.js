@@ -57,6 +57,7 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/manage-about" element={<ManageAbout />} />
+
         </Routes>
       </main>
       {!hideLayout && <Footer />}

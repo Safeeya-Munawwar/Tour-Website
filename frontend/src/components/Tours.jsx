@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import BookForm from "../pages/BookForm";
+
 
 const packages = [
   {
@@ -42,7 +44,10 @@ const packages = [
     img: "/images/galle.PNG",
   },
 ];
+
 export default function Tours() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <section className="w-full bg-[#F5F7FA] py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -51,30 +56,26 @@ export default function Tours() {
           ITINERARIES
         </p>
 
-        {/* Title */}
-        <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
-          Popular Tours
-        </h2>
+          <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
+            Popular Tours
+          </h2>
 
-        {/* 8 Cards, 2 Rows × 4 Columns */}
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-2 py-2">
-          {packages.map((pkg, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-0 overflow-hidden border border-gray-100"
-            >
-              {/* Image */}
-              <img
-                src={pkg.img}
-                alt={pkg.title}
-                className="w-full h-52 object-cover"
-              />
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-2 py-2">
+            {packages.map((pkg, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-0 overflow-hidden border border-gray-100"
+              >
+                <img
+                  src={pkg.img}
+                  alt={pkg.title}
+                  className="w-full h-52 object-cover"
+                />
 
-              {/* Card Content */}
-              <div className="py-6 text-center">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {pkg.title}
-                </h3>
+                <div className="py-6 text-center">
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {pkg.title}
+                  </h3>
 
                 <p className="text-gray-500 mt-2">{pkg.days}</p>
                 <button

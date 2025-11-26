@@ -14,8 +14,9 @@ import Stories from '../components/Stories'
 export default function Home() {
   return (
     <div>
-     
-      <Header/>
+    <div className="">
+  <Header />
+</div>
       <VideoSection videoSrc="/tr1.mp4"/>
       <Stats/>
       <Tours/>

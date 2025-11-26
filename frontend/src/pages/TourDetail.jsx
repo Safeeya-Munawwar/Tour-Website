@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules"; // ✅ Correct
 import "swiper/css";
 import { useRef, useState } from "react";
+import BookForm from "./BookForm";
 
 const slides = [
   { image: "/images/40.jpg", title: "Kuttam Pokuna", desc: "Ancient royal bathing ponds in Anuradhapura." },
@@ -14,6 +15,7 @@ const slides = [
 export default function TourDetail() {
  const [activeIndex, setActiveIndex] = useState(0);
   const innerSwiperRef = useRef();
+const [showForm, setShowForm] = useState(false);
 
   return (
     <>
@@ -79,9 +81,14 @@ export default function TourDetail() {
               EXPLORE DESTINATIONS
             </button>
 
-            <button className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-full text-sm font-semibold">
-              BOOK THIS TOUR
-            </button>
+           <button
+  onClick={() => setShowForm(true)}
+  className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-full text-sm font-semibold"
+>
+  BOOK THIS TOUR
+</button>
+
+
           </div>
         </div>
       </section>
@@ -263,6 +270,41 @@ export default function TourDetail() {
     </Swiper>
   </div>
 </section>
+{showForm && (
+  <>
+    {/* Dark Overlay */}
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+      onClick={() => setShowForm(false)}
+    ></div>
+
+    {/* Popup Modal */}
+    <div
+      className="
+        fixed top-1/2 left-1/2 
+        -translate-x-1/2 -translate-y-1/2
+        w-[90vw] max-w-[400px] 
+        h-[90vh]
+        bg-white shadow-2xl 
+        p-4 z-[20001]
+        flex flex-col overflow-auto
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowForm(false)}
+          className="text-gray-500 hover:text-black text-2xl font-bold"
+        >
+          ×
+        </button>
+      </div>
+
+      <BookForm />
+    </div>
+  </>
+)}
 
 
     </>

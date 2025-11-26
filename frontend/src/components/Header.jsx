@@ -4,7 +4,7 @@ import { Check, Settings } from "lucide-react";
 export default function Header() {
   return (
     <header
-      className="w-full h-[600px] sm:h-[650px] md:h-[750px] relative flex flex-col items-center justify-center"
+      className="w-full h-[600px] sm:h-[650px] md:h-[750px]  flex flex-col items-center justify-center relative top-0"
       style={{
         backgroundImage: `url('/images/12.jpg')`,
         backgroundSize: "cover",
@@ -15,7 +15,7 @@ export default function Header() {
       <div className="absolute inset-0 bg-black/30"></div>
 
       {/* Center text content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 mt-8 max-w-4xl text-white">
+      <div className="relative z-10 text-center px-4 sm:px-6  max-w-4xl text-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-snug sm:leading-relaxed font-serif-custom">
           Net Lanka Tours
         </h1>
