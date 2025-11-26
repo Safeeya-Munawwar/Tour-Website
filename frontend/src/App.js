@@ -1,5 +1,7 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+
+// User Pages
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -11,18 +13,30 @@ import Contact from "./pages/Contact";
 import Destination from "./pages/Destination";
 import Blog from "./pages/Blog";
 import Experiences from "./pages/Experiences";
-import ExperienceDetail from "./pages/ExperienceDetail"; 
+import ExperienceDetail from "./pages/ExperienceDetail";
 import DayTour from "./pages/DayTour";
 import RoundTour from "./pages/RoundTour";
 import TourDetail from "./pages/TourDetail";
 import RoundTourDetail from "./pages/RoundTourDetail";
 import TailorMadeTours from "./pages/TailorMadeTours";
+
+// Admin Pages
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+import ManageAbout from "./pages/admin/ManageAbout";
+
 function App() {
+  const location = useLocation();
+
+  // Hide Navbar + Footer for admin pages
+  const hideLayout = location.pathname.startsWith("/admin");
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      {!hideLayout && <Navbar />}
       <main className="flex-grow">
         <Routes>
+          {/* USER ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/our-team" element={<OurTeam />} />
@@ -33,17 +47,19 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/experience" element={<Experiences />} />
           <Route path="/experience/:slug" element={<ExperienceDetail />} />
-          <Route path="/day-tours" element={<DayTour/>} />
-          <Route path="/round-tours" element={<RoundTour/>} />
-          <Route path="/day-tour-detail" element={<TourDetail/>} />
-          <Route path="/round-tour-detail" element={<RoundTourDetail/>} />
-
-
-
+          <Route path="/day-tours" element={<DayTour />} />
+          <Route path="/round-tours" element={<RoundTour />} />
+          <Route path="/day-tour-detail" element={<TourDetail />} />
+          <Route path="/round-tour-detail" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
+
+          {/* ADMIN ROUTES */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/manage-about" element={<ManageAbout />} />
         </Routes>
       </main>
-      <Footer />
+      {!hideLayout && <Footer />}
     </div>
   );
 }
