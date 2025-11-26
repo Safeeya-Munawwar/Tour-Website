@@ -146,7 +146,7 @@ export default function Navbar() {
     `}
   >
     <img
-      src="/logo.png"
+      src="/images/logo.png"
       alt="logo"
       className={`transition-all duration-300
         ${scrolled ? "w-[100px]" : "w-[0px]"}
@@ -211,7 +211,7 @@ export default function Navbar() {
 >
   {/* Header */}
   <div className="flex items-center justify-between px-5 py-5 border-b border-white/20">
-    <img src="/logo.png" alt="logo" className="w-28" />
+    <img src="/images/logo.png" alt="logo" className="w-28" />
     <button
       onClick={() => setSidebar(false)}
       className="text-white text-3xl"

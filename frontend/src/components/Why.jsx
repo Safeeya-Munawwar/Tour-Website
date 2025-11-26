@@ -2,8 +2,11 @@ import { FaRegGem } from "react-icons/fa";
 import { LuMedal } from "react-icons/lu";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
+import { useState } from "react";
+import BookForm from "../pages/BookForm";
 
 export default function Why() {
+  const [showForm, setShowForm] = useState(false);
   const items = [
     {
       icon: <FaRegGem size={40} className="text-[#2E5B84]" />,
@@ -60,11 +63,51 @@ export default function Why() {
         </div>
 
         {/* Button */}
-        <button className="mt-16 bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition">
+        <button 
+         onClick={() => setShowForm(true)}
+        className="mt-16 bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition">
           Book Now
         </button>
 
       </div>
+      {showForm && (
+  <>
+    {/* Dark Overlay */}
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+      onClick={() => setShowForm(false)}
+    ></div>
+
+    {/* Popup Modal */}
+    <div
+      className="
+        fixed top-1/2 left-1/2 
+        -translate-x-1/2 -translate-y-1/2
+        w-[90vw] max-w-[400px] 
+        h-[90vh]
+        bg-white shadow-2xl 
+        p-4 z-[20001]
+        flex flex-col overflow-auto
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowForm(false)}
+          className="text-gray-500 hover:text-black text-2xl font-bold"
+        >
+          ×
+        </button>
+      </div>
+
+      <BookForm />
+    </div>
+  </>
+)}
+
     </section>
+
+    
   );
 }
