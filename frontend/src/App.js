@@ -37,10 +37,8 @@ function App() {
           <Route path="/round-tours" element={<RoundTour/>} />
           <Route path="/day-tour-detail" element={<TourDetail/>} />
           <Route path="/round-tour-detail" element={<RoundTourDetail/>} />
-
-
-
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
+          
         </Routes>
       </main>
       <Footer />

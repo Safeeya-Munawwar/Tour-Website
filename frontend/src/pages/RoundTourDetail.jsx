@@ -24,6 +24,7 @@ const itinerary = [
 export default function RoundTourDetail() {
   const [activeIndex, setActiveIndex] = useState(0);
   const innerSwiperRef = useRef();
+const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="font-poppins">
@@ -64,9 +65,13 @@ export default function RoundTourDetail() {
             <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white px-8 py-4 rounded-full font-semibold">
               EXPLORE DESTINATIONS
             </button>
-            <button className="bg-[#D4AF37] hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-semibold">
-              BOOK THIS TOUR
-            </button>
+           <button
+  onClick={() => setShowForm(true)}
+  className="bg-[#D4AF37] hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-semibold"
+>
+  BOOK THIS TOUR
+</button>
+
           </div>
         </div>
       </section>
@@ -220,7 +225,42 @@ export default function RoundTourDetail() {
         </div>
 
       </section>
-      
+      {showForm && (
+  <>
+    {/* Dim Background */}
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+      onClick={() => setShowForm(false)}
+    ></div>
+
+    {/* Popup Box */}
+    <div
+      className="
+        fixed top-1/2 left-1/2 
+        -translate-x-1/2 -translate-y-1/2
+        w-[90vw] max-w-[420px] 
+        h-[90vh]
+        bg-white shadow-xl 
+        p-4 z-[20001]
+        overflow-auto rounded-xl
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <div className="flex justify-end">
+        <button
+          className="text-3xl font-bold text-gray-600 hover:text-black"
+          onClick={() => setShowForm(false)}
+        >
+          ×
+        </button>
+      </div>
+
+      <BookForm />
+    </div>
+  </>
+)}
+
     </div>
   );
 }
