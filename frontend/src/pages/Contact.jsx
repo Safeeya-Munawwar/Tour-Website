@@ -13,7 +13,7 @@ import {
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import Testimonials from "../../src/components/Testimonials.jsx";
+import Testimonials from "../components/Testimonials";
 
 const Contact = () => {
   const [showText, setShowText] = useState(false);
@@ -182,10 +182,9 @@ const Contact = () => {
         </div>
       </section>
 
-
-      <section className="max-w-7xl mx-auto mt-2 mb-8 ml-8 mr-8 p-8 lg:mt-4 lg:mb-16 lg:ml-16 lg:mr-16 flex flex-col lg:flex-row gap-12">
+      {/* ---------------------------- TESTIMONIALS ---------------------------- */}
       <Testimonials />
-      </section>
+      
     </div>
   );
 };

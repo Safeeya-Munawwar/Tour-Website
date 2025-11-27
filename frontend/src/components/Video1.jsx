@@ -1,6 +1,10 @@
 import React from "react";
+import { useState } from "react";
+import BookForm from "../pages/BookForm";
 
 export default function Video1() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <section className="relative w-full h-screen overflow-hidden">
 
@@ -35,10 +39,48 @@ export default function Video1() {
         </p>
 
         {/* Button */}
-        <button className="bg-white text-black px-10 py-4 rounded-full font-medium text-lg shadow-lg transition hover:bg-gray-200">
+        <button 
+         onClick={() => setShowForm(true)}
+         className="bg-white text-black px-10 py-4 rounded-full font-medium text-lg shadow-lg transition hover:bg-gray-200">
           Book Now
         </button>
       </div>
+
+      {showForm && (
+  <>
+    {/* Dark Overlay */}
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+      onClick={() => setShowForm(false)}
+    ></div>
+
+    {/* Popup Modal */}
+    <div
+      className="
+        fixed top-1/2 left-1/2 
+        -translate-x-1/2 -translate-y-1/2
+        w-[90vw] max-w-[400px] 
+        h-[90vh]
+        bg-white shadow-2xl 
+        p-4 z-[20001]
+        flex flex-col overflow-auto
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowForm(false)}
+          className="text-gray-500 hover:text-black text-2xl font-bold"
+        >
+          ×
+        </button>
+      </div>
+
+      <BookForm />
+    </div>
+  </>
+)}
 
     </section>
   );

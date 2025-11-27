@@ -211,7 +211,7 @@ export default function Navbar() {
 >
   {/* Header */}
   <div className="flex items-center justify-between px-5 py-5 border-b border-white/20">
-    <img src="/logo.png" alt="logo" className="w-28" />
+    <img src="/images/logo.png" alt="logo" className="w-28" />
     <button
       onClick={() => setSidebar(false)}
       className="text-white text-3xl"
