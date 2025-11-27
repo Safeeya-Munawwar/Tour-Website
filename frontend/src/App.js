@@ -27,6 +27,16 @@ import AdminManageAbout from "./pages/admin/ManageAbout";
 import AdminManageTeam from "./pages/admin/ManageTeam";
 import AdminManageJourney from "./pages/admin/ManageJourney";
 import AdminManageCommunityImpact from "./pages/admin/ManageCommunityImpact";
+import ManageDestination from "./pages/admin/ManageDestination";
+import DestinationList from "./pages/destinations/DestinationList";
+import AddDestination from "./pages/destinations/AddDestination";
+import EditDestination from "./pages/destinations/EditDestination";
+import ExperienceList from "./pages/experience/ExperienceList";
+import AddExperience from "./pages/experience/AddExperience";
+import EditExperience from "./pages/experience/EditExperience";
+import BlogList from "./pages/blog/BlogList";
+import AddBlog from "./pages/blog/AddBlog";
+import EditBlog from "./pages/blog/EditBlog";
 
 function App() {
   const location = useLocation();
@@ -61,8 +71,33 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/manage-about" element={<AdminManageAbout />} />
           <Route path="/admin/manage-team" element={<AdminManageTeam />} />
-          <Route path="/admin/manage-journey" element={<AdminManageJourney />} />
-          <Route path="/admin/manage-community" element={<AdminManageCommunityImpact />} />
+          <Route
+            path="/admin/manage-journey"
+            element={<AdminManageJourney />}
+          />
+          <Route
+            path="/admin/manage-community"
+            element={<AdminManageCommunityImpact />}
+          />
+          <Route
+            path="/admin/manage-destination"
+            element={<ManageDestination />}
+          />
+          <Route path="/admin/destinations" element={<DestinationList />} />
+          <Route path="/admin/destinations/new" element={<AddDestination />} />
+          <Route
+            path="/admin/destinations/edit/:id"
+            element={<EditDestination />}
+          />
+          <Route path="/admin/experiences" element={<ExperienceList />} />
+          <Route path="/admin/experiences/new" element={<AddExperience />} />
+          <Route
+            path="/admin/experiences/edit/:id"
+            element={<EditExperience />}
+          />
+          <Route path="/admin/blogs" element={<BlogList />} />
+          <Route path="/admin/blogs/new" element={<AddBlog />} />
+          <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

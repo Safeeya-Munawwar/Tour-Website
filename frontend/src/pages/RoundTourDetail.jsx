@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
+import BookForm from "./BookForm";
 
 const slides = [
   { image: "/images/40.jpg", title: "Kuttam Pokuna", desc: "Ancient royal bathing ponds in Anuradhapura." },
