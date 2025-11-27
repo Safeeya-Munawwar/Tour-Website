@@ -146,7 +146,7 @@ export default function Navbar() {
     `}
   >
     <img
-      src="/logo.png"
+      src="/images/logo.png"
       alt="logo"
       className={`transition-all duration-300
         ${scrolled ? "w-[100px]" : "w-[0px]"}
