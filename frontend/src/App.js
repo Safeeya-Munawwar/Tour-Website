@@ -24,6 +24,16 @@ import TailorMadeTours from "./pages/TailorMadeTours";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import ManageAbout from "./pages/admin/ManageAbout";
+import ManageDestination from "./pages/admin/ManageDestination";
+import DestinationList from "./pages/destinations/DestinationList";
+import AddDestination from "./pages/destinations/AddDestination";
+import EditDestination from "./pages/destinations/EditDestination";
+import ExperienceList from "./pages/experience/ExperienceList";
+import AddExperience from "./pages/experience/AddExperience";
+import EditExperience from "./pages/experience/EditExperience";
+import BlogList from "./pages/blog/BlogList";
+import AddBlog from "./pages/blog/AddBlog";
+import EditBlog from "./pages/blog/EditBlog";
 
 function App() {
   const location = useLocation();
@@ -57,7 +67,20 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/manage-about" element={<ManageAbout />} />
+          <Route path="/admin/manage-destination" element={<ManageDestination/>} />
+      
+        <Route path="/admin/destinations" element={<DestinationList />} />
+        <Route path="/admin/destinations/new" element={<AddDestination />} />
+        <Route path="/admin/destinations/edit/:id" element={<EditDestination />} />
 
+        {/* Experience Admin Routes */}
+        <Route path="/admin/experiences" element={<ExperienceList />} />
+        <Route path="/admin/experiences/new" element={<AddExperience />} />
+        <Route path="/admin/experiences/edit/:id" element={<EditExperience/>} />
+        
+        <Route path="/admin/blogs" element={<BlogList />} />
+        <Route path="/admin/blogs/new" element={<AddBlog />} />
+        <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

@@ -169,7 +169,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Destinations */}
           <NavLink
-            to="/admin/manage-destinations"
+            to="/admin/destinations"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${isActive ? activeClass : defaultClass}`
             }
@@ -179,7 +179,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Experiences */}
           <NavLink
-            to="/admin/manage-experiences"
+            to="/admin/experiences"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${isActive ? activeClass : defaultClass}`
             }
@@ -189,7 +189,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Blog */}
           <NavLink
-            to="/admin/manage-blog"
+            to="/admin/blogs"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${isActive ? activeClass : defaultClass}`
             }
