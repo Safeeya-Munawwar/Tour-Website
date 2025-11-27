@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-
-const journeyMilestones = [
-  {
-    year: "2015",
-    title: "Our Inception",
-    description:
-      "NetLanka Tours was founded with a vision to showcase the authentic beauty and culture of Sri Lanka to travelers worldwide.",
-    image: "/images/inspection.PNG",
-  },
-  {
-    year: "2017",
-    title: "Expanding Horizons",
-    description:
-      "We partnered with local experts and guides, creating bespoke itineraries and immersive experiences for every traveler.",
-    image: "/images/gallery12.PNG",
-  },
-  {
-    year: "2019",
-    title: "Innovation & Technology",
-    description:
-      "We embraced digital solutions to provide seamless bookings, personalized tours, and real-time support for our clients.",
-    image: "/images/booking.PNG",
-  },
-  {
-    year: "2022",
-    title: "Award-Winning Excellence",
-    description:
-      "Our commitment to service quality and customer satisfaction earned us multiple travel and tourism awards in Sri Lanka.",
-    image: "/images/ceremony.PNG",
-  },
-];
+import axios from "axios";
 
 const OurJourney = () => {
   const [showText, setShowText] = useState(false);
+  const [journeyData, setJourneyData] = useState({
+    commonImage: "",
+    fullDescription: [],
+    milestones: [],
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const fetchJourneyData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/journey");
+        if (res.data) {
+          setJourneyData(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch journey data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJourneyData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-500">
+        Loading Journey...
+      </div>
+    );
+  }
 
   return (
     <div className="font-poppins bg-white text-[#222]">
@@ -64,66 +64,76 @@ const OurJourney = () => {
         </div>
       </div>
 
-      {/* ---------------------------- MISSION & VISION ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 flex flex-col md:flex-row items-center gap-12">
-        <div className="md:w-1/2">
-          <img
-            src="/images/mission.PNG"
-            alt="Mission"
-            className="w-full h-auto rounded-lg shadow-lg"
-          />
-        </div>
-        <div className="md:w-1/2 space-y-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+  <div className="md:w-1/2 relative group overflow-hidden rounded-lg shadow-lg">
+    <img
+      src={journeyData.commonImage}
+      alt="Mission"
+      className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+    />
+    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-70 transition-opacity duration-500 flex items-center justify-center">
+      <span className="text-white font-semibold text-lg text-center px-4">
+        Our Mission & Vision
+      </span>
+    </div>
+  </div>
+
+
+  <div className="md:w-1/2 space-y-6">
+  <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
             Our Mission & Vision
           </h2>
-          <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-            At NetLanka Tours, our mission is to provide authentic and immersive
-            travel experiences that showcase the natural beauty, culture, and
-            heritage of Sri Lanka. We envision a world where travelers leave
-            with unforgettable memories and a deep appreciation of our island.
-          </p>
-          <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-            Guided by expertise, dedication, and passion, we strive to deliver
-            exceptional service, personalized itineraries, and seamless
-            adventures from start to finish.
-          </p>
-        </div>
-      </section>
+    {(journeyData.fullDescription || []).map((para, idx) => (
+      <p
+        key={idx}
+        className="text-gray-600 text-base md:text-lg leading-relaxed transition-all duration-500 transform hover:translate-x-1"
+      >
+        {para.description}
+      </p>
+    ))}
+  </div>
+</section>
+
 
       {/* ---------------------------- JOURNEY TIMELINE ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 space-y-20">
-        {journeyMilestones.map((milestone, idx) => (
-          <div
-            key={idx}
-            className={`flex flex-col lg:flex-row items-center gap-12 ${
-              idx % 2 !== 0 ? "lg:flex-row-reverse" : ""
-            }`}
-          >
-            {/* Image */}
-            <div className="lg:w-1/2 flex justify-center">
-              <img
-                src={milestone.image}
-                alt={milestone.title}
-                className="w-full h-auto rounded-lg shadow-lg"
-              />
-            </div>
+  {journeyData.milestones.map((milestone, idx) => (
+    <div
+      key={idx}
+      className={`flex flex-col lg:flex-row items-center gap-12 relative group ${
+        idx % 2 !== 0 ? "lg:flex-row-reverse" : ""
+      }`}
+    >
+      {/* IMAGE WITH OVERLAY */}
+      <div className="lg:w-1/2 relative overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500">
+        <img
+          src={milestone.image}
+          alt={milestone.title}
+          className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500 flex items-center justify-center">
+          <span className="text-white font-semibold text-xl">
+            {milestone.year}
+          </span>
+        </div>
+      </div>
 
-            {/* Text */}
-            <div className="lg:w-1/2 space-y-4">
-              <span className="text-sm uppercase text-[#1a73e8] font-semibold">
-                {milestone.year}
-              </span>
-              <h3 className="text-3xl font-bold text-[#1a1a1a]">
-                {milestone.title}
-              </h3>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                {milestone.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </section>
+      {/* TEXT */}
+      <div className="lg:w-1/2 space-y-4">
+        <span className="text-sm uppercase text-[#1a73e8] font-semibold transition-transform transform group-hover:translate-x-1">
+          {milestone.year}
+        </span>
+        <h3 className="text-3xl font-bold text-[#1a1a1a] transition-transform transform group-hover:translate-x-1">
+          {milestone.title}
+        </h3>
+        <p className="text-gray-600 text-lg leading-relaxed transition-transform transform group-hover:translate-x-1">
+          {milestone.description}
+        </p>
+      </div>
+    </div>
+  ))}
+</section>
+
 
       {/* ---------------------------- CTA TO OUR TEAM ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 text-center">

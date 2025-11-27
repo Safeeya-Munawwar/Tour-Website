@@ -3,11 +3,17 @@ const mongoose = require("mongoose");
 const AboutSchema = new mongoose.Schema(
   {
     subtitle: { type: String, default: "ABOUT NETLANKA TOURS" },
+
     heading: { type: String, required: true },
+
+    smallDescription: { type: String, default: "" },
+
     description: { type: String, required: true },
-    fullDescription: { type: String }, // for READ MORE
-    imageHeader: { type: String }, // '/images/about-header.jpg'
-    imageFull: { type: String }, // '/images/about-desc.jpg'
+
+    fullDescription: [
+      { description: String }
+    ],    
+
     features: [
       {
         title: String,
@@ -15,20 +21,16 @@ const AboutSchema = new mongoose.Schema(
         image: String,
       },
     ],
+
     teamMembers: [
       {
         name: String,
         role: String,
-        image: String,
+       image: String,
       },
     ],
+
     gallery: [String],
-    cta: {
-      text: String,
-      buttonText: String,
-      buttonLink: String,
-      buttonIcon: String,
-    },
   },
   { timestamps: true }
 );

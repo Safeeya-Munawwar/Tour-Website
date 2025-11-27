@@ -5,7 +5,7 @@ import Testimonials from "../components/Testimonials";
 import { ArrowRight, Calendar, Users } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import "swiper/css";
+import "swiper/css"; 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
@@ -13,61 +13,29 @@ const About = () => {
   const [showFull, setShowFull] = useState(false);
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
+  const [about, setAbout] = useState(null);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/about");
+        const data = await res.json();
+        setAbout(data);
+      } catch (err) {
+        console.error("Failed to load About page", err);
+      }
+    };
+
+    fetchAbout();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
 
-  /*const awards = [
-    "/images/award1.PNG",
-    "/images/award2.PNG",
-    "/images/award3.PNG",
-    "/images/award4.PNG",
-    "/images/award5.PNG",
-    "/images/award6.PNG",
-  ];*/
-
-  const teamMembers = [
-    { image: "/images/user1.PNG", name: "John Doe", role: "Travel Consultant" },
-    { image: "/images/user2.PNG", name: "Jane Smith", role: "Tour Specialist" },
-    { image: "/images/user3.PNG", name: "Alice Lee", role: "Holiday Planner" },
-    {
-      image: "/images/user4.PNG",
-      name: "Mark Brown",
-      role: "Customer Experience",
-    },
-    {
-      image: "/images/user5.PNG",
-      name: "Sara Wilson",
-      role: "Booking Manager",
-    },
-    { image: "/images/user6.PNG", name: "David Kim", role: "Travel Advisor" },
-    {
-      image: "/images/user7.PNG",
-      name: "Emily Clark",
-      role: "Tour Coordinator",
-    },
-    {
-      image: "/images/user8.PNG",
-      name: "Michael Johnson",
-      role: "Destination Expert",
-    },
-    {
-      image: "/images/user9.PNG",
-      name: "Olivia Martinez",
-      role: "Holiday Planner",
-    },
-    {
-      image: "/images/user10.PNG",
-      name: "Chris Evans",
-      role: "Travel Consultant",
-    },
-    {
-      image: "/images/user11.PNG",
-      name: "Sophia Patel",
-      role: "Customer Relations",
-    },
-  ];
+  if (!about) {
+    return <p className="text-center py-20">Loading...</p>;
+  }
 
   return (
     <div className="font-poppins bg-white text-[#222]">
@@ -97,70 +65,31 @@ const About = () => {
       <div className="max-w-6xl mx-auto py-20 px-6 text-center space-y-6">
         {/* Subtitle */}
         <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
-          ABOUT NETLANKA TOURS
+          {about.subtitle}
         </p>
 
         {/* Heading */}
         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
-          Discover Sri Lanka With Us
+          {about.heading}
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          NetLanka Tours is the present and future of destination management in
-          Sri Lanka, where the most exciting tropical holidays happen in South
-          Asia.
+          {about.smallDescription}
         </p>
 
         {/* Gold Accent Line */}
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
         <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-          Founded in 2010, we have built an unwavering reputation for offering
-          an impressive travel portfolio even for the most discerning travelers.
-          Our insight and in-depth knowledge of Sri Lanka and its most beautiful
-          destinations have earned the trust of a wide and growing clientele
-          from around the world. We bring you intimate and personalized services
-          unmatched by most other travel companies, fostering strong
-          relationships between our clients and local suppliers to ensure
-          ultimate satisfaction from your Sri Lankan holiday.
+          {about.description}
         </p>
 
         {/* ------------------- FULL DESCRIPTION ------------------- */}
         {showFull && (
           <div className="text-base md:text-lg text-gray-600 leading-relaxed mt-6 space-y-4">
-            <p>
-              We have over 1000 accommodation properties in our portfolio and
-              they have been chosen for their excellence of service, special
-              significance, artistic and cultural importance and value for your
-              money. These include boutique hotels, beach hotels, bungalows and
-              mansions, cultural area hotels, camping sites and hill country
-              hotels. We make sure every accommodation provider we deal with
-              maintain their good standards and are monitored and overseen by us
-              for quality assurance. A diverse range of tours focused on
-              culture, beaches, adventure and honeymoon give you the opportunity
-              of discovering many hidden wonders and pleasures of the island. We
-              do not promote anything we have not experienced and enjoyed
-              ourselves.
-            </p>
-            <p>
-              Our holidays are tailor-made to your requirements and our travel
-              advice is personalized and detailed to make sure you receive what
-              you are looking for in the best possible package. Our services
-              along with our commitment to provide you a comfortable holiday
-              beats the efforts of the independent traveler to do it alone. Blue
-              Lanka also fosters ethical and responsible tourism and has a
-              strong corporate social responsibility program that gives back to
-              local communities.
-            </p>
-            <p>
-              We have a 24/7 customer service dedicated to maintaining customer
-              support whenever needed. Our fleet of luxury vehicles is always
-              standing by for transport facilities and we as a team of highly
-              trained tour professionals, who are a resourceful wealth of
-              information. Blue Lanka is a registered holiday company with the
-              Sri Lanka Tourism Development Authority and assures trust,
-              flexibility, expertise and 100% customer satisfaction.
-            </p>
+            {about.fullDescription?.map((item, idx) => (
+              <p key={idx}>{item.description}</p>
+            ))}
           </div>
         )}
 
@@ -185,41 +114,6 @@ const About = () => {
         />
       </div>
 
-      {/* ------------------- AWARDS SECTION ------------------- 
-      <section className="mt-12 mb-20 max-w-7xl mx-auto px-6 relative z-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] text-center mb-12">
-          Awards & Accreditations
-        </h1>
-
-        <div className="relative z-10">
-          <Swiper
-            modules={[Navigation, Autoplay]}
-            navigation={{ prevEl: ".award-prev", nextEl: ".award-next" }}
-            loop={true}
-            autoplay={{ delay: 2500, disableOnInteraction: false }}
-            spaceBetween={28}
-            slidesPerView={1.2}
-            breakpoints={{
-              640: { slidesPerView: 1.5 },
-              1024: { slidesPerView: 2.5 },
-              1280: { slidesPerView: 4 },
-            }}
-          >
-            {awards.map((award, i) => (
-              <SwiperSlide key={i}>
-                <div className="bg-white flex justify-center items-center h-48">
-                  <img
-                    src={award}
-                    alt={`Award ${i + 1}`}
-                    className="h-40 w-auto object-contain"
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>*/}
-
       {/* ------------------- WHY NETLANKA TOURS ------------------- */}
       <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-12">
@@ -228,45 +122,14 @@ const About = () => {
 
         {/* Feature Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Feature 1 */}
-          <div className="flex flex-col items-center">
-            <img
-              src="/images/reputable.PNG"
-              alt="Reputable"
-              className="w-24 h-24 mb-4"
-            />
-            <p className="text-gray-600 text-base md:text-lg max-w-xs">
-              Reputable and trustworthy holiday solutions providers in Sri Lanka
-              with nearly a decade of experience in the industry.
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className="flex flex-col items-center">
-            <img
-              src="/images/friendly.PNG"
-              alt="Friendly"
-              className="w-24 h-24 mb-4"
-            />
-            <p className="text-gray-600 text-base md:text-lg max-w-xs">
-              Friendly team of expert travel consultants who will provide advice
-              with the client’s best interest in mind. They ensure a seamless
-              holiday.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="flex flex-col items-center">
-            <img
-              src="/images/tailor.PNG"
-              alt="Tailor Icon"
-              className="w-24 h-24 mb-4"
-            />
-            <p className="text-gray-600 text-base md:text-lg max-w-xs">
-              Committed towards providing customized holiday solutions keeping
-              in mind maximum luxury and comfort of the customer.
-            </p>
-          </div>
+          {about.features?.map((f, idx) => (
+            <div key={idx} className="flex flex-col items-center">
+              <img src={f.image} alt={f.title} className="w-24 h-24 mb-4" />
+              <p className="text-gray-600 text-base md:text-lg max-w-xs text-center">
+                {f.description}
+              </p>
+            </div>
+          ))}
         </div>
 
         {/* Centered Button */}
@@ -302,37 +165,46 @@ const About = () => {
         </p>
 
         {/* Team Swiper */}
-        <div className="relative">
-          <Swiper
-            modules={[Navigation, Autoplay]}
-            navigation={{ prevEl: ".team-prev", nextEl: ".team-next" }}
-            loop={true}
-            autoplay={{ delay: 2500, disableOnInteraction: false }}
-            spaceBetween={28}
-            slidesPerView={1}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-              1280: { slidesPerView: 4 },
-            }}
-          >
-            {teamMembers.map((member, i) => (
-              <SwiperSlide key={i}>
-                <div className="bg-white overflow-hidden shadow-lg hover:shadow-lg transition-shadow border border-gray-600">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-64 object-cover"
-                  />
-                  <div className="bg-white p-4 text-center border-t border-gray-200">
-                    <h3 className="font-semibold text-lg">{member.name}</h3>
-                    <p className="text-gray-500 text-sm">{member.role}</p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        {/* Swiper Navigation Buttons */}
+        <div className="flex justify-end mb-4 gap-4">
+          <button className="team-prev bg-gray-800 text-white px-4 py-2 rounded">
+            Prev
+          </button>
+          <button className="team-next bg-gray-800 text-white px-4 py-2 rounded">
+            Next
+          </button>
         </div>
+
+        {/* Swiper */}
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          navigation={{ prevEl: ".team-prev", nextEl: ".team-next" }}
+          loop={true}
+          autoplay={{ delay: 2500, disableOnInteraction: false }}
+          spaceBetween={30}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
+          }}
+        >
+          {about.teamMembers?.map((m, idx) => (
+            <SwiperSlide key={idx}>
+              <div className="bg-white overflow-hidden shadow-lg hover:shadow-lg transition-shadow border border-gray-600">
+                <img
+                  src={m.image}
+                  className="w-full h-64 object-cover"
+                  alt={m.name}
+                />
+                <div className="bg-white p-4 text-center border-t border-gray-200">
+                  <h3 className="font-semibold text-lg">{m.name}</h3>
+                  <p className="text-gray-500 text-sm">{m.role}</p>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
         {/* Centered Button */}
         <div className="flex justify-center mt-8">
@@ -357,47 +229,27 @@ const About = () => {
         </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-          {[
-            "/images/gallery1.PNG",
-            "/images/gallery2.PNG",
-            "/images/gallery3.PNG",
-            "/tr2.MP4",
-            "/images/gallery4.PNG",
-            "/images/gallery5.PNG",
-            "/tr1.MP4",
-            "/images/gallery6.PNG",
-            "/images/gallery7.PNG",
-            "/images/gallery8.PNG",
-            "/images/gallery9.PNG",
-            "/images/gallery10.PNG",
-            "/images/gallery11.PNG",
-            "/images/gallery12.PNG",
-            "/images/gallery13.PNG",
-            "/images/gallery14.PNG",
-            "/tr.MP4",
-            "/images/gallery15.PNG",
-          ].map((item, i) =>
-            item.endsWith(".MP4") ? (
-              <div key={i} className="w-full">
+          {about.gallery?.map((url, idx) => (
+            <div key={idx} className="w-full">
+              {url.endsWith(".mp4") ? (
                 <video
-                  src={item}
+                  src={url}
                   autoPlay
-                  loop
                   muted
+                  loop
                   playsInline
+                  preload="auto"
                   className="w-full h-full object-cover"
                 />
-              </div>
-            ) : (
-              <div key={i} className="w-full">
+              ) : (
                 <img
-                  src={item}
-                  alt={`Gallery ${i + 1}`}
+                  src={url}
+                  alt="img"
                   className="w-full h-full object-cover"
                 />
-              </div>
-            )
-          )}
+              )}
+            </div>
+          ))}
         </div>
       </section>
 

@@ -23,7 +23,10 @@ import TailorMadeTours from "./pages/TailorMadeTours";
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
-import ManageAbout from "./pages/admin/ManageAbout";
+import AdminManageAbout from "./pages/admin/ManageAbout";
+import AdminManageTeam from "./pages/admin/ManageTeam";
+import AdminManageJourney from "./pages/admin/ManageJourney";
+import AdminManageCommunityImpact from "./pages/admin/ManageCommunityImpact";
 
 function App() {
   const location = useLocation();
@@ -56,8 +59,10 @@ function App() {
           {/* ADMIN ROUTES */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/manage-about" element={<ManageAbout />} />
-
+          <Route path="/admin/manage-about" element={<AdminManageAbout />} />
+          <Route path="/admin/manage-team" element={<AdminManageTeam />} />
+          <Route path="/admin/manage-journey" element={<AdminManageJourney />} />
+          <Route path="/admin/manage-community" element={<AdminManageCommunityImpact />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

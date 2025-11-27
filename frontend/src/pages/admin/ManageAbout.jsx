@@ -6,11 +6,15 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminManageAbout = () => {
+  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+  const [isSaving, setIsSaving] = useState(false);
+
   const [aboutData, setAboutData] = useState({
     subtitle: "ABOUT NETLANKA TOURS",
     heading: "",
+    smallDescription: "",
     description: "",
-    fullDescription: "",
+    fullDescription: [],
     features: [{ title: "", description: "", image: "" }],
     teamMembers: [{ name: "", role: "", image: "" }],
     gallery: [],
@@ -28,7 +32,12 @@ const AdminManageAbout = () => {
       if (res.data) {
         setAboutData({
           ...res.data,
-          cta: res.data.cta || { text: "", buttonText: "", buttonLink: "", buttonIcon: "" },
+          cta: res.data.cta || {
+            text: "",
+            buttonText: "",
+            buttonLink: "",
+            buttonIcon: "",
+          },
         });
       }
     } catch (err) {
@@ -52,7 +61,10 @@ const AdminManageAbout = () => {
   };
 
   const handleAddItem = (section, template = {}) => {
-    setAboutData({ ...aboutData, [section]: [...aboutData[section], template] });
+    setAboutData({
+      ...aboutData,
+      [section]: [...aboutData[section], template],
+    });
   };
 
   const handleRemoveItem = (section, idx) => {
@@ -71,31 +83,52 @@ const AdminManageAbout = () => {
   };
 
   // Delete existing gallery URL
-const handleDeleteExistingGalleryItem = (index) => {
+  const handleDeleteExistingGalleryItem = (index) => {
     const updatedGallery = [...aboutData.gallery];
     updatedGallery.splice(index, 1);
     setAboutData({ ...aboutData, gallery: updatedGallery });
   };
-  
+
   // Delete new file before upload
   const handleDeleteGalleryFile = (index) => {
     const updatedFiles = [...files.galleryFiles];
     updatedFiles.splice(index, 1);
     setFiles({ ...files, galleryFiles: updatedFiles });
   };
-  
 
   const handleDrop = (acceptedFiles, type, index) => {
+    const oversizedFiles = acceptedFiles.filter(
+      (file) => file.size > MAX_FILE_SIZE
+    );
+
+    if (oversizedFiles.length > 0) {
+      toast.error(
+        `Some files exceed the maximum size of 50MB and were not added.`
+      );
+    }
+
+    const validFiles = acceptedFiles.filter(
+      (file) => file.size <= MAX_FILE_SIZE
+    );
+
     if (type === "featureImages" || type === "teamImages") {
       const arr = [...files[type]];
-      arr[index] = acceptedFiles[0];
+      arr[index] = validFiles[0]; // only take the first valid file
       setFiles({ ...files, [type]: arr });
-      // Immediately update the preview
-      const updated = [...aboutData[type === "featureImages" ? "features" : "teamMembers"]];
-      updated[index].image = URL.createObjectURL(acceptedFiles[0]);
-      setAboutData({ ...aboutData, [type === "featureImages" ? "features" : "teamMembers"]: updated });
+
+      // update preview
+      const updated = [
+        ...aboutData[type === "featureImages" ? "features" : "teamMembers"],
+      ];
+      updated[index].image = validFiles[0]
+        ? URL.createObjectURL(validFiles[0])
+        : "";
+      setAboutData({
+        ...aboutData,
+        [type === "featureImages" ? "features" : "teamMembers"]: updated,
+      });
     } else if (type === "galleryFiles") {
-      const newFiles = [...files[type], ...acceptedFiles];
+      const newFiles = [...files[type], ...validFiles];
       setFiles({ ...files, [type]: newFiles });
     }
   };
@@ -104,6 +137,7 @@ const handleDeleteExistingGalleryItem = (index) => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (acceptedFiles) => handleDrop(acceptedFiles, type, index),
       accept: { "image/*": [], "video/*": [] },
+      multiple: true,
     });
 
     return (
@@ -113,40 +147,51 @@ const handleDeleteExistingGalleryItem = (index) => {
       >
         <input {...getInputProps()} />
         <p className="text-blue-600">
-          Drag & drop {type.includes("gallery") ? "images/videos" : "image"} here or click
+          Drag & drop {type.includes("gallery") ? "images/videos" : "image"}{" "}
+          here or click
         </p>
+        <p className="text-xs text-gray-500 mt-1">Maximum file size: 50MB</p>
       </div>
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true); // start loading
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(aboutData));
-  
-      // Add files
-      files.featureImages.forEach((file) => file && formData.append("featureImages", file));
-      files.teamImages.forEach((file) => file && formData.append("teamImages", file));
-      files.galleryFiles.forEach((file) => file && formData.append("galleryImages", file));
-  
-      const res = await axios.post("http://localhost:5000/api/about", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      // ✅ Immediate feedback
+
+      files.featureImages.forEach(
+        (file) => file && formData.append("featureImages", file)
+      );
+      files.teamImages.forEach(
+        (file) => file && formData.append("teamImages", file)
+      );
+      files.galleryFiles.forEach(
+        (file) => file && formData.append("galleryImages", file)
+      );
+
+      const res = await axios.post(
+        "http://localhost:5000/api/about",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       if (res.status === 200) {
         toast.success("About page updated successfully!");
-        setAboutData(res.data); // update local state immediately
+        setAboutData(res.data); // update state with backend data
+        setFiles({ featureImages: [], teamImages: [], galleryFiles: [] }); // clear uploaded files
       } else {
         toast.error("Failed to update About page");
       }
     } catch (err) {
       console.error(err);
       toast.error("Failed to update About page");
+    } finally {
+      setIsSaving(false); // stop loading
     }
   };
-  
 
   return (
     <div className="flex">
@@ -158,9 +203,14 @@ const handleDeleteExistingGalleryItem = (index) => {
 
       {/* Main Content */}
       <div className="flex-1 ml-64 p-6 bg-blue-50">
-        <h2 className="text-3xl font-bold mb-6 text-blue-800">Manage About Page</h2>
+        <h2 className="text-3xl font-bold mb-6 text-blue-800">
+          Manage About Page
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-8 bg-white p-6 rounded shadow-md">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-8 bg-white p-6 rounded shadow-md"
+        >
           {/* General Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
@@ -177,30 +227,64 @@ const handleDeleteExistingGalleryItem = (index) => {
               placeholder="Heading"
               className="border p-3 w-full rounded focus:ring-2 focus:ring-blue-300"
             />
+            <textarea
+              name="smallDescription"
+              value={aboutData.smallDescription}
+              onChange={handleChange}
+              placeholder="Small Description"
+              className="border p-3 w-full rounded focus:ring-2 focus:ring-blue-300"
+              rows={4}
+            />
           </div>
 
           <textarea
             name="description"
             value={aboutData.description}
             onChange={handleChange}
-            placeholder="Description"
+            placeholder="Main Description"
             className="border p-3 w-full rounded focus:ring-2 focus:ring-blue-300"
             rows={4}
           />
-          <textarea
-            name="fullDescription"
-            value={aboutData.fullDescription}
-            onChange={handleChange}
-            placeholder="Full Description"
-            className="border p-3 w-full rounded focus:ring-2 focus:ring-blue-300"
-            rows={6}
-          />
+          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">
+            Full Description (Paragraphs)
+          </h3>
+
+          {aboutData.fullDescription.map((item, index) => (
+            <textarea
+              key={index}
+              name="paragraph"
+              value={item.description}
+              onChange={(e) => {
+                const updated = [...aboutData.fullDescription];
+                updated[index].description = e.target.value;
+                setAboutData({ ...aboutData, fullDescription: updated });
+              }}
+              placeholder={`Paragraph ${index + 1}`}
+              className="border p-3 w-full rounded mb-3 focus:ring-2 focus:ring-blue-300"
+              rows={4}
+            />
+          ))}
+
+          <button
+            type="button"
+            onClick={() =>
+              handleAddItem("fullDescription", { description: "" })
+            }
+            className="text-blue-600 underline"
+          >
+            Add Paragraph
+          </button>
 
           {/* Features */}
-          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">Features</h3>
+          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">
+            Features
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {aboutData.features.map((feat, idx) => (
-              <div key={idx} className="border p-4 rounded space-y-3 bg-blue-50">
+              <div
+                key={idx}
+                className="border p-4 rounded space-y-3 bg-blue-50"
+              >
                 <input
                   value={feat.title || ""}
                   onChange={(e) => handleChange(e, "features", idx, "title")}
@@ -209,7 +293,9 @@ const handleDeleteExistingGalleryItem = (index) => {
                 />
                 <textarea
                   value={feat.description || ""}
-                  onChange={(e) => handleChange(e, "features", idx, "description")}
+                  onChange={(e) =>
+                    handleChange(e, "features", idx, "description")
+                  }
                   placeholder="Description"
                   className="border p-2 w-full rounded focus:ring-2 focus:ring-blue-300"
                 />
@@ -235,17 +321,28 @@ const handleDeleteExistingGalleryItem = (index) => {
           </div>
           <button
             type="button"
-            onClick={() => handleAddItem("features", { title: "", description: "", image: "" })}
+            onClick={() =>
+              handleAddItem("features", {
+                title: "",
+                description: "",
+                image: "",
+              })
+            }
             className="text-blue-600 underline"
           >
             Add Feature
           </button>
 
           {/* Team Section */}
-          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">Team Members</h3>
+          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">
+            Team Members
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {aboutData.teamMembers.map((member, idx) => (
-              <div key={idx} className="border p-4 rounded space-y-3 bg-blue-50">
+              <div
+                key={idx}
+                className="border p-4 rounded space-y-3 bg-blue-50"
+              >
                 <input
                   value={member.name || ""}
                   onChange={(e) => handleChange(e, "teamMembers", idx, "name")}
@@ -288,67 +385,76 @@ const handleDeleteExistingGalleryItem = (index) => {
             Add Team Member
           </button>
 
-         {/* Gallery Section */}
-<h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">
-  Gallery (Images & Videos)
-</h3>
-<Dropzone type="galleryFiles" />
+          {/* Gallery Section */}
+          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">
+            Gallery (Images & Videos)
+          </h3>
+          <Dropzone type="galleryFiles" />
 
-<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-2">
+            {/* Existing gallery from backend */}
+            {aboutData.gallery?.map((url, idx) => (
+              <div className="relative" key={`existing-${idx}`}>
+                {url.endsWith(".mp4") ? (
+                  <video src={url} controls className="w-40 max-h-40 rounded" />
+                ) : (
+                  <img
+                    src={url}
+                    alt="gallery"
+                    className="w-40 max-h-40 object-cover rounded"
+                  />
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleDeleteExistingGalleryItem(idx)}
+                  className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
+                >
+                  X
+                </button>
+              </div>
+            ))}
 
-  {/* Existing gallery from backend */}
-  {aboutData.gallery?.map((url, idx) => (
-    <div className="relative" key={`existing-${idx}`}>
-      {url.endsWith(".mp4") ? (
-        <video src={url} controls className="w-40 max-h-40 rounded" />
-      ) : (
-        <img src={url} alt="gallery" className="w-40 max-h-40 object-cover rounded" />
-      )}
-      <button
-        type="button"
-        onClick={() => handleDeleteExistingGalleryItem(idx)}
-        className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
-      >
-        X
-      </button>
-    </div>
-  ))}
-
-  {/* New gallery files before upload */}
-  {files.galleryFiles.map((file, i) => {
-    const url = URL.createObjectURL(file);
-    return file.type.startsWith("video") ? (
-      <div className="relative" key={`new-${i}`}>
-        <video src={url} controls className="w-40 max-h-40 rounded" />
-        <button
-          type="button"
-          onClick={() => handleDeleteGalleryFile(i)}
-          className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
-        >
-          X
-        </button>
-      </div>
-    ) : (
-      <div className="relative" key={`new-${i}`}>
-        <img src={url} alt="gallery" className="w-40 max-h-40 object-cover rounded" />
-        <button
-          type="button"
-          onClick={() => handleDeleteGalleryFile(i)}
-          className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
-        >
-          X
-        </button>
-      </div>
-    );
-  })}
-</div>
-
+            {/* New gallery files before upload */}
+            {files.galleryFiles.map((file, i) => {
+              const url = URL.createObjectURL(file);
+              return file.type.startsWith("video") ? (
+                <div className="relative" key={`new-${i}`}>
+                  <video src={url} controls className="w-40 max-h-40 rounded" />
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteGalleryFile(i)}
+                    className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
+                  >
+                    X
+                  </button>
+                </div>
+              ) : (
+                <div className="relative" key={`new-${i}`}>
+                  <img
+                    src={url}
+                    alt="gallery"
+                    className="w-40 max-h-40 object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteGalleryFile(i)}
+                    className="absolute top-1 right-1 bg-red-600 text-white px-1 rounded text-xs"
+                  >
+                    X
+                  </button>
+                </div>
+              );
+            })}
+          </div>
 
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded mt-4 hover:bg-blue-700 transition"
+            className={`bg-blue-600 text-white px-6 py-3 rounded mt-4 hover:bg-blue-700 transition flex items-center justify-center ${
+              isSaving ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            disabled={isSaving}
           >
-            Save About Page
+            {isSaving ? "Saving..." : "Save About Page"}
           </button>
         </form>
       </div>

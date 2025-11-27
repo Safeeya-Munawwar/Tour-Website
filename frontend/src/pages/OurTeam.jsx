@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-
-const teamMembers = [
-  { image: "/images/user1.PNG", name: "John Doe", role: "Travel Consultant" },
-  { image: "/images/user2.PNG", name: "Jane Smith", role: "Tour Specialist" },
-  { image: "/images/user3.PNG", name: "Alice Lee", role: "Holiday Planner" },
-  {
-    image: "/images/user4.PNG",
-    name: "Mark Brown",
-    role: "Customer Experience",
-  },
-  { image: "/images/user5.PNG", name: "Sara Wilson", role: "Booking Manager" },
-  { image: "/images/user6.PNG", name: "David Kim", role: "Travel Advisor" },
-  { image: "/images/user7.PNG", name: "Emily Clark", role: "Tour Coordinator" },
-  {
-    image: "/images/user8.PNG",
-    name: "Michael Johnson",
-    role: "Destination Expert",
-  },
-  {
-    image: "/images/user9.PNG",
-    name: "Olivia Martinez",
-    role: "Holiday Planner",
-  },
-  {
-    image: "/images/user10.PNG",
-    name: "Chris Evans",
-    role: "Travel Consultant",
-  },
-  {
-    image: "/images/user11.PNG",
-    name: "Sophia Patel",
-    role: "Customer Relations",
-  },
-];
+import axios from "axios";
 
 const OurTeam = () => {
+  const [teamData, setTeamData] = useState({
+    fullDescription: [],
+    members: [],
+    teamImage: "",
+  });
   const [showText, setShowText] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
+
+    const fetchTeam = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/team");
+        if (res.data) {
+          setTeamData(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch team data:", err);
+      }
+    };
+
+    fetchTeam();
   }, []);
 
   return (
@@ -70,11 +55,13 @@ const OurTeam = () => {
       <section className="relative flex flex-col md:flex-row h-auto md:h-screen w-full overflow-hidden bg-white">
         {/* LEFT IMAGE WRAPPER */}
         <div className="w-full md:w-1/2 h-64 sm:h-80 md:h-full overflow-hidden rounded-r-[45%] relative">
-          <img
-            src="/images/team.PNG"
-            alt="Our Team"
-            className="absolute inset-0 w-full h-full object-cover object-center"
-          />
+          {teamData.teamImage && (
+            <img
+              src={teamData.teamImage}
+              alt="Our Team"
+              className="absolute inset-0 w-full h-full object-cover object-center"
+            />
+          )}
         </div>
 
         {/* Right Text */}
@@ -88,24 +75,16 @@ const OurTeam = () => {
 
           <div className="w-12 sm:w-16 h-[2px] bg-[#D4AF37] mt-2 mb-4 mx-auto md:mx-0"></div>
 
-          <p className="font-inter text-sm sm:text-base leading-relaxed text-gray-800 max-w-5xl mx-auto tracking-tight mb-4">
-            At NetLanka Tours, our shared passion is the beauty and mystery of
-            Sri Lanka. Our team, based in our office on the island, has
-            firsthand knowledge of its wonders. We’re more than just a digital
-            presence; we’re real individuals offering profound insights into Sri
-            Lanka’s allure. Instead of wrestling with travel intricacies
-            yourself, trust our experts to craft a tailor-made Sri Lankan
-            experience for you.
-          </p>
-          <p className="font-inter text-sm sm:text-base leading-relaxed text-gray-800 max-w-5xl mx-auto tracking-tight mb-6">
-            Get to know the voices behind your journey, from our travel
-            specialists with their favorite local recommendations to our
-            committed board of directors and managers. Whether you're
-            reconnecting with us or seeking specific guidance, NetLanka Tours
-            ensures your Sri Lankan adventure is unparalleled.
-          </p>
+          {/* Optional: render fullDescription paragraphs if needed */}
+          {teamData.fullDescription?.map((item, idx) => (
+            <p
+              key={idx}
+              className="font-inter text-sm sm:text-base leading-relaxed text-gray-800 max-w-5xl mx-auto tracking-tight mb-4"
+            >
+              {item.description}
+            </p>
+          ))}
 
-          {/* Scroll Button */}
           <div className="flex justify-center md:justify-start mt-4">
             <button
               onClick={() => {
@@ -129,7 +108,7 @@ const OurTeam = () => {
         className="mt-16 mb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-          {teamMembers.map((member, idx) => (
+          {teamData.members?.map((member, idx) => (
             <div
               key={idx}
               className="bg-white overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-gray-200 rounded-lg flex flex-col"

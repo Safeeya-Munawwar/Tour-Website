@@ -45,8 +45,6 @@ router.get("/", async (req, res) => {
 router.post(
   "/",
   upload.fields([
-    { name: "imageHeader", maxCount: 1 },
-    { name: "imageFull", maxCount: 1 },
     { name: "featureImages", maxCount: 20 },
     { name: "teamImages", maxCount: 20 },
     { name: "galleryImages", maxCount: 50 },
