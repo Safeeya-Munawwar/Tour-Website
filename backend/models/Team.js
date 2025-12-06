@@ -9,7 +9,7 @@ const teamMemberSchema = new mongoose.Schema({
 
 const TeamSchema = new mongoose.Schema({
   teamImage: { type: String },
-  fullDescription: [{ description: String }], // <-- paragraph-wise description
+  fullDescription: [{ description: String }],
   members: [teamMemberSchema],
 });
 

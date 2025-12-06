@@ -15,8 +15,6 @@ const AdminTopbar = ({ sidebarOpen, setSidebarOpen }) => {
           <Menu size={24} />
         </button>
 
-        {/* Optional Logo / Brand Name */}
-        {/* <img src="/images/logo.png" alt="Logo" className="w-10 h-10 object-contain" /> */}
         <h1 className="text-lg font-semibold text-gray-700 hidden sm:block">
           Admin Dashboard
         </h1>

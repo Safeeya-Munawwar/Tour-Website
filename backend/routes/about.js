@@ -1,8 +1,8 @@
 const express = require("express");
-const About = require("../models/About");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const About = require("../models/About");
 
 const router = express.Router();
 
@@ -16,10 +16,10 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
     let folder = "about";
-    // Decide folder by fieldname
-    if (file.fieldname.startsWith("feature")) folder += "/features";
-    if (file.fieldname.startsWith("team")) folder += "/team";
-    if (file.fieldname.startsWith("gallery")) folder += "/gallery";
+    if (file.fieldname.startsWith("featureImages")) folder += "/features";
+    else if (file.fieldname.startsWith("teamImages")) folder += "/team";
+    else if (file.fieldname.startsWith("galleryFiles")) folder += "/gallery";
+
     return {
       folder,
       resource_type: file.mimetype.startsWith("video") ? "video" : "image",
@@ -28,77 +28,69 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } }); // 100MB limit
+const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } });
 
-// GET About page
+// GET About data
 router.get("/", async (req, res) => {
   try {
-    const about = await About.findOne({});
-    res.json(about);
+    const about = await About.findOne();
+    res.json(about || {});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST About data
+router.post("/", upload.any(), async (req, res) => {
+  try {
+    if (!req.body.data) throw new Error("No data provided");
+    const data =
+      typeof req.body.data === "string"
+        ? JSON.parse(req.body.data)
+        : req.body.data;
+
+    // Handle feature images
+    if (data.features && Array.isArray(data.features)) {
+      const featureFiles = req.files.filter((f) =>
+        f.fieldname.startsWith("featureImages")
+      );
+      data.features = data.features.map((feat, idx) => {
+        const file = featureFiles.find(
+          (f) => f.fieldname === `featureImages${idx}`
+        );
+        return { ...feat, image: file ? file.path : feat.image || "" };
+      });
+    }
+
+    // Handle team images
+    if (data.teamMembers && Array.isArray(data.teamMembers)) {
+      const teamFiles = req.files.filter((f) =>
+        f.fieldname.startsWith("teamImages")
+      );
+      data.teamMembers = data.teamMembers.map((member, idx) => {
+        const file = teamFiles.find((f) => f.fieldname === `teamImages${idx}`);
+        return { ...member, image: file ? file.path : member.image || "" };
+      });
+    }
+
+    // Handle gallery files
+    if (!data.gallery) data.gallery = [];
+    const galleryFiles = req.files.filter(
+      (f) => f.fieldname === "galleryFiles"
+    );
+    data.gallery.push(...galleryFiles.map((f) => f.path));
+
+    // Save or update
+    const updatedAbout = await About.findOneAndUpdate({}, data, {
+      new: true,
+      upsert: true,
+    });
+
+    res.json(updatedAbout);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
-
-// POST / UPDATE About page
-router.post(
-  "/",
-  upload.fields([
-    { name: "featureImages", maxCount: 20 },
-    { name: "teamImages", maxCount: 20 },
-    { name: "galleryImages", maxCount: 50 },
-  ]),
-  async (req, res) => {
-    try {
-      if (!req.body.data) throw new Error("No data provided");
-
-      let data = JSON.parse(req.body.data);
-
-      // Assign single images
-      if (req.files.imageHeader)
-        data.imageHeader = req.files.imageHeader[0].path;
-      if (req.files.imageFull) data.imageFull = req.files.imageFull[0].path;
-
-      // Assign feature images safely
-      if (req.files.featureImages) {
-        req.files.featureImages.forEach((file, idx) => {
-          if (data.features && data.features[idx])
-            data.features[idx].image = file.path;
-        });
-      }
-
-      // Assign team images safely
-      if (req.files.teamImages) {
-        req.files.teamImages.forEach((file, idx) => {
-          if (data.teamMembers && data.teamMembers[idx])
-            data.teamMembers[idx].image = file.path;
-        });
-      }
-
-      // Gallery supports images and videos
-      if (req.files.galleryImages) {
-        // Preserve existing gallery URLs and append newly uploaded files
-        data.gallery = [
-          ...(data.gallery || []), // existing gallery URLs from frontend
-          ...req.files.galleryImages.map((file) => file.path), // newly uploaded files
-        ];
-      }
-
-      let about = await About.findOne({});
-      if (!about) {
-        about = await About.create(data);
-      } else {
-        Object.assign(about, data);
-        await about.save();
-      }
-
-      res.json(about);
-    } catch (err) {
-      console.error("Error in /api/about:", err);
-      res.status(500).json({ error: err.message });
-    }
-  }
-);
 
 module.exports = router;

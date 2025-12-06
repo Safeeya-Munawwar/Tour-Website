@@ -41,7 +41,7 @@ export default function BlogList() {
             {blogs.map((b) => (
               <tr key={b._id} className="border-b border-[#2E5B84] hover:bg-blue-50">
                 <td className="p-2 border border-[#2E5B84] text-center">
-                  <img src={b.heroImg} className="h-12 w-12 object-cover rounded mx-auto" />
+                  <img src={b.heroImg} alt="img" className="h-12 w-12 object-cover rounded mx-auto" />
                 </td>
                 <td className="p-3 border border-[#2E5B84]">{b.title}</td>
                 <td className="p-3 border border-[#2E5B84]">{new Date(b.date).toLocaleDateString()}</td>

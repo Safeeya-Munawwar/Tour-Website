@@ -16,7 +16,7 @@ export default function AdminLogin() {
     e.preventDefault();
     setError("");
 
-    // Fake admin login credentials (for now)
+    // Fake admin login credentials
     if (email === "admin@gmail.com" && password === "12345") {
       navigate("/admin/dashboard");
     } else {
@@ -58,7 +58,6 @@ export default function AdminLogin() {
 
         {/* Inputs */}
         <div className="flex flex-col space-y-4 text-left">
-
           {/* Email */}
           <div>
             <label className="text-sm">Email</label>

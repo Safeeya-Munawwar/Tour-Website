@@ -65,16 +65,13 @@ router.post("/", upload.any(), async (req, res) => {
       });
     }
 
-    // Common Image – handle uploaded file
     const commonFile = req.files.find((f) => f.fieldname === "commonImage");
     if (commonFile) {
       data.commonImage = commonFile.path;
     } else if (data.commonImage) {
-      // keep existing URL if no new upload
       data.commonImage = data.commonImage;
     }
 
-    // Ensure fullDescription exists
     if (!data.fullDescription) data.fullDescription = [{ description: "" }];
 
     let journey = await Journey.findOne();
@@ -91,7 +88,6 @@ router.post("/", upload.any(), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // ---------------- DELETE MILESTONE ----------------
 router.delete("/milestone/:index", async (req, res) => {

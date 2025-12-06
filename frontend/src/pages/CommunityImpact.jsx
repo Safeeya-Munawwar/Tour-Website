@@ -29,7 +29,6 @@ const OurCommunity = () => {
     fetchCommunityData();
   }, []);
 
-  // Hero text animation
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
@@ -48,7 +47,8 @@ const OurCommunity = () => {
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-           backgroundImage: "url('/images/community-header.jpg')" }}
+          backgroundImage: "url('/images/community-header.jpg')",
+        }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
 
@@ -133,34 +133,33 @@ const OurCommunity = () => {
         ))}
       </section>
 
-{/* ---------------------------- CUSTOM TOUR CTA ---------------------------- */}
-<section className="relative bg-white py-8 sm:py-12 lg:py-16 flex justify-center items-center">
-  <div className="max-w-3xl text-center px-4 sm:px-6">
-    {/* Heading */}
-    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-      Ready to Explore Sri Lanka?
-    </h2>
+      {/* ---------------------------- CUSTOM TOUR CTA ---------------------------- */}
+      <section className="relative bg-white py-8 sm:py-12 lg:py-16 flex justify-center items-center">
+        <div className="max-w-3xl text-center px-4 sm:px-6">
+          {/* Heading */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+            Ready to Explore Sri Lanka?
+          </h2>
 
-    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#1a1a1a] mb-6 leading-relaxed">
-      Let our dedicated experts <br /> craft an unforgettable journey.
-    </h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#1a1a1a] mb-6 leading-relaxed">
+            Let our dedicated experts <br /> craft an unforgettable journey.
+          </h3>
 
-    {/* CTA Button */}
-    <a
-      href="/contact"
-      className="
+          {/* CTA Button */}
+          <a
+            href="/contact"
+            className="
         bg-[#ce2a40] hover:bg-[#ef0530]
         text-white uppercase px-8 py-4 rounded-full font-semibold
         flex items-center gap-2 text-sm sm:text-base shadow-lg
         transition-colors duration-300 justify-center mx-auto
       "
-    >
-      Explore with Us
-      <ArrowRight className="w-4 sm:w-5" />
-    </a>
-  </div>
-</section>
-
+          >
+            Explore with Us
+            <ArrowRight className="w-4 sm:w-5" />
+          </a>
+        </div>
+      </section>
     </div>
   );
 };

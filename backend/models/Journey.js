@@ -10,7 +10,7 @@ const milestoneSchema = new mongoose.Schema({
 const journeySchema = new mongoose.Schema({
   fullDescription: [{ description: String }],
   milestones: [milestoneSchema],
-  commonImage: { type: String }, 
+  commonImage: { type: String },
 });
 
 module.exports = mongoose.model("Journey", journeySchema);

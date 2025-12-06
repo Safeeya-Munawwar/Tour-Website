@@ -37,6 +37,7 @@ import EditExperience from "./pages/experience/EditExperience";
 import BlogList from "./pages/blog/BlogList";
 import AddBlog from "./pages/blog/AddBlog";
 import EditBlog from "./pages/blog/EditBlog";
+import AdminTailorMade from "./pages/admin/ManageTailorMadeTour";
 
 function App() {
   const location = useLocation();
@@ -98,6 +99,7 @@ function App() {
           <Route path="/admin/blogs" element={<BlogList />} />
           <Route path="/admin/blogs/new" element={<AddBlog />} />
           <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
+          <Route path="/admin/tailor-made-tours" element={<AdminTailorMade />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

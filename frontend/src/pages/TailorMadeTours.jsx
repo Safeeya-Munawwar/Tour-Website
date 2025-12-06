@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Why from ".././components/Why";
 import {
   FaWhatsapp,
@@ -12,6 +13,8 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const testimonials = [
   {
@@ -74,6 +77,7 @@ const testimonials = [
 ];
 
 const TailorMadeTours = () => {
+  const [tourData, setTourData] = useState(null);
   const [showText, setShowText] = useState(false);
   const [step, setStep] = useState(1);
   const [captchaChecked, setCaptchaChecked] = useState(false);
@@ -88,6 +92,23 @@ const TailorMadeTours = () => {
     travelDates: "",
     travelers: "",
   });
+
+  useEffect(() => {
+    const fetchTour = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/tailor-made-tours"
+        );
+        if (res.data) {
+          setTourData(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch Tailor Made Tour data", err);
+      }
+    };
+
+    fetchTour();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
@@ -110,14 +131,44 @@ const TailorMadeTours = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Your trip request has been submitted!");
+    if (!captchaChecked) {
+      toast.error("Please verify captcha!");
+      return;
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:5000/api/tailor-made-tours/inquiry",
+        formData
+      );
+      toast.success("Your trip plan has been submitted!");
+      setFormData({
+        title: "",
+        fullName: "",
+        nationality: "",
+        email: "",
+        phone: "",
+        destination: "",
+        travelDates: "",
+        travelers: "",
+      });
+      setStep(1);
+      setCaptchaChecked(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit your plan. Try again.");
+    }
   };
+
+  if (!tourData) {
+    return <div className="text-center py-20">Loading...</div>;
+  }
 
   return (
     <div className="font-poppins bg-white text-[#222]">
+      <ToastContainer />
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -150,11 +201,7 @@ const TailorMadeTours = () => {
           Tailor-Made Sri Lanka Tours & Holidays
         </h2>
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          NetLanka Tours offers tailor-made holidays to explore the diverse
-          landscapes and attractions of Sri Lanka — from beaches and wildlife to
-          rich culture and history. We craft personalized itineraries to match
-          your preferences, offering luxurious vehicles, top-tier
-          accommodations, and unforgettable experiences.
+          {tourData?.description || "No description available."}
         </p>
         {/* Gold Accent Line */}
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
@@ -420,7 +467,7 @@ const TailorMadeTours = () => {
               <div className="bg-green-600 text-white rounded-full p-3">
                 <FaWhatsapp className="w-5 h-5" />
               </div>
-              <span>(+94) 777 300 852</span>
+              <span>{tourData.whatsapp || "+94 777 000 000"}</span>
             </div>
 
             {/* Phone */}
@@ -428,7 +475,7 @@ const TailorMadeTours = () => {
               <div className="bg-blue-600 text-white rounded-full p-3">
                 <FaPhoneAlt className="w-5 h-5" />
               </div>
-              <span>(+94) 777 300 852</span>
+              <span>{tourData.phone || "+94 777 000 000"}</span>
             </div>
           </div>
 
@@ -443,43 +490,21 @@ const TailorMadeTours = () => {
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 place-items-center">
-              {/* Step 1 */}
-              <div className="flex flex-col items-center text-center max-w-xs">
-                <img
-                  src="/images/browse.PNG"
-                  alt="browse"
-                  className="w-20 h-20 mb-4"
-                />
-                <p className="text-gray-700 text-sm md:text-base">
-                  Browse our website for luxury travel ideas and holiday
-                  inspiration.
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex flex-col items-center text-center max-w-xs">
-                <img
-                  src="/images/phone.PNG"
-                  alt="phone"
-                  className="w-20 h-20 mb-4"
-                />
-                <p className="text-gray-700 text-sm md:text-base">
-                  Call us or message via WhatsApp to start customizing your
-                  holiday.
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex flex-col items-center text-center max-w-xs">
-                <img
-                  src="/images/book.PNG"
-                  alt="paper"
-                  className="w-20 h-20 mb-4"
-                />
-                <p className="text-gray-700 text-sm md:text-base">
-                  We finalize your itinerary and handle everything for you.
-                </p>
-              </div>
+              {tourData?.howItWorks?.map((step, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center text-center max-w-xs"
+                >
+                  <img
+                    src={step.image || "/images/browse.PNG"}
+                    alt={step.description}
+                    className="w-20 h-20 mb-4"
+                  />
+                  <p className="text-gray-700 text-sm md:text-base">
+                    {step.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -553,63 +578,27 @@ const TailorMadeTours = () => {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         {/* Review Icons */}
         <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-8 flex-wrap">
-          <img
-            src="/images/tripadvisor.PNG"
-            alt="Tripadvisor Review"
-            className="w-32 sm:w-56 h-auto"
-          />
-          <img
-            src="/images/trustpilot.PNG"
-            alt="Trustpilot Review"
-            className="w-32 sm:w-56 h-auto"
-          />
+          {tourData?.gallery?.slice(0, 2).map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`Review ${idx + 1}`}
+              className="w-32 sm:w-56 h-auto"
+            />
+          ))}
         </div>
 
         {/* Main Text */}
         <p className="text-sm sm:text-base text-center text-gray-600 leading-relaxed">
-          NetLanka Tours and our team of friendly consultants work tirelessly to
-          create exciting Sri Lanka tailor-made holidays for guests who want to
-          tour this beautiful island. Whether you are looking to explore Sri
-          Lanka’s beaches, wildlife, birds, greenery, history, and culture or
-          even the warm and friendly people of the rural areas, we have just the
-          holiday package for you. Sri Lanka is currently the number one tourist
-          destination and is renowned for its diverse landscapes. Whilst these
-          are specialized packages mostly focusing on a few aspects of the
-          country, we have also lined up a few itineraries that cover all these
-          landscapes in one tour.
+          {tourData?.description || "No description available."}
         </p>
 
         {/* Expandable Content */}
         {showFull && (
           <div className="text-sm sm:text-base text-center text-gray-600 leading-relaxed mt-4 sm:mt-6 space-y-4">
-            <p>
-              If any of our prepared itineraries are not meeting your
-              requirements, we will gladly make alterations to cater to your
-              requests. Our intimate and personalized services have served
-              travellers for many years while dealing with the most discerning
-              preferences and yet managed to successfully come up with an ideal
-              itinerary, meeting their needs. We talk to each group of
-              travellers personally to determine what they will and will not
-              like to do during their holiday.
-            </p>
-
-            <p>
-              From pick up at the airport to each destination transfer to each
-              tour attraction transfer to drop back to the airport, NetLanka
-              Tours will transport you in an ultra-comfortable, luxury
-              air-conditioned vehicle. Depending on the number of passengers
-              travelling with you, we will advise the type of car or van that
-              would make your tour of Sri Lanka a smooth and comfortable
-              journey.
-            </p>
-
-            <p>
-              NetLanka Tours has a wide network of accommodation options for
-              your tailor-made Sri Lanka tour. We specialize in selecting the
-              most comfortable and luxurious holiday resorts across the country.
-              Whether it's a honeymoon, family tour, or group trip, we ensure
-              your stay is relaxing and top-tier.
-            </p>
+            {tourData?.fullDescription?.map((item, idx) => (
+              <p key={idx}>{item.description}</p>
+            ))}
           </div>
         )}
 

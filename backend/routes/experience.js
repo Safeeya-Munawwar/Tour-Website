@@ -46,7 +46,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const experience = await Experience.findById(req.params.id);
-    if (!experience) return res.status(404).json({ error: "Experience not found" });
+    if (!experience)
+      return res.status(404).json({ error: "Experience not found" });
     res.json(experience);
   } catch (err) {
     console.error(err);
@@ -79,7 +80,9 @@ router.post("/", parser, async (req, res) => {
     const galleryImgs = req.files?.galleryFiles?.map((f) => f.path) || [];
 
     if (!heroImg || !mainImg) {
-      return res.status(400).json({ error: "Hero image and main image are required" });
+      return res
+        .status(400)
+        .json({ error: "Hero image and main image are required" });
     }
 
     const newExperience = new Experience({
@@ -91,7 +94,9 @@ router.post("/", parser, async (req, res) => {
       mainDesc,
       subDesc,
       subExperiences: safeJSONParse(subExperiences),
-      gallery: safeJSONParse(gallery).length ? safeJSONParse(gallery) : galleryImgs,
+      gallery: safeJSONParse(gallery).length
+        ? safeJSONParse(gallery)
+        : galleryImgs,
       tips: safeJSONParse(tips),
     });
 
@@ -106,7 +111,8 @@ router.post("/", parser, async (req, res) => {
 // -------------------- PUT update experience --------------------
 router.put("/:id", parser, async (req, res) => {
   try {
-    const { slug, title, subtitle, mainDesc, subDesc, subExperiences, tips } = req.body;
+    const { slug, title, subtitle, mainDesc, subDesc, subExperiences, tips } =
+      req.body;
 
     const updateData = {
       slug,
@@ -131,9 +137,14 @@ router.put("/:id", parser, async (req, res) => {
       updateData.gallery = req.files.galleryFiles.map((f) => f.path);
     }
 
-    const updatedExperience = await Experience.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updatedExperience = await Experience.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
-    if (!updatedExperience) return res.status(404).json({ error: "Experience not found" });
+    if (!updatedExperience)
+      return res.status(404).json({ error: "Experience not found" });
 
     res.json(updatedExperience);
   } catch (err) {
@@ -146,7 +157,8 @@ router.put("/:id", parser, async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const deletedExperience = await Experience.findByIdAndDelete(req.params.id);
-    if (!deletedExperience) return res.status(404).json({ error: "Experience not found" });
+    if (!deletedExperience)
+      return res.status(404).json({ error: "Experience not found" });
     res.json({ message: "Experience deleted successfully" });
   } catch (err) {
     console.error(err);

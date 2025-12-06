@@ -11,6 +11,8 @@ const communityRoute = require("./routes/communityImpact");
 const destinationRoute = require("./routes/destination"); 
 const experienceRoutes = require("./routes/experience");
 const blogRoutes = require("./routes/blog");
+const tailorMadeTourRoutes = require("./routes/tailorMadeTourRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
 
@@ -28,12 +30,17 @@ app.use("/api/communityImpact", communityRoute);
 app.use("/api/destination", destinationRoute);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/blog", blogRoutes);
+app.use("/api/tailor-made-tours", tailorMadeTourRoutes);
+app.use("/api/send-email", emailRoutes);
 
 // Connect to MongoDB
 const PORT = process.env.PORT || 5000;
+
 mongoose
-  .connect(process.env.MONGO_URI)
-  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
