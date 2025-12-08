@@ -38,6 +38,9 @@ import BlogList from "./pages/blog/BlogList";
 import AddBlog from "./pages/blog/AddBlog";
 import EditBlog from "./pages/blog/EditBlog";
 import AdminTailorMade from "./pages/admin/ManageTailorMadeTour";
+import DayTourList from "./pages/daytour/DayTourList";
+import AddDayTour from "./pages/daytour/AddDayTour";
+import EditDayTour from "./pages/daytour/EditDayTour";
 
 function App() {
   const location = useLocation();
@@ -63,7 +66,8 @@ function App() {
           <Route path="/experience/:id" element={<ExperienceDetail />} />
           <Route path="/day-tours" element={<DayTour />} />
           <Route path="/round-tours" element={<RoundTour />} />
-          <Route path="/day-tour-detail" element={<TourDetail />} />
+          <Route path="/day-tour-detail/:id" element={<TourDetail />} />
+
           <Route path="/round-tour-detail" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
 
@@ -100,6 +104,12 @@ function App() {
           <Route path="/admin/blogs/new" element={<AddBlog />} />
           <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
           <Route path="/admin/tailor-made-tours" element={<AdminTailorMade />} />
+
+  {/* Admin routes */}
+        <Route path="/admin/day-tours" element={<DayTourList />} />
+        <Route path="/admin/day-tours/new" element={<AddDayTour />} />
+        <Route path="/admin/day-tours/edit/:id" element={<EditDayTour />} />
+
         </Routes>
       </main>
       {!hideLayout && <Footer />}
