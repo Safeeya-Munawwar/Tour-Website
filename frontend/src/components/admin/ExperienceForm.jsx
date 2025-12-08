@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import { useDropzone } from "react-dropzone";
 
 export default function ExperienceForm({ formData, setFormData, handleSubmit, submitLabel }) {
@@ -68,7 +68,7 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
           <input {...getHeroInput()} />
           <p>Click or drag & drop image here</p>
         </div>
-        {formData.heroImgPreview && <img src={formData.heroImgPreview} className="w-48 h-48 mt-2 object-cover rounded"/>}
+        {formData.heroImgPreview && <img src={formData.heroImgPreview} alt="img" className="w-48 h-48 mt-2 object-cover rounded"/>}
       </div>
 
       <div className="mt-4">
@@ -77,7 +77,7 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
           <input {...getMainInput()} />
           <p>Click or drag & drop image here</p>
         </div>
-        {formData.mainImgPreview && <img src={formData.mainImgPreview} className="w-48 h-48 mt-2 object-cover rounded"/>}
+        {formData.mainImgPreview && <img src={formData.mainImgPreview} alt="img" className="w-48 h-48 mt-2 object-cover rounded"/>}
       </div>
 
       <div className="mt-4">
@@ -87,7 +87,7 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
           <p>Click or drag & drop multiple images here</p>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
-          {formData.galleryFiles?.map((f, i) => <img key={i} src={URL.createObjectURL(f)} className="w-24 h-24 object-cover rounded"/> )}
+          {formData.galleryFiles?.map((f, i) => <img key={i} src={URL.createObjectURL(f)} alt="img" className="w-24 h-24 object-cover rounded"/> )}
         </div>
       </div>
 

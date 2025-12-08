@@ -6,14 +6,12 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const router = express.Router();
 
-// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Multer Cloudinary storage
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
@@ -30,15 +28,13 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } });
 
-// ------------------- CRUD ------------------- //
-
 // GET team (single doc)
 router.get("/", async (req, res) => {
   try {
     const team = await Team.findOne();
     res.json(team || {});
   } catch (err) {
-    console.error("GET /api/team:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -48,26 +44,36 @@ router.post("/", upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
 
-    let data = typeof req.body.data === "string" ? JSON.parse(req.body.data) : req.body.data;
+    let data =
+      typeof req.body.data === "string"
+        ? JSON.parse(req.body.data)
+        : req.body.data;
 
-    // Main team image
-    const teamImageFile = req.files.find((f) => f.fieldname === "teamImage");
-    if (teamImageFile) data.teamImage = teamImageFile.path;
+    let team = await Team.findOne();
 
-    // Member images
     if (data.members && Array.isArray(data.members)) {
+      const memberFiles = req.files.filter((f) =>
+        f.fieldname.startsWith("members")
+      );
       data.members = data.members.map((member, idx) => {
-        const file = req.files.find(f => f.fieldname === `members[${idx}][image]`);
+        const file = memberFiles.find(
+          (f) => f.fieldname === `members[${idx}][image]`
+        );
+        const existingMember = team?.members[idx] || {};
         return {
           name: member.name,
           role: member.role,
           description: member.description || "",
-          image: file ? file.path : member.image || "",
+          image: file ? file.path : member.image || existingMember.image || "",
         };
       });
     }
 
-    let team = await Team.findOne();
+    // Handle main team image
+    const teamImageFile = req.files.find((f) => f.fieldname === "teamImage");
+    if (teamImageFile) data.teamImage = teamImageFile.path;
+    else if (team && !data.teamImage) data.teamImage = team.teamImage;
+
     if (!team) {
       team = await Team.create(data);
     } else {
@@ -77,7 +83,7 @@ router.post("/", upload.any(), async (req, res) => {
 
     res.json(team);
   } catch (err) {
-    console.error("POST /api/team:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -95,18 +101,7 @@ router.delete("/member/:index", async (req, res) => {
     await team.save();
     res.json(team);
   } catch (err) {
-    console.error("DELETE /api/team/member/:index:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE whole team
-router.delete("/", async (req, res) => {
-  try {
-    await Team.deleteMany();
-    res.json({ message: "Team deleted successfully" });
-  } catch (err) {
-    console.error("DELETE /api/team:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });

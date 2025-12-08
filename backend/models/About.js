@@ -10,9 +10,7 @@ const AboutSchema = new mongoose.Schema(
 
     description: { type: String, required: true },
 
-    fullDescription: [
-      { description: String }
-    ],    
+    fullDescription: [{ description: String }],
 
     features: [
       {
@@ -26,7 +24,7 @@ const AboutSchema = new mongoose.Schema(
       {
         name: String,
         role: String,
-       image: String,
+        image: String,
       },
     ],
 

@@ -16,26 +16,22 @@ cloudinary.config({
 // ---------------- MULTER STORAGE ----------------
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: async (req, file) => {
-    let folder = "community";
-    if (file.fieldname.startsWith("impacts")) folder += "/impacts";
-    return {
-      folder,
-      resource_type: file.mimetype.startsWith("video") ? "video" : "image",
-      allowed_formats: ["jpg", "jpeg", "png", "mp4", "mov", "webm"],
-    };
-  },
+  params: async () => ({
+    folder: "community/impacts",
+    resource_type: "image",
+    allowed_formats: ["jpg", "jpeg", "png"],
+  }),
 });
 
-const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } });
+const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB
 
 // ---------------- GET COMMUNITY IMPACT ----------------
 router.get("/", async (req, res) => {
   try {
     const community = await CommunityImpact.findOne();
-    res.json(community || {});
+    res.json(community || { description: [""], impacts: [] });
   } catch (err) {
-    console.error("GET /api/community:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -50,30 +46,22 @@ router.post("/", upload.any(), async (req, res) => {
         ? JSON.parse(req.body.data)
         : req.body.data;
 
-    // Map impact images
-    if (data.impacts && Array.isArray(data.impacts)) {
-        data.impacts = data.impacts.map((impact, idx) => {
-          const files = req.files.filter(
-            f => f.fieldname === `impacts[${idx}][images][]`
-          );
-      
-          return {
-            title: impact.title,
-            description: impact.description || "",
-            images: files.length > 0 
-              ? files.map(f => f.path)
-              : (impact.images && impact.images.length > 0 
-                  ? impact.images
-                  : []),
-          };
-        });
-      }      
+    data.impacts = data.impacts.map((impact, index) => {
+      const imageFiles = req.files.filter(
+        (f) => f.fieldname === `impactImages_${index}`
+      );
 
-    // Ensure commonImage exists
-    if (req.files) {
-      const commonFile = req.files.find((f) => f.fieldname === "commonImage");
-      if (commonFile) data.commonImage = commonFile.path;
-    }
+      return {
+        title: impact.title,
+        description: impact.description,
+        images: imageFiles.length
+          ? [...(impact.existingImages || []), ...imageFiles.map((f) => f.path)]
+          : impact.images || [],
+      };
+    });
+
+    if (!Array.isArray(data.description))
+      data.description = [data.description || ""];
 
     let community = await CommunityImpact.findOne();
     if (!community) {
@@ -85,7 +73,7 @@ router.post("/", upload.any(), async (req, res) => {
 
     res.json(community);
   } catch (err) {
-    console.error("POST /api/community:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -97,13 +85,14 @@ router.delete("/impact/:index", async (req, res) => {
     if (isNaN(idx)) throw new Error("Invalid index");
 
     const community = await CommunityImpact.findOne();
-    if (!community) return res.status(404).json({ message: "Community not found" });
+    if (!community)
+      return res.status(404).json({ message: "Community not found" });
 
     if (community.impacts[idx]) community.impacts.splice(idx, 1);
     await community.save();
     res.json(community);
   } catch (err) {
-    console.error("DELETE /api/community/impact/:index:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -114,7 +103,7 @@ router.delete("/", async (req, res) => {
     await CommunityImpact.deleteMany();
     res.json({ message: "Community impacts deleted successfully" });
   } catch (err) {
-    console.error("DELETE /api/community:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });

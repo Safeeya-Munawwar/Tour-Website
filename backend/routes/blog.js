@@ -65,7 +65,11 @@ router.put("/:id", parser, async (req, res) => {
 
     if (req.file) updateData.heroImg = req.file.path;
 
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
     if (!updatedBlog) return res.status(404).json({ error: "Blog not found" });
 
     res.json(updatedBlog);

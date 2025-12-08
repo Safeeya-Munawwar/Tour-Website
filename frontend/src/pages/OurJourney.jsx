@@ -65,75 +65,72 @@ const OurJourney = () => {
       </div>
 
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 flex flex-col md:flex-row items-center gap-12">
-  <div className="md:w-1/2 relative group overflow-hidden rounded-lg shadow-lg">
-    <img
-      src={journeyData.commonImage}
-      alt="Mission"
-      className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
-    />
-    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-70 transition-opacity duration-500 flex items-center justify-center">
-      <span className="text-white font-semibold text-lg text-center px-4">
-        Our Mission & Vision
-      </span>
-    </div>
-  </div>
+        <div className="md:w-1/2 relative group overflow-hidden rounded-lg shadow-lg">
+          <img
+            src={journeyData.commonImage}
+            alt="Mission"
+            className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-70 transition-opacity duration-500 flex items-center justify-center">
+            <span className="text-white font-semibold text-lg text-center px-4">
+              Our Mission & Vision
+            </span>
+          </div>
+        </div>
 
-
-  <div className="md:w-1/2 space-y-6">
-  <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+        <div className="md:w-1/2 space-y-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a]">
             Our Mission & Vision
           </h2>
-    {(journeyData.fullDescription || []).map((para, idx) => (
-      <p
-        key={idx}
-        className="text-gray-600 text-base md:text-lg leading-relaxed transition-all duration-500 transform hover:translate-x-1"
-      >
-        {para.description}
-      </p>
-    ))}
-  </div>
-</section>
-
+          {(journeyData.fullDescription || []).map((para, idx) => (
+            <p
+              key={idx}
+              className="text-gray-600 text-base md:text-lg leading-relaxed transition-all duration-500 transform hover:translate-x-1"
+            >
+              {para.description}
+            </p>
+          ))}
+        </div>
+      </section>
 
       {/* ---------------------------- JOURNEY TIMELINE ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 space-y-20">
-  {journeyData.milestones.map((milestone, idx) => (
-    <div
-      key={idx}
-      className={`flex flex-col lg:flex-row items-center gap-12 relative group ${
-        idx % 2 !== 0 ? "lg:flex-row-reverse" : ""
-      }`}
-    >
-      {/* IMAGE WITH OVERLAY */}
-      <div className="lg:w-1/2 relative overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500">
-        <img
-          src={milestone.image}
-          alt={milestone.title}
-          className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500 flex items-center justify-center">
-          <span className="text-white font-semibold text-xl">
-            {milestone.year}
-          </span>
-        </div>
-      </div>
+        {journeyData.milestones.map((milestone, idx) => (
+          <div
+            key={idx}
+            className={`flex flex-col lg:flex-row items-center gap-12 relative group ${
+              idx % 2 !== 0 ? "lg:flex-row-reverse" : ""
+            }`}
+          >
+            {/* IMAGE WITH OVERLAY */}
+            <div className="lg:w-1/2 relative overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500">
+              <img
+                src={milestone.image}
+                alt={milestone.title}
+                className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500 flex items-center justify-center">
+                <span className="text-white font-semibold text-xl">
+                  {milestone.year}
+                </span>
+              </div>
+            </div>
 
-      {/* TEXT */}
-      <div className="lg:w-1/2 space-y-4">
-        <span className="text-sm uppercase text-[#1a73e8] font-semibold transition-transform transform group-hover:translate-x-1">
-          {milestone.year}
-        </span>
-        <h3 className="text-3xl font-bold text-[#1a1a1a] transition-transform transform group-hover:translate-x-1">
-          {milestone.title}
-        </h3>
-        <p className="text-gray-600 text-lg leading-relaxed transition-transform transform group-hover:translate-x-1">
-          {milestone.description}
-        </p>
-      </div>
-    </div>
-  ))}
-</section>
-
+            {/* TEXT */}
+            <div className="lg:w-1/2 space-y-4">
+              <span className="text-sm uppercase text-[#1a73e8] font-semibold transition-transform transform group-hover:translate-x-1">
+                {milestone.year}
+              </span>
+              <h3 className="text-3xl font-bold text-[#1a1a1a] transition-transform transform group-hover:translate-x-1">
+                {milestone.title}
+              </h3>
+              <p className="text-gray-600 text-lg leading-relaxed transition-transform transform group-hover:translate-x-1">
+                {milestone.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </section>
 
       {/* ---------------------------- CTA TO OUR TEAM ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 lg:px-0 py-20 text-center">

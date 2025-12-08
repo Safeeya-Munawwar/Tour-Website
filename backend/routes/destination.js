@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../config/cloudinary"); // CommonJS export
+const cloudinary = require("../config/cloudinary");
 const Destination = require("../models/Destination");
 
 const router = express.Router();
@@ -31,7 +31,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const destination = await Destination.findById(req.params.id);
-    if (!destination) return res.status(404).json({ error: "Destination not found" });
+    if (!destination)
+      return res.status(404).json({ error: "Destination not found" });
     res.json(destination);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,7 +43,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", parser.single("imgFile"), async (req, res) => {
   try {
     const { title, subtitle } = req.body;
-    const img = req.file.path; // Cloudinary URL
+    const img = req.file.path;
 
     const newDestination = new Destination({ title, subtitle, img });
     await newDestination.save();
@@ -69,7 +70,8 @@ router.put("/:id", parser.single("imgFile"), async (req, res) => {
       { new: true }
     );
 
-    if (!updatedDestination) return res.status(404).json({ error: "Destination not found" });
+    if (!updatedDestination)
+      return res.status(404).json({ error: "Destination not found" });
 
     res.json(updatedDestination);
   } catch (err) {
@@ -80,8 +82,11 @@ router.put("/:id", parser.single("imgFile"), async (req, res) => {
 // DELETE destination
 router.delete("/:id", async (req, res) => {
   try {
-    const deletedDestination = await Destination.findByIdAndDelete(req.params.id);
-    if (!deletedDestination) return res.status(404).json({ error: "Destination not found" });
+    const deletedDestination = await Destination.findByIdAndDelete(
+      req.params.id
+    );
+    if (!deletedDestination)
+      return res.status(404).json({ error: "Destination not found" });
 
     res.json({ message: "Destination deleted" });
   } catch (err) {

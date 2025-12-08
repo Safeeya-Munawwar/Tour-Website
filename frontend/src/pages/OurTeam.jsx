@@ -8,6 +8,7 @@ const OurTeam = () => {
     members: [],
     teamImage: "",
   });
+
   const [showText, setShowText] = useState(false);
 
   useEffect(() => {
@@ -107,22 +108,59 @@ const OurTeam = () => {
         id="team-members"
         className="mt-16 mb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {teamData.members?.map((member, idx) => (
             <div
               key={idx}
-              className="bg-white overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-gray-200 rounded-lg flex flex-col"
+              className="relative group bg-white shadow-lg rounded-xl overflow-hidden"
             >
-              <div className="w-full h-56 sm:h-64 md:h-64 lg:h-72 overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
-                />
-              </div>
-              <div className="bg-white p-4 text-center border-t border-gray-200">
-                <h3 className="font-semibold text-lg">{member.name}</h3>
-                <p className="text-gray-500 text-sm">{member.role}</p>
+              {/* IMAGE */}
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+
+              {/* BUTTON */}
+              <button
+                onClick={() =>
+                  setTeamData((prev) => ({ ...prev, activeIndex: idx }))
+                }
+                className="absolute bottom-0 left-0 w-full bg-black/60 text-white 
+            font-semibold py-3 text-center backdrop-blur-sm hover:bg-black/70 transition"
+              >
+                Learn More
+              </button>
+
+              {/* SLIDE OVERLAY */}
+              <div
+                className={`absolute top-0 left-0 h-full bg-white/70 backdrop-blur-md shadow-xl 
+              transition-all duration-500 overflow-hidden
+              ${teamData.activeIndex === idx ? "w-full" : "w-0"}
+            `}
+              >
+                <div className="p-6 h-full flex flex-col">
+                  <button
+                    onClick={() =>
+                      setTeamData((prev) => ({ ...prev, activeIndex: null }))
+                    }
+                    className="self-end text-gray-700 hover:text-black text-2xl font-bold"
+                  >
+                    &times;
+                  </button>
+
+                  <h3 className="text-2xl font-semibold mb-2 text-gray-800">
+                    {member.name}
+                  </h3>
+
+                  <p className="text-gray-600 font-medium mb-4">
+                    {member.role}
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed">
+                    {member.description || "No description available."}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

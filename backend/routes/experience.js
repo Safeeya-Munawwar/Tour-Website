@@ -6,7 +6,9 @@ const Experience = require("../models/Experience");
 
 const router = express.Router();
 
-// -------------------- Cloudinary storage --------------------
+/* ----------------------------------------
+   Cloudinary Storage
+---------------------------------------- */
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -15,14 +17,16 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// Use multer with Cloudinary
+// Multer fields
 const parser = multer({ storage }).fields([
   { name: "heroImgFile", maxCount: 1 },
   { name: "mainImgFile", maxCount: 1 },
   { name: "galleryFiles", maxCount: 10 },
 ]);
 
-// -------------------- Utility: safe JSON parse --------------------
+/* ----------------------------------------
+   Utility: Safe JSON parser
+---------------------------------------- */
 function safeJSONParse(str) {
   try {
     return JSON.parse(str);
@@ -31,30 +35,36 @@ function safeJSONParse(str) {
   }
 }
 
-// -------------------- GET all experiences --------------------
+/* ----------------------------------------
+   GET All Experiences
+---------------------------------------- */
 router.get("/", async (req, res) => {
   try {
     const experiences = await Experience.find();
     res.json({ experiences });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// -------------------- GET single experience --------------------
+/* ----------------------------------------
+   GET Single Experience
+---------------------------------------- */
 router.get("/:id", async (req, res) => {
   try {
     const experience = await Experience.findById(req.params.id);
-    if (!experience) return res.status(404).json({ error: "Experience not found" });
+    if (!experience)
+      return res.status(404).json({ error: "Experience not found" });
+
     res.json(experience);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// -------------------- POST create experience --------------------
+/* ----------------------------------------
+   POST Create Experience
+---------------------------------------- */
 router.post("/", parser, async (req, res) => {
   try {
     const {
@@ -68,18 +78,18 @@ router.post("/", parser, async (req, res) => {
       tips,
     } = req.body;
 
-    // Validate required fields
     if (!slug || !title || !subtitle || !mainDesc || !subDesc) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Get uploaded images
     const heroImg = req.files?.heroImgFile?.[0]?.path;
     const mainImg = req.files?.mainImgFile?.[0]?.path;
     const galleryImgs = req.files?.galleryFiles?.map((f) => f.path) || [];
 
     if (!heroImg || !mainImg) {
-      return res.status(400).json({ error: "Hero image and main image are required" });
+      return res
+        .status(400)
+        .json({ error: "Hero image and main image are required" });
     }
 
     const newExperience = new Experience({
@@ -91,22 +101,26 @@ router.post("/", parser, async (req, res) => {
       mainDesc,
       subDesc,
       subExperiences: safeJSONParse(subExperiences),
-      gallery: safeJSONParse(gallery).length ? safeJSONParse(gallery) : galleryImgs,
+      gallery: safeJSONParse(gallery).length
+        ? safeJSONParse(gallery)
+        : galleryImgs,
       tips: safeJSONParse(tips),
     });
 
     await newExperience.save();
     res.status(201).json(newExperience);
   } catch (err) {
-    console.error("Error creating experience:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// -------------------- PUT update experience --------------------
+/* ----------------------------------------
+   PUT Update Experience
+---------------------------------------- */
 router.put("/:id", parser, async (req, res) => {
   try {
-    const { slug, title, subtitle, mainDesc, subDesc, subExperiences, tips } = req.body;
+    const { slug, title, subtitle, mainDesc, subDesc, subExperiences, tips } =
+      req.body;
 
     const updateData = {
       slug,
@@ -118,7 +132,6 @@ router.put("/:id", parser, async (req, res) => {
       tips: safeJSONParse(tips),
     };
 
-    // Update images if uploaded
     if (req.files?.heroImgFile?.[0]?.path) {
       updateData.heroImg = req.files.heroImgFile[0].path;
     }
@@ -131,28 +144,37 @@ router.put("/:id", parser, async (req, res) => {
       updateData.gallery = req.files.galleryFiles.map((f) => f.path);
     }
 
-    const updatedExperience = await Experience.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updatedExperience = await Experience.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
-    if (!updatedExperience) return res.status(404).json({ error: "Experience not found" });
+    if (!updatedExperience)
+      return res.status(404).json({ error: "Experience not found" });
 
     res.json(updatedExperience);
   } catch (err) {
-    console.error("Error updating experience:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-router.get("/:id", async (req, res) => {
+/* ----------------------------------------
+   DELETE Experience
+---------------------------------------- */
+router.delete("/:id", async (req, res) => {
   try {
-    const experience = await Experience.findById(req.params.id);
-    if (!experience) return res.status(404).json({ error: "Experience not found" });
-    res.json(experience);
+    const deletedExperience = await Experience.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!deletedExperience)
+      return res.status(404).json({ error: "Experience not found" });
+
+    res.json({ message: "Experience deleted successfully" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
-
-
 
 module.exports = router;

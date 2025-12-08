@@ -21,7 +21,7 @@ export default function BlogForm({ formData, setFormData, handleSubmit, submitLa
           <input {...getInputProps()} />
           <p>Click or drag & drop image here</p>
         </div>
-        {formData.heroImgPreview && <img src={formData.heroImgPreview} className="w-48 h-48 mt-2 object-cover rounded"/>}
+        {formData.heroImgPreview && <img src={formData.heroImgPreview} alt="img" className="w-48 h-48 mt-2 object-cover rounded"/>}
       </div>
 
       <button type="submit" className="w-full bg-[#0d203a] text-white py-3 rounded-xl mt-6">{submitLabel}</button>

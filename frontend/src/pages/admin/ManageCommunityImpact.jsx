@@ -5,48 +5,62 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 const AdminCommunityImpact = () => {
+  const [activeTab, setActiveTab] = useState("description");
   const [isSaving, setIsSaving] = useState(false);
   const [communityData, setCommunityData] = useState({
-    description: "",
-    commonImage: "",
+    description: [""],
     impacts: [],
   });
-  const [files, setFiles] = useState({
-    commonImage: null,
-    impactImages: [],
-  });
+  const [files, setFiles] = useState({ impactImages: [] });
 
-  // Fetch data from backend
+  useEffect(() => {
+    fetchCommunity();
+  }, []);
+
   const fetchCommunity = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/communityImpact");
-      if (res.data)
+      if (res.data) {
         setCommunityData({
-          description: res.data.description || "",
-          commonImage: res.data.commonImage || "",
-          impacts: res.data.impacts || [],
+          description: Array.isArray(res.data.description)
+            ? res.data.description
+            : [res.data.description || ""],
+          impacts: Array.isArray(res.data.impacts) ? res.data.impacts : [],
         });
+        setFiles({
+          impactImages: (res.data.impacts || []).map(() => []),
+        });
+      }
     } catch (err) {
       console.error(err);
       toast.error("Failed to load community data");
     }
   };
 
-  useEffect(() => {
-    fetchCommunity();
-  }, []);
-
-  // Handle changes for description
-  const handleDescriptionChange = (e) => {
-    setCommunityData({ ...communityData, description: e.target.value });
+  // ---------------- Handlers ----------------
+  const handleDescriptionChange = (e, idx) => {
+    const updated = [...communityData.description];
+    updated[idx] = e.target.value;
+    setCommunityData({ ...communityData, description: updated });
   };
 
-  // Handle changes for impacts
+  const handleAddParagraph = () =>
+    setCommunityData({
+      ...communityData,
+      description: [...communityData.description, ""],
+    });
+
+  const handleRemoveParagraph = (idx) => {
+    const updated = [...communityData.description];
+    updated.splice(idx, 1);
+    setCommunityData({ ...communityData, description: updated });
+  };
+
   const handleImpactChange = (e, idx, field) => {
-    const updated = [...(communityData.impacts || [])];
+    const updated = [...communityData.impacts];
     updated[idx][field] = e.target.value;
     setCommunityData({ ...communityData, impacts: updated });
   };
@@ -54,89 +68,86 @@ const AdminCommunityImpact = () => {
   const handleAddImpact = () => {
     setCommunityData({
       ...communityData,
-      impacts: [...(communityData.impacts || []), { title: "", description: "", images: [] }],
+      impacts: [
+        ...communityData.impacts,
+        { title: "", description: "", images: [] },
+      ],
     });
-    setFiles({ ...files, impactImages: [...(files.impactImages || []), []] });
+    setFiles({ ...files, impactImages: [...files.impactImages, []] });
   };
 
   const handleRemoveImpact = (idx) => {
-    const updated = [...(communityData.impacts || [])];
+    const updated = [...communityData.impacts];
     updated.splice(idx, 1);
     setCommunityData({ ...communityData, impacts: updated });
 
-    const updatedFiles = [...(files.impactImages || [])];
+    const updatedFiles = [...files.impactImages];
     updatedFiles.splice(idx, 1);
     setFiles({ ...files, impactImages: updatedFiles });
   };
 
-  // Dropzone handler
-  const handleDrop = (acceptedFiles, type, index) => {
-    const oversizedFiles = acceptedFiles.filter(file => file.size > MAX_FILE_SIZE);
-    if (oversizedFiles.length > 0) {
-      toast.error("Some files exceed the 50MB limit");
-    }
-    const validFiles = acceptedFiles.filter(file => file.size <= MAX_FILE_SIZE);
+  const handleDrop = (acceptedFiles, idx) => {
+    const oversized = acceptedFiles.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversized.length) toast.error("Some files exceed 50MB");
 
-    if (type === "commonImage") {
-      setFiles({ ...files, commonImage: validFiles[0] });
-      setCommunityData({ ...communityData, commonImage: validFiles[0] ? URL.createObjectURL(validFiles[0]) : "" });
-    } else if (type === "impact") {
-      const impactFiles = [...(files.impactImages || [])];
-      impactFiles[index] = validFiles;
-      setFiles({ ...files, impactImages: impactFiles });
+    const validFiles = acceptedFiles.filter((f) => f.size <= MAX_FILE_SIZE);
+    const impactFiles = [...files.impactImages];
+    impactFiles[idx] = validFiles;
+    setFiles({ ...files, impactImages: impactFiles });
 
-      const updatedImpacts = [...(communityData.impacts || [])];
-      updatedImpacts[index].images = validFiles.map(f => URL.createObjectURL(f));
-      setCommunityData({ ...communityData, impacts: updatedImpacts });
-    }
+    const updatedImpacts = [...communityData.impacts];
+    updatedImpacts[idx].images = [
+      ...(communityData.impacts[idx].images || []),
+      ...validFiles.map((f) => URL.createObjectURL(f)),
+    ];
+    setCommunityData({ ...communityData, impacts: updatedImpacts });
   };
 
-  const Dropzone = ({ type, index }) => {
+  const Dropzone = ({ idx }) => {
     const { getRootProps, getInputProps } = useDropzone({
-      onDrop: (acceptedFiles) => handleDrop(acceptedFiles, type, index),
+      onDrop: (files) => handleDrop(files, idx),
       accept: { "image/*": [] },
-      multiple: type === "impact",
+      multiple: true,
     });
 
     return (
       <div
         {...getRootProps()}
-        className="border-2 border-dashed border-blue-400 rounded-md p-4 text-center cursor-pointer hover:bg-blue-50 transition"
+        className="border-2 border-dashed border-[#2E5B84] rounded-md p-4 text-center cursor-pointer hover:bg-blue-50 transition"
       >
         <input {...getInputProps()} />
-        <p className="text-blue-600">Drag & drop image here or click</p>
-        <p className="text-xs text-gray-500 mt-1">Max file size: 50MB</p>
+        <p className="text-[#2E5B84] font-medium">
+          Drag & drop images here or click
+        </p>
       </div>
     );
   };
 
-  // Save handler
   const handleSave = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(communityData));
 
-      if (files.commonImage) formData.append("commonImage", files.commonImage);
-
-      (files.impactImages || []).forEach((arr, idx) => {
+      files.impactImages.forEach((arr, impactIndex) => {
         arr.forEach((file) => {
-          formData.append(`impacts[${idx}][images][]`, file);
+          formData.append(`impactImages_${impactIndex}`, file);
         });
       });
 
-      const res = await axios.post("http://localhost:5000/api/communityImpact", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/communityImpact",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
       if (res.status === 200) {
         toast.success("Community Impact updated successfully!");
         setCommunityData(res.data);
-        setFiles({ commonImage: null, impactImages: [] });
-      } else {
-        toast.error("Failed to save community impact");
-      }
+        setFiles({ impactImages: [] });
+      } else toast.error("Failed to save community impact");
     } catch (err) {
       console.error(err);
       toast.error("Failed to save community impact");
@@ -152,69 +163,165 @@ const AdminCommunityImpact = () => {
         <AdminSidebar />
       </div>
 
-      <div className="flex-1 ml-64 p-6 bg-blue-50 min-h-screen">
-        <h2 className="text-3xl font-bold mb-6 text-blue-800">Manage Community Impact</h2>
-        <form onSubmit={handleSave} className="space-y-6 bg-white p-6 rounded shadow-md">
+      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+        <h2 className="text-4xl font-bold text-[#0d203a] mb-6">
+          Manage Community Impact
+        </h2>
 
-          {/* Description */}
-          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">Description</h3>
-          <textarea
-            value={communityData.description || ""}
-            onChange={handleDescriptionChange}
-            placeholder="Enter community impact description"
-            className="border p-3 w-full rounded mb-3 focus:ring-2 focus:ring-blue-300"
-            rows={4}
-          />
-
-          {/* Impacts */}
-          <h3 className="text-xl font-semibold text-blue-800 mt-6 mb-2">Impacts</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {(communityData.impacts || []).map((impact, idx) => (
-              <div key={idx} className="border p-4 rounded space-y-3 bg-blue-50">
-                <input
-                  value={impact.title || ""}
-                  onChange={(e) => handleImpactChange(e, idx, "title")}
-                  placeholder="Impact Title"
-                  className="border p-2 w-full rounded focus:ring-2 focus:ring-blue-300"
-                />
-                <textarea
-                  value={impact.description || ""}
-                  onChange={(e) => handleImpactChange(e, idx, "description")}
-                  placeholder="Impact Description"
-                  className="border p-2 w-full rounded focus:ring-2 focus:ring-blue-300"
-                  rows={3}
-                />
-                <Dropzone type="impact" index={idx} />
-                {impact.images && impact.images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {impact.images.map((img, i) => (
-                      <img key={i} src={img} alt="impact" className="w-24 h-24 object-cover rounded" />
-                    ))}
-                  </div>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImpact(idx)}
-                  className="text-red-600 underline mt-2"
-                >
-                  Remove Impact
-                </button>
-              </div>
-            ))}
-          </div>
-          <button type="button" onClick={handleAddImpact} className="text-blue-600 underline mt-4">
-            Add Impact
-          </button>
-
+        <div className="flex justify-end mb-8">
           <button
             type="submit"
+            onClick={handleSave}
             disabled={isSaving}
-            className={`bg-blue-600 text-white px-6 py-3 rounded mt-4 hover:bg-blue-700 transition flex items-center justify-center ${
+            className={`bg-[#2E5B84] text-white px-6 py-3 rounded hover:bg-[#1E3A60] transition ${
               isSaving ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
             {isSaving ? "Saving..." : "Save Community Impact"}
           </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex justify-center gap-4 mb-6">
+          {["description", "impacts"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-t ${
+                activeTab === tab
+                  ? "bg-[#2E5B84] text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {tab === "description" ? "Description" : "Impacts"}
+            </button>
+          ))}
+        </div>
+
+        <form className="space-y-6 bg-white p-6 rounded shadow-md">
+          {/* Description */}
+          {activeTab === "description" && (
+            <div>
+              <div className="flex justify-end mb-4">
+                <button
+                  type="button"
+                  onClick={handleAddParagraph}
+                  className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
+                >
+                  + Add Paragraph
+                </button>
+              </div>
+              <table className="w-full border border-[#1a354e] rounded mb-6">
+                <thead className="bg-[#0d203a] text-white">
+                  <tr>
+                    <th className="p-3 border border-[#1a354e]">Paragraph</th>
+                    <th className="p-3 border border-[#1a354e] text-center w-24">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {communityData.description.map((para, idx) => (
+                    <tr
+                      key={idx}
+                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+                    >
+                      <td className="p-3 border border-[#2E5B84]">
+                        <textarea
+                          value={para}
+                          onChange={(e) => handleDescriptionChange(e, idx)}
+                          rows={4}
+                          className="border p-2 w-full rounded focus:ring-2 focus:ring-[#2E5B84]"
+                        />
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveParagraph(idx)}
+                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Impacts */}
+          {activeTab === "impacts" && (
+            <div>
+              <div className="flex justify-end mb-4">
+                <button
+                  type="button"
+                  onClick={handleAddImpact}
+                  className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
+                >
+                  + Add Impact
+                </button>
+              </div>
+              <table className="w-full border border-[#1a354e] rounded mb-6">
+                <thead className="bg-[#0d203a] text-white">
+                  <tr>
+                    <th className="p-3 border border-[#1a354e]">Title</th>
+                    <th className="p-3 border border-[#1a354e]">Description</th>
+                    <th className="p-3 border border-[#1a354e]">Images</th>
+                    <th className="p-3 border border-[#1a354e] text-center w-24">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {communityData.impacts.map((impact, idx) => (
+                    <tr
+                      key={idx}
+                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+                    >
+                      <td className="p-3 border border-[#2E5B84]">
+                        <input
+                          value={impact.title}
+                          onChange={(e) => handleImpactChange(e, idx, "title")}
+                          className="border p-2 w-full rounded focus:ring-2 focus:ring-[#2E5B84]"
+                        />
+                      </td>
+                      <td className="p-3 border border-[#2E5B84]">
+                        <textarea
+                          value={impact.description}
+                          onChange={(e) =>
+                            handleImpactChange(e, idx, "description")
+                          }
+                          rows={6}
+                          className="border p-2 w-full rounded focus:ring-2 focus:ring-[#2E5B84]"
+                        />
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-center">
+                        <Dropzone idx={idx} />
+                        {impact.images?.map((img, i) => (
+                          <img
+                            key={i}
+                            src={img}
+                            alt="impact"
+                            className="w-20 h-20 object-cover rounded mt-1 mx-auto"
+                          />
+                        ))}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImpact(idx)}
+                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </form>
       </div>
     </div>
