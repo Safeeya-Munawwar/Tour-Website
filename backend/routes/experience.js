@@ -142,16 +142,17 @@ router.put("/:id", parser, async (req, res) => {
   }
 });
 
-// -------------------- DELETE experience --------------------
-router.delete("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const deletedExperience = await Experience.findByIdAndDelete(req.params.id);
-    if (!deletedExperience) return res.status(404).json({ error: "Experience not found" });
-    res.json({ message: "Experience deleted successfully" });
+    const experience = await Experience.findById(req.params.id);
+    if (!experience) return res.status(404).json({ error: "Experience not found" });
+    res.json(experience);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 module.exports = router;

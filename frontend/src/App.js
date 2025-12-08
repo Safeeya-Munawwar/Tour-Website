@@ -59,7 +59,7 @@ function App() {
           <Route path="/destinations" element={<Destination />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/experience" element={<Experiences />} />
-          <Route path="/experience/:slug" element={<ExperienceDetail />} />
+          <Route path="/experience/:id" element={<ExperienceDetail />} />
           <Route path="/day-tours" element={<DayTour />} />
           <Route path="/round-tours" element={<RoundTour />} />
           <Route path="/day-tour-detail" element={<TourDetail />} />

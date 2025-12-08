@@ -1,45 +1,29 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { IoIosArrowForward } from "react-icons/io";
 
 export default function Blog() {
+  const [stories, setStories] = useState([]);
   const [showText, setShowText] = useState(false);
+
+  // Animation for hero text
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
-  const stories = [
-    {
-      img: "/images/experience.PNG",
-      title: "Sri Lanka’s Hidden Gems: A Journey Off the Beaten Path",
-      date: "November 10, 2025",
-    },
-    {
-      img: "/images/home5.PNG",
-      title:
-        "Exploring Sri Lanka’s Cultural Triangle: Ancient Cities and Timeless Heritage",
-      date: "November 10, 2025",
-    },
-    {
-      img: "/images/home8.PNG",
-      title:
-        "Sri Lanka Hill Country Adventure: Tea, Trekking, and Scenic Wonders",
-      date: "November 10, 2025",
-    },
-    {
-      img: "/images/beach.PNG",
-      title: "Coastal Bliss: Discovering Sri Lanka’s Most Stunning Beaches",
-      date: "November 12, 2025",
-    },
-    {
-      img: "/images/info4.jpg",
-      title: "Wildlife Encounters: A Safari Through Sri Lanka’s National Parks",
-      date: "November 12, 2025",
-    },
-    {
-      img: "/images/street food.PNG",
-      title: "A Taste of Sri Lanka: Culinary Adventures Across the Island",
-      date: "November 12, 2025",
-    },
-  ];
+
+  // Fetch experiences from backend
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/experience"); // adjust route
+        setStories(res.data.experiences);
+      } catch (err) {
+        console.error("Error fetching experiences:", err);
+      }
+    };
+
+    fetchStories();
+  }, []);
 
   return (
     <div className="font-poppins bg-white text-[#222]">
@@ -63,54 +47,51 @@ export default function Blog() {
         </div>
       </div>
 
-      {/* ---------------------------- BLOG PAGE INTRO ---------------------------- */}
+      {/* ---------------------------- BLOG PAGE ---------------------------- */}
       <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          {/* Subtitle */}
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
             BLOG & NEWS
           </p>
 
-          {/* Heading */}
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
             A Little Story From Us
           </h2>
 
-          {/* Description */}
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
             Explore stories, tips, and behind-the-scenes experiences from our
             team at NetLanka Tours. Stay inspired and discover how we craft
             unforgettable journeys across Sri Lanka.
           </p>
 
-          {/* Gold Accent */}
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
-          {/* Cards */}
+          {/* ---------------------------- STORIES GRID ---------------------------- */}
           <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
-            {stories.map((story, index) => (
-              <div key={index} className="flex flex-col w-full">
-                {/* Card Image */}
-                <img
-                  src={story.img}
-                  alt={story.title}
-                  className="w-full h-[330px] object-cover rounded-xl"
-                />
-
-                {/* Title */}
-                <h3 className="mt-5 text-[22px] font-semibold leading-snug">
-                  {story.title}
-                </h3>
-
-                {/* Date */}
-                <p className="text-gray-500 text-sm mt-2">{story.date}</p>
-
-                {/* Read More */}
-                <button className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70">
-                  Read More <IoIosArrowForward size={20} />
-                </button>
-              </div>
-            ))}
+            {stories.length > 0 ? (
+              stories.map((story) => (
+                <div key={story._id} className="flex flex-col w-full">
+                  <img
+                    src={story.heroImg} // Cloudinary URL
+                    alt={story.title}
+                    className="w-full h-[330px] object-cover rounded-xl"
+                  />
+                  <h3 className="mt-5 text-[22px] font-semibold leading-snug">
+                    {story.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm mt-2">
+                    {new Date(story.date).toLocaleDateString()}
+                  </p>
+                  <button className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70">
+                    Read More <IoIosArrowForward size={20} />
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="col-span-3 text-center text-gray-500 mt-10">
+                No stories available yet.
+              </p>
+            )}
           </div>
         </div>
       </section>
