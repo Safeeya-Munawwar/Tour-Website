@@ -5,10 +5,10 @@ const cors = require("cors");
 require("dotenv").config();
 
 const aboutRoute = require("./routes/about");
-const teamRoute = require("./routes/team"); 
+const teamRoute = require("./routes/team");
 const journeyRoute = require("./routes/journey");
 const communityRoute = require("./routes/communityImpact");
-const destinationRoute = require("./routes/destination"); 
+const destinationRoute = require("./routes/destination");
 const experienceRoutes = require("./routes/experience");
 const blogRoutes = require("./routes/blog");
 const tailorMadeTourRoutes = require("./routes/tailorMadeTourRoutes");

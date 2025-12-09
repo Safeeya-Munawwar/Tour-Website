@@ -8,7 +8,7 @@ export default function ExperienceList() {
 
   const fetchExperiences = async () => {
     const res = await axios.get("http://localhost:5000/api/experience");
-    setExperiences(res.data.experiences || []);
+    setExperiences(res.data || []);
   };
 
   useEffect(() => {
@@ -28,7 +28,9 @@ export default function ExperienceList() {
       </div>
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
-        <h2 className="text-4xl font-bold text-[#0d203a] px-5 mt-4  mb-4">Experiences</h2>
+        <h2 className="text-4xl font-bold text-[#0d203a] px-5 mt-4  mb-4">
+          Experiences
+        </h2>
 
         <div className="flex justify-end mb-8">
           <Link
@@ -50,17 +52,36 @@ export default function ExperienceList() {
           </thead>
           <tbody>
             {experiences.map((exp) => (
-              <tr key={exp._id} className="border-b border-[#2E5B84] hover:bg-blue-50">
+              <tr
+                key={exp._id}
+                className="border-b border-[#2E5B84] hover:bg-blue-50"
+              >
                 <td className="p-2 border border-[#2E5B84] text-center">
-                  <img src={exp.heroImg} alt="" className="h-12 w-12 rounded object-cover mx-auto"/>
+                  <img
+                    src={exp.heroImg}
+                    alt=""
+                    className="h-12 w-12 rounded object-cover mx-auto"
+                  />
                 </td>
                 <td className="p-3 border border-[#2E5B84]">{exp.title}</td>
                 <td className="p-3 border border-[#2E5B84]">{exp.subtitle}</td>
                 <td className="py-4 flex justify-center items-center gap-2">
-                  <Link to={`/admin/experiences/edit/${exp._id}`} className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm">
+                  <Link
+                    to={`/admin/experiences/view/${exp._id}`}
+                    className="bg-[#6B8FB6] text-white px-3 py-1 rounded hover:bg-[#4b6f8f] text-sm"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    to={`/admin/experiences/edit/${exp._id}`}
+                    className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm"
+                  >
                     Edit
                   </Link>
-                  <button onClick={() => handleDelete(exp._id)} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">
+                  <button
+                    onClick={() => handleDelete(exp._id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                  >
                     Delete
                   </button>
                 </td>
