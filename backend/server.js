@@ -14,6 +14,7 @@ const blogRoutes = require("./routes/blog");
 const tailorMadeTourRoutes = require("./routes/tailorMadeTourRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const dayTourRoutes = require("./routes/dayTour");
+const roundToursRouter = require("./routes/roundTours");
 const app = express();
 
 // Middleware
@@ -24,6 +25,7 @@ app.use("/uploads", express.static("uploads"));
 
 // Routes
 
+app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);
 app.use("/api/about", aboutRoute);
 app.use("/api/team", teamRoute);
