@@ -473,14 +473,22 @@ const AdminManageTailorMadeTour = () => {
         {activeTab === "inquiries" && (
           <div className="px-5">
             <h3 className="text-xl font-bold mb-4">User Inquiries</h3>
-            <table className="w-full border border-[#1a354e] rounded mb-6">
+            <table className="w-full border border-[#1a354e] rounded mb-6 text-center">
               <thead className="bg-[#0d203a] text-white">
                 <tr>
                   <th className="p-3 border border-[#1a354e]">Full Name</th>
                   <th className="p-3 border border-[#1a354e]">Email</th>
                   <th className="p-3 border border-[#1a354e]">Phone</th>
-                  <th className="p-3 border border-[#1a354e]">Destination</th>
-                  <th className="p-3 border border-[#1a354e]">Travel Dates</th>
+                  <th className="p-3 border border-[#1a354e]">
+                    Pickup Location
+                    <br />
+                    <span className="text-m text-gray-300">(Start Date)</span>
+                  </th>
+                  <th className="p-3 border border-[#1a354e]">
+                    Drop Location
+                    <br />
+                    <span className="text-m text-gray-300">(End Date)</span>
+                  </th>
                   <th className="p-3 border border-[#1a354e]">Travelers</th>
                   <th className="p-3 border border-[#1a354e]">Status</th>
                   <th className="p-3 border border-[#1a354e]">Actions</th>
@@ -498,11 +506,36 @@ const AdminManageTailorMadeTour = () => {
                     <td className="p-3 border border-[#2E5B84]">{inq.email}</td>
                     <td className="p-3 border border-[#2E5B84]">{inq.phone}</td>
                     <td className="p-3 border border-[#2E5B84]">
-                      {inq.destination}
+                      {inq.pickupLocation || "—"}
+                      <br />
+                      <span className="text-sm text-gray-700">
+                        {inq.startDate
+                          ? new Date(inq.startDate).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )
+                          : "—"}
+                      </span>
                     </td>
+
                     <td className="p-3 border border-[#2E5B84]">
-                      {inq.travelDates}
+                      {inq.dropLocation || "—"}
+                      <br />
+                      <span className="text-sm text-gray-700">
+                        {inq.endDate
+                          ? new Date(inq.endDate).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
+                          : "—"}
+                      </span>
                     </td>
+
                     <td className="p-3 border border-[#2E5B84]">
                       {inq.travelers}
                     </td>

@@ -6,11 +6,20 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   nationality: String,
   email: String,
   phone: String,
-  destination: String,
-  travelDates: String,
+  pickupLocation: String,
+  dropLocation: String,
+  startDate: { type: Date },
+  endDate: { type: Date },
   travelers: Number,
-  status: { type: String, enum: ["Pending","Approved","Cancelled"], default: "Pending" },
+  status: {
+    type: String,
+    enum: ["Pending", "Approved", "Cancelled"],
+    default: "Pending",
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("TailorMadeTourInquiry", TailorMadeTourInquirySchema);
+module.exports = mongoose.model(
+  "TailorMadeTourInquiry",
+  TailorMadeTourInquirySchema
+);

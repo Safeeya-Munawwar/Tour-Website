@@ -31,9 +31,6 @@ import ManageDestination from "./pages/admin/ManageDestination";
 import DestinationList from "./pages/destinations/DestinationList";
 import AddDestination from "./pages/destinations/AddDestination";
 import EditDestination from "./pages/destinations/EditDestination";
-import ExperienceList from "./pages/experience/ExperienceList";
-import AddExperience from "./pages/experience/AddExperience";
-import EditExperience from "./pages/experience/EditExperience";
 import BlogList from "./pages/blog/BlogList";
 import AddBlog from "./pages/blog/AddBlog";
 import EditBlog from "./pages/blog/EditBlog";
@@ -44,15 +41,23 @@ import EditDayTour from "./pages/daytour/EditDayTour";
 import RoundTourList from "./pages/roundtour/RoundTourList";
 import AddRoundTour from "./pages/roundtour/AddRoundTour";
 import EditRoundTour from "./pages/roundtour/EditRoundTour";
+import ExperienceList from "./pages/experience/ExperienceList";
+import AddExperience from "./pages/experience/AddExperience";
+import EditExperience from "./pages/experience/EditExperience";
+import ExperienceView from "./pages/experience/ExperienceView";
+import EditContact from "./pages/contact/EditContact";
+import ContactList from "./pages/contact/ContactList";
+
 function App() {
   const location = useLocation();
 
-  // Hide Navbar + Footer for admin pages
+  // Hide Navbar + Footer on admin pages
   const hideLayout = location.pathname.startsWith("/admin");
 
   return (
     <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
+
       <main className="flex-grow">
         <Routes>
           {/* USER ROUTES */}
@@ -65,7 +70,7 @@ function App() {
           <Route path="/destinations" element={<Destination />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/experience" element={<Experiences />} />
-          <Route path="/experience/:id" element={<ExperienceDetail />} />
+          <Route path="/experience/:slug" element={<ExperienceDetail />} />
           <Route path="/day-tours" element={<DayTour />} />
           <Route path="/round-tours" element={<RoundTour />} />
           <Route path="/day-tour-detail/:id" element={<TourDetail />} />
@@ -107,8 +112,16 @@ function App() {
 
         
 
+          <Route path="/admin/experiences" element={<ExperienceList />} />
+          <Route path="/admin/experiences/new" element={<AddExperience />} />
+          <Route path="/admin/experiences/edit/:id" element={<EditExperience />} />
+          <Route path="/admin/experiences/view/:id" element={<ExperienceView />} />
+          
+          <Route path="/admin/contacts" element={<ContactList />} />  
+          <Route path="/admin/contacts/edit" element={<EditContact />} />
         </Routes>
       </main>
+
       {!hideLayout && <Footer />}
     </div>
   );

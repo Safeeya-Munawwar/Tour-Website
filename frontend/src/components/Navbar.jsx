@@ -86,7 +86,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="w-full fixed top-0 left-0 z-[1000] font-[Poppins]">
+    <div className="w-full fixed top-0 left-0 z-[9999] font-[Poppins]">
 
       {/* ⭐ HEADER AREA WITH SCROLL EFFECT */}
       <div

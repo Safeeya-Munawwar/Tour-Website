@@ -88,8 +88,10 @@ const TailorMadeTours = () => {
     nationality: "",
     email: "",
     phone: "",
-    destination: "",
-    travelDates: "",
+    pickupLoaction: "",
+    dropLoaction: "",
+    startDate: "",
+    endDate: "",
     travelers: "",
   });
 
@@ -150,8 +152,10 @@ const TailorMadeTours = () => {
         nationality: "",
         email: "",
         phone: "",
-        destination: "",
-        travelDates: "",
+        pickupLoaction: "",
+        dropLoaction: "",
+        startDate: "",
+        endDate: "",
         travelers: "",
       });
       setStep(1);
@@ -338,34 +342,66 @@ const TailorMadeTours = () => {
                   Step 2: Your Trip Details
                 </h2>
 
+                {/* Pickup Location */}
                 <div>
                   <label className="block text-gray-700 font-semibold mb-1">
-                    Destination*
+                    Pickup Location*
                   </label>
                   <input
                     type="text"
-                    name="destination"
-                    value={formData.destination}
+                    name="pickupLocation"
+                    value={formData.pickupLocation}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Where do you want to go?"
+                    placeholder="Where should we pick you up?"
                   />
                 </div>
 
+                {/* Drop Location */}
                 <div>
                   <label className="block text-gray-700 font-semibold mb-1">
-                    Travel Dates*
+                    Drop Location*
                   </label>
                   <input
                     type="text"
-                    name="travelDates"
-                    value={formData.travelDates}
+                    name="dropLocation"
+                    value={formData.dropLocation}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="e.g., 20 Dec 2025 - 30 Dec 2025"
+                    placeholder="Where should we drop you off?"
                   />
                 </div>
 
+                {/* Start + End Date */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1">
+                      Start Date*
+                    </label>
+                    <input
+                      type="date"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-md p-2"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1">
+                      End Date*
+                    </label>
+                    <input
+                      type="date"
+                      name="endDate"
+                      value={formData.endDate}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-md p-2"
+                    />
+                  </div>
+                </div>
+
+                {/* Travelers */}
                 <div>
                   <label className="block text-gray-700 font-semibold mb-1">
                     Number of Travelers*
@@ -424,11 +460,17 @@ const TailorMadeTours = () => {
                     <strong>Phone:</strong> {formData.phone}
                   </p>
                   <p>
-                    <strong>Destination:</strong> {formData.destination}
+                    <strong>Pickup Location:</strong> {formData.pickupLocation}
                   </p>
                   <p>
-                    <strong>Travel Dates:</strong> {formData.travelDates}
+                    <strong>Drop Location:</strong> {formData.dropLocation}
                   </p>
+
+                  <p>
+                    <strong>Travel Dates:</strong> {formData.startDate} to{" "}
+                    {formData.endDate}
+                  </p>
+
                   <p>
                     <strong>Number of Travelers:</strong> {formData.travelers}
                   </p>

@@ -233,7 +233,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Contact */}
           <NavLink
-            to="/admin/manage-contact"
+            to="/admin/contacts"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
                 isActive ? activeClass : defaultClass

@@ -1,64 +1,97 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import ExperienceForm from "../../components/admin/ExperienceForm";
 
 export default function AddExperience() {
   const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
+
   const [formData, setFormData] = useState({
     slug: "",
     title: "",
     subtitle: "",
+    description: "",
     mainDesc: "",
     subDesc: "",
     heroImgFile: null,
     mainImgFile: null,
     galleryFiles: [],
+    subExperienceFiles: [],
     subExperiences: [],
     tips: [],
+    removeGallery: [],
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
+
     try {
       const data = new FormData();
-      data.append("slug", formData.slug);
-      data.append("title", formData.title);
-      data.append("subtitle", formData.subtitle);
-      data.append("mainDesc", formData.mainDesc);
-      data.append("subDesc", formData.subDesc);
+      const jsonData = {
+        slug: formData.slug,
+        title: formData.title,
+        subtitle: formData.subtitle,
+        description: formData.description,
+        mainDesc: formData.mainDesc,
+        subDesc: formData.subDesc,
+        subExperiences: formData.subExperiences,
+        tips: formData.tips,
+      };
 
-      if (formData.heroImgFile) data.append("heroImgFile", formData.heroImgFile);
-      if (formData.mainImgFile) data.append("mainImgFile", formData.mainImgFile);
-      formData.galleryFiles.forEach((file) => data.append("galleryFiles", file));
+      data.append("data", JSON.stringify(jsonData));
 
-      data.append("subExperiences", JSON.stringify(formData.subExperiences));
-      data.append("tips", JSON.stringify(formData.tips));
+      if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
+      if (formData.mainImgFile) data.append("mainImg", formData.mainImgFile);
 
-      await axios.post("http://localhost:5000/api/experience", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      (formData.galleryFiles || []).forEach((file) =>
+        data.append("galleryFiles", file)
+      );
+      (formData.subExperienceFiles || []).forEach((file, i) =>
+        data.append(`subExperienceImages${i}`, file)
+      );
 
-      alert("Experience added successfully!");
-      navigate("/admin/experiences");
+      const res = await axios.post(
+        "http://localhost:5000/api/experience",
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success("Experience added successfully!", {
+          onClose: () => navigate("/admin/experiences"),
+        });
+      } else {
+        toast.error("Failed to add experience!");
+      }
     } catch (err) {
       console.error(err);
-      alert("Error adding experience.");
+      toast.error("Error adding experience!");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="flex">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-screen">
         <AdminSidebar />
       </div>
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <ExperienceForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitLabel="Add Experience"
+          submitLabel={isSaving ? "Saving..." : "Add Experience"}
+          isSaving={isSaving}
         />
       </div>
     </div>

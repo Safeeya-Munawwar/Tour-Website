@@ -5,16 +5,19 @@ const cors = require("cors");
 require("dotenv").config();
 
 const aboutRoute = require("./routes/about");
-const teamRoute = require("./routes/team"); 
+const teamRoute = require("./routes/team");
 const journeyRoute = require("./routes/journey");
 const communityRoute = require("./routes/communityImpact");
-const destinationRoute = require("./routes/destination"); 
+const destinationRoute = require("./routes/destination");
 const experienceRoutes = require("./routes/experience");
 const blogRoutes = require("./routes/blog");
 const tailorMadeTourRoutes = require("./routes/tailorMadeTourRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const dayTourRoutes = require("./routes/dayTour");
 const roundToursRouter = require("./routes/roundTours");
+const contactRoute = require("./routes/contact");
+const contactFormRoute = require("./routes/contactForm");
+
 const app = express();
 
 // Middleware
@@ -36,12 +39,17 @@ app.use("/api/experience", experienceRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/tailor-made-tours", tailorMadeTourRoutes);
 app.use("/api/send-email", emailRoutes);
+app.use("/api/contact", contactRoute);
+app.use("/api/contact-form", contactFormRoute);
 
 // Connect to MongoDB
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
