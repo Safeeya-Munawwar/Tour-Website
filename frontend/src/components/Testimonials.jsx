@@ -1,35 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import axios from "axios";
 import "swiper/css";
 import "swiper/css/navigation";
 
 export default function Testimonials() {
-  const bigReviews = [
-    {
-      name: "Nisha Maniam",
-      time: "3 weeks ago",
-      review:
-        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
-      avatar: "N",
-    },
-    {
-      name: "Nisha Maniam",
-      time: "3 weeks ago",
-      review:
-        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
-      avatar: "N",
-    },
-    {
-      name: "Nisha Maniam",
-      time: "3 weeks ago",
-      review:
-        "Our Sri Lanka trip was truly wonderful! The tour guide provided very professional service, friendly, knowledgeable, and always attentive...",
-      avatar: "N",
-    },
-  ];
+  const [bigReviews, setBigReviews] = useState([]);
 
+  // Keep your static smallReviews
   const smallReviews = [
     {
       name: "Gita A",
@@ -67,6 +47,27 @@ export default function Testimonials() {
       img: "/images/profile-user.PNG",
     },
   ];
+
+  // Fetch backend messages
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/contact-form");
+        // Map backend messages to your bigReviews structure
+        const mapped = res.data.map((msg) => ({
+          name: `${msg.firstName} ${msg.lastName}`,
+          time: new Date(msg.createdAt).toLocaleDateString(),
+          review: msg.message,
+          avatar: msg.firstName.charAt(0).toUpperCase(),
+          rating: msg.rating || 0, // <- add this line
+        }));        
+        setBigReviews(mapped.reverse()); // latest first
+      } catch (err) {
+        console.error("Failed to fetch reviews", err);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   return (
     <section className="w-full py-24 bg-white font-sans">
@@ -116,19 +117,28 @@ export default function Testimonials() {
 
                   {/* stars */}
                   <div className="flex justify-center gap-1 text-yellow-400 mb-4">
-                    {[...Array(5)].map((_, s) => (
-                      <FaStar key={s} />
-                    ))}
-                  </div>
+  {[...Array(5)].map((_, i) => {
+    // check if rating exists and fill stars accordingly
+    const filled = item.rating && i < Number(item.rating);
+    return (
+      <FaStar
+        key={i}
+        className={filled ? "text-yellow-400" : "text-gray-300"}
+      />
+    );
+  })}
+</div>
+
 
                   {/* review */}
                   <p className="text-gray-700 text-center leading-relaxed">
                     {item.review}
                   </p>
 
-                  <p className="mt-4 text-center text-blue-600 cursor-pointer font-medium">
+                  {/* <p className="mt-4 text-center text-blue-600 cursor-pointer font-medium">
                     Read more
-                  </p>
+                  </p> */}
+
                 </div>
               </SwiperSlide>
             ))}

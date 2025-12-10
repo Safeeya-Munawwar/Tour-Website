@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 
 export default function ExperienceDetail() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const [experience, setExperience] = useState(null);
   const [otherExperiences, setOtherExperiences] = useState([]);
