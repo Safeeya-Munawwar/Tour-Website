@@ -51,43 +51,55 @@ export default function ExperienceList() {
             </tr>
           </thead>
           <tbody>
-            {experiences.map((exp) => (
-              <tr
-                key={exp._id}
-                className="border-b border-[#2E5B84] hover:bg-blue-50"
-              >
-                <td className="p-2 border border-[#2E5B84] text-center">
-                  <img
-                    src={exp.heroImg}
-                    alt=""
-                    className="h-12 w-12 rounded object-cover mx-auto"
-                  />
-                </td>
-                <td className="p-3 border border-[#2E5B84]">{exp.title}</td>
-                <td className="p-3 border border-[#2E5B84]">{exp.subtitle}</td>
-                <td className="py-4 flex justify-center items-center gap-2">
-                  <Link
-                    to={`/admin/experiences/view/${exp._id}`}
-                    className="bg-[#6B8FB6] text-white px-3 py-1 rounded hover:bg-[#4b6f8f] text-sm"
-                  >
-                    View
-                  </Link>
-                  <Link
-                    to={`/admin/experiences/edit/${exp._id}`}
-                    className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(exp._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {experiences.length > 0 ? (
+    experiences.map((exp) => (
+      <tr
+        key={exp._id}
+        className="border-b border-[#2E5B84] hover:bg-blue-50"
+      >
+        <td className="p-2 border border-[#2E5B84] text-center">
+          <img
+            src={exp.heroImg || "/images/placeholder.jpg"}
+            alt=""
+            className="h-12 w-12 rounded object-cover mx-auto"
+          />
+        </td>
+        <td className="p-3 border border-[#2E5B84]">{exp.title || "-"}</td>
+        <td className="p-3 border border-[#2E5B84]">{exp.subtitle || "-"}</td>
+        <td className="py-4 flex justify-center items-center gap-2">
+          <Link
+            to={`/admin/experiences/view/${exp._id}`}
+            className="bg-[#6B8FB6] text-white px-3 py-1 rounded hover:bg-[#4b6f8f] text-sm"
+          >
+            View
+          </Link>
+          <Link
+            to={`/admin/experiences/edit/${exp._id}`}
+            className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm"
+          >
+            Edit
+          </Link>
+          <button
+            onClick={() => handleDelete(exp._id)}
+            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td
+        colSpan={4}
+        className="text-center text-gray-500 py-6 border border-[#2E5B84]"
+      >
+        No experiences available.
+      </td>
+    </tr>
+  )}
+</tbody>
+
         </table>
       </div>
     </div>

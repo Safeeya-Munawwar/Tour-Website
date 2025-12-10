@@ -72,40 +72,41 @@ export default function Experiences() {
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mt-12">
-          {experiences.map((item, index) => (
-            <div
-              key={index}
-              className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
-            >
-              <img
-                src={item.mainImg}
-                alt={item.title}
-                className="w-full h-56 object-cover rounded-t-xl"
-              />
-
-              <div className="p-6">
-                <p className="text-[#8C1F28] text-sm font-semibold tracking-wide mb-1">
-                  {item.subtitle}
-                </p>
-
-                <h3 className="text-2xl font-light text-gray-900 group-hover:text-[#8C1F28] transition-colors">
-                  {item.title}
-                </h3>
-
-                <p className="text-gray-600 text-sm mt-3 leading-relaxed">
-                  {item.description}
-                </p>
-
-                <Link to={`/experience/${item.slug}`}>
-                  <button className="mt-4 text-[#8C1F28] font-semibold text-sm hover:underline">
-                    Read more
-                  </button>
-                </Link>
-              </div>
-            </div>
-          ))}
+       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mt-12">
+  {Array.isArray(experiences) && experiences.length > 0 ? (
+    experiences.map((item, index) => (
+      <div
+        key={index}
+        className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
+      >
+        <img
+          src={item.mainImg || "/images/placeholder.jpg"} // fallback image
+          alt={item.title || "Experience"}
+          className="w-full h-56 object-cover rounded-t-xl"
+        />
+        <div className="p-6">
+          <p className="text-[#8C1F28] text-sm font-semibold tracking-wide mb-1">
+            {item.subtitle || "Subtitle"}
+          </p>
+          <h3 className="text-2xl font-light text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+            {item.title || "Title"}
+          </h3>
+          <p className="text-gray-600 text-sm mt-3 leading-relaxed">
+            {item.description || "Description goes here."}
+          </p>
+          <Link to={`/experience/${item.slug || "#"}`}>
+            <button className="mt-4 text-[#8C1F28] font-semibold text-sm hover:underline">
+              Read more
+            </button>
+          </Link>
         </div>
+      </div>
+    ))
+  ) : (
+    <p className="text-center col-span-full">No experiences available yet.</p>
+  )}
+</div>
+
       </section>
     </div>
   );
