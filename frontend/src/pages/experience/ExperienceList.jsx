@@ -29,7 +29,7 @@ export default function ExperienceList() {
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl font-bold text-[#0d203a] px-5 mt-4  mb-4">
-          Experiences
+         Manage Experiences
         </h2>
 
         <div className="flex justify-end mb-8">

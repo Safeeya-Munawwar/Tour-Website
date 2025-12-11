@@ -88,7 +88,7 @@ export default function AdminContactList() {
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
-          Contact Information
+         Manage Contact Information
         </h2>
 
         {/* Edit Button */}

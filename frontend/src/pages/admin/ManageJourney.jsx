@@ -185,7 +185,7 @@ const AdminManageJourney = () => {
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6">
-          Manage Journey
+          Manage Our Journey
         </h2>
 
         <div className="flex justify-end mb-8">

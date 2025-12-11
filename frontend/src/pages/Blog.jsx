@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { IoIosArrowForward } from "react-icons/io";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Blog() {
-  const [stories, setStories] = useState([]);
   const [showText, setShowText] = useState(false);
+  const [stories, setStories] = useState([]); // fetched blogs
+  const [loading, setLoading] = useState(true);
 
   // Animation for hero text
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
 
-  // Fetch experiences from backend
+  // Fetch blogs from backend
   useEffect(() => {
-    const fetchStories = async () => {
+    const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/experience"); // adjust route
-        setStories(res.data.experiences);
+        const res = await axios.get("http://localhost:5000/api/blog");
+        setStories(res.data.blogs || []); // adjust if your API returns differently
       } catch (err) {
-        console.error("Error fetching experiences:", err);
+        console.error("Failed to fetch blogs:", err);
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchStories();
+    fetchBlogs();
   }, []);
 
   return (
@@ -67,32 +70,39 @@ export default function Blog() {
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
           {/* ---------------------------- STORIES GRID ---------------------------- */}
-          <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
-            {stories.length > 0 ? (
-              stories.map((story) => (
-                <div key={story._id} className="flex flex-col w-full">
-                  <img
-                    src={story.heroImg} // Cloudinary URL
-                    alt={story.title}
-                    className="w-full h-[330px] object-cover rounded-xl"
-                  />
-                  <h3 className="mt-5 text-[22px] font-semibold leading-snug">
-                    {story.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm mt-2">
-                    {new Date(story.date).toLocaleDateString()}
-                  </p>
-                  <button className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70">
-                    Read More <IoIosArrowForward size={20} />
-                  </button>
-                </div>
-              ))
-            ) : (
-              <p className="col-span-3 text-center text-gray-500 mt-10">
-                No stories available yet.
-              </p>
-            )}
-          </div>
+          {loading ? (
+            <p className="mt-10 text-center text-gray-500">Loading blogs...</p>
+          ) : (
+            <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
+              {stories.length > 0 ? (
+                stories.map((story) => (
+                  <div key={story._id} className="flex flex-col w-full">
+                    <img
+                      src={story.heroImg} // Cloudinary URL
+                      alt={story.title}
+                      className="w-full h-[330px] object-cover rounded-xl"
+                    />
+                    <h3 className="mt-5 text-[22px] font-semibold leading-snug">
+                      {story.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm mt-2">
+                      {new Date(story.date).toLocaleDateString()}
+                    </p>
+                    <Link
+                      to={`/blog/${story.slug}`} // link to blog detail page
+                      className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70"
+                    >
+                      Read More <IoIosArrowForward size={20} />
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-3 text-center text-gray-500 mt-10">
+                  No stories available yet.
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </section>
     </div>

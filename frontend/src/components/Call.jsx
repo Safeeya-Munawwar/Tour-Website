@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
+import axios from "axios";
 
 export default function Call() {
+  const [contact, setContact] = useState(null);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/contact");
+        setContact(res.data);
+      } catch (err) {
+        console.error("Failed to fetch contact info", err);
+      }
+    };
+    fetchContact();
+  }, []);
+
+  // Fallback if contact data hasn't loaded yet
+  const phone = contact?.phones?.[0] || "+94 72 917 1089";
+
   return (
     <section className="relative bg-zinc-100">
       <div className="mx-6 md:mx-12 lg:mx-20 py-16">
@@ -42,20 +60,16 @@ export default function Call() {
               {/* Phone row */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#2E5B84] text-white shadow">
-                  <FaPhone
-                    size={20}
-                    aria-hidden="true"
-                    className="text-white"
-                  />
+                  <FaPhone size={20} aria-hidden="true" />
                 </div>
 
                 <div>
                   <div className="text-sm text-gray-500">Call:</div>
                   <a
-                    href="tel:+94729171089"
+                    href={`tel:${phone.replace(/\s+/g, "")}`}
                     className="inline-block text-lg md:text-xl font-bold text-gray-900"
                   >
-                    +94 72 917 1089
+                    {phone}
                   </a>
                 </div>
               </div>
@@ -66,7 +80,7 @@ export default function Call() {
 
       {/* Floating WhatsApp button */}
       <a
-        href="/"
+        href={`https://wa.me/${phone.replace(/\D/g, "")}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed right-6 bottom-6 z-50"

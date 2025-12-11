@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import DayTourForm from "../../components/admin/DayTourForm";
 
@@ -24,12 +27,14 @@ export default function AddDayTour() {
     gallerySlides: [],
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
+
     try {
-      // ------------------------
       // Upload DayTour
-      // ------------------------
       const tourData = new FormData();
       tourData.append("title", formData.title);
       tourData.append("location", formData.location);
@@ -44,9 +49,7 @@ export default function AddDayTour() {
 
       const tourId = tourRes.data.tour._id;
 
-      // ------------------------
       // Upload DayTourDetail
-      // ------------------------
       const detailData = new FormData();
       detailData.append("tourId", tourId);
       detailData.append("heroTitle", formData.heroTitle);
@@ -57,14 +60,12 @@ export default function AddDayTour() {
       detailData.append("historyLeftList", JSON.stringify(formData.historyLeftList));
       detailData.append("historyRightList", JSON.stringify(formData.historyRightList));
 
-      // Gallery slides JSON
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,
       }));
       detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
 
-      // Attach gallery images separately
       formData.gallerySlides.forEach((slide, idx) => {
         if (slide.imageFile) {
           detailData.append(`galleryImage_${idx}`, slide.imageFile);
@@ -77,16 +78,21 @@ export default function AddDayTour() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      alert("Day Tour added successfully!");
-      navigate("/admin/day-tours");
+      toast.success("Day Tour added successfully!", {
+        onClose: () => navigate("/admin/day-tours"),
+        autoClose: 3000,
+      });
     } catch (err) {
       console.error(err);
-      alert("Error adding day tour");
+      toast.error("Error adding day tour!");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="flex min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-full">
         <AdminSidebar />
       </div>
@@ -95,7 +101,7 @@ export default function AddDayTour() {
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitLabel="Add Day Tour"
+          submitLabel={isSaving ? "Saving..." : "Add Day Tour"}
         />
       </div>
     </div>

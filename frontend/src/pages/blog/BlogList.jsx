@@ -23,7 +23,7 @@ export default function BlogList() {
     <div className="flex">
       <div className="w-64 fixed h-screen"><AdminSidebar /></div>
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
-        <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4 ">Blogs</h2>
+        <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4 ">Manage Blogs</h2>
         <div className="flex justify-end mb-8">
           <Link to="/admin/blogs/new" className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]">+ Add Blog</Link>
         </div>

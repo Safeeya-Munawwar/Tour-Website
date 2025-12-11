@@ -29,7 +29,7 @@ export default function DestinationList() {
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl px-5 mt-4 font-bold text-[#0d203a] mb-4">
-          Destinations
+          Manage Destinations
         </h2>
 
         <div className="flex justify-end mb-8">

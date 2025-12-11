@@ -209,7 +209,7 @@ const AdminManageAbout = () => {
 
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
-          About Page
+          Manage About
         </h2>
         <div className="flex justify-end mb-8">
           <button

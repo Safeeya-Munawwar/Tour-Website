@@ -47,6 +47,7 @@ import EditExperience from "./pages/experience/EditExperience";
 import ExperienceView from "./pages/experience/ExperienceView";
 import EditContact from "./pages/contact/EditContact";
 import ContactList from "./pages/contact/ContactList";
+import AdminManageHome from "./pages/admin/ManageHome";
 
 function App() {
   const location = useLocation();
@@ -60,7 +61,7 @@ function App() {
 
       <main className="flex-grow">
         <Routes>
-          {/* USER ROUTES */}
+          {/* ---------------------------USER ROUTES--------------------------- */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/our-team" element={<OurTeam />} />
@@ -77,48 +78,43 @@ function App() {
            <Route path="/round-tours/:id" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
 
-          {/* ADMIN ROUTES */}
-
+          {/* ---------------------------ADMIN ROUTES--------------------------- */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          
+          {/* Admin Our Story */}
           <Route path="/admin/manage-about" element={<AdminManageAbout />} />
           <Route path="/admin/manage-team" element={<AdminManageTeam />} />
           <Route path="/admin/manage-journey" element={<AdminManageJourney />}/>
           <Route path="/admin/manage-community"element={<AdminManageCommunityImpact />} />
+          {/* Admin Destinations */}
           <Route path="/admin/manage-destination"element={<ManageDestination />}/>
-
           <Route path="/admin/destinations" element={<DestinationList />} />
           <Route path="/admin/destinations/new" element={<AddDestination />} />
           <Route path="/admin/destinations/edit/:id"element={<EditDestination />}/>
-
-          <Route path="/admin/experiences" element={<ExperienceList />} />
-          <Route path="/admin/experiences/new" element={<AddExperience />} />
-          <Route path="/admin/experiences/edit/:id" element={<EditExperience />}/>
-
-          <Route path="/admin/blogs" element={<BlogList />} />
-          <Route path="/admin/blogs/new" element={<AddBlog />} />
-          <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
-
-          <Route path="/admin/tailor-made-tours" element={<AdminTailorMade />} />
-
-          <Route path="/admin/day-tours" element={<DayTourList />} />
-          <Route path="/admin/day-tours/new" element={<AddDayTour />} />
-          <Route path="/admin/day-tours/edit/:id" element={<EditDayTour />} />
-
-        <Route path="/admin/round-tours" element={<RoundTourList />} />
-        <Route path="/admin/round-tours/new" element={<AddRoundTour />} />
-        <Route path="/admin/round-tours/edit/:id" element={<EditRoundTour />} />
-
-        
-
+          {/* Admin Experiences */}
           <Route path="/admin/experiences" element={<ExperienceList />} />
           <Route path="/admin/experiences/new" element={<AddExperience />} />
           <Route path="/admin/experiences/edit/:id" element={<EditExperience />} />
           <Route path="/admin/experiences/view/:id" element={<ExperienceView />} />
-          
+          {/* Admin Blogs */}
+          <Route path="/admin/blogs" element={<BlogList />} />
+          <Route path="/admin/blogs/new" element={<AddBlog />} />
+          <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
+          {/* Admin Tailor Made Tours */}
+          <Route path="/admin/tailor-made-tours" element={<AdminTailorMade />} />
+          {/* Admin Day Tours */}
+          <Route path="/admin/day-tours" element={<DayTourList />} />
+          <Route path="/admin/day-tours/new" element={<AddDayTour />} />
+          <Route path="/admin/day-tours/edit/:id" element={<EditDayTour />} />
+          {/* Admin Round Tours */}
+          <Route path="/admin/round-tours" element={<RoundTourList />} />
+          <Route path="/admin/round-tours/new" element={<AddRoundTour />} />
+          <Route path="/admin/round-tours/edit/:id" element={<EditRoundTour />} />
+          {/* Admin Contact */}
           <Route path="/admin/contacts" element={<ContactList />} />  
           <Route path="/admin/contacts/edit" element={<EditContact />} />
+          {/* Admin Home */}
+          <Route path="/admin/manage-home" element={<AdminManageHome />} />
         </Routes>
       </main>
 

@@ -17,6 +17,7 @@ const dayTourRoutes = require("./routes/dayTour");
 const roundToursRouter = require("./routes/roundTours");
 const contactRoute = require("./routes/contact");
 const contactFormRoute = require("./routes/contactForm");
+const homeRoute = require("./routes/home");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/tailor-made-tours", tailorMadeTourRoutes);
 app.use("/api/send-email", emailRoutes);
 app.use("/api/contact", contactRoute);
 app.use("/api/contact-form", contactFormRoute);
+app.use("/api/home", homeRoute);
 
 // Connect to MongoDB
 const PORT = process.env.PORT || 5000;
