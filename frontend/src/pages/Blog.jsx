@@ -6,19 +6,21 @@ export default function Blog() {
   const [stories, setStories] = useState([]);
   const [showText, setShowText] = useState(false);
 
-  // Animation for hero text
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
 
-  // Fetch experiences from backend
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/experience"); // adjust route
-        setStories(res.data.experiences);
+        const res = await axios.get("http://localhost:5000/api/blog"); // adjust route
+
+        // Use optional chaining in case the property doesn't exist
+        const blogList = res.data?.blogs || res.data?.experiences || [];
+        setStories(blogList);
       } catch (err) {
-        console.error("Error fetching experiences:", err);
+        console.error("Error fetching blog:", err);
+        setStories([]); // fallback to empty array
       }
     };
 
@@ -27,7 +29,7 @@ export default function Blog() {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* ---------------------------- HERO HEADER ---------------------------- */}
+      {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/43.jpg')" }}
@@ -47,7 +49,7 @@ export default function Blog() {
         </div>
       </div>
 
-      {/* ---------------------------- BLOG PAGE ---------------------------- */}
+      {/* BLOG PAGE */}
       <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
@@ -66,21 +68,23 @@ export default function Blog() {
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
-          {/* ---------------------------- STORIES GRID ---------------------------- */}
+          {/* STORIES GRID */}
           <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
             {stories.length > 0 ? (
               stories.map((story) => (
-                <div key={story._id} className="flex flex-col w-full">
+                <div key={story._id || story.id} className="flex flex-col w-full">
                   <img
-                    src={story.heroImg} // Cloudinary URL
-                    alt={story.title}
+                    src={story.heroImg || "/images/default.jpg"} // fallback image
+                    alt={story.title || "Blog Story"}
                     className="w-full h-[330px] object-cover rounded-xl"
                   />
                   <h3 className="mt-5 text-[22px] font-semibold leading-snug">
-                    {story.title}
+                    {story.title || "Untitled"}
                   </h3>
                   <p className="text-gray-500 text-sm mt-2">
-                    {new Date(story.date).toLocaleDateString()}
+                    {story.date
+                      ? new Date(story.date).toLocaleDateString()
+                      : "Date not available"}
                   </p>
                   <button className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70">
                     Read More <IoIosArrowForward size={20} />
