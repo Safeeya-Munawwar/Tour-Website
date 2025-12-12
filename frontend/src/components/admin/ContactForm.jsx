@@ -52,7 +52,7 @@ const ContactForm = ({ contact }) => {
         {/* First Name */}
         <div className="flex flex-col space-y-1">
           <label className="font-medium text-gray-700">First Name</label>
-          <input
+          <input 
             type="text"
             placeholder="Enter your first name"
             value={firstName}

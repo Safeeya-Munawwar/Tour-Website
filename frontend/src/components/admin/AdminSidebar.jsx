@@ -14,18 +14,22 @@ import {
   MessageSquare,
   Home,
   Mail,
+  MessageCircle,
+  NotebookPen,
+  CalendarCheck,
 } from "lucide-react";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
   const [openToursMenu, setOpenToursMenu] = useState(false);
+  const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
+  const [openBookingMenu, setOpenBookingMenu] = useState(false);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
   return (
     <>
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 lg:hidden z-30"
@@ -33,15 +37,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
         />
       )}
 
-      <aside
-        className={`
-          fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200
-          transform transition-transform duration-300 z-40
-          ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-          }
-        `}
-      >
+      <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 overflow-y-auto">
         {/* Logo */}
         <div className="h-16 flex items-center px-6 shadow-md border-b border-gray-800">
           <img
@@ -95,6 +91,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <ChevronRight size={18} />
             )}
           </button>
+
           {openStoryMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
               <NavLink
@@ -158,6 +155,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <ChevronRight size={18} />
             )}
           </button>
+
           {openToursMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
               <NavLink
@@ -219,6 +217,70 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <PenTool size={18} /> Experiences
           </NavLink>
 
+          {/* ---------------- BOOKING MENU ---------------- */}
+          <button
+            onClick={() => setOpenBookingMenu(!openBookingMenu)}
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          >
+            <span className="flex items-center gap-3">
+              <CalendarCheck size={18} />
+              Booking
+            </span>
+            {openBookingMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
+          </button>
+
+          {openBookingMenu && (
+            <div className="ml-10 mt-1 flex flex-col space-y-1">
+              <NavLink
+                to="/admin/day-tour-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Map size={16} /> Day Tour
+              </NavLink>
+
+              <NavLink
+                to="/admin/round-tour-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Compass size={16} /> Round Tour
+              </NavLink>
+
+              <NavLink
+                to="/admin/common-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Star size={16} /> Common Booking
+              </NavLink>
+
+              <NavLink
+                to="/admin/customize-tour"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <PenTool size={16} /> Customize Tour
+              </NavLink>
+            </div>
+          )}
+
           {/* Blog */}
           <NavLink
             to="/admin/blogs"
@@ -230,6 +292,62 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           >
             <MessageSquare size={18} /> Blog
           </NavLink>
+
+          {/* ---------------- COMMENTS MENU ---------------- */}
+          <button
+            onClick={() => setOpenCommentsMenu(!openCommentsMenu)}
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          >
+            <span className="flex items-center gap-3">
+              <MessageCircle size={18} />
+              Comments
+            </span>
+            {openCommentsMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
+          </button>
+
+          {openCommentsMenu && (
+            <div className="ml-10 mt-1 flex flex-col space-y-1">
+              {/* Blog Comments */}
+              <NavLink
+                to="/admin/blog-comments"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <NotebookPen size={16} /> Blog Comments
+              </NavLink>
+
+              {/* Contact Form Messages */}
+              <NavLink
+                to="/admin/contact-messages"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Mail size={16} /> Contact Messages
+              </NavLink>
+
+              {/* Tailor-Made Tour Comments */}
+              <NavLink
+                to="/admin/tailor-comments"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Star size={16} /> Tailor Reviews
+              </NavLink>
+            </div>
+          )}
 
           {/* Contact */}
           <NavLink

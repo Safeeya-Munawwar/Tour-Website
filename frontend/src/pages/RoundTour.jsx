@@ -67,14 +67,30 @@ export default function RoundTour() {
             key={t._id}
             className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
           >
-            <img src={t.img} alt={t.title} className="w-full h-[260px] object-cover" />
+            <img
+              src={t.img}
+              alt={t.title}
+              className="w-full h-[260px] object-cover"
+            />
 
             <div className="px-8 py-10 flex flex-col flex-grow">
-              <h3 className="text-2xl font-serif font-semibold mb-3">{t.title}</h3>
+              <h3 className="text-2xl font-serif font-semibold mb-2">
+                {t.title}
+              </h3>
 
-              <div className="font-semibold text-gray-700 mb-4">{t.days}</div>
+              {/* Location */}
+              {t.location && (
+                <div className="text-gray-500 italic mb-2">{t.location}</div>
+              )}
 
-              <p className="text-gray-600 leading-relaxed mb-8 flex-grow">{t.desc}</p>
+              {/* Days */}
+              {t.days && (
+                <div className="font-semibold text-gray-700 mb-4">{t.days}</div>
+              )}
+
+              <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
+                {t.desc}
+              </p>
 
               <Link to={`/round-tours/${t._id}`} className="mx-auto">
                 <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 flex items-center gap-2 transition">
@@ -86,7 +102,9 @@ export default function RoundTour() {
         ))}
 
         {tours.length === 0 && (
-          <div className="col-span-3 text-center text-gray-500 p-8">No tours available.</div>
+          <div className="col-span-3 text-center text-gray-500 p-8">
+            No tours available.
+          </div>
         )}
       </div>
     </section>

@@ -18,7 +18,7 @@ export default function Blog() {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/blog");
-        setStories(res.data.blogs || []); // adjust if your API returns differently
+        setStories(res.data.blogs || []);
       } catch (err) {
         console.error("Failed to fetch blogs:", err);
       } finally {
@@ -76,24 +76,38 @@ export default function Blog() {
             <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
               {stories.length > 0 ? (
                 stories.map((story) => (
-                  <div key={story._id} className="flex flex-col w-full">
+                  <div
+                    key={story._id}
+                    className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col"
+                  >
+                    {/* Blog Image */}
                     <img
-                      src={story.heroImg} // Cloudinary URL
-                      alt={story.title}
-                      className="w-full h-[330px] object-cover rounded-xl"
+                      src={story.heroImg || "/images/placeholder.jpg"}
+                      alt={story.title || "Blog"}
+                      className="w-full h-[330px] object-cover rounded-t-xl"
                     />
-                    <h3 className="mt-5 text-[22px] font-semibold leading-snug">
-                      {story.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm mt-2">
-                      {new Date(story.date).toLocaleDateString()}
-                    </p>
-                    <Link
-                      to={`/blog/${story.slug}`} // link to blog detail page
-                      className="mt-6 flex items-center gap-2 font-medium text-black hover:opacity-70"
-                    >
-                      Read More <IoIosArrowForward size={20} />
-                    </Link>
+
+                    {/* Blog Content */}
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+                        {story.title || "Blog Title"}
+                      </h3>
+                      <p className="text-gray-500 text-sm mt-1">
+                        {story.date
+                          ? new Date(story.date).toLocaleDateString()
+                          : "Date"}
+                      </p>
+                      <p className="text-gray-600 text-sm mt-3 leading-relaxed flex-1">
+                        {story.description ||
+                          "Short description of the blog goes here."}
+                      </p>
+                      <Link
+                        to={`/blog/${story.slug || "#"}`}
+                        className="mt-4 flex items-center gap-2 font-medium text-[#8C1F28] hover:underline"
+                      >
+                        Read More <IoIosArrowForward size={20} />
+                      </Link>
+                    </div>
                   </div>
                 ))
               ) : (

@@ -23,7 +23,7 @@ export default function Why() {
   }, []);
 
   return (
-    <section className="w-full bg-white py-24">
+    <section className="w-full bg-white py-16">
       <div className="max-w-7xl mx-auto px-6 text-center">
 
         {/* Subtitle */}

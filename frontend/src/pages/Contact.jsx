@@ -278,7 +278,7 @@ const Contact = () => {
         {/* FORM */}
         <div className="bg-white shadow-xl p-5 sm:p-8 rounded-xl space-y-6 border border-gray-100 lg:col-span-5">
           <ContactForm />
-        </div>
+        </div> 
       </section>
 
       {/* MAP */}

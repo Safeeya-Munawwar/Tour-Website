@@ -11,7 +11,6 @@ export default function RoundTourDetail() {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
  const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
@@ -69,22 +68,30 @@ export default function RoundTourDetail() {
       </section>
 
       <section className="w-full px-6 md:px-32 py-10 mt-10">
-        <h2 className="font-playfair text-4xl mb-10 text-center">Highlights</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-gray-700">
-          {(details?.highlights || []).map((h, i) => (
-            <div key={i} className="bg-gray-100 p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col gap-3">
-              <h3 className="font-semibold text-xl mb-1 flex items-center gap-2">
-                <FiStar className="text-yellow-400" /> {h.title}
-              </h3>
-              <p>{h.desc}</p>
-            </div>
-          ))}
+  <h2 className="font-playfair text-4xl mb-10 text-center">Highlights</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-gray-700">
+    {(details?.highlights || []).map((h, i) => (
+      <div key={i} className="bg-gray-100 p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col gap-3">
+        {h.image && (
+          <img
+            src={h.image}
+            alt={h.title}
+            className="w-full h-40 object-cover rounded-md"
+          />
+        )}
+        <h3 className="font-semibold text-xl mb-1 flex items-center gap-2">
+          <FiStar className="text-yellow-400" /> {h.title}
+        </h3>
+        <p>{h.desc}</p>
+      </div>
+    ))}
 
-          {(details?.highlights || []).length === 0 && (
-            <div className="text-center col-span-3">No highlights provided.</div>
-          )}
-        </div>
-      </section>
+    {(details?.highlights || []).length === 0 && (
+      <div className="text-center col-span-3">No highlights provided.</div>
+    )}
+  </div>
+</section>
+
 
       <section className="w-full px-6 md:px-32 py-10 mt-10">
         <h2 className="font-playfair text-4xl mb-10 text-center">Day-wise Itinerary</h2>

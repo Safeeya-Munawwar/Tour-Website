@@ -10,15 +10,35 @@ import axios from "axios";
 export default function EditBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ title: "", slug: "", content: "", heroImgFile: null, heroImgPreview: "" });
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    subtitle: "",
+    description: "",
+    contentParagraphs: [],
+    heroImgFile: null,
+    heroImgPreview: "",
+  });
+  
   const [isSaving, setIsSaving] = useState(false);
 
+  // Fetch blog data
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/blog/${id}`);
         const blog = res.data;
-        setFormData({ title: blog.title, slug: blog.slug, content: blog.content, heroImgPreview: blog.heroImg });
+
+        setFormData({
+          slug: blog.slug || "",
+          title: blog.title || "",
+          subtitle: blog.subtitle || "",
+          description: blog.description || "",
+          contentParagraphs: blog.content ? blog.content.split("\n\n") : [],
+          heroImgPreview: blog.heroImg || "",
+          heroImgFile: null,
+        });
+        
       } catch (err) {
         console.error(err);
         toast.error("Error fetching blog!");
@@ -27,14 +47,17 @@ export default function EditBlog() {
     fetchBlog();
   }, [id]);
 
+  // Submit updated blog
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
 
     const data = new FormData();
-    data.append("title", formData.title);
     data.append("slug", formData.slug);
-    data.append("content", formData.content);
+    data.append("title", formData.title);
+    data.append("subtitle", formData.subtitle);
+data.append("description", formData.description);
+    data.append("content", (formData.contentParagraphs || []).join("\n\n"));
     if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
 
     try {
@@ -56,7 +79,9 @@ export default function EditBlog() {
   return (
     <div className="flex min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-full"><AdminSidebar /></div>
+      <div className="w-64 fixed h-full">
+        <AdminSidebar />
+      </div>
       <div className="flex-1 ml-64 p-6 bg-gray-50">
         <BlogForm
           formData={formData}

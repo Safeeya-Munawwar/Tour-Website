@@ -12,6 +12,7 @@ import CommunityImpact from "./pages/CommunityImpact";
 import Contact from "./pages/Contact";
 import Destination from "./pages/Destination";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import Experiences from "./pages/Experiences";
 import ExperienceDetail from "./pages/ExperienceDetail";
 import DayTour from "./pages/DayTour";
@@ -34,6 +35,7 @@ import EditDestination from "./pages/destinations/EditDestination";
 import BlogList from "./pages/blog/BlogList";
 import AddBlog from "./pages/blog/AddBlog";
 import EditBlog from "./pages/blog/EditBlog";
+import BlogView from "./pages/blog/BlogView";
 import AdminTailorMade from "./pages/admin/ManageTailorMadeTour";
 import DayTourList from "./pages/daytour/DayTourList";
 import AddDayTour from "./pages/daytour/AddDayTour";
@@ -48,6 +50,9 @@ import ExperienceView from "./pages/experience/ExperienceView";
 import EditContact from "./pages/contact/EditContact";
 import ContactList from "./pages/contact/ContactList";
 import AdminManageHome from "./pages/admin/ManageHome";
+import BlogComments from "./pages/admin/BlogComments";
+import ContactMessages from "./pages/admin/ContactMessages";
+import TailorComments from "./pages/admin/TailorComments";
 
 function App() {
   const location = useLocation();
@@ -70,6 +75,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/destinations" element={<Destination />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="blog/:slug" element={<BlogDetail />} />
           <Route path="/experience" element={<Experiences />} />
           <Route path="/experience/:slug" element={<ExperienceDetail />} />
           <Route path="/day-tours" element={<DayTour />} />
@@ -100,6 +106,7 @@ function App() {
           <Route path="/admin/blogs" element={<BlogList />} />
           <Route path="/admin/blogs/new" element={<AddBlog />} />
           <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
+          <Route path="/admin/blogs/view/:id" element={<BlogView />} />
           {/* Admin Tailor Made Tours */}
           <Route path="/admin/tailor-made-tours" element={<AdminTailorMade />} />
           {/* Admin Day Tours */}
@@ -115,6 +122,13 @@ function App() {
           <Route path="/admin/contacts/edit" element={<EditContact />} />
           {/* Admin Home */}
           <Route path="/admin/manage-home" element={<AdminManageHome />} />
+          {/* Blog Comments */}
+          <Route path="admin/blog-comments" element={<BlogComments />} />
+          {/* Contact Msgs */}
+          <Route path="admin/contact-messages" element={<ContactMessages />} />
+          {/* Tailor Comments */}
+          <Route path="admin/tailor-comments" element={<TailorComments />} />
+
         </Routes>
       </main>
 

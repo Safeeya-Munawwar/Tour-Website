@@ -23,7 +23,18 @@ router.get("/", async (req, res) => {
   }
 });
 
-// -------------------- GET single blog --------------------
+// -------------------- GET single blog by slug --------------------
+router.get("/slug/:slug", async (req, res) => {
+  try {
+    const blog = await Blog.findOne({ slug: req.params.slug });
+    if (!blog) return res.status(404).json({ error: "Blog not found" });
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// -------------------- GET single blog by ID --------------------
 router.get("/:id", async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -37,17 +48,19 @@ router.get("/:id", async (req, res) => {
 // -------------------- POST create blog --------------------
 router.post("/", parser, async (req, res) => {
   try {
-    const { title, slug, content } = req.body;
-    if (!title || !slug || !content || !req.file) {
+    const { title, slug, subtitle, description, content } = req.body;
+
+    if (!title || !slug || !subtitle || !description || !content || !req.file) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
     const newBlog = new Blog({
       title,
       slug,
+      subtitle,
+      description,
       content,
       heroImg: req.file.path,
-      date: new Date(),
     });
 
     await newBlog.save();
@@ -60,8 +73,9 @@ router.post("/", parser, async (req, res) => {
 // -------------------- PUT update blog --------------------
 router.put("/:id", parser, async (req, res) => {
   try {
-    const { title, slug, content } = req.body;
-    const updateData = { title, slug, content };
+    const { title, slug, subtitle, description, content } = req.body;
+
+    const updateData = { title, slug, subtitle, description, content };
 
     if (req.file) updateData.heroImg = req.file.path;
 
@@ -70,6 +84,7 @@ router.put("/:id", parser, async (req, res) => {
       updateData,
       { new: true }
     );
+
     if (!updatedBlog) return res.status(404).json({ error: "Blog not found" });
 
     res.json(updatedBlog);

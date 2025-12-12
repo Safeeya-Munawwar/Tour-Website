@@ -9,7 +9,16 @@ import axios from "axios";
 
 export default function AddBlog() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ title: "", slug: "", content: "", heroImgFile: null, heroImgPreview: "" });
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    subtitle: "",
+    description: "",
+    contentParagraphs: [],
+    heroImgFile: null,
+    heroImgPreview: "",
+  });
+  
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -17,10 +26,13 @@ export default function AddBlog() {
     setIsSaving(true);
 
     const data = new FormData();
-    data.append("title", formData.title);
     data.append("slug", formData.slug);
-    data.append("content", formData.content);
-    if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
+data.append("title", formData.title);
+data.append("subtitle", formData.subtitle);
+data.append("description", formData.description);
+data.append("content", (formData.contentParagraphs || []).join("\n\n"));
+if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
+
 
     try {
       await axios.post("http://localhost:5000/api/blog", data, {
