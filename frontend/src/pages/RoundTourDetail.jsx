@@ -5,12 +5,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
 import { FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
-import BookForm from "./BookForm"; // adjust path if needed
+import BookRoundTour from "../components/BookRoundTour";
+
 
 export default function RoundTourDetail() {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
-  const [details, setDetails] = useState(null);
+  const [details, setDetails] = useState(null); 
   const [showForm, setShowForm] = useState(false);
  const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
@@ -211,11 +212,12 @@ export default function RoundTourDetail() {
       {showForm && (
         <>
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]" onClick={() => setShowForm(false)}></div>
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] h-[90vh] bg-white shadow-xl p-4 z-[20001] overflow-auto rounded-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto"
+   onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-end">
               <button className="text-3xl font-bold text-gray-600 hover:text-black" onClick={() => setShowForm(false)}>×</button>
             </div>
-            <BookForm />
+            <BookRoundTour tourId={tour._id} tourTitle={tour.title} tourLocation={tour.location} />
           </div>
         </>
       )}

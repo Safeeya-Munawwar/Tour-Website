@@ -4,7 +4,9 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
-import BookForm from "./BookForm";
+import BookDayTour from "../components/BookDayTour";
+
+
 
 export default function TourDetail() {
   const { id } = useParams();
@@ -168,10 +170,10 @@ export default function TourDetail() {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
             onClick={() => setShowForm(false)}
           ></div>
-          <div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[400px] h-[90vh] bg-white shadow-2xl p-4 z-[20001] flex flex-col overflow-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
+         <div
+  className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto"
+  onClick={(e) => e.stopPropagation()}
+>
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => setShowForm(false)}
@@ -180,7 +182,7 @@ export default function TourDetail() {
                 ×
               </button>
             </div>
-            <BookForm />
+            <BookDayTour tourId={tour._id} tourTitle={tour.title} tourLocation={tour.location} />
           </div>
         </>
       )}

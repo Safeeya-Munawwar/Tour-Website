@@ -18,6 +18,7 @@ import {
   NotebookPen,
   CalendarCheck,
 } from "lucide-react";
+import { FaTripadvisor } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
@@ -345,6 +346,18 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 }
               >
                 <Star size={16} /> Tailor Reviews
+              </NavLink>
+
+              {/* TripAdvisor Reviews */}
+              <NavLink
+                to="/admin/tripadvisor-reviews"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <FaTripadvisor size={16} /> TripAdvisor
               </NavLink>
             </div>
           )}
