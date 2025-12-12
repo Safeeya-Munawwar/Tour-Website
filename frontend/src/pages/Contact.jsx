@@ -32,7 +32,8 @@ const CurvedBezierRouting = ({ userLocation, offices }) => {
   const animationRefs = useRef([]);
 
   useEffect(() => {
-    if (!userLocation || !map) return;
+    if (!userLocation || !map || !offices?.length) return;
+
     map.eachLayer((layer) => {
       if (layer?.customBezierRoute) map.removeLayer(layer);
     });
@@ -104,19 +105,21 @@ const CurvedBezierRouting = ({ userLocation, offices }) => {
 /* --------------------------- QUICK JUMP --------------------------- */
 const QuickJump = ({ offices, userLocation }) => {
   const map = useMap();
-  const jump = (coords) => map.setView(coords, 13, { animate: true });
+  const jump = (coords) => coords && map.setView(coords, 13, { animate: true });
 
   return (
     <div className="absolute top-3 right-3 bg-white shadow-md rounded-lg p-2 z-[1000] space-y-1 text-xs sm:text-sm">
-      {offices.map((o, i) => (
-        <p
-          key={i}
-          onClick={() => jump(o.coords)}
-          className="cursor-pointer hover:text-yellow-600 font-medium"
-        >
-          📍 {o.name}
-        </p>
-      ))}
+      {offices?.map((o, i) =>
+        o.coords ? (
+          <p
+            key={i}
+            onClick={() => jump(o.coords)}
+            className="cursor-pointer hover:text-yellow-600 font-medium"
+          >
+            📍 {o.name}
+          </p>
+        ) : null
+      )}
       {userLocation && (
         <p
           onClick={() => jump(userLocation)}
@@ -131,7 +134,13 @@ const QuickJump = ({ offices, userLocation }) => {
 
 /* --------------------------- MAIN CONTACT PAGE --------------------------- */
 const Contact = () => {
-  const [contact, setContact] = useState(null);
+  const [contact, setContact] = useState({
+    offices: [],
+    phones: [],
+    emails: [],
+    socialMedia: [],
+    workingHours: { start: "", end: "" },
+  });
   const [userLocation, setUserLocation] = useState(null);
   const [showText, setShowText] = useState(false);
 
@@ -142,7 +151,7 @@ const Contact = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/contact")
-      .then((res) => setContact(res.data))
+      .then((res) => setContact(res.data || {}))
       .catch((err) => console.error(err));
   }, []);
 
@@ -154,18 +163,14 @@ const Contact = () => {
     }
   }, []);
 
-  if (!contact) return <p>Loading...</p>;
-
   return (
     <div className="font-poppins bg-white text-[#222]">
-
       {/* HERO */}
       <div
         className="w-full h-[260px] sm:h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/contact-header.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
-
         <div
           className={`absolute bottom-4 sm:bottom-6 md:bottom-10 right-3 sm:right-6 md:right-10 max-w-[90%] md:w-[320px] bg-black/70 text-white p-3 sm:p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
@@ -194,10 +199,8 @@ const Contact = () => {
 
       {/* CONTACT + FORM */}
       <section className="py-6 px-4 sm:px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-9 gap-10 sm:gap-12 items-center">
-
         {/* CONTACT INFO */}
         <div className="space-y-8 lg:col-span-4 pl-1 sm:pl-10 max-md:pl-3">
-
           {/* OFFICES */}
           <div>
             {contact.offices.map((office, i) => (
@@ -278,7 +281,7 @@ const Contact = () => {
         {/* FORM */}
         <div className="bg-white shadow-xl p-5 sm:p-8 rounded-xl space-y-6 border border-gray-100 lg:col-span-5">
           <ContactForm />
-        </div> 
+        </div>
       </section>
 
       {/* MAP */}
@@ -293,50 +296,51 @@ const Contact = () => {
           style={{ height: 350 }}
         >
           <MapContainer
-            center={contact.offices[0].coords}
+            center={contact.offices?.[0]?.coords || [0, 0]}
             zoom={10}
             style={{ height: "100%", width: "100%" }}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-            <QuickJump offices={contact.offices} userLocation={userLocation} />
+            <QuickJump
+              offices={contact.offices?.filter((o) => o.coords)}
+              userLocation={userLocation}
+            />
 
             {userLocation && (
               <CurvedBezierRouting
                 userLocation={userLocation}
-                offices={contact.offices}
+                offices={contact.offices?.filter((o) => o.coords)}
               />
             )}
 
             {/* OFFICE MARKERS */}
-            {contact.offices.map((office, i) => (
-              <Marker
-                key={i}
-                position={office.coords}
-                icon={
-                  office.name.toLowerCase().includes("corporate")
-                    ? greenIcon
-                    : blueIcon
-                }
-              >
-                <Popup>
-                  <div className="space-y-1 text-xs sm:text-sm">
-                    <strong className="text-gray-800">{office.name}</strong>
-                    <p className="text-gray-600">{office.address}</p>
-                    {contact.phones[0] && (
-                      <p className="text-gray-600">
-                        Phone: {contact.phones[0]}
-                      </p>
-                    )}
-                    {contact.emails[0] && (
-                      <p className="text-gray-600">
-                        Email: {contact.emails[0]}
-                      </p>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+            {contact.offices
+              .filter((o) => o.coords)
+              .map((office, i) => (
+                <Marker
+                  key={i}
+                  position={office.coords}
+                  icon={
+                    office.name?.toLowerCase().includes("corporate")
+                      ? greenIcon
+                      : blueIcon
+                  }
+                >
+                  <Popup>
+                    <div className="space-y-1 text-xs sm:text-sm">
+                      <strong className="text-gray-800">{office.name}</strong>
+                      <p className="text-gray-600">{office.address}</p>
+                      {contact.phones[0] && (
+                        <p className="text-gray-600">Phone: {contact.phones[0]}</p>
+                      )}
+                      {contact.emails[0] && (
+                        <p className="text-gray-600">Email: {contact.emails[0]}</p>
+                      )}
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
 
             {/* USER LOCATION */}
             {userLocation && <Marker position={userLocation} icon={redIcon} />}
