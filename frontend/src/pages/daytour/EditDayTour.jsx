@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import DayTourForm from "../../components/admin/DayTourForm";
 
 export default function EditDayTour() {
-  const { id } = useParams(); // Tour ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,7 +28,8 @@ export default function EditDayTour() {
     gallerySlides: [],
   });
 
-  // Fetch existing tour + detail
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     async function fetchTour() {
       try {
@@ -56,34 +60,29 @@ export default function EditDayTour() {
         }
       } catch (err) {
         console.error(err);
-        alert("Error fetching tour data");
+        toast.error("Error fetching tour data!");
       }
     }
     fetchTour();
   }, [id]);
 
-  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
+
     try {
-      // ------------------------
       // Update DayTour
-      // ------------------------
       const tourData = new FormData();
       tourData.append("title", formData.title);
       tourData.append("location", formData.location);
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      await axios.put(
-        `http://localhost:5000/api/day-tours/${id}`,
-        tourData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      await axios.put(`http://localhost:5000/api/day-tours/${id}`, tourData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      // ------------------------
       // Update DayTourDetail
-      // ------------------------
       const detailData = new FormData();
       detailData.append("heroTitle", formData.heroTitle);
       detailData.append("heroSubtitle", formData.heroSubtitle);
@@ -93,36 +92,37 @@ export default function EditDayTour() {
       detailData.append("historyLeftList", JSON.stringify(formData.historyLeftList));
       detailData.append("historyRightList", JSON.stringify(formData.historyRightList));
 
-      // Gallery slides JSON
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,
       }));
       detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
 
-      // Attach gallery images separately
       formData.gallerySlides.forEach((slide, idx) => {
         if (slide.imageFile) {
           detailData.append(`galleryImage_${idx}`, slide.imageFile);
         }
       });
 
-      await axios.put(
-        `http://localhost:5000/api/day-tours/detail/${id}`, // Backend must support detail update by tourId
-        detailData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      await axios.put(`http://localhost:5000/api/day-tours/detail/${id}`, detailData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      alert("Day Tour updated successfully!");
-      navigate("/admin/day-tours");
+      toast.success("Day Tour updated successfully!", {
+        onClose: () => navigate("/admin/day-tours"),
+        autoClose: 3000,
+      });
     } catch (err) {
       console.error(err);
-      alert("Error updating day tour");
+      toast.error("Error updating day tour!");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="flex min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-full">
         <AdminSidebar />
       </div>
@@ -131,7 +131,7 @@ export default function EditDayTour() {
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitLabel="Update Day Tour"
+          submitLabel={isSaving ? "Saving..." : "Update Day Tour"}
         />
       </div>
     </div>

@@ -64,28 +64,23 @@ router.post("/", upload.single("img"), async (req, res) => {
 // ------------------------
 // ADMIN — CREATE DETAIL ITEM
 // ------------------------
-router.post("/detail", upload.fields([
-  { name: "heroImage", maxCount: 1 },
-  { name: "galleryImage_0" },
-  { name: "galleryImage_1" },
-  { name: "galleryImage_2" }, // Add more if needed or handle dynamically
-]), async (req, res) => {
+router.post("/detail", upload.any(), async (req, res) => {
   try {
     const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
 
-    // Attach uploaded images if any
+    // Attach uploaded images dynamically
     gallerySlides.forEach((slide, idx) => {
       const fileKey = `galleryImage_${idx}`;
-      if (req.files[fileKey] && req.files[fileKey][0]) {
-        slide.image = req.files[fileKey][0].path; // Cloudinary URL
-      } else {
-        slide.image = slide.image || ""; // fallback
-      }
+      const uploadedFile = req.files.find(f => f.fieldname === fileKey);
+      if (uploadedFile) slide.image = uploadedFile.path;
+      else slide.image = slide.image || "";
     });
+
+    const heroFile = req.files.find(f => f.fieldname === "heroImage");
 
     const newDetail = new DayTourDetail({
       tourId: req.body.tourId,
-      heroImage: req.files.heroImage ? req.files.heroImage[0].path : "",
+      heroImage: heroFile ? heroFile.path : "",
       heroTitle: req.body.heroTitle,
       heroSubtitle: req.body.heroSubtitle,
       aboutParagraphs: JSON.parse(req.body.aboutParagraphs || "[]"),

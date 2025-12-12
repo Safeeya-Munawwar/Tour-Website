@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import RoundTourForm from "../../components/admin/RoundTourForm";
 
@@ -28,6 +31,8 @@ export default function EditRoundTour() {
     tourFacts: {},
     gallerySlides: [],
   });
+
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchTour = async () => {
@@ -57,7 +62,7 @@ export default function EditRoundTour() {
         });
       } catch (err) {
         console.error(err);
-        alert("Error loading tour data");
+        toast.error("Error loading tour data");
       }
     };
     fetchTour();
@@ -65,6 +70,8 @@ export default function EditRoundTour() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
+
     try {
       // ----- Update Tour Card -----
       const tourData = new FormData();
@@ -114,19 +121,29 @@ export default function EditRoundTour() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Round Tour updated successfully!");
-      navigate("/admin/round-tours");
+      toast.success("Round Tour updated successfully!", {
+        onClose: () => navigate("/admin/round-tours"),
+        autoClose: 3000,
+      });
     } catch (err) {
       console.error(err);
-      alert("Error updating round tour: " + (err.response?.data?.error || err.message));
+      toast.error("Error updating round tour: " + (err.response?.data?.error || err.message));
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="flex min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-full"><AdminSidebar /></div>
       <div className="flex-1 ml-64 p-6 bg-gray-50">
-        <RoundTourForm formData={formData} setFormData={setFormData} handleSubmit={handleSubmit} submitLabel="Update Round Tour" />
+        <RoundTourForm
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+          submitLabel={isSaving ? "Saving..." : "Update Round Tour"}
+        />
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import axios from "axios";
 import DestinationForm from "../../components/admin/DestinationForm";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function AddDestination() {
   const navigate = useNavigate();
@@ -14,32 +16,46 @@ export default function AddDestination() {
     imgFile: null,
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
 
-    const fd = new FormData();
-    fd.append("subtitle", formData.subtitle);
-    fd.append("title", formData.title);
-    if (formData.imgFile) fd.append("imgFile", formData.imgFile); // must match backend field name
+    try {
+      const fd = new FormData();
+      fd.append("subtitle", formData.subtitle);
+      fd.append("title", formData.title);
+      if (formData.imgFile) fd.append("imgFile", formData.imgFile);
 
+      await axios.post("http://localhost:5000/api/destination", fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    await axios.post("http://localhost:5000/api/destination", fd);
-
-    navigate("/admin/destinations");
+      toast.success("Destination created successfully!", {
+        onClose: () => navigate("/admin/destinations"),
+        autoClose: 3000,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Error creating destination!");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
     <div className="flex">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-screen">
         <AdminSidebar />
       </div>
-
       <div className="flex-1 ml-64 p-6 bg-blue-50 min-h-screen">
         <DestinationForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitLabel="Create Destination"
+          submitLabel={isSaving ? "Saving..." : "Create Destination"}
         />
       </div>
     </div>

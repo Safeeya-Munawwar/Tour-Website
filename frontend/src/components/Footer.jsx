@@ -1,136 +1,209 @@
-import React from "react";
-import { FaFacebookF, FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import {
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaClock,
+  FaStar,
+} from "react-icons/fa";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Footer = () => {
-  const socialLinks = [
-    { icon: FaFacebookF, url: "https://facebook.com", label: "Facebook" },
-    { icon: FaInstagram, url: "https://instagram.com", label: "Instagram" },
-    { icon: FaTwitter, url: "https://twitter.com", label: "Twitter" },
-    { icon: FaTiktok, url: "https://tiktok.com", label: "TikTok" },
-  ];
+export default function Footer() {
+  const [contact, setContact] = useState(null);
 
-  const navLinks = [
-    "Home",
-    "About Us",
-    "Tours",
-    "Destinations",
-    "Activities",
-    "Gallery",
-    "Contact Us",
-  ];
+  // ⭐ ONLY THIS IS THE CORRECT FORM STATE
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/contact")
+      .then((res) => res.json())
+      .then((data) => setContact(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  // ⭐ FIXED FUNCTION
+  const submitReview = async (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !message || rating === 0) {
+      toast.warning("Please fill all fields including rating!");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/reviews", {
+        name,
+        email,
+        rating,
+        message,
+      });
+
+      if (res.data.success) {
+        toast.success("Review submitted!");
+
+        // Reset
+        setName("");
+        setEmail("");
+        setMessage("");
+        setRating(0);
+      } else {
+        toast.error("Submission failed");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Server error");
+    }
+  };
 
   return (
-    <footer className="bg-black text-gray-200 pt-16 pb-10 font-poppins">
-      <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-10">
-        {/* Logo & Description */}
-        <div className="flex flex-col items-center md:items-start space-y-3 md:col-span-1">
-          <img src="/images/Logo.png" alt="NetLanka Tours" className="w-36" />
-          <p className="text-gray-400 text-sm text-center md:text-left leading-relaxed">
-            Discover Sri Lanka like never before with NetLanka Tours. Exclusive
-            journeys, expert guides, and unforgettable memories.
+    <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]">
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* MAIN GRID */}
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
+
+        {/* 1) LOGO + DESCRIPTION */}
+        <div>
+          <img src="/images/logo.png" alt="img" className="w-40 mb-5 opacity-95" />
+
+          <p className="text-gray-200 text-[15px] leading-relaxed pr-6">
+            NetLanka Tours is your trusted travel partner in Sri Lanka,
+            offering tailor-made tours, day tours, adventures and premium
+            travel experiences.
           </p>
+
+          <div className="flex gap-4 mt-7">
+            {contact?.socialMedia?.map((sm, i) => (
+              <a key={i} href={sm.url}>
+                <img src={sm.icon} alt="img" className="w-8 h-8 hover:scale-110" />
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex flex-col items-center md:items-start md:col-span-1">
-          <h4 className="text-white font-semibold mb-4 text-lg tracking-wide">
-            Quick Links
-          </h4>
-          <ul className="space-y-2 text-gray-400 text-sm">
-            {navLinks.map((link, idx) => (
-              <li
-                key={idx}
-                className="hover:text-red-500 cursor-pointer transition-colors duration-300"
-              >
-                {link}
+        {/* 2) CONTACT INFO */}
+        <div>
+          <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
+
+          <div className="space-y-5">
+
+            {contact?.phones?.map((p, i) => (
+              <div key={i} className="flex gap-3">
+                <FaPhoneAlt />
+                <span>{p}</span>
+              </div>
+            ))}
+
+            {contact?.emails?.map((e, i) => (
+              <div key={i} className="flex gap-3">
+                <FaEnvelope />
+                <span>{e}</span>
+              </div>
+            ))}
+
+            {contact?.offices?.map((o, i) => (
+              <div key={i} className="flex gap-3">
+                <FaMapMarkerAlt className="mt-1" />
+                <div>
+                  <p className="font-medium">{o.name}</p>
+                  <p className="text-gray-300">{o.address}</p>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex gap-3">
+              <FaClock />
+              <span>
+                {contact?.workingHours?.start} - {contact?.workingHours?.end}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 3) QUICK LINKS */}
+        <div>
+          <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
+          <ul className="space-y-3 text-gray-200">
+            {[
+              "Home",
+              "Tailor-Made Tours",
+              "Destinations",
+              "Tours",
+              "Our Story",
+              "Blogs",
+              "Experiences",
+              "Contact Us",
+            ].map((item, i) => (
+              <li key={i} className="hover:text-white cursor-pointer">
+                {item}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Social Media */}
-        <div className="flex flex-col items-center md:items-start md:col-span-1">
-          <h4 className="text-white font-semibold mb-4 text-lg tracking-wide">
-            Follow Us
-          </h4>
-          <div className="flex space-x-3">
-            {socialLinks.map((social, idx) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={idx}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-600 transition-colors duration-300"
-                  title={social.label}
-                >
-                  <Icon className="text-white w-4 h-4" />
-                </a>
-              );
-            })}
-          </div>
-        </div>
+        {/* 4) REVIEW FORM */}
+        <div>
+          <h3 className="text-xl font-semibold mb-6">Leave a Review</h3>
 
-        {/* Contact Info */}
-        <div className="flex flex-col items-center md:items-start md:col-span-1">
-          <h4 className="text-white font-semibold mb-4 text-lg tracking-wide">
-            Contact Us
-          </h4>
-          <p className="text-gray-400 text-sm leading-relaxed text-center md:text-left">
-            10/20, Kandy Road, Ampitiya,
-            <br />
-            Kandy, Sri Lanka
-            <br />
-            <span className="block mt-2">Phone: +94 771 234 567</span>
-            <span className="block mt-1">Guide Team: +94 777 654 321</span>
-            <a
-              href="mailto:info@netlankatours.com"
-              className="hover:underline block mt-1"
-            >
-              info@netlankatours.com
-            </a>
-          </p>
-        </div>
-
-        {/* Simple Newsletter Form */}
-        <div className="flex flex-col items-center md:items-start md:col-span-1">
-          <h4 className="text-white font-semibold mb-4 text-lg tracking-wide">
-            Subscribe
-          </h4>
-          <p className="text-gray-400 text-sm mb-3 text-center md:text-left">
-            Get exclusive offers & travel updates.
-          </p>
-          <form className="flex flex-col space-y-2 w-full">
+          <form className="space-y-4" onSubmit={submitReview}>
+            {/* Name */}
             <input
               type="text"
               placeholder="Your Name"
-              className="w-full px-3 py-2 rounded bg-gray-800 text-gray-100 border border-gray-700 focus:outline-none focus:border-red-500 transition-all"
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
+
+            {/* Email */}
             <input
               type="email"
               placeholder="Email Address"
-              className="w-full px-3 py-2 rounded bg-gray-800 text-gray-100 border border-gray-700 focus:outline-none focus:border-red-500 transition-all"
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <button
-              type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded transition-colors"
-            >
-              Subscribe
+
+            {/* Rating */}
+            <div className="flex gap-2 text-2xl">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <FaStar
+                  key={n}
+                  onClick={() => setRating(n)}
+                  className={`cursor-pointer ${
+                    n <= rating ? "text-yellow-400" : "text-gray-500"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Message */}
+            <textarea
+              rows="4"
+              placeholder="Write your review..."
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            ></textarea>
+
+            <button className="w-full py-3 bg-white text-black rounded-full font-semibold">
+              Submit Review
             </button>
           </form>
         </div>
       </div>
 
-      <hr className="border-gray-700 my-8" />
+      <hr className="border-gray-900 my-8" />
 
-      {/* Footer Bottom */}
-      <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-gray-400 text-xs md:text-sm space-y-2 md:space-y-0">
-        <p>© 2025 NetLanka Tours. All rights reserved.</p>
+      <div className="max-w-[1400px] mx-auto px-6  text-black font-semibold text-xs md:text-sm flex justify-between">
+        <p>© {new Date().getFullYear()} NetLanka Tours. All rights reserved.</p>
         <p>Website Design & Development by NetIT Technology</p>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

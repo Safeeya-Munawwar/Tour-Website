@@ -46,13 +46,13 @@ const ContactForm = ({ contact }) => {
   };
 
   return (
-    <div>
-      <ToastContainer position="top-right" autoClose={3000} />
+    <div>   
+   <ToastContainer position="top-right" autoClose={3000} />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Name */}
         <div className="flex flex-col space-y-1">
           <label className="font-medium text-gray-700">First Name</label>
-          <input
+          <input 
             type="text"
             placeholder="Enter your first name"
             value={firstName}

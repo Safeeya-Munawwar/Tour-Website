@@ -17,6 +17,12 @@ const dayTourRoutes = require("./routes/dayTour");
 const roundToursRouter = require("./routes/roundTours");
 const contactRoute = require("./routes/contact");
 const contactFormRoute = require("./routes/contactForm");
+const homeRoute = require("./routes/home");
+const BlogCommentRoute = require("./routes/blogComments");
+const testimonialRoute = require("./routes/testimonials");
+const reviewRoute = require("./routes/review");
+const dayTourBookingRoute = require("./routes/dayTourBooking");
+const roundTourBookingRoute = require("./routes/roundTourBooking");
 
 const app = express();
 
@@ -27,7 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 // Routes
-
 app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);
 app.use("/api/about", aboutRoute);
@@ -41,6 +46,12 @@ app.use("/api/tailor-made-tours", tailorMadeTourRoutes);
 app.use("/api/send-email", emailRoutes);
 app.use("/api/contact", contactRoute);
 app.use("/api/contact-form", contactFormRoute);
+app.use("/api/home", homeRoute);
+app.use("/api/blog-comments", BlogCommentRoute);
+app.use("/api/testimonials", testimonialRoute);
+app.use("/api/reviews", reviewRoute);
+app.use("/api/day-tour-booking", dayTourBookingRoute);
+app.use("/api/round-tour-booking", roundTourBookingRoute);
 
 // Connect to MongoDB
 const PORT = process.env.PORT || 5000;

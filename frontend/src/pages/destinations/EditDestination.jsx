@@ -3,56 +3,68 @@ import axios from "axios";
 import DestinationForm from "../../components/admin/DestinationForm";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function EditDestination() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState(null); // start as null
+  const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
- useEffect(() => {
-  axios
-    .get(`http://localhost:5000/api/destination/${id}`)
-    .then((res) => {
-      const d = res.data; // <-- change here
-      if (!d) {
-        alert("Destination not found");
-        navigate("/admin/destinations");
-        return;
-      }
-      setFormData({
-        subtitle: d.subtitle || "",
-        title: d.title || "",
-        imgPreview: d.img || "",
-        imgFile: null,
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("Failed to fetch destination");
-      navigate("/admin/destinations");
-    })
-    .finally(() => setLoading(false));
-}, [id, navigate]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/destination/${id}`)
+      .then((res) => {
+        const d = res.data;
+        if (!d) {
+          toast.error("Destination not found!", {
+            onClose: () => navigate("/admin/destinations"),
+          });
+          return;
+        }
+        setFormData({
+          subtitle: d.subtitle || "",
+          title: d.title || "",
+          imgPreview: d.img || "",
+          imgFile: null,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch destination!", {
+          onClose: () => navigate("/admin/destinations"),
+        });
+      })
+      .finally(() => setLoading(false));
+  }, [id, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData) return;
-
-    const fd = new FormData();
-    fd.append("subtitle", formData.subtitle);
-    fd.append("title", formData.title);
-    if (formData.imgFile) fd.append("imgFile", formData.imgFile);
+    setIsSaving(true);
 
     try {
+      const fd = new FormData();
+      fd.append("subtitle", formData.subtitle);
+      fd.append("title", formData.title);
+      if (formData.imgFile) fd.append("imgFile", formData.imgFile);
+
       await axios.put(`http://localhost:5000/api/destination/${id}`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/admin/destinations");
+
+      toast.success("Destination updated successfully!", {
+        onClose: () => navigate("/admin/destinations"),
+        autoClose: 3000,
+      });
     } catch (err) {
       console.error("Update failed:", err.response?.data || err.message);
-      alert("Failed to update destination");
+      toast.error("Failed to update destination!");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -66,16 +78,16 @@ export default function EditDestination() {
 
   return (
     <div className="flex">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-64 fixed h-screen">
         <AdminSidebar />
       </div>
-
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <DestinationForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitLabel="Update Destination"
+          submitLabel={isSaving ? "Saving..." : "Update Destination"}
         />
       </div>
     </div>

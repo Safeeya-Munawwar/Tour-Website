@@ -8,45 +8,7 @@ import "swiper/css/navigation";
 
 export default function Testimonials() {
   const [bigReviews, setBigReviews] = useState([]);
-
-  // Keep your static smallReviews
-  const smallReviews = [
-    {
-      name: "Gita A",
-      time: "1 month ago",
-      review:
-        "Damith & Sam — The Best You Could Ever Ask For ❤️🇱🇰 We don’t think we could have asked for a better tour guide...",
-      img: "/images/profile-user.PNG",
-    },
-    {
-      name: "Afia J",
-      time: "1 month ago",
-      review:
-        "An unforgettable trip with the best tour company. We absolutely loved our time in Sri Lanka...",
-      img: "/images/profile-user.PNG",
-    },
-    {
-      name: "Bilal M",
-      time: "1 month ago",
-      review:
-        "Excellent experience. We had such a wonderful trip. Very well organized...",
-      img: "/images/profile-user.PNG",
-    },
-    {
-      name: "Afia J",
-      time: "1 month ago",
-      review:
-        "An unforgettable trip with the best tour company. We absolutely loved our time in Sri Lanka...",
-      img: "/images/profile-user.PNG",
-    },
-    {
-      name: "Bilal M",
-      time: "1 month ago",
-      review:
-        "Excellent experience. We had such a wonderful trip. Very well organized...",
-      img: "/images/profile-user.PNG",
-    },
-  ];
+  const [smallReviews, setSmallReviews] = useState([]);
 
   // Fetch backend messages
   useEffect(() => {
@@ -60,13 +22,36 @@ export default function Testimonials() {
           review: msg.message,
           avatar: msg.firstName.charAt(0).toUpperCase(),
           rating: msg.rating || 0, // <- add this line
-        }));        
+        }));
         setBigReviews(mapped.reverse()); // latest first
       } catch (err) {
         console.error("Failed to fetch reviews", err);
       }
     };
     fetchReviews();
+  }, []);
+
+  useEffect(() => {
+    const fetchSmallReviews = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/reviews");
+
+        // Map backend review → small review card
+        const mappedSmall = res.data.reviews.map((r) => ({
+          name: r.name,
+          time: new Date(r.createdAt).toLocaleDateString(),
+          review: r.message,
+          rating: r.rating,
+          img: "/images/profile-user.PNG",
+        }));
+
+        setSmallReviews(mappedSmall.reverse()); // latest first
+      } catch (error) {
+        console.error("Failed to load small reviews", error);
+      }
+    };
+
+    fetchSmallReviews();
   }, []);
 
   return (
@@ -97,7 +82,7 @@ export default function Testimonials() {
             autoplay={{ delay: 3500, disableOnInteraction: false }}
             loop={true}
             slidesPerView={1}
-            className="rounded-2xl shadow-lg"
+            className="bg-[#f7f7f7] rounded-2xl shadow-lg"
           >
             {bigReviews.map((item, i) => (
               <SwiperSlide key={i}>
@@ -117,28 +102,24 @@ export default function Testimonials() {
 
                   {/* stars */}
                   <div className="flex justify-center gap-1 text-yellow-400 mb-4">
-  {[...Array(5)].map((_, i) => {
-    // check if rating exists and fill stars accordingly
-    const filled = item.rating && i < Number(item.rating);
-    return (
-      <FaStar
-        key={i}
-        className={filled ? "text-yellow-400" : "text-gray-300"}
-      />
-    );
-  })}
-</div>
-
+                    {[...Array(5)].map((_, i) => {
+                      // check if rating exists and fill stars accordingly
+                      const filled = item.rating && i < Number(item.rating);
+                      return (
+                        <FaStar
+                          key={i}
+                          className={
+                            filled ? "text-yellow-400" : "text-gray-300"
+                          }
+                        />
+                      );
+                    })}
+                  </div>
 
                   {/* review */}
                   <p className="text-gray-700 text-center leading-relaxed">
                     {item.review}
                   </p>
-
-                  {/* <p className="mt-4 text-center text-blue-600 cursor-pointer font-medium">
-                    Read more
-                  </p> */}
-
                 </div>
               </SwiperSlide>
             ))}
@@ -222,18 +203,21 @@ export default function Testimonials() {
 
                     {/* GREEN RATING */}
                     <div className="flex gap-1 text-green-600 text-lg mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} />
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <FaStar
+                          key={n}
+                          className={
+                            n <= item.rating
+                              ? "text-green-600"
+                              : "text-gray-300"
+                          }
+                        />
                       ))}
                     </div>
 
                     {/* REVIEW TEXT — flex-1 makes all cards equal height */}
                     <p className="text-gray-700 text-sm leading-relaxed line-clamp-4 flex-1">
                       {item.review}
-                    </p>
-
-                    <p className="text-gray-500 font-medium mt-2 cursor-pointer">
-                      Read more
                     </p>
                   </div>
                 </SwiperSlide>

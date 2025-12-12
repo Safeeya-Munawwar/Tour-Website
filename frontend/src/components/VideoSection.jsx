@@ -1,8 +1,36 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
-export default function VideoSection({ videoSrc }) {
+export default function VideoSection() {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+  const [homeInfo, setHomeInfo] = useState({
+    title: "",
+    subtitle: "",
+    description: "",
+    video: "",
+  });
+
+  // Fetch home info from backend
+  const fetchHomeData = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/home");
+      if (res.data && res.data.info && res.data.info.video) {
+        setHomeInfo({
+          title: res.data.info.title,
+          subtitle: res.data.info.subtitle,
+          description: res.data.info.description,
+          video: res.data.info.video,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch home info:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchHomeData();
+  }, []);
 
   // autoplay only when visible
   useEffect(() => {
@@ -23,23 +51,21 @@ export default function VideoSection({ videoSrc }) {
       { threshold: 0.5 }
     );
 
-    io.observe(containerRef.current);
+    if (containerRef.current) io.observe(containerRef.current);
     return () => io.disconnect();
   }, []);
 
   return (
     <section className="w-full bg-white py-16 md:py-32">
       <div className="max-w-[1350px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-8">
-
         {/* LEFT TEXT */}
         <div className="lg:col-span-6">
           <div className="max-w-[680px] mx-auto lg:mx-0">
-
             <div
               className="text-lg sm:text-sm tracking-widest uppercase mb-6 text-gray-400"
               style={{ letterSpacing: "2px" }}
             >
-              About Travelers Choice To Ceylon
+              {homeInfo.subtitle}
             </div>
 
             <h1
@@ -50,17 +76,12 @@ export default function VideoSection({ videoSrc }) {
                 letterSpacing: "-1px",
               }}
             >
-              Explore Sri Lanka
+              {homeInfo.title}
             </h1>
 
             <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
-              Experience the true beauty of Sri Lanka with our friendly and
-              professional vehicle and driver guide services. From smooth airport
-              transfers to personalized day tours and custom itineraries, we’re
-              here to make your journey unforgettable. Let us take care of the
-              details while you enjoy the best of Sri Lanka.
+              {homeInfo.description}
             </p>
-
           </div>
         </div>
 
@@ -70,17 +91,20 @@ export default function VideoSection({ videoSrc }) {
             ref={containerRef}
             className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]"
           >
-            <video
-              ref={videoRef}
-              src={videoSrc}
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover block"
-            />
+            {homeInfo.video && (
+              <video
+                ref={videoRef}
+                src={homeInfo.video}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="w-full h-full object-cover block"
+              />
+            )}
           </div>
         </div>
-
       </div>
     </section>
   );

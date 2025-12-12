@@ -16,17 +16,19 @@ import {
   Mail,
   LogOut,
 } from "lucide-react";
+import { FaTripadvisor } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
   const [openToursMenu, setOpenToursMenu] = useState(false);
+  const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
+  const [openBookingMenu, setOpenBookingMenu] = useState(false);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
   return (
     <>
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 lg:hidden z-30"

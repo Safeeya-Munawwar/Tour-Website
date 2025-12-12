@@ -53,7 +53,7 @@ export default function AddDayTourDetail() {
             <input {...getInputProps()}/>
             <p>Upload Hero Image</p>
           </div>
-          {formData.heroImagePreview && <img src={formData.heroImagePreview} className="w-48 h-48 object-cover mb-3"/>}
+          {formData.heroImagePreview && <img src={formData.heroImagePreview} alt="img" className="w-48 h-48 object-cover mb-3"/>}
 
           <input className="border p-3 w-full mb-3" placeholder="Hero Title" value={formData.heroTitle} onChange={e=>setFormData({...formData,heroTitle:e.target.value})}/>
           <input className="border p-3 w-full mb-3" placeholder="Hero Subtitle" value={formData.heroSubtitle} onChange={e=>setFormData({...formData,heroSubtitle:e.target.value})}/>

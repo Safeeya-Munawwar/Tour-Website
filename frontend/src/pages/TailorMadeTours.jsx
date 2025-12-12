@@ -8,73 +8,13 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const testimonials = [
-  {
-    title: "Best honeymoon we could have wished for! 🥰🐘",
-    text: "We were guided by Aruna, a very friendly and cheerful guy, who learned us a lot about the Sri Lankan culture, food, history. He brought us safely from place to place and adjusted our plans if necessary and always checked with us first. He was always available and helpful, in short a really great guide. We shared some great laughs along the way! We really recommend everyone to travel with Blue Lanka if you are looking for a guided tour where everything is taken care of and is planned based on your desires and preferences.",
-    name: "Sylvie & Christophe",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Shan is an angel (and BL is the best)",
-    text: "Long story short, after landing in Colombo on a Saturday morning and having the most fantastic afternoon, I had to rush to a hospital - I had contracted an infection mid-flight that had spread to my right kidney. Shan drove me to Kandy to a modern and large hospital and stood by my side all night and day long. He was an angel; he made me feel safe and helped me arrange my documents/meds/etc. with the hospital team and my family back in Brazil. There are things that money cannot buy, and Shan's personality is one of those. And thank you to Blue Lanka for being there for me all along!",
-    name: "Beatriz S",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Blue Lanka gave us a taste of Sri Lanka. Now we want to come back!",
-    text: "We decided to spend a holiday in Sri Lanka very. It was then that I stumbled upon this page and all of the rave reviews of Blue Lanka. I can absolutely say that the other reviews are not exaggerations - everyone at Blue Lanka is helpful, responsive, and willing to the extra mile. I worked with Reshani to build out the itinerary. Once the deposit was submitted, we worked with Himaya to finalize hotels. When we were arrived in Sri Lanka, we were greeted by our awesome tour guide Dilan Silva and driver Nuwan. I appreciated the amount of care Dilan showed to ensure that my parents were not overexerting themselves, would not slip, and were still having a great time.",
-    name: "Kirtana R",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title:
-      "The red carpet experience! A pleasure to deal with Blue Lanka. Would do it again.",
-    text: "Look no further- you’ve found the right place for all things Sri Lanka. We just completed a two week trip with our adult children and Blue Lanka handled all our details and executed with perfection. I first reached out to the owner Mr. Dinesh, who connected us to Reshani and her fabulous team. Our train to Ella was delayed and Dhanushka went and purchased snacks for us and waited until we departed the station. When we checked into hotels, we learned about Blue Lanka’s reputation, and many were familiar with the CEO. This company is ethical and will go above and beyond to make sure you’re smiling every single day there. Worth every penny!",
-    name: "drTX2 - Inverness, IL",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Magical Sri Lankan holiday",
-    text: "My husband and I recently spent 11 days privately touring Sri Lanka through Blue Lanka tours. I worked directly with Reshani and the team, who diligently answered all my questions and helped plan out our holiday. From the temples, lush jungles, the tea plantations, hill districts to the beaches, Sri Lanka has it all. We had a private tour guide, Mr. Hemantha, with 20+ years' experience, and a wonderful driver Aruna who safely navigated us around the island. We were happy with our decision to do a private tour - the extra attention to detail. We ate and drank like a king and queen - with no issues with sickness. Thank you, Blue Lanka tours, and all our Sri Lankan friends, we will return!",
-    name: "Holidayhars - Sydney, Australia",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Sigiriya fort and the cave",
-    text: "Amazing is an understatement. The views were spectacular. Sameer who was our local guide gave a great snapshot of the history of the place. The walk up the hill was worth the effort as we witnessed the wonderful sunrise on top of the Sigiriya fort. The cave paintings are second to none. Really a privilege to be there.",
-    name: "Mithun S - Dubai, United Arab Emirates",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Totally recommend Blue Lanka and Aruna",
-    text: "I had an absolutely incredible experience with Blue Lanka and our exceptional guide Aruna. Reshani's responsiveness and attention to detail in creating our tour plan were outstanding. Blue Lanka is a responsible company that goes above and beyond to ensure a smooth and memorable trip.",
-    name: "Ani Grigoryan - Yerevan, Armenia",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-  {
-    title: "Excellent experience!",
-    text: "Our trip started off great, our chauffeur Roshan greeted us both with a beautiful arrangement of flowers. He was very friendly and interactive and also caring to our needs. We never felt uncomfortable and made sure we were well hydrated and fed. It was overall an amazing experience and we would recommend Blue Lanka Tours and our excellent chauffeur Roshan.",
-    name: "Stephanie Afif - Victoria, Seychelles",
-    rating:
-      "https://www.bluelankatours.com/wp-content/uploads/2023/07/rating.svg",
-  },
-];
+import TestimonialForm from "../components/TestimonialForm";
+import TestimonialsSection from "../components/TestimonialsSection";
 
 const TailorMadeTours = () => {
   const [tourData, setTourData] = useState(null);
@@ -553,68 +493,13 @@ const TailorMadeTours = () => {
       </section>
 
       {/* ------------------------------ WHY CHOOSE US ------------------------------ */}
-      <section>
-        <Why />
-      </section>
 
-      {/* ------------------------------ REVIEWS ------------------------------ */}
-      <section className="px-4 md:px-0">
-        <p className="text-sm text-center md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
-          SEE WHAT OUR GUESTS ARE SAYING ABOUT US
-        </p>
+      <div>
+  <Why />
+  <TestimonialForm />
+  <TestimonialsSection />
+</div>
 
-        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mb-6">
-          Don’t Take Our Word for It
-        </h2>
-
-        <div
-          className="relative bg-cover bg-center py-14 md:py-20"
-          style={{
-            backgroundImage: "url('/images/team-header.jpg')",
-            backgroundPosition: "center 50%",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div className="absolute inset-0 bg-black/40"></div>
-
-          <div className="relative max-w-7xl mx-auto px-4 md:px-6">
-            <Swiper
-              modules={[Autoplay]}
-              spaceBetween={20}
-              autoplay={{ delay: 5000 }}
-              breakpoints={{
-                0: { slidesPerView: 1 },
-                768: { slidesPerView: 1 },
-                1024: { slidesPerView: 2 },
-              }}
-            >
-              {testimonials.map((t, idx) => (
-                <SwiperSlide key={idx} className="flex">
-                  <div className="bg-white/70 backdrop-blur-md rounded-xl p-5 md:p-6 shadow-lg flex-1 flex flex-col justify-center items-center text-center min-h-[380px] md:min-h-[500px]">
-                    <h4 className="text-lg md:text-xl font-bold mb-2">
-                      {t.title}
-                    </h4>
-
-                    <p className="text-gray-700 text-sm md:text-base mb-4 overflow-auto max-h-[180px] md:max-h-none">
-                      {t.text}
-                    </p>
-
-                    <h5 className="font-semibold text-sm md:text-base">
-                      {t.name}
-                    </h5>
-
-                    <img
-                      src={t.rating}
-                      alt="rating"
-                      className="mt-3 mx-auto w-32 md:w-auto"
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      </section>
 
       {/* ------------------------------ REVIEWS ------------------------------ */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
