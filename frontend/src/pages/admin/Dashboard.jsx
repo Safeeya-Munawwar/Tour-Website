@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-import AdminSidebar from "../../components/admin/AdminSidebar";
-
-import { LayoutDashboard, Users, Map, Plane, MapPin, FileText, User, MessageSquare, Star} from "lucide-react";
-import {  } from "lucide-react";
-
 import {
-  
-  PieChart,
-  Pie,
+  LayoutDashboard,
+  Plane,
+  Map,
+  Users,
+  MessageSquare,
+  Star,
+  MapPin,
+  FileText,
+  User,
+} from "lucide-react";
+import AdminSidebar from "../../components/admin/AdminSidebar";
+import {
   LineChart,
   Line,
   XAxis,
@@ -17,7 +20,10 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
+  PieChart,
+  Pie,
   Cell,
+  Legend,
 } from "recharts";
 
 export default function Dashboard() {
@@ -34,53 +40,119 @@ export default function Dashboard() {
     inquiries: 0,
   });
 
+  const [bookings, setBookings] = useState([]);
   const [monthlyBookings, setMonthlyBookings] = useState([]);
 
-  // Load all stats
+  // ---------------- STATUS BADGE COLOR ----------------
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Approved":
+        return "bg-green-100 text-green-700";
+      case "Cancelled":
+        return "bg-red-100 text-red-700";
+      case "Completed":
+        return "bg-blue-100 text-blue-700";
+      case "Pending":
+      default:
+        return "bg-yellow-100 text-yellow-700";
+    }
+  };
+
+  // ---------------- FETCH STATS ----------------
   const loadStats = async () => {
     try {
       const [
-        roundTours,
-        dayTours,
-        experiences,
-        destinations,
-        blog,
-        tailor,
-        team,
-        inquiries,
+        roundToursRes,
+        dayToursRes,
+        experiencesRes,
+        destinationsRes,
+        blogRes,
+        tailorMadeRes,
+        teamRes,
+        inquiriesRes,
+        dayTourBookingsRes,
+        roundTourBookingsRes,
       ] = await Promise.all([
         axios.get("http://localhost:5000/api/round-tours"),
         axios.get("http://localhost:5000/api/day-tours"),
         axios.get("http://localhost:5000/api/experience"),
         axios.get("http://localhost:5000/api/destination"),
         axios.get("http://localhost:5000/api/blog"),
-        axios.get("http://localhost:5000/api/tailor-made-tours"),
-        axios.get("http://localhost:5000/api/team"),
         axios.get("http://localhost:5000/api/tailor-made-tours/inquiries"),
+        axios.get("http://localhost:5000/api/team"),
+        axios.get("http://localhost:5000/api/contact-form"),
+        axios.get("http://localhost:5000/api/day-tour-booking"),
+        axios.get("http://localhost:5000/api/round-tour-booking"),
       ]);
 
-  setStats({
-  roundTours: roundTours.data.tours?.length || 0,
-  dayTours: dayTours.data.tours?.length || 0,
-  experiences: experiences.data.length || 0,
-  destinations: destinations.data.destinations?.length || 0,
-  blog: blog.data.blogs?.length || 0,          // fixed
-  tailorMade: tailor.data && Object.keys(tailor.data).length > 0 ? 1 : 0,  // fixed
-  team: team.data?.members?.length || 0,
-  inquiries: inquiries.data.length || 0,
-});
+      // ---------------- STATS ----------------
+      setStats({
+        roundTours: roundToursRes.data.tours?.length || 0,
+        dayTours: dayToursRes.data.tours?.length || 0,
+        experiences: experiencesRes.data.length || 0,
+        destinations: destinationsRes.data.destinations?.length || 0,
+        blog: blogRes.data.blogs?.length || 0,
+        tailorMade: tailorMadeRes.data?.length || 0,
+        team: teamRes.data?.members?.length || 0,
+        inquiries: inquiriesRes.data?.length || 0,
+      });
 
+      // ---------------- RECENT BOOKINGS (3 + 3) ----------------
+      const latestDayBookings = (dayTourBookingsRes.data.bookings || [])
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3)
+        .map((b) => ({ ...b, type: "Day Tour" }));
 
-      // Fake monthly bookings for demo if no API
-      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      const fakeBookings = months.map((m) => ({
+      const latestRoundBookings = (roundTourBookingsRes.data.bookings || [])
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3)
+        .map((b) => ({ ...b, type: "Round Tour" }));
+
+      const recentBookings = [
+        ...latestDayBookings,
+        ...latestRoundBookings,
+      ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setBookings(recentBookings);
+
+      // ---------------- MONTHLY LINE CHART ----------------
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const dayCounts = Array(12).fill(0);
+      const roundCounts = Array(12).fill(0);
+
+      (dayTourBookingsRes.data.bookings || []).forEach((b) => {
+        const m = new Date(b.startDate).getMonth();
+        dayCounts[m]++;
+      });
+
+      (roundTourBookingsRes.data.bookings || []).forEach((b) => {
+        const m = new Date(b.startDate).getMonth();
+        roundCounts[m]++;
+      });
+
+      const chartData = months.map((m, i) => ({
         month: m,
-        count: Math.floor(Math.random() * 60) + 10,
+        day: dayCounts[i],
+        round: roundCounts[i],
       }));
-      setMonthlyBookings(fakeBookings);
 
+      setMonthlyBookings(chartData);
     } catch (err) {
-      console.log("Dashboard loading error:", err);
+      console.error("Dashboard loading error:", err);
     }
   };
 
@@ -88,85 +160,100 @@ export default function Dashboard() {
     loadStats();
   }, []);
 
-
-
+  // ---------------- PIE CHART ----------------
   const pieData = [
     { name: "Round Tours", value: stats.roundTours },
     { name: "Day Tours", value: stats.dayTours },
-    { name: "Tailor-Made", value: stats.tailorMade },
+    { name: "Tailor Made", value: stats.tailorMade },
   ];
 
   const COLORS = ["#2563eb", "#10b981", "#f59e0b"];
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-auto bg-gray-100">
-       
-
+      <div className="flex-1 overflow-auto bg-gray-100">
         <main className="p-6">
           <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-            <LayoutDashboard size={28} />
-            Dashboard
+            <LayoutDashboard size={28} /> Dashboard
           </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-  {Object.entries(stats).map(([name, count]) => (
-    <div key={name} className="bg-white shadow rounded-lg p-5 hover:shadow-lg transition flex items-center justify-between">
-      <div>
-        <h2 className="text-gray-500 text-sm capitalize">{name.replace(/([A-Z])/g, " $1")}</h2>
-        <p className="text-3xl font-bold mt-1">{count}</p>
-      </div>
-
-      {/* Icons */}
-      {name === "dayTours" && <Plane className="text-blue-500" size={36} />}
-      {name === "roundTours" && <Map className="text-green-500" size={36} />}
-      {name === "tailorMade" && <Users className="text-yellow-500" size={36} />}
-      {name === "inquiries" && <MessageSquare className="text-red-500" size={36} />}
-      {name === "experiences" && <Star className="text-purple-500" size={36} />}
-      {name === "destinations" && <MapPin className="text-pink-500" size={36} />}
-      {name === "blog" && <FileText className="text-indigo-500" size={36} />}
-      {name === "team" && <User className="text-teal-500" size={36} />}
-    </div>
-  ))}
-</div>
-
-
-
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-             {/* Line Chart */}
-          <div className="bg-white shadow rounded-lg p-5 ">
-            <h2 className="text-lg font-semibold mb-4">Monthly Bookings</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={monthlyBookings}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="count" stroke="#10b981" strokeWidth={3} />
-              </LineChart>
-            </ResponsiveContainer>
+          {/* ---------------- STATS CARDS ---------------- */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            {Object.entries(stats).map(([name, count]) => (
+              <div
+                key={name}
+                className="bg-white shadow rounded-lg p-5 flex justify-between"
+              >
+                <div>
+                  <h2 className="text-gray-500 text-sm capitalize">
+                    {name.replace(/([A-Z])/g, " $1")}
+                  </h2>
+                  <p className="text-3xl font-bold">{count}</p>
+                </div>
+                {name === "dayTours" && (
+                  <Plane size={36} className="text-blue-500" />
+                )}
+                {name === "roundTours" && (
+                  <Map size={36} className="text-green-500" />
+                )}
+                {name === "tailorMade" && (
+                  <Users size={36} className="text-yellow-500" />
+                )}
+                {name === "inquiries" && (
+                  <MessageSquare size={36} className="text-red-500" />
+                )}
+                {name === "experiences" && (
+                  <Star size={36} className="text-purple-500" />
+                )}
+                {name === "destinations" && (
+                  <MapPin size={36} className="text-pink-500" />
+                )}
+                {name === "blog" && (
+                  <FileText size={36} className="text-indigo-500" />
+                )}
+                {name === "team" && (
+                  <User size={36} className="text-teal-500" />
+                )}
+              </div>
+            ))}
           </div>
 
-            {/* Pie Chart */}
-            <div className="bg-white shadow rounded-lg p-5">
+          {/* ---------------- CHARTS ---------------- */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white p-5 rounded shadow">
+              <h2 className="text-lg font-semibold mb-4">Monthly Bookings</h2>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={monthlyBookings}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    dataKey="day"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    name="Day Tours"
+                  />
+                  <Line
+                    dataKey="round"
+                    stroke="#16a34a"
+                    strokeWidth={3}
+                    name="Round Tours"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="bg-white p-5 rounded shadow">
               <h2 className="text-lg font-semibold mb-4">Tours Breakdown</h2>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    outerRadius={100}
-                    label
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index]} />
+                  <Pie data={pieData} dataKey="value" outerRadius={100} label>
+                    {pieData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i]} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -175,45 +262,42 @@ export default function Dashboard() {
             </div>
           </div>
 
-         
-
-          {/* Recent Bookings Table */}
-          <div className="mt-8 bg-white shadow rounded-lg p-4">
+          {/* ---------------- RECENT BOOKINGS ---------------- */}
+          <div className="bg-white p-4 rounded shadow">
             <h2 className="text-xl font-semibold mb-4">Recent Bookings</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tour Name</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            <table className="min-w-full divide-y">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left">Type</th>
+                  <th className="px-4 py-2 text-left">Tour</th>
+                  <th className="px-4 py-2 text-left">Customer</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.map((b) => (
+                  <tr key={b._id} className="hover:bg-blue-50">
+                    <td className="px-4 py-2">{b.type}</td>
+                    <td className="px-4 py-2">{b.tourId?.title || "—"}</td>
+                    <td className="px-4 py-2">{b.name}</td>
+                    <td className="px-4 py-2">
+                      {new Date(b.startDate).toLocaleDateString("en-GB")}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
+                          b.status
+                        )}`}
+                      >
+                        {b.status}
+                      </span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-2">City Tour Colombo</td>
-                    <td className="px-4 py-2">John Doe</td>
-                    <td className="px-4 py-2">25 Nov 2025</td>
-                    <td className="px-4 py-2 text-green-600 font-semibold">Confirmed</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-2">Round Tour Kandy</td>
-                    <td className="px-4 py-2">Jane Smith</td>
-                    <td className="px-4 py-2">26 Nov 2025</td>
-                    <td className="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-2">Tailor-Made Tour</td>
-                    <td className="px-4 py-2">Alice Brown</td>
-                    <td className="px-4 py-2">27 Nov 2025</td>
-                    <td className="px-4 py-2 text-red-600 font-semibold">Cancelled</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-
         </main>
       </div>
     </div>

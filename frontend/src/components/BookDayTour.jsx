@@ -1,4 +1,3 @@
-// src/components/BookDayTour.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -14,8 +13,8 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [responseMsg, setResponseMsg] = useState(""); // success or error message
-  const [isError, setIsError] = useState(false); // flag for error styling
+  const [responseMsg, setResponseMsg] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +24,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setResponseMsg(""); // clear previous message
+    setResponseMsg("");
     setIsError(false);
 
     try {

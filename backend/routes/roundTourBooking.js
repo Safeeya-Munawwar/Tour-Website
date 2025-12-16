@@ -1,4 +1,3 @@
-// backend/routes/roundTourBooking.js
 const express = require("express");
 const router = express.Router();
 const RoundTourBooking = require("../models/RoundTourBooking");
@@ -20,7 +19,7 @@ router.get("/", async (req, res) => {
   try {
     const bookings = await RoundTourBooking.find()
       .sort({ createdAt: -1 })
-      .populate("tourId", "title location"); // populate title & location
+      .populate("tourId", "title location"); 
 
     res.json({ success: true, bookings });
   } catch (err) {

@@ -1,4 +1,3 @@
-// backend/models/RoundTourBooking.js
 const mongoose = require("mongoose");
 
 const RoundTourBookingSchema = new mongoose.Schema({

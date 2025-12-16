@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaStar,
-} from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -26,7 +24,10 @@ const ContactForm = ({ contact }) => {
     const data = { firstName, lastName, email, rating, message };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/contact-form", data);
+      const res = await axios.post(
+        "http://localhost:5000/api/contact-form",
+        data
+      );
       if (res.data.success) {
         toast.success("Form submitted successfully!");
 
@@ -46,13 +47,13 @@ const ContactForm = ({ contact }) => {
   };
 
   return (
-    <div>   
-   <ToastContainer position="top-right" autoClose={3000} />
+    <div>
+      <ToastContainer position="top-right" autoClose={3000} />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Name */}
         <div className="flex flex-col space-y-1">
           <label className="font-medium text-gray-700">First Name</label>
-          <input 
+          <input
             type="text"
             placeholder="Enter your first name"
             value={firstName}

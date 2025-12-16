@@ -8,7 +8,7 @@ export default function DestinationHome() {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/destination"); 
+        const res = await axios.get("http://localhost:5000/api/destination");
         const allDestinations = res.data.destinations || [];
 
         // Sort by newest first (_id timestamp) and take last 7 added

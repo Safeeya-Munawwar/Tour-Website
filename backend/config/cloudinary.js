@@ -1,4 +1,3 @@
-// Example Cloudinary config file. Make sure CLOUDINARY_URL or the fields below are set in your env.
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -9,128 +9,13 @@ import {
 import Testimonials from "../components/Testimonials";
 import ContactForm from "../components/admin/ContactForm";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
-import "leaflet-routing-machine";
+import "leaflet-routing-machine"; // import after L is global
 
-/* --------------------------- CUSTOM MARKERS --------------------------- */
-const createIcon = (color) =>
-  new L.Icon({
-    iconUrl: `/images/marker-icon-2x-${color}.png`,
-    shadowUrl: "/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
+// Make Leaflet global for routing machine
+window.L = L;
 
-const blueIcon = createIcon("blue");
-const greenIcon = createIcon("green");
-const redIcon = createIcon("red");
-
-/* --------------------------- CURVED ROUTE --------------------------- */
-const CurvedBezierRouting = ({ userLocation, offices }) => {
-  const map = useMap();
-  const animationRefs = useRef([]);
-
-  useEffect(() => {
-    if (!userLocation || !map || !offices?.length) return;
-
-    map.eachLayer((layer) => {
-      if (layer?.customBezierRoute) map.removeLayer(layer);
-    });
-    animationRefs.current.forEach((id) => cancelAnimationFrame(id));
-    animationRefs.current = [];
-
-    const createCurve = (start, end, curveStrength = 0.25) => {
-      const [lat1, lng1] = start;
-      const [lat2, lng2] = end;
-      const controlLat = (lat1 + lat2) / 2 + curveStrength * (lng2 - lng1);
-      const controlLng = (lng1 + lng2) / 2 - curveStrength * (lat2 - lat1);
-
-      const curve = [];
-      for (let t = 0; t <= 1; t += 0.02) {
-        const x =
-          (1 - t) ** 2 * lat1 + 2 * (1 - t) * t * controlLat + t ** 2 * lat2;
-        const y =
-          (1 - t) ** 2 * lng1 + 2 * (1 - t) * t * controlLng + t ** 2 * lng2;
-
-        curve.push([x, y]);
-      }
-      return curve;
-    };
-
-    offices.forEach((office) => {
-      if (!office.coords || office.coords.length !== 2) return;
-      const curve = createCurve(userLocation, office.coords, 0.28);
-
-      const polyline = L.polyline(curve, {
-        color: "#999999",
-        weight: 3,
-        opacity: 0.9,
-      }).addTo(map);
-      polyline.customBezierRoute = true;
-
-      const vehicleMarker = L.marker(curve[0], {
-        icon: L.divIcon({
-          html: "🚌",
-          className: "vehicle-icon",
-          iconSize: [30, 30],
-          iconAnchor: [15, 15],
-        }),
-      }).addTo(map);
-      vehicleMarker.customBezierRoute = true;
-
-      let index = 0;
-      const animate = () => {
-        index = (index + 1) % curve.length;
-        vehicleMarker.setLatLng(curve[index]);
-        const animId = requestAnimationFrame(animate);
-        animationRefs.current.push(animId);
-      };
-
-      animate();
-    });
-
-    return () => {
-      animationRefs.current.forEach((id) => cancelAnimationFrame(id));
-      animationRefs.current = [];
-      map.eachLayer((layer) => {
-        if (layer.customBezierRoute) map.removeLayer(layer);
-      });
-    };
-  }, [map, userLocation, offices]);
-
-  return null;
-};
-
-/* --------------------------- QUICK JUMP --------------------------- */
-const QuickJump = ({ offices, userLocation }) => {
-  const map = useMap();
-  const jump = (coords) => coords && map.setView(coords, 13, { animate: true });
-
-  return (
-    <div className="absolute top-3 right-3 bg-white shadow-md rounded-lg p-2 z-[1000] space-y-1 text-xs sm:text-sm">
-      {offices?.map((o, i) =>
-        o.coords ? (
-          <p
-            key={i}
-            onClick={() => jump(o.coords)}
-            className="cursor-pointer hover:text-yellow-600 font-medium"
-          >
-            📍 {o.name}
-          </p>
-        ) : null
-      )}
-      {userLocation && (
-        <p
-          onClick={() => jump(userLocation)}
-          className="cursor-pointer hover:text-red-600 font-medium"
-        >
-          🧍‍♂️ Your Location
-        </p>
-      )}
-    </div>
-  );
-};
+const ContactMap = React.lazy(() => import("../components/ContactMap"));
 
 /* --------------------------- MAIN CONTACT PAGE --------------------------- */
 const Contact = () => {
@@ -286,67 +171,18 @@ const Contact = () => {
 
       {/* MAP */}
       <section className="w-full px-4 sm:px-6 mt-8">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
-          Our Locations at a Glance
-        </h2>
-        <div className="w-16 h-[3px] bg-yellow-500 mx-auto mb-6 rounded"></div>
+  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
+    Our Locations at a Glance
+  </h2>
+  <div className="w-16 h-[3px] bg-yellow-500 mx-auto mb-6 rounded"></div>
 
-        <div
-          className="relative rounded-xl shadow-lg border border-gray-200 overflow-hidden"
-          style={{ height: 350 }}
-        >
-          <MapContainer
-            center={contact.offices?.[0]?.coords || [0, 0]}
-            zoom={10}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+  <div className="relative rounded-xl shadow-lg border border-gray-200 overflow-hidden" style={{ height: 350 }}>
+    <React.Suspense fallback={<div className="text-center py-10">Loading map...</div>}>
+      <ContactMap offices={contact.offices} userLocation={userLocation} />
+    </React.Suspense>
+  </div>
+</section>
 
-            <QuickJump
-              offices={contact.offices?.filter((o) => o.coords)}
-              userLocation={userLocation}
-            />
-
-            {userLocation && (
-              <CurvedBezierRouting
-                userLocation={userLocation}
-                offices={contact.offices?.filter((o) => o.coords)}
-              />
-            )}
-
-            {/* OFFICE MARKERS */}
-            {contact.offices
-              .filter((o) => o.coords)
-              .map((office, i) => (
-                <Marker
-                  key={i}
-                  position={office.coords}
-                  icon={
-                    office.name?.toLowerCase().includes("corporate")
-                      ? greenIcon
-                      : blueIcon
-                  }
-                >
-                  <Popup>
-                    <div className="space-y-1 text-xs sm:text-sm">
-                      <strong className="text-gray-800">{office.name}</strong>
-                      <p className="text-gray-600">{office.address}</p>
-                      {contact.phones[0] && (
-                        <p className="text-gray-600">Phone: {contact.phones[0]}</p>
-                      )}
-                      {contact.emails[0] && (
-                        <p className="text-gray-600">Email: {contact.emails[0]}</p>
-                      )}
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-
-            {/* USER LOCATION */}
-            {userLocation && <Marker position={userLocation} icon={redIcon} />}
-          </MapContainer>
-        </div>
-      </section>
 
       {/* TESTIMONIALS */}
       <Testimonials />

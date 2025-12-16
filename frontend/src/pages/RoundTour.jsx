@@ -31,7 +31,7 @@ export default function RoundTour() {
         <div className="absolute inset-0 bg-black/40"></div>
 
         <div
-          className={`absolute bottom-10 right-10 w-[480px] bg-black/80 text-white p-7 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-10 right-10 w-[380px] bg-black/80 text-white p-7 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >

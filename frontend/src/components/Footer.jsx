@@ -12,8 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Footer() {
   const [contact, setContact] = useState(null);
-
-  // ⭐ ONLY THIS IS THE CORRECT FORM STATE
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [rating, setRating] = useState(0);
@@ -26,7 +24,6 @@ export default function Footer() {
       .catch((err) => console.log(err));
   }, []);
 
-  // ⭐ FIXED FUNCTION
   const submitReview = async (e) => {
     e.preventDefault();
 
@@ -66,21 +63,28 @@ export default function Footer() {
 
       {/* MAIN GRID */}
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
-
         {/* 1) LOGO + DESCRIPTION */}
         <div>
-          <img src="/images/logo.png" alt="img" className="w-40 mb-5 opacity-95" />
+          <img
+            src="/images/logo.png"
+            alt="img"
+            className="w-40 mb-5 opacity-95"
+          />
 
           <p className="text-gray-200 text-[15px] leading-relaxed pr-6">
-            NetLanka Tours is your trusted travel partner in Sri Lanka,
-            offering tailor-made tours, day tours, adventures and premium
-            travel experiences.
+            NetLanka Tours is your trusted travel partner in Sri Lanka, offering
+            tailor-made tours, day tours, adventures and premium travel
+            experiences.
           </p>
 
           <div className="flex gap-4 mt-7">
             {contact?.socialMedia?.map((sm, i) => (
               <a key={i} href={sm.url}>
-                <img src={sm.icon} alt="img" className="w-8 h-8 hover:scale-110" />
+                <img
+                  src={sm.icon}
+                  alt="img"
+                  className="w-8 h-8 hover:scale-110"
+                />
               </a>
             ))}
           </div>
@@ -91,7 +95,6 @@ export default function Footer() {
           <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
 
           <div className="space-y-5">
-
             {contact?.phones?.map((p, i) => (
               <div key={i} className="flex gap-3">
                 <FaPhoneAlt />

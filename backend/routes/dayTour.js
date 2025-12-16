@@ -6,30 +6,24 @@ const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-// ------------------------
-// Cloudinary Upload Setup
-// ------------------------
+// ------------------------ Cloudinary Upload Setup ------------------------
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: { folder: "day-tours" },
 });
 const upload = multer({ storage });
 
-// ------------------------
-// GET ALL TOURS (cards)
-// ------------------------
+// ------------------------ GET ALL TOURS (cards) ------------------------
 router.get("/", async (req, res) => {
   try {
     const tours = await DayTour.find();
-    res.json({ success: true, tours }); // always returns an array
+    res.json({ success: true, tours });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// ------------------------
-// GET SINGLE TOUR + DETAILS
-// ------------------------
+// ------------------------ GET SINGLE TOUR + DETAILS ------------------------
 router.get("/:id", async (req, res) => {
   try {
     const tour = await DayTour.findById(req.params.id);
@@ -43,9 +37,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ------------------------
-// ADMIN — CREATE LIST ITEM
-// ------------------------
+// ------------------------ ADMIN — CREATE LIST ITEM ------------------------
 router.post("/", upload.single("img"), async (req, res) => {
   try {
     const newTour = new DayTour({
@@ -61,9 +53,7 @@ router.post("/", upload.single("img"), async (req, res) => {
   }
 });
 
-// ------------------------
-// ADMIN — CREATE DETAIL ITEM
-// ------------------------
+// ------------------------ ADMIN — CREATE DETAIL ITEM -----------------------
 router.post("/detail", upload.any(), async (req, res) => {
   try {
     const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
@@ -71,12 +61,12 @@ router.post("/detail", upload.any(), async (req, res) => {
     // Attach uploaded images dynamically
     gallerySlides.forEach((slide, idx) => {
       const fileKey = `galleryImage_${idx}`;
-      const uploadedFile = req.files.find(f => f.fieldname === fileKey);
+      const uploadedFile = req.files.find((f) => f.fieldname === fileKey);
       if (uploadedFile) slide.image = uploadedFile.path;
       else slide.image = slide.image || "";
     });
 
-    const heroFile = req.files.find(f => f.fieldname === "heroImage");
+    const heroFile = req.files.find((f) => f.fieldname === "heroImage");
 
     const newDetail = new DayTourDetail({
       tourId: req.body.tourId,
@@ -98,10 +88,7 @@ router.post("/detail", upload.any(), async (req, res) => {
   }
 });
 
-
-// ------------------------
-// ADMIN — UPDATE LIST ITEM
-// ------------------------
+// ------------------------ ADMIN — UPDATE LIST ITEM ------------------------
 router.put("/:id", upload.single("img"), async (req, res) => {
   try {
     const updateData = {
@@ -134,7 +121,7 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
     // Attach uploaded images dynamically
     gallerySlides.forEach((slide, idx) => {
       const fileKey = `galleryImage_${idx}`;
-      const uploadedFile = req.files.find(f => f.fieldname === fileKey);
+      const uploadedFile = req.files.find((f) => f.fieldname === fileKey);
       if (uploadedFile) slide.image = uploadedFile.path;
       else slide.image = slide.image || "";
     });
@@ -149,18 +136,20 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
       gallerySlides,
     };
 
-    const heroFile = req.files.find(f => f.fieldname === "heroImage");
+    const heroFile = req.files.find((f) => f.fieldname === "heroImage");
     if (heroFile) updateData.heroImage = heroFile.path;
 
-    // ⚠️ Find by tourId instead of _id
+    // Find by tourId instead of _id
     const updatedDetail = await DayTourDetail.findOneAndUpdate(
-      { tourId: req.params.id }, // <-- use tourId here
+      { tourId: req.params.id },
       updateData,
-      { new: true, upsert: true } // upsert: true if detail doesn't exist yet
+      { new: true, upsert: true }
     );
 
     if (!updatedDetail) {
-      return res.status(404).json({ success: false, error: "Detail not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Detail not found" });
     }
 
     res.json({ success: true, detail: updatedDetail });
@@ -170,9 +159,7 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
   }
 });
 
-// ------------------------
-// ADMIN — DELETE TOUR + DETAIL
-// ------------------------
+// ----------------------- ADMIN — DELETE TOUR + DETAIL ------------------------
 router.delete("/:id", async (req, res) => {
   try {
     const tour = await DayTour.findByIdAndDelete(req.params.id);

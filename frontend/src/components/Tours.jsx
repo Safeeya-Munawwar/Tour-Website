@@ -18,7 +18,9 @@ export default function PopularTours() {
         setDayTours(lastTwoDayTours);
 
         // Last 2 round tours
-        const roundRes = await axios.get("http://localhost:5000/api/round-tours");
+        const roundRes = await axios.get(
+          "http://localhost:5000/api/round-tours"
+        );
         if (roundRes.data.success) {
           const lastTwoRoundTours = roundRes.data.tours
             .sort((a, b) => (b._id > a._id ? 1 : -1))
@@ -41,7 +43,7 @@ export default function PopularTours() {
   }
 
   return (
-    <section className="w-full bg-[#F5F7FA] py-16">
+    <section className="w-full bg-white py-16">
       <div className="max-w-7xl mx-auto px-4">
         <p className="text-center text-gray-500 text-lg font-semibold tracking-wide">
           ITINERARIES
@@ -63,7 +65,9 @@ export default function PopularTours() {
                   className="w-full h-52 object-cover"
                 />
                 <div className="py-6 text-center flex flex-col items-center">
-                  <h3 className="text-xl font-semibold text-gray-900">{tour.title}</h3>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {tour.title}
+                  </h3>
                   {tour.location && (
                     <p className="text-gray-500 mt-2 flex items-center gap-1">
                       <FaMapMarkerAlt className="text-red-500" size={16} />
@@ -74,7 +78,9 @@ export default function PopularTours() {
                   {/* Show small type tag */}
                   <span
                     className={`mt-2 px-3 py-1 text-xs font-semibold rounded-full ${
-                      tour.type === "round" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"
+                      tour.type === "round"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-green-100 text-green-800"
                     }`}
                   >
                     {tour.type === "round" ? "Round Tour" : "Day Tour"}
@@ -96,7 +102,9 @@ export default function PopularTours() {
               </div>
             ))
           ) : (
-            <p className="text-center col-span-4 text-gray-500">No tours available</p>
+            <p className="text-center col-span-4 text-gray-500">
+              No tours available
+            </p>
           )}
         </div>
       </div>

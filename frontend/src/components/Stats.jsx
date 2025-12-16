@@ -51,8 +51,9 @@ export default function Stats() {
     >
       <div className="absolute inset-0 bg-black/50"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 text-center px-6 gap-8 md:gap-12">
-        {statsData.map((stat, i) => (
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 text-center px-6 gap-8 md:gap-12">
+
+{statsData.map((stat, i) => (
           <div
             key={i}
             className="text-white flex flex-col items-center px-4 sm:px-6"

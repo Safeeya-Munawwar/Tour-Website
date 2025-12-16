@@ -282,7 +282,7 @@ const About = () => {
             {/* CTA Button */}
             <div className="mt-4">
               <a
-                href="/contact"
+                href="/tailor-made-tours"
                 className="
             bg-[#ce2a40] hover:bg-[#ef0530]
             text-white uppercase px-6 py-3 rounded-full font-semibold 

@@ -1,12 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const DayTourBooking = require("../models/DayTourBooking");
+const TourBooking = require("../models/TourBooking");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
   try {
-    const booking = new DayTourBooking(req.body);
+    const { tourType, tourId } = req.body;
+
+    if (!tourType || !tourId) {
+      return res.status(400).json({
+        success: false,
+        error: "tourType and tourId are required",
+      });
+    }
+
+    const booking = new TourBooking({
+      ...req.body,
+      tourRef: tourType === "day" ? "DayTour" : "RoundTour",
+    });
+
     await booking.save();
+
     res.json({ success: true, booking });
   } catch (err) {
     console.error(err);
@@ -14,12 +28,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ---------------- GET ALL BOOKINGS ----------------
+// ---------------- GET ALL BOOKINGS (ADMIN) ----------------
 router.get("/", async (req, res) => {
   try {
-    const bookings = await DayTourBooking.find()
-      .populate("tourId", "title location")
-      .sort({ createdAt: -1 });
+    const bookings = await TourBooking.find()
+      .sort({ createdAt: -1 })
+      .populate("tourId", "title location");
 
     res.json({ success: true, bookings });
   } catch (err) {
@@ -28,19 +42,21 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ---------------- UPDATE STATUS ----------------
+// ---------------- UPDATE BOOKING STATUS ----------------
 router.patch("/:id", async (req, res) => {
   try {
     const { status } = req.body;
-    const booking = await DayTourBooking.findByIdAndUpdate(
+
+    const booking = await TourBooking.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true }
     );
-    if (!booking)
-      return res
-        .status(404)
-        .json({ success: false, error: "Booking not found" });
+
+    if (!booking) {
+      return res.status(404).json({ success: false, error: "Booking not found" });
+    }
+
     res.json({ success: true, booking });
   } catch (err) {
     console.error(err);
@@ -51,11 +67,7 @@ router.patch("/:id", async (req, res) => {
 // ---------------- DELETE BOOKING ----------------
 router.delete("/:id", async (req, res) => {
   try {
-    const booking = await DayTourBooking.findByIdAndDelete(req.params.id);
-    if (!booking)
-      return res
-        .status(404)
-        .json({ success: false, error: "Booking not found" });
+    await TourBooking.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (err) {
     console.error(err);
