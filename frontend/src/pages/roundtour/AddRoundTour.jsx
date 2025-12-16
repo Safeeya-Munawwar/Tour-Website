@@ -10,7 +10,6 @@ import RoundTourForm from "../../components/admin/RoundTourForm";
 export default function AddRoundTour() {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
-
   const [formData, setFormData] = useState({
     title: "",
     days: "",
@@ -36,7 +35,7 @@ export default function AddRoundTour() {
     setIsSaving(true);
 
     try {
-      // Upload RoundTour
+      // ---------- Upload Tour Card ----------
       const tourData = new FormData();
       tourData.append("title", formData.title);
       tourData.append("days", formData.days);
@@ -52,12 +51,13 @@ export default function AddRoundTour() {
 
       const tourId = tourRes.data.tour._id;
 
-      // Upload RoundTourDetail
+      // ---------- Upload Tour Detail ----------
       const detailData = new FormData();
       detailData.append("tourId", tourId);
       detailData.append("heroTitle", formData.heroTitle);
       detailData.append("heroSubtitle", formData.heroSubtitle);
       if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
+
       detailData.append("highlights", JSON.stringify(formData.highlights));
       detailData.append("itinerary", JSON.stringify(formData.itinerary));
       detailData.append("inclusions", JSON.stringify(formData.inclusions));
@@ -65,17 +65,14 @@ export default function AddRoundTour() {
       detailData.append("offers", JSON.stringify(formData.offers));
       detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
 
-      const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
-        title: slide.title,
-        desc: slide.desc,
-      }));
-      detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
-
-      formData.gallerySlides.forEach((slide, idx) => {
-        if (slide.imageFile) {
-          detailData.append(`galleryImage_${idx}`, slide.imageFile);
-        }
+      // Attach gallery images
+      formData.gallerySlides.forEach(slide => {
+        if (slide.imageFile) detailData.append("galleryImages", slide.imageFile);
       });
+      detailData.append(
+        "gallerySlides",
+        JSON.stringify(formData.gallerySlides.map(s => ({ title: s.title, desc: s.desc })))
+      );
 
       await axios.post(
         "http://localhost:5000/api/round-tours/detail",

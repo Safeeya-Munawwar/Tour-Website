@@ -31,15 +31,12 @@ export default function EditRoundTour() {
     gallerySlides: [],
   });
 
-  // Fetch existing tour data
+  // ---------- Fetch Tour & Detail ----------
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const tourRes = await axios.get(`http://localhost:5000/api/round-tours/${id}`);
-        const detailRes = await axios.get(`http://localhost:5000/api/round-tours/detail/${id}`);
-
-        const tour = tourRes.data.tour;
-        const detail = detailRes.data.detail;
+        const res = await axios.get(`http://localhost:5000/api/round-tours/${id}`);
+        const { tour, details } = res.data;
 
         setFormData({
           title: tour.title || "",
@@ -48,26 +45,29 @@ export default function EditRoundTour() {
           desc: tour.desc || "",
           imgFile: null,
           imgPreview: tour.img || "",
-          heroTitle: detail.heroTitle || "",
-          heroSubtitle: detail.heroSubtitle || "",
+
+          heroTitle: details?.heroTitle || "",
+          heroSubtitle: details?.heroSubtitle || "",
           heroImageFile: null,
-          heroImagePreview: detail.heroImage || "",
-          highlights: detail.highlights || [],
-          itinerary: detail.itinerary || [],
-          inclusions: detail.inclusions || [],
-          exclusions: detail.exclusions || [],
-          offers: detail.offers || [],
-          tourFacts: detail.tourFacts || { duration: "", groupSize: "", difficulty: "" },
-          gallerySlides: (detail.gallerySlides || []).map(slide => ({
-            title: slide.title,
-            desc: slide.desc,
+          heroImagePreview: details?.heroImage || "",
+
+          highlights: details?.highlights || [],
+          itinerary: details?.itinerary || [],
+          inclusions: details?.inclusions || [],
+          exclusions: details?.exclusions || [],
+          offers: details?.offers || [],
+          tourFacts: details?.tourFacts || { duration: "", groupSize: "", difficulty: "" },
+
+          gallerySlides: (details?.gallerySlides || []).map(s => ({
+            title: s.title,
+            desc: s.desc,
             imageFile: null,
-            imagePreview: slide.image,
+            imagePreview: s.image,
           })),
         });
       } catch (err) {
         console.error(err);
-        toast.error("Error fetching tour data!");
+        toast.error("Failed to load round tour");
       }
     };
 
@@ -79,7 +79,7 @@ export default function EditRoundTour() {
     setIsSaving(true);
 
     try {
-      // Update RoundTour
+      // ---------- Update Tour Card ----------
       const tourData = new FormData();
       tourData.append("title", formData.title);
       tourData.append("days", formData.days);
@@ -87,15 +87,14 @@ export default function EditRoundTour() {
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      await axios.put(`http://localhost:5000/api/round-tours/${id}`, tourData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.put(`http://localhost:5000/api/round-tours/${id}`, tourData);
 
-      // Update RoundTourDetail
+      // ---------- Update Tour Detail ----------
       const detailData = new FormData();
       detailData.append("heroTitle", formData.heroTitle);
       detailData.append("heroSubtitle", formData.heroSubtitle);
       if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
+
       detailData.append("highlights", JSON.stringify(formData.highlights));
       detailData.append("itinerary", JSON.stringify(formData.itinerary));
       detailData.append("inclusions", JSON.stringify(formData.inclusions));
@@ -103,29 +102,20 @@ export default function EditRoundTour() {
       detailData.append("offers", JSON.stringify(formData.offers));
       detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
 
-      const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
-        title: slide.title,
-        desc: slide.desc,
-      }));
-      detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
-
-      formData.gallerySlides.forEach((slide, idx) => {
-        if (slide.imageFile) {
-          detailData.append(`galleryImage_${idx}`, slide.imageFile);
-        }
+      formData.gallerySlides.forEach(slide => {
+        if (slide.imageFile) detailData.append("galleryImages", slide.imageFile);
       });
+      detailData.append(
+        "gallerySlides",
+        JSON.stringify(formData.gallerySlides.map(s => ({ title: s.title, desc: s.desc })))
+      );
 
-      await axios.put(`http://localhost:5000/api/round-tours/detail/${id}`, detailData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.put(`http://localhost:5000/api/round-tours/detail/${id}`, detailData);
 
-      toast.success("Round Tour updated successfully!", {
-        onClose: () => navigate("/admin/round-tours"),
-        autoClose: 3000,
-      });
+      toast.success("Round Tour updated", { onClose: () => navigate("/admin/round-tours") });
     } catch (err) {
       console.error(err);
-      toast.error("Error updating round tour!");
+      toast.error("Update failed");
     } finally {
       setIsSaving(false);
     }
@@ -133,10 +123,8 @@ export default function EditRoundTour() {
 
   return (
     <div className="flex min-h-screen">
-      <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-full">
-        <AdminSidebar />
-      </div>
+      <ToastContainer />
+      <div className="w-64 fixed h-full"><AdminSidebar /></div>
       <div className="flex-1 ml-64 p-6 bg-gray-50">
         <RoundTourForm
           formData={formData}
