@@ -1,226 +1,305 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Controller } from "swiper/modules";
-import "swiper/css";
-import { FiClock, FiUsers, FiMapPin, FiStar } from "react-icons/fi";
-import BookRoundTour from "../components/BookRoundTour";
+import React from "react";
+import { useDropzone } from "react-dropzone";
 
-
-export default function RoundTourDetail() {
-  const { id } = useParams();
-  const [tour, setTour] = useState(null);
-  const [details, setDetails] = useState(null); 
-  const [showForm, setShowForm] = useState(false);
- const mainSwiperRef = useRef(null);
-  const thumbSwiperRef = useRef(null);
-
-  useEffect(() => {
-    async function fetch() {
-      try {
-        const res = await axios.get(`http://localhost:5000/api/round-tours/${id}`);
-        if (res.data.success) {
-          setTour(res.data.tour);
-          setDetails(res.data.details || {});
-        }
-      } catch (err) {
-        console.error("Error fetching round tour detail:", err);
-      }
-    }
-    fetch();
-  }, [id]);
-
-  if (!tour) return <div className="p-8 text-center">Loading...</div>;
-
-  const slides = (details?.gallerySlides || []).length ? details.gallerySlides : [
-    { image: tour.img, title: tour.title, desc: tour.desc },
-  ];
-
-  const itinerary = details?.itinerary || [];
+/**
+ * Gallery slide uploader
+ */
+function GalleryUpload({ slide, index, onFile, onTitleChange, onDescChange, onRemove }) {
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop: (files) => onFile(index, files[0]),
+  });
 
   return (
-    <div className="font-poppins">
-      <section className="relative flex flex-col md:flex-row h-screen w-full overflow-hidden bg-white">
-        <div className="w-full md:w-1/2 h-80 md:h-full overflow-hidden rounded-r-[45%] relative">
-          <img src={details?.heroImage || tour.img} alt={tour.title} className="absolute inset-0 w-full h-full object-cover object-center" />
-        </div>
-
-        <div className="w-full md:w-1/2 flex flex-col justify-center px-10 md:px-20 mt-20">
-          <h1 className="font-playfair text-5xl md:text-6xl font-bold leading-[1.05] tracking-[-1px] max-w-xl">
-            {details?.heroTitle || tour.title}
-            <br />
-            <span className="block text-2xl text-[#D4AF37] mt-1">{tour.days || details?.tourFacts?.duration}</span>
-          </h1>
-
-          <p className="text-2xl md:text-3xl text-gray-700 mt-6 leading-snug tracking-[-0.5px] max-w-xl">
-            {details?.heroSubtitle || tour.desc}
-          </p>
-
-          <div className="flex gap-4 mt-10">
-            <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white px-8 py-4 rounded-full font-semibold">
-              EXPLORE DESTINATIONS
-            </button>
-            <button onClick={() => setShowForm(true)} className="bg-[#D4AF37] hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-semibold">
-              BOOK THIS TOUR
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="w-full px-6 md:px-32 py-10 mt-10">
-  <h2 className="font-playfair text-4xl mb-10 text-center">Highlights</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-gray-700">
-    {(details?.highlights || []).map((h, i) => (
-      <div key={i} className="bg-gray-100 p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col gap-3">
-        {h.image && (
-          <img
-            src={h.image}
-            alt={h.title}
-            className="w-full h-40 object-cover rounded-md"
-          />
-        )}
-        <h3 className="font-semibold text-xl mb-1 flex items-center gap-2">
-          <FiStar className="text-yellow-400" /> {h.title}
-        </h3>
-        <p>{h.desc}</p>
+    <div className="border p-3 rounded mt-3">
+      <div {...getRootProps()} className="border-2 border-dashed p-4 cursor-pointer">
+        <input {...getInputProps()} />
+        <p>Click or drag & drop gallery image</p>
       </div>
-    ))}
-
-    {(details?.highlights || []).length === 0 && (
-      <div className="text-center col-span-3">No highlights provided.</div>
-    )}
-  </div>
-</section>
-
-
-      <section className="w-full px-6 md:px-32 py-10 mt-10">
-        <h2 className="font-playfair text-4xl mb-10 text-center">Day-wise Itinerary</h2>
-
-        <div className="space-y-16">
-          {itinerary.length === 0 && <div className="text-center">No itinerary available.</div>}
-          {[...Array(Math.ceil(itinerary.length / 7))].map((_, weekIndex) => {
-            const weekDays = itinerary.slice(weekIndex * 7, weekIndex * 7 + 7);
-            return (
-              <div key={weekIndex} className="flex justify-between items-center">
-                {weekDays.map((day) => (
-                  <div key={day.day} className="flex items-center">
-                    <div className="flex flex-col items-center">
-                      <div className="w-12 h-12 rounded-full bg-[#D4AF37] flex items-center justify-center text-white font-bold">
-                        {day.day}
-                      </div>
-                      <span className="text-xs mt-1 text-gray-700 text-center">{day.title}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="w-full px-6 md:px-32 py-10 mt-10">
-        <h2 className="font-playfair text-4xl mb-10 text-center">Tour Facts</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-700 text-center">
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiClock className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Duration</h3>
-            <p>{details?.tourFacts?.duration || tour.days || "—"}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiStar className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Difficulty</h3>
-            <p>{details?.tourFacts?.difficulty || "—"}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiUsers className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Group Size</h3>
-            <p>{details?.tourFacts?.groupSize || "—"}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiMapPin className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Best Season</h3>
-            <p>{details?.tourFacts?.bestSeason || "—"}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiStar className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Tour Type</h3>
-            <p>{details?.tourFacts?.tourType || "—"}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow flex flex-col items-center gap-2">
-            <FiMapPin className="text-[#D4AF37] text-2xl" />
-            <h3 className="font-semibold text-xl mb-1">Languages</h3>
-            <p>{details?.tourFacts?.languages || "—"}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* GALLERY WITH MAIN + THUMB SWIPER */}
-      <h2 className="font-playfair text-4xl mb-5 mt-8 text-center">Gallery</h2>
-      <section className="relative w-full h-[600px] px-10 py-10 flex items-center">
-        {/* Main Swiper */}
-        <Swiper
-          modules={[Autoplay, Controller]}
-          loop={true}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          onSwiper={(swiper) => (mainSwiperRef.current = swiper)}
-          controller={{ control: thumbSwiperRef.current }}
-          className="h-full w-full"
-        >
-          {slides.map(({ image, title, desc }, idx) => (
-            <SwiperSlide key={idx}>
-              <div className="relative h-full w-full">
-                <img
-                  src={image}
-                  alt={title}
-                  className="h-full w-full object-cover brightness-[0.6] rounded-lg"
-                />
-                <div className="absolute top-1/2 right-10 transform -translate-y-1/2 w-1/3 text-white flex flex-col gap-4">
-                  <h2 className="text-4xl md:text-5xl font-playfair font-bold">{title}</h2>
-                  <p className="text-sm md:text-base">{desc}</p>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        {/* Thumbnail Swiper */}
-        <div className="absolute bottom-10 left-10 w-[500px] px-4 py-4">
-          <Swiper
-            modules={[Controller]}
-            loop={true}
-            slidesPerView={3}
-            spaceBetween={10}
-            onSwiper={(swiper) => (thumbSwiperRef.current = swiper)}
-            controller={{ control: mainSwiperRef.current }}
-            className="h-52"
-          >
-            {slides.map(({ image, title }, idx) => (
-              <SwiperSlide key={idx}>
-                <div className="h-full w-full relative rounded overflow-hidden cursor-pointer">
-                  <img src={image} alt={title} className="h-full w-full object-cover" />
-                  <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-xs text-center py-1">
-                    {title}
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>
-
-      {showForm && (
-        <>
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]" onClick={() => setShowForm(false)}></div>
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto"
-   onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-end">
-              <button className="text-3xl font-bold text-gray-600 hover:text-black" onClick={() => setShowForm(false)}>×</button>
-            </div>
-            <BookRoundTour tourId={tour._id} tourTitle={tour.title} tourLocation={tour.location} />
-          </div>
-        </>
+      {slide.imagePreview && (
+        <img src={slide.imagePreview} className="w-48 h-32 mt-2 object-cover rounded" alt="Gallery" />
       )}
+      <input
+        placeholder="Title"
+        value={slide.title}
+        onChange={(e) => onTitleChange(index, e.target.value)}
+        className="border p-2 w-full rounded mt-2"
+      />
+      <textarea
+        placeholder="Description"
+        value={slide.desc}
+        onChange={(e) => onDescChange(index, e.target.value)}
+        className="border p-2 w-full rounded mt-2"
+      />
+      <button
+        type="button"
+        onClick={() => onRemove(index)}
+        className="bg-red-600 text-white px-3 py-1 rounded mt-2"
+      >
+        Remove
+      </button>
     </div>
+  );
+}
+
+export default function RoundTourForm({ formData, setFormData, handleSubmit, submitLabel }) {
+  const updateField = (field, value) => setFormData({ ...formData, [field]: value });
+
+  // Dropzone for Tour Card
+  const { getRootProps: getCardRootProps, getInputProps: getCardInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop: (files) =>
+      setFormData({ ...formData, imgFile: files[0], imgPreview: URL.createObjectURL(files[0]) }),
+  });
+
+  // Dropzone for Hero Image
+  const { getRootProps: getHeroRootProps, getInputProps: getHeroInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop: (files) =>
+      setFormData({ ...formData, heroImageFile: files[0], heroImagePreview: URL.createObjectURL(files[0]) }),
+  });
+
+  // Itinerary helpers
+  const addItinerary = () =>
+    setFormData({
+      ...formData,
+      itinerary: [...(formData.itinerary || []), { day: (formData.itinerary || []).length + 1, title: "", desc: "", activities: [] }],
+    });
+  const updateItinerary = (i, key, val) => {
+    const it = [...(formData.itinerary || [])];
+    it[i][key] = val;
+    setFormData({ ...formData, itinerary: it });
+  };
+  const removeItinerary = (i) => {
+    const it = [...(formData.itinerary || [])];
+    it.splice(i, 1);
+    setFormData({ ...formData, itinerary: it });
+  };
+
+  // Text list helpers (highlights, inclusions, exclusions, offers)
+  const addTextItem = (key) =>
+    setFormData({ ...formData, [key]: [...(formData[key] || []), ""] });
+  const updateTextItem = (key, index, value) => {
+    const arr = [...(formData[key] || [])];
+    arr[index] = value;
+    setFormData({ ...formData, [key]: arr });
+  };
+  const removeTextItem = (key, index) => {
+    const arr = [...(formData[key] || [])];
+    arr.splice(index, 1);
+    setFormData({ ...formData, [key]: arr });
+  };
+
+  // Gallery helpers
+  const addGallery = () =>
+    setFormData({
+      ...formData,
+      gallerySlides: [...(formData.gallerySlides || []), { title: "", desc: "", imageFile: null, imagePreview: "" }],
+    });
+    
+  const updateGalleryFile = (i, file) => {
+    const arr = [...(formData.gallerySlides || [])];
+    arr[i].imageFile = file;
+    arr[i].imagePreview = file ? URL.createObjectURL(file) : arr[i].imagePreview;
+    setFormData({ ...formData, gallerySlides: arr });
+    
+  };
+  const updateGalleryField = (i, key, value) => {
+    const arr = [...(formData.gallerySlides || [])];
+    arr[i][key] = value;
+    setFormData({ ...formData, gallerySlides: arr });
+  };
+  const removeGallery = (i) => {
+    const arr = [...(formData.gallerySlides || [])];
+    arr.splice(i, 1);
+    setFormData({ ...formData, gallerySlides: arr });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white border border-[#2E5B84] p-8 rounded-2xl shadow-xl max-w-4xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold text-[#0d203a] mb-4 text-center">{submitLabel}</h2>
+
+      {/* Basic Info */}
+      <div>
+        <input className="border p-3 w-full rounded mb-3" placeholder="Title" value={formData.title} onChange={(e) => updateField("title", e.target.value)} />
+        <input className="border p-3 w-full rounded mb-3" placeholder="Days" value={formData.days} onChange={(e) => updateField("days", e.target.value)} />
+        <input className="border p-3 w-full rounded mb-3" placeholder="Location" value={formData.location} onChange={(e) => updateField("location", e.target.value)} />
+        <textarea className="border p-3 w-full rounded mb-3" placeholder="Short Description" value={formData.desc} onChange={(e) => updateField("desc", e.target.value)} />
+      </div>
+
+      {/* Tour Card */}
+      <div>
+        <label className="font-semibold">Tour Card Image</label>
+        <div {...getCardRootProps()} className="border-2 border-dashed p-6 mt-2 cursor-pointer">
+          <input {...getCardInputProps()} />
+          <p>Click or drag & drop image here</p>
+        </div>
+        {formData.imgPreview && <img src={formData.imgPreview} alt="Tour Card" className="w-48 h-32 mt-2 object-cover rounded shadow" />}
+      </div>
+
+      <hr />
+
+      {/* Hero Section */}
+      <div>
+        <h3 className="font-semibold mb-2">Hero</h3>
+        <input className="border p-3 w-full rounded mb-3" placeholder="Hero Title" value={formData.heroTitle} onChange={(e) => updateField("heroTitle", e.target.value)} />
+        <input className="border p-3 w-full rounded mb-3" placeholder="Hero Subtitle" value={formData.heroSubtitle} onChange={(e) => updateField("heroSubtitle", e.target.value)} />
+        <div {...getHeroRootProps()} className="border-2 border-dashed p-6 mt-2 cursor-pointer">
+          <input {...getHeroInputProps()} />
+          <p>Click or drag & drop hero image here</p>
+        </div>
+        {formData.heroImagePreview && <img src={formData.heroImagePreview} className="w-60 h-36 rounded mt-3 object-cover shadow" alt="Hero" />}
+      </div>
+
+      <hr />
+
+      {/* Highlights */}
+      <div>
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Highlights</h3>
+          <button type="button" onClick={() => addTextItem("highlights")} className="bg-[#2E5B84] text-white px-4 py-1 rounded">+ Add</button>
+        </div>
+        {(formData.highlights || []).map((item, i) => (
+          <div key={i} className="flex gap-2 mt-2">
+            <input className="border p-2 flex-1 rounded" placeholder="Highlight text" value={item} onChange={(e) => updateTextItem("highlights", i, e.target.value)} />
+            <button type="button" onClick={() => removeTextItem("highlights", i)} className="bg-red-600 text-white px-3 rounded">✕</button>
+          </div>
+        ))}
+      </div>
+
+      <hr />
+
+      {/* Daily Itinerary */}
+      <div>
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Daily Itinerary</h3>
+          <button type="button" onClick={addItinerary} className="bg-[#2E5B84] text-white px-4 py-1 rounded">+ Add Day</button>
+        </div>
+        {(formData.itinerary || []).map((day, i) => (
+          <div key={i} className="border p-4 rounded mt-3 space-y-2">
+            <input className="border p-2 w-full rounded" placeholder="Day Number" value={day.day} onChange={(e) => updateItinerary(i, "day", e.target.value)} />
+            <input className="border p-2 w-full rounded" placeholder="Title" value={day.title} onChange={(e) => updateItinerary(i, "title", e.target.value)} />
+            <textarea className="border p-2 w-full rounded" placeholder="Description" value={day.desc} onChange={(e) => updateItinerary(i, "desc", e.target.value)} />
+
+            {/* Activities */}
+            <div className="mt-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Activities</span>
+                <button type="button" onClick={() => {
+                  const it = [...formData.itinerary];
+                  it[i].activities = [...(it[i].activities || []), ""];
+                  setFormData({ ...formData, itinerary: it });
+                }} className="text-sm bg-green-600 text-white px-2 rounded">+ Add</button>
+              </div>
+              {(day.activities || []).map((a, ai) => (
+                <div key={ai} className="flex gap-2 mt-1">
+                  <input className="border p-2 flex-1 rounded" placeholder="Activity" value={a} onChange={(e) => {
+                    const it = [...formData.itinerary];
+                    it[i].activities[ai] = e.target.value;
+                    setFormData({ ...formData, itinerary: it });
+                  }} />
+                  <button type="button" onClick={() => {
+                    const it = [...formData.itinerary];
+                    it[i].activities.splice(ai, 1);
+                    setFormData({ ...formData, itinerary: it });
+                  }} className="bg-red-600 text-white px-2 rounded">✕</button>
+                </div>
+              ))}
+            </div>
+
+            <button type="button" onClick={() => removeItinerary(i)} className="bg-red-600 text-white px-3 py-1 rounded mt-2">Remove Day</button>
+          </div>
+        ))}
+      </div>
+
+      <hr />
+
+      {/* Inclusions / Exclusions / Offers */}
+      {["inclusions", "exclusions", "offers"].map((key) => (
+        <div key={key}>
+          <div className="flex justify-between items-center">
+            <h3 className="font-semibold capitalize">{key}</h3>
+            <button type="button" onClick={() => addTextItem(key)} className="bg-[#2E5B84] text-white px-4 py-1 rounded">+ Add</button>
+          </div>
+          {(formData[key] || []).map((item, i) => (
+            <div key={i} className="flex gap-2 mt-2">
+              <input className="border p-2 flex-1 rounded" value={item} onChange={(e) => updateTextItem(key, i, e.target.value)} />
+              <button type="button" onClick={() => removeTextItem(key, i)} className="bg-red-600 text-white px-3 rounded">✕</button>
+            </div>
+          ))}
+          <hr className="my-3" />
+        </div>
+      ))}
+
+      {/* Gallery Slides */}
+      <div>
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Gallery Slides</h3>
+          <button type="button" onClick={addGallery} className="bg-[#2E5B84] text-white px-4 py-1 rounded">+ Add Slide</button>
+        </div>
+        {(formData.gallerySlides || []).map((slide, i) => (
+          <GalleryUpload
+            key={i}
+            slide={slide}
+            index={i}
+            onFile={updateGalleryFile}
+            onTitleChange={(idx, v) => updateGalleryField(idx, "title", v)}
+            onDescChange={(idx, v) => updateGalleryField(idx, "desc", v)}
+            onRemove={removeGallery}
+          />
+        ))}
+        
+      </div>
+
+      {/* TOUR FACTS */}
+      <div className="mt-4">
+        <h3 className="font-semibold mb-2">Tour Facts</h3>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block mb-1">Duration</label>
+            <input
+              type="text"
+              placeholder="e.g., 14 Days / 13 Nights"
+              className="border p-2 w-full rounded"
+              value={formData.tourFacts.duration}
+              onChange={(e) => setFormData({
+                ...formData,
+                tourFacts: { ...formData.tourFacts, duration: e.target.value }
+              })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Group Size</label>
+            <input
+              type="text"
+              placeholder="e.g., 2–20 people"
+              className="border p-2 w-full rounded"
+              value={formData.tourFacts.groupSize}
+              onChange={(e) => setFormData({
+                ...formData,
+                tourFacts: { ...formData.tourFacts, groupSize: e.target.value }
+              })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Difficulty</label>
+            <input
+              type="text"
+              placeholder="e.g., Easy – Moderate"
+              className="border p-2 w-full rounded"
+              value={formData.tourFacts.difficulty}
+              onChange={(e) => setFormData({
+                ...formData,
+                tourFacts: { ...formData.tourFacts, difficulty: e.target.value }
+              })}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" className="bg-[#2E5B84] text-white px-6 py-2 rounded w-full">{submitLabel}</button>
+      </div>
+    </form>
   );
 }
