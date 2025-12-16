@@ -92,8 +92,24 @@ router.post("/", upload.any(), async (req, res) => {
 // Save a new inquiry
 router.post("/inquiry", async (req, res) => {
   try {
-    const newInquiry = new Inquiry(req.body);
-    const saved = await newInquiry.save();
+    const inquiry = new Inquiry({
+      title: req.body.title,
+      fullName: req.body.fullName,
+      nationality: req.body.nationality,
+      email: req.body.email,
+      phone: req.body.phone,
+      pickupLocation: req.body.pickupLocation,
+      dropLocation: req.body.dropLocation,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      travelers: req.body.travelers,
+      interests: req.body.interests || [],
+      budget: req.body.budget || null,
+      currency: req.body.currency || null,
+      notes: req.body.notes || "",
+    });
+
+    const saved = await inquiry.save();
     res.status(201).json(saved);
   } catch (err) {
     console.error(err);

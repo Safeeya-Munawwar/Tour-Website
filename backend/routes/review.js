@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 // GET ALL REVIEWS
 router.get("/", async (req, res) => {
   try {
-    const reviews = await Review.find().sort({ createdAt: -1 }); // latest first
+    const reviews = await Review.find().sort({ createdAt: -1 });
     res.json({ success: true, reviews });
   } catch (error) {
     console.log(error);

@@ -56,6 +56,7 @@ import TailorComments from "./pages/admin/TailorComments";
 import TripadvisorReviews from "./pages/admin/TripadvisorReviews";
 import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
 import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
+import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 
 function App() {
   const location = useLocation();
@@ -157,8 +158,12 @@ function App() {
           <Route path="admin/tailor-comments" element={<TailorComments />} />
           {/* Tailor Comments */}
           <Route path="admin/tripadvisor-reviews" element={<TripadvisorReviews />} />
+          {/* Day Tour Bookings */}
           <Route path="admin/day-tour-booking" element={<DayTourBookingAdmin />} />
+          {/* Round Tour Bookings */}
           <Route path="admin/round-tour-booking" element={<RoundTourBookingAdmin />} />
+          {/* Customize Tour Bookings */}
+          <Route path="admin/customize-tour" element={<CustomizeTourBookingAdmin />} />
         </Routes>
       </main>
 

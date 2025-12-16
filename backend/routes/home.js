@@ -55,7 +55,7 @@ router.post("/", upload.any(), async (req, res) => {
     // Handle icons/images for stats, activities, whyChooseUs
     const imageFiles = req.files.filter((f) => f.fieldname !== "infoVideo");
 
-    // Map icons/images based on fieldname convention: e.g., stats0, activities0, choose0
+    // Map icons/images based on fieldname convention
     if (data.stats && Array.isArray(data.stats)) {
       data.stats = data.stats.map((item, idx) => {
         const file = imageFiles.find((f) => f.fieldname === `stats${idx}`);

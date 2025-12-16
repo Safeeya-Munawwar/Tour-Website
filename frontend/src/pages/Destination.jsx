@@ -4,6 +4,8 @@ import axios from "axios";
 export default function Destination() {
   const [showText, setShowText] = useState(false);
   const [destinations, setDestinations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 8;
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
@@ -13,25 +15,28 @@ export default function Destination() {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/destination"); // adjust URL if needed
-        setDestinations(res.data.destinations); // match your backend JSON
+        const res = await axios.get("http://localhost:5000/api/destination");
+        setDestinations(res.data.destinations || []);
       } catch (err) {
         console.error("Error fetching destinations:", err);
       }
     };
-
     fetchDestinations();
   }, []);
 
+  const totalPages = Math.ceil(destinations.length / perPage);
+  const indexOfLast = currentPage * perPage;
+  const indexOfFirst = indexOfLast - perPage;
+  const currentDestinations = destinations.slice(indexOfFirst, indexOfLast);
+
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* ---------------------------- HERO HEADER ---------------------------- */}
+      {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/40.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-
         <div
           className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[360px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
@@ -45,7 +50,7 @@ export default function Destination() {
         </div>
       </div>
 
-      {/* ---------------------------- DESTINATIONS GRID ---------------------------- */}
+      {/* DESTINATIONS GRID */}
       <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
@@ -64,12 +69,13 @@ export default function Destination() {
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
+          {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mt-12">
-            {destinations.length > 0 ? (
-              destinations.map((item) => (
+            {currentDestinations.length > 0 ? (
+              currentDestinations.map((item) => (
                 <div key={item._id} className="flex flex-col w-full">
                   <img
-                    src={item.img} // Cloudinary URL from DB
+                    src={item.img}
                     alt={item.title}
                     className="w-full h-56 object-cover rounded-xl shadow-md"
                   />
@@ -85,6 +91,31 @@ export default function Destination() {
               </p>
             )}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-12">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              <span className="text-gray-700 font-medium">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -13,21 +13,6 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
-/*  
-===========================================================
- FIXED ROUTER ORDER  
-===========================================================
- 1. POST /detail       (must come before /:id)
- 2. PUT /detail/:id
- 3. GET ALL /
- 4. CREATE TOUR /
- 5. GET SINGLE /:id
- 6. UPDATE TOUR /:id
- 7. DELETE TOUR /:id
-===========================================================
-*/
-
-
 // ---------------- CREATE TOUR DETAIL ----------------
 router.post("/detail", upload.any(), async (req, res) => {
   try {
@@ -42,7 +27,7 @@ router.post("/detail", upload.any(), async (req, res) => {
       historyLeftList,
       historyRightList,
       itinerary,
-      tourFacts
+      tourFacts,
     } = req.body;
 
     const parsedHighlights = JSON.parse(highlights || "[]");
@@ -55,16 +40,18 @@ router.post("/detail", upload.any(), async (req, res) => {
 
     // Attach images dynamically
     parsedHighlights.forEach((h, idx) => {
-      const file = req.files.find(f => f.fieldname === `highlightImage_${idx}`);
+      const file = req.files.find(
+        (f) => f.fieldname === `highlightImage_${idx}`
+      );
       if (file) h.image = file.path;
     });
 
     parsedGallery.forEach((g, idx) => {
-      const file = req.files.find(f => f.fieldname === `galleryImage_${idx}`);
+      const file = req.files.find((f) => f.fieldname === `galleryImage_${idx}`);
       if (file) g.image = file.path;
     });
 
-    const heroFile = req.files.find(f => f.fieldname === "heroImage");
+    const heroFile = req.files.find((f) => f.fieldname === "heroImage");
 
     const newDetail = new RoundTourDetail({
       tourId,
@@ -78,17 +65,15 @@ router.post("/detail", upload.any(), async (req, res) => {
       historyRightList: parsedHistoryRight,
       itinerary: parsedItinerary,
       tourFacts: parsedTourFacts,
-      gallerySlides: parsedGallery
+      gallerySlides: parsedGallery,
     });
 
     await newDetail.save();
     res.json({ success: true, detail: newDetail });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 // ---------------- UPDATE TOUR DETAIL ----------------
 router.put("/detail/:id", upload.any(), async (req, res) => {
@@ -103,7 +88,7 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
       historyLeftList,
       historyRightList,
       itinerary,
-      tourFacts
+      tourFacts,
     } = req.body;
 
     const parsedHighlights = JSON.parse(highlights || "[]");
@@ -116,17 +101,19 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
 
     // update highlight images
     parsedHighlights.forEach((h, idx) => {
-      const file = req.files.find(f => f.fieldname === `highlightImage_${idx}`);
+      const file = req.files.find(
+        (f) => f.fieldname === `highlightImage_${idx}`
+      );
       if (file) h.image = file.path;
     });
 
     // update gallery images
     parsedGallery.forEach((g, idx) => {
-      const file = req.files.find(f => f.fieldname === `galleryImage_${idx}`);
+      const file = req.files.find((f) => f.fieldname === `galleryImage_${idx}`);
       if (file) g.image = file.path;
     });
 
-    const heroFile = req.files.find(f => f.fieldname === "heroImage");
+    const heroFile = req.files.find((f) => f.fieldname === "heroImage");
 
     const updateData = {
       heroImage: heroFile?.path,
@@ -139,7 +126,7 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
       historyLeftList: parsedHistoryLeft,
       historyRightList: parsedHistoryRight,
       itinerary: parsedItinerary,
-      tourFacts: parsedTourFacts
+      tourFacts: parsedTourFacts,
     };
 
     const updatedDetail = await RoundTourDetail.findOneAndUpdate(
@@ -149,12 +136,10 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
     );
 
     res.json({ success: true, detail: updatedDetail });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 // ---------------- GET ALL TOURS ----------------
 router.get("/", async (req, res) => {
@@ -166,14 +151,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-
 // ---------------- CREATE TOUR ----------------
 router.post("/", upload.single("img"), async (req, res) => {
   try {
     if (!req.body.title || !req.body.desc || !req.file)
       return res.status(400).json({
         success: false,
-        error: "Title, description, and img are required"
+        error: "Title, description, and img are required",
       });
 
     const newTour = new RoundTour({
@@ -186,12 +170,10 @@ router.post("/", upload.single("img"), async (req, res) => {
 
     await newTour.save();
     res.json({ success: true, tour: newTour });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 // ---------------- GET SINGLE TOUR + DETAILS ----------------
 router.get("/:id", async (req, res) => {
@@ -203,12 +185,10 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ success: false, error: "Tour not found" });
 
     res.json({ success: true, tour, details });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 // ---------------- UPDATE TOUR ----------------
 router.put("/:id", upload.single("img"), async (req, res) => {
@@ -217,7 +197,7 @@ router.put("/:id", upload.single("img"), async (req, res) => {
       title: req.body.title,
       days: req.body.days || "",
       location: req.body.location || "",
-      desc: req.body.desc
+      desc: req.body.desc,
     };
 
     if (req.file) updateData.img = req.file.path;
@@ -232,7 +212,6 @@ router.put("/:id", upload.single("img"), async (req, res) => {
       return res.status(404).json({ success: false, error: "Tour not found" });
 
     res.json({ success: true, tour: updatedTour });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -249,7 +228,6 @@ router.delete("/:id", async (req, res) => {
     await RoundTourDetail.deleteOne({ tourId: req.params.id });
 
     res.json({ success: true, message: "Deleted successfully" });
-
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

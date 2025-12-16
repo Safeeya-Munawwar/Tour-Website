@@ -33,9 +33,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// =======================================================
-// GET ALL EXPERIENCES
-// =======================================================
+// =======================================================GET ALL EXPERIENCES=======================================================
 router.get("/", async (req, res) => {
   try {
     const all = await Experience.find();
@@ -57,9 +55,7 @@ router.get("/slug/:slug", async (req, res) => {
   }
 });
 
-// =======================================================
-// GET SINGLE EXPERIENCE
-// =======================================================
+// ===================================GET SINGLE EXPERIENCE===============================
 router.get("/:id", async (req, res) => {
   try {
     const exp = await Experience.findById(req.params.id);
@@ -71,9 +67,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// =======================================================
-// CREATE EXPERIENCE
-// =======================================================
+// =================================CREATE EXPERIENCE================================
 router.post("/", upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
@@ -102,7 +96,7 @@ router.post("/", upload.any(), async (req, res) => {
         const file = subFiles.find(
           (f) => f.fieldname === `subExperienceImages${idx}`
         );
-        const { _id, ...rest } = item; // remove _id
+        const { _id, ...rest } = item;
         return { ...rest, image: file ? file.path : rest.image || "" };
       });
     }
@@ -121,9 +115,7 @@ router.post("/", upload.any(), async (req, res) => {
   }
 });
 
-// =======================================================
-// UPDATE EXPERIENCE
-// =======================================================
+// ============================UPDATE EXPERIENCE===============================
 router.put("/:id", upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
@@ -173,9 +165,7 @@ router.put("/:id", upload.any(), async (req, res) => {
   }
 });
 
-// =======================================================
-// DELETE EXPERIENCE
-// =======================================================
+// ===============================DELETE EXPERIENCE=============================
 router.delete("/:id", async (req, res) => {
   try {
     await Experience.findByIdAndDelete(req.params.id);

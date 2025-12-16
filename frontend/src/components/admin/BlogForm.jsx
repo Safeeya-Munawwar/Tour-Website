@@ -1,7 +1,12 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function BlogForm({ formData, setFormData, handleSubmit, submitLabel }) {
+export default function BlogForm({
+  formData,
+  setFormData,
+  handleSubmit,
+  submitLabel,
+}) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "image/*": [] },
     onDrop: (files) =>
@@ -39,45 +44,50 @@ export default function BlogForm({ formData, setFormData, handleSubmit, submitLa
       onSubmit={handleSubmit}
       className="bg-white border border-[#2E5B84] p-10 rounded-2xl shadow-xl w-full max-w-3xl mx-auto mt-10"
     >
-      <h2 className="text-3xl font-bold text-[#0d203a] mb-8 text-center">{submitLabel}</h2>
+      <h2 className="text-3xl font-bold text-[#0d203a] mb-8 text-center">
+        {submitLabel}
+      </h2>
 
       <input
-  type="text"
-  placeholder="Slug"
-  value={formData.slug}
-  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-  className="border p-3 w-full rounded mb-4"
-/>
+        type="text"
+        placeholder="Slug"
+        value={formData.slug}
+        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
-<input
-  type="text"
-  placeholder="Title"
-  value={formData.title}
-  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-  className="border p-3 w-full rounded mb-4"
-/>
+      <input
+        type="text"
+        placeholder="Title"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
-<input
-  type="text"
-  placeholder="Subtitle"
-  value={formData.subtitle}
-  onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-  className="border p-3 w-full rounded mb-4"
-/>
+      <input
+        type="text"
+        placeholder="Subtitle"
+        value={formData.subtitle}
+        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
-<textarea
-  placeholder="Description"
-  value={formData.description}
-  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-  className="border p-3 w-full rounded mb-4"
-  rows={3}
-/>
-
+      <textarea
+        placeholder="Description"
+        value={formData.description}
+        onChange={(e) =>
+          setFormData({ ...formData, description: e.target.value })
+        }
+        className="border p-3 w-full rounded mb-4"
+        rows={3}
+      />
 
       {/* Paragraphs */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
-          <label className="font-semibold text-[#2E5B84]">Content Paragraphs</label>
+          <label className="font-semibold text-[#2E5B84]">
+            Content Paragraphs
+          </label>
           <button
             type="button"
             onClick={addParagraph}
@@ -105,7 +115,8 @@ export default function BlogForm({ formData, setFormData, handleSubmit, submitLa
           </div>
         ))}
 
-        {(!formData.contentParagraphs || formData.contentParagraphs.length === 0) && (
+        {(!formData.contentParagraphs ||
+          formData.contentParagraphs.length === 0) && (
           <p className="text-gray-500 text-sm">No paragraphs added yet.</p>
         )}
       </div>

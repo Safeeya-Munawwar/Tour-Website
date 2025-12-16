@@ -21,7 +21,7 @@ const AdminManageTailorMadeTour = () => {
   });
 
   const [files, setFiles] = useState({ howItWorks: [], gallery: [] });
-  const [inquiries, setInquiries] = useState([]);
+  
 
   // -------------------- Fetch Tour Data --------------------
   useEffect(() => {
@@ -53,21 +53,7 @@ const AdminManageTailorMadeTour = () => {
     }
   };
 
-  // -------------------- Fetch Inquiries --------------------
-  useEffect(() => {
-    fetchInquiries();
-  }, []);
 
-  const fetchInquiries = async () => {
-    try {
-      const res = await axios.get(
-        "http://localhost:5000/api/tailor-made-tours/inquiries"
-      );
-      setInquiries(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   // -------------------- Handlers --------------------
   const handleChange = (e, section, idx) => {
@@ -138,55 +124,7 @@ const AdminManageTailorMadeTour = () => {
     );
   };
 
-  // -------------------- Update Inquiry Status --------------------
-  const updateInquiryStatus = async (id, status, email, userName) => {
-    const toastId = toast.loading(`Updating inquiry status for ${userName}...`);
 
-    try {
-      await axios.put(
-        `http://localhost:5000/api/tailor-made-tours/inquiries/${id}`,
-        { status },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      await axios.post("http://localhost:5000/api/send-email", {
-        to: email,
-        subject: "Your Tailor Made Tour Status",
-        message: `Hello ${userName},\n\nYour inquiry status has been updated to: ${status}.`,
-      });
-
-      toast.update(toastId, {
-        render: `Inquiry status updated to ${status.toUpperCase()}! User ${userName} has been notified.`,
-        type: "success",
-        isLoading: false,
-        autoClose: 2500,
-      });
-
-      fetchInquiries();
-    } catch (err) {
-      console.error("Update Status Error:", err.response || err);
-
-      toast.update(toastId, {
-        render: "Failed to update the inquiry status!",
-        type: "error",
-        isLoading: false,
-        autoClose: 2500,
-      });
-    }
-  };
-
-  const deleteInquiry = async (id) => {
-    try {
-      await axios.delete(
-        `http://localhost:5000/api/tailor-made-tours/inquiries/${id}`
-      );
-      toast.success("Inquiry deleted!");
-      fetchInquiries();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete inquiry.");
-    }
-  };
 
   // -------------------- Save Tour --------------------
   const handleSubmit = async () => {
@@ -247,7 +185,7 @@ const AdminManageTailorMadeTour = () => {
 
         {/* Tabs */}
         <div className="flex justify-center gap-4 mb-4">
-          {["general", "howItWorks", "full", "inquiries"].map((tab) => (
+          {["general", "howItWorks", "full"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -261,9 +199,7 @@ const AdminManageTailorMadeTour = () => {
                 ? "General Info"
                 : tab === "howItWorks"
                 ? "How It Works"
-                : tab === "full"
-                ? "Full Description & Gallery"
-                : "Inquiries"}
+                : "Full Description & Gallery"}
             </button>
           ))}
         </div>
@@ -469,124 +405,7 @@ const AdminManageTailorMadeTour = () => {
           </div>
         )}
 
-        {/* Inquiries */}
-        {activeTab === "inquiries" && (
-          <div className="px-5">
-            <h3 className="text-xl font-bold mb-4">User Inquiries</h3>
-            <table className="w-full border border-[#1a354e] rounded mb-6 text-center">
-              <thead className="bg-[#0d203a] text-white">
-                <tr>
-                  <th className="p-3 border border-[#1a354e]">Full Name</th>
-                  <th className="p-3 border border-[#1a354e]">Email</th>
-                  <th className="p-3 border border-[#1a354e]">Phone</th>
-                  <th className="p-3 border border-[#1a354e]">
-                    Pickup Location
-                    <br />
-                    <span className="text-m text-gray-300">(Start Date)</span>
-                  </th>
-                  <th className="p-3 border border-[#1a354e]">
-                    Drop Location
-                    <br />
-                    <span className="text-m text-gray-300">(End Date)</span>
-                  </th>
-                  <th className="p-3 border border-[#1a354e]">Travelers</th>
-                  <th className="p-3 border border-[#1a354e]">Status</th>
-                  <th className="p-3 border border-[#1a354e]">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inquiries.map((inq) => (
-                  <tr
-                    key={inq._id}
-                    className="border-b border-[#2E5B84] hover:bg-blue-50"
-                  >
-                    <td className="p-3 border border-[#2E5B84]">
-                      {inq.fullName}
-                    </td>
-                    <td className="p-3 border border-[#2E5B84]">{inq.email}</td>
-                    <td className="p-3 border border-[#2E5B84]">{inq.phone}</td>
-                    <td className="p-3 border border-[#2E5B84]">
-                      {inq.pickupLocation || "—"}
-                      <br />
-                      <span className="text-sm text-gray-700">
-                        {inq.startDate
-                          ? new Date(inq.startDate).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              }
-                            )
-                          : "—"}
-                      </span>
-                    </td>
-
-                    <td className="p-3 border border-[#2E5B84]">
-                      {inq.dropLocation || "—"}
-                      <br />
-                      <span className="text-sm text-gray-700">
-                        {inq.endDate
-                          ? new Date(inq.endDate).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })
-                          : "—"}
-                      </span>
-                    </td>
-
-                    <td className="p-3 border border-[#2E5B84]">
-                      {inq.travelers}
-                    </td>
-                    <td
-                      className="p-3
- border border-[#2E5B84]"
-                    >
-                      {inq.status || "Pending"}
-                    </td>
-                    <td className="p-3 flex gap-1 justify-center">
-                      <button
-                        className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 text-sm"
-                        onClick={() =>
-                          updateInquiryStatus(
-                            inq._id,
-                            "Approved",
-                            inq.email,
-                            inq.fullName
-                          )
-                        }
-                      >
-                        Approve
-                      </button>
-
-                      <button
-                        className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-sm"
-                        onClick={() =>
-                          updateInquiryStatus(
-                            inq._id,
-                            "Cancelled",
-                            inq.email,
-                            inq.fullName
-                          )
-                        }
-                      >
-                        Cancel
-                      </button>
-
-                      <button
-                        className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-sm"
-                        onClick={() => deleteInquiry(inq._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        
       </div>
     </div>
   );

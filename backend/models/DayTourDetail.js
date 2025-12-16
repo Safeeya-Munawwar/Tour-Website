@@ -11,7 +11,7 @@ const DayTourDetailSchema = new mongoose.Schema({
   heroTitle: String,
   heroSubtitle: String,
 
-  aboutParagraphs: [String], // 2 paragraphs
+  aboutParagraphs: [String],
 
   historyTitle: String,
   historyLeftList: [String],

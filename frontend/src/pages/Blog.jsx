@@ -61,9 +61,8 @@ export default function Blog() {
           </h2>
 
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-            Explore stories, tips, and behind-the-scenes experiences from our
-            team at NetLanka Tours. Stay inspired and discover how we craft
-            unforgettable journeys across Sri Lanka.
+          Explore stories, tips, and behind-the-scenes experiences from our travel team. 
+          Stay inspired and discover how we craft unforgettable journeys across Sri Lanka.
           </p>
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>

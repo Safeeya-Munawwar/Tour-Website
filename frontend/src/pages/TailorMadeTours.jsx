@@ -7,33 +7,38 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  MapPin,
+  Clock,
+  Hotel,
+  Car,
+  Mountain,
+  Wallet,
+} from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TestimonialForm from "../components/TestimonialForm";
 import TestimonialsSection from "../components/TestimonialsSection";
+import TailorMadeForm from "../components/CustomizeTourForm";
 
 const TailorMadeTours = () => {
   const [tourData, setTourData] = useState(null);
   const [showText, setShowText] = useState(false);
-  const [step, setStep] = useState(1);
-  const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFull, setShowFull] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    fullName: "",
-    nationality: "",
-    email: "",
-    phone: "",
-    pickupLoaction: "",
-    dropLoaction: "",
-    startDate: "",
-    endDate: "",
-    travelers: "",
-  });
+
+  const customizeOptions = [
+    { icon: MapPin, label: "Destinations & Routes" },
+    { icon: Clock, label: "Tour Duration" },
+    { icon: Hotel, label: "Hotel Category (Budget to Luxury)" },
+    { icon: Car, label: "Private Transport & Driver" },
+    { icon: Mountain, label: "Activities & Experiences" },
+    { icon: Wallet, label: "Budget & Travel Style" },
+  ];
 
   useEffect(() => {
     const fetchTour = async () => {
@@ -56,63 +61,13 @@ const TailorMadeTours = () => {
     setTimeout(() => setShowText(true), 200);
   }, []);
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    if (step === 1) {
-      if (!captchaChecked) {
-        alert("Please confirm you are not a robot!");
-        return;
-      }
-    }
-    setStep(step + 1);
-  };
-
-  const handlePrev = () => setStep(step - 1);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!captchaChecked) {
-      toast.error("Please verify captcha!");
-      return;
-    }
-
-    try {
-      await axios.post(
-        "http://localhost:5000/api/tailor-made-tours/inquiry",
-        formData
-      );
-      toast.success("Your trip plan has been submitted!");
-      setFormData({
-        title: "",
-        fullName: "",
-        nationality: "",
-        email: "",
-        phone: "",
-        pickupLoaction: "",
-        dropLoaction: "",
-        startDate: "",
-        endDate: "",
-        travelers: "",
-      });
-      setStep(1);
-      setCaptchaChecked(false);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to submit your plan. Try again.");
-    }
-  };
-
   if (!tourData) {
     return <div className="text-center py-20">Loading...</div>;
   }
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} />
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -151,291 +106,42 @@ const TailorMadeTours = () => {
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </section>
 
+      {/* ---------------- WHAT YOU CAN CUSTOMIZE ---------------- */}
+      <section className="max-w-7xl mx-auto px-6 pt-2 pb-20">
+        <h3 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          What You Can Customize
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {customizeOptions.map(({ icon: Icon, label }, idx) => (
+            <div
+              key={idx}
+              className="border rounded-xl p-6 text-center shadow-sm 
+                 hover:shadow-md transition group"
+            >
+              <div className="flex justify-center mb-4">
+                <div
+                  className="w-14 h-14 rounded-full bg-blue-50 
+                     flex items-center justify-center
+                     group-hover:bg-blue-800 transition"
+                >
+                  <Icon
+                    className="w-7 h-7 text-blue-800 
+                       group-hover:text-white transition"
+                  />
+                </div>
+              </div>
+
+              <p className="font-semibold text-lg text-gray-800">{label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ---------------------------- PLAN YOUR TRIP SECTION ---------------------------- */}
       <section className="max-w-7xl mx-auto px-5 md:px-20 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left Side - Form */}
-        <div className="lg:col-span-1 w-full">
-          <div className="bg-blue-600 text-white rounded-t-xl px-6 py-5 mb-6">
-            <h3 className="text-xl md:text-2xl font-bold text-center">
-              Plan Your Trip
-            </h3>
-          </div>
-
-          <p className="text-gray-500 mb-6 px-3 text-center text-sm md:text-base">
-            Please note that your information is saved on our server as you
-            enter it.
-          </p>
-
-          <div className="max-w-xl mx-auto px-3 md:px-5">
-            {/* Step 1: Personal Info */}
-            {step === 1 && (
-              <form className="space-y-4">
-                <div className="flex justify-center space-x-3 mb-4 items-center">
-                  {[1, 2, 3].map((n) => (
-                    <span
-                      key={n}
-                      className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold"
-                    >
-                      {n}
-                    </span>
-                  ))}
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Title*
-                  </label>
-                  <select
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  >
-                    <option value="">Select</option>
-                    <option>Mr.</option>
-                    <option>Mrs.</option>
-                    <option>Miss</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Full Name*
-                  </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Nationality*
-                  </label>
-                  <input
-                    type="text"
-                    name="nationality"
-                    value={formData.nationality}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your nationality"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Email*
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Phone*
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="+94 777 000 000"
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={captchaChecked}
-                    onChange={(e) => setCaptchaChecked(e.target.checked)}
-                    className="w-5 h-5"
-                  />
-                  <label className="text-gray-700 font-semibold">
-                    I am not a robot
-                  </label>
-                </div>
-
-                <button
-                  onClick={handleNext}
-                  className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
-                >
-                  Next
-                </button>
-              </form>
-            )}
-
-            {/* Step 2: Trip Details */}
-            {step === 2 && (
-              <form className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">
-                  Step 2: Your Trip Details
-                </h2>
-
-                {/* Pickup Location */}
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Pickup Location*
-                  </label>
-                  <input
-                    type="text"
-                    name="pickupLocation"
-                    value={formData.pickupLocation}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Where should we pick you up?"
-                  />
-                </div>
-
-                {/* Drop Location */}
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Drop Location*
-                  </label>
-                  <input
-                    type="text"
-                    name="dropLocation"
-                    value={formData.dropLocation}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Where should we drop you off?"
-                  />
-                </div>
-
-                {/* Start + End Date */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
-                      Start Date*
-                    </label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      value={formData.startDate}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-md p-2"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
-                      End Date*
-                    </label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      value={formData.endDate}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-md p-2"
-                    />
-                  </div>
-                </div>
-
-                {/* Travelers */}
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Number of Travelers*
-                  </label>
-                  <input
-                    type="number"
-                    name="travelers"
-                    value={formData.travelers}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Number of travelers"
-                  />
-                </div>
-
-                <div className="flex flex-col sm:flex-row justify-between gap-4">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
-                  >
-                    Previous
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
-                  >
-                    Next
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* Step 3: Review & Submit */}
-            {step === 3 && (
-              <form className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">
-                  Step 3: Review & Submit
-                </h2>
-
-                <div className="bg-gray-50 p-4 rounded-md space-y-2">
-                  <p>
-                    <strong>Title:</strong> {formData.title}
-                  </p>
-                  <p>
-                    <strong>Full Name:</strong> {formData.fullName}
-                  </p>
-                  <p>
-                    <strong>Nationality:</strong> {formData.nationality}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {formData.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {formData.phone}
-                  </p>
-                  <p>
-                    <strong>Pickup Location:</strong> {formData.pickupLocation}
-                  </p>
-                  <p>
-                    <strong>Drop Location:</strong> {formData.dropLocation}
-                  </p>
-
-                  <p>
-                    <strong>Travel Dates:</strong> {formData.startDate} to{" "}
-                    {formData.endDate}
-                  </p>
-
-                  <p>
-                    <strong>Number of Travelers:</strong> {formData.travelers}
-                  </p>
-                </div>
-
-                <div className="flex justify-between">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    className="bg-blue-500 text-gray-800 font-bold py-3 px-6 rounded-md hover:bg-[#283d9e] transition-colors"
-                  >
-                    Previous
-                  </button>
-
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-[#D4AF37] text-white font-bold py-3 px-6 rounded-md hover:bg-[#b9932b] transition-colors"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
+        <TailorMadeForm />
 
         {/* Right Side - Contact & Service Info */}
         <div className="lg:col-span-2 px-4 md:px-12 py-10 md:py-20">
@@ -493,13 +199,53 @@ const TailorMadeTours = () => {
       </section>
 
       {/* ------------------------------ WHY CHOOSE US ------------------------------ */}
+      <Why />
 
-      <div>
-  <Why />
-  <TestimonialForm />
-  <TestimonialsSection />
-</div>
+      {/* ------------------------------ TESTIMONIAL SECTION ------------------------------ */}
+      <TestimonialsSection />
 
+      {/* ------------------------------ TESTIMONIALS ------------------------------ */}
+      <div className="font-poppins bg-gray-100 text-[#222]">
+        {/* ---------------------------- PLAN YOUR TRIP CTA ---------------------------- */}
+        <section className="max-w-7xl mx-auto px-5 md:px-20 py-10 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            Ready to Share Your Experience?
+          </h2>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition"
+          >
+            Write a Testimonial
+          </button>
+        </section>
+
+        {/* ---------------------------- TESTIMONIAL MODAL ---------------------------- */}
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+            onClick={(e) =>
+              e.target === e.currentTarget && setIsModalOpen(false)
+            }
+          >
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto">
+              {/* Close button */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-500 hover:text-black text-2xl font-bold"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {/* Modal content */}
+              <div className="flex-1">
+                <TestimonialForm />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* ------------------------------ REVIEWS ------------------------------ */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
@@ -517,7 +263,8 @@ const TailorMadeTours = () => {
 
         {/* Main Text */}
         <p className="text-sm sm:text-base text-center text-gray-600 leading-relaxed">
-          {tourData?.description || "No description available."}
+          Our tailor-made tours are designed around your comfort, interests, and
+          pace — ensuring a seamless Sri Lanka holiday experience.
         </p>
 
         {/* Expandable Content */}
@@ -552,17 +299,12 @@ const TailorMadeTours = () => {
             className="w-full lg:w-1/2 flex flex-col justify-center items-center text-center 
                     px-4 sm:px-6 py-10 sm:py-14 lg:py-0 z-10 space-y-2 sm:space-y-4"
           >
-            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
-              Looking for an
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+              Ready to Design <br /> Your Dream Sri Lanka Tour?
             </h2>
-
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
-              Exclusive Customized Tour?
-            </h2>
-
-            <h2 className="text-base sm:text-lg md:text-3xl font-semibold text-[#1a1a1a]">
-              No Problem
-            </h2>
+            <p className="text-gray-600 text-base md:text-lg">
+              Tell us your ideas - we’ll take care of the rest.
+            </p>
 
             {/* CTA Button */}
             <div className="mt-4">

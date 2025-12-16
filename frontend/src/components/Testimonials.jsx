@@ -15,13 +15,12 @@ export default function Testimonials() {
     const fetchReviews = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/contact-form");
-        // Map backend messages to your bigReviews structure
         const mapped = res.data.map((msg) => ({
           name: `${msg.firstName} ${msg.lastName}`,
           time: new Date(msg.createdAt).toLocaleDateString(),
           review: msg.message,
           avatar: msg.firstName.charAt(0).toUpperCase(),
-          rating: msg.rating || 0, // <- add this line
+          rating: msg.rating || 0,
         }));
         setBigReviews(mapped.reverse()); // latest first
       } catch (err) {

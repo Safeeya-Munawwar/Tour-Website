@@ -1,4 +1,3 @@
-// RoundTour.js
 const mongoose = require("mongoose");
 
 const RoundTourSchema = new mongoose.Schema({

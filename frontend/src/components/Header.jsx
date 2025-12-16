@@ -56,25 +56,27 @@ export default function Header() {
         {/* Buttons */}
         <div className="mt-6 sm:mt-8 md:mt-12 flex justify-center gap-3 sm:gap-4 md:gap-6 flex-wrap">
           <button
+            onClick={() => (window.location.href = "/destinations")}
             className="
-              bg-[#487898] hover:bg-[#0c3956]
-              text-white uppercase px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3
-              rounded-full font-light flex items-center gap-2 sm:gap-3
-              text-xs sm:text-sm md:text-base lg:text-lg
-              transition
-            "
+      bg-[#487898] hover:bg-[#0c3956]
+      text-white uppercase px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3
+      rounded-full font-light flex items-center gap-2 sm:gap-3
+      text-xs sm:text-sm md:text-base lg:text-lg
+      transition
+    "
           >
             Curated Itineraries <Check className="w-4 sm:w-5" />
           </button>
 
           <button
+            onClick={() => (window.location.href = "/tailor-made-tours")}
             className="
-              bg-[#ce2a40] hover:bg-[#ef0530]
-              text-white uppercase px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3
-              rounded-full font-light flex items-center gap-2 sm:gap-3
-              text-xs sm:text-sm md:text-base lg:text-lg
-              transition
-            "
+      bg-[#ce2a40] hover:bg-[#ef0530]
+      text-white uppercase px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3
+      rounded-full font-light flex items-center gap-2 sm:gap-3
+      text-xs sm:text-sm md:text-base lg:text-lg
+      transition
+    "
           >
             Tailormade Experiences <Settings className="w-4 sm:w-5" />
           </button>

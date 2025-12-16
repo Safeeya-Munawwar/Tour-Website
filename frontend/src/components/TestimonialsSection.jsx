@@ -23,7 +23,7 @@ const TestimonialsSection = () => {
   }, []);
 
   return (
-    <section className="px-4 md:px-0 mt-16">
+    <section className="bg-gray-100 px-4 md:px-0 mt-2 pt-10">
       <p className="text-sm text-center md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
         SEE WHAT OUR GUESTS ARE SAYING ABOUT US
       </p>

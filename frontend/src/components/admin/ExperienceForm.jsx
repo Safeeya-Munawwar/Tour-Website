@@ -1,27 +1,49 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function ExperienceForm({ formData, setFormData, handleSubmit, submitLabel }) {
+export default function ExperienceForm({
+  formData,
+  setFormData,
+  handleSubmit,
+  submitLabel,
+}) {
   // Hero Dropzone
-  const { getRootProps: getHeroProps, getInputProps: getHeroInput } = useDropzone({
-    accept: { "image/*": [] },
-    multiple: false,
-    onDrop: (files) => setFormData({ ...formData, heroImgFile: files[0], heroImgPreview: URL.createObjectURL(files[0]) }),
-  });
+  const { getRootProps: getHeroProps, getInputProps: getHeroInput } =
+    useDropzone({
+      accept: { "image/*": [] },
+      multiple: false,
+      onDrop: (files) =>
+        setFormData({
+          ...formData,
+          heroImgFile: files[0],
+          heroImgPreview: URL.createObjectURL(files[0]),
+        }),
+    });
 
   // Main Dropzone
-  const { getRootProps: getMainProps, getInputProps: getMainInput } = useDropzone({
-    accept: { "image/*": [] },
-    multiple: false,
-    onDrop: (files) => setFormData({ ...formData, mainImgFile: files[0], mainImgPreview: URL.createObjectURL(files[0]) }),
-  });
+  const { getRootProps: getMainProps, getInputProps: getMainInput } =
+    useDropzone({
+      accept: { "image/*": [] },
+      multiple: false,
+      onDrop: (files) =>
+        setFormData({
+          ...formData,
+          mainImgFile: files[0],
+          mainImgPreview: URL.createObjectURL(files[0]),
+        }),
+    });
 
   // Gallery Dropzone (multiple files)
-  const { getRootProps: getGalleryProps, getInputProps: getGalleryInput } = useDropzone({
-    accept: { "image/*": [] },
-    multiple: true,
-    onDrop: (files) => setFormData({ ...formData, galleryFiles: [...(formData.galleryFiles || []), ...files] }),
-  });
+  const { getRootProps: getGalleryProps, getInputProps: getGalleryInput } =
+    useDropzone({
+      accept: { "image/*": [] },
+      multiple: true,
+      onDrop: (files) =>
+        setFormData({
+          ...formData,
+          galleryFiles: [...(formData.galleryFiles || []), ...files],
+        }),
+    });
 
   // Sub Experiences Handlers
   const addSubExperience = () => {
@@ -49,11 +71,17 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
       if (previews[i]) newPreviews[i] = previews[i];
     }
 
-    setFormData({ ...formData, subExperiences: updated, subExperienceFiles: files, subPreviews: newPreviews });
+    setFormData({
+      ...formData,
+      subExperiences: updated,
+      subExperienceFiles: files,
+      subPreviews: newPreviews,
+    });
   };
 
   // Tips Handlers
-  const addTip = () => setFormData({ ...formData, tips: [...(formData.tips || []), ""] });
+  const addTip = () =>
+    setFormData({ ...formData, tips: [...(formData.tips || []), ""] });
   const updateTip = (index, value) => {
     const updated = [...(formData.tips || [])];
     updated[index] = value;
@@ -77,7 +105,14 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
     setFormData({ ...formData, galleryFiles: updated });
   };
 
-  function SubExperienceItem({ sub, idx, updateSubExperience, removeSubExperience, formData, setFormData }) {
+  function SubExperienceItem({
+    sub,
+    idx,
+    updateSubExperience,
+    removeSubExperience,
+    formData,
+    setFormData,
+  }) {
     const { getRootProps, getInputProps } = useDropzone({
       accept: { "image/*": [] },
       multiple: false,
@@ -85,47 +120,62 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
         const f = files[0];
         const filesArr = [...(formData.subExperienceFiles || [])];
         filesArr[idx] = f;
-  
+
         const previews = { ...(formData.subPreviews || {}) };
         previews[idx] = URL.createObjectURL(f);
-  
-        setFormData({ ...formData, subExperienceFiles: filesArr, subPreviews: previews });
+
+        setFormData({
+          ...formData,
+          subExperienceFiles: filesArr,
+          subPreviews: previews,
+        });
       },
     });
-  
+
     return (
       <div className="mb-3 border p-3 rounded">
         <input
           placeholder="Location"
           value={sub.location || ""}
-          onChange={e => updateSubExperience(idx, "location", e.target.value)}
+          onChange={(e) => updateSubExperience(idx, "location", e.target.value)}
           className="border p-2 rounded w-full mb-2"
         />
         <input
           placeholder="Place"
           value={sub.place || ""}
-          onChange={e => updateSubExperience(idx, "place", e.target.value)}
+          onChange={(e) => updateSubExperience(idx, "place", e.target.value)}
           className="border p-2 rounded w-full mb-2"
         />
-  
-        <div {...getRootProps()} className="border-2 border-dashed p-4 mb-2 cursor-pointer text-center">
+
+        <div
+          {...getRootProps()}
+          className="border-2 border-dashed p-4 mb-2 cursor-pointer text-center"
+        >
           <input {...getInputProps()} />
           <p>Click or drag & drop sub experience image here</p>
         </div>
-  
+
         {formData.subPreviews && formData.subPreviews[idx] ? (
-          <img src={formData.subPreviews[idx]} alt="sub preview" className="w-48 h-28 object-cover rounded mt-2" />
+          <img
+            src={formData.subPreviews[idx]}
+            alt="sub preview"
+            className="w-48 h-28 object-cover rounded mt-2"
+          />
         ) : sub.image ? (
-          <img src={sub.image} alt="sub existing" className="w-48 h-28 object-cover rounded mt-2" />
+          <img
+            src={sub.image}
+            alt="sub existing"
+            className="w-48 h-28 object-cover rounded mt-2"
+          />
         ) : null}
-  
+
         <input
           placeholder="Short desc"
           value={sub.desc || ""}
-          onChange={e => updateSubExperience(idx, "desc", e.target.value)}
+          onChange={(e) => updateSubExperience(idx, "desc", e.target.value)}
           className="border p-2 rounded w-full mt-2 mb-2"
         />
-  
+
         <button
           type="button"
           onClick={() => removeSubExperience(idx)}
@@ -136,62 +186,126 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
       </div>
     );
   }
-  
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-[#2E5B84] p-10 rounded-2xl shadow-xl w-full max-w-5xl mx-auto mt-10">
-      <h2 className="text-3xl font-bold text-[#0d203a] mb-8 text-center">{submitLabel}</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white border border-[#2E5B84] p-10 rounded-2xl shadow-xl w-full max-w-5xl mx-auto mt-10"
+    >
+      <h2 className="text-3xl font-bold text-[#0d203a] mb-8 text-center">
+        {submitLabel}
+      </h2>
 
       {/* Slug */}
-      <input type="text" placeholder="Slug" value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value })} className="border p-3 w-full rounded mb-4"/>
+      <input
+        type="text"
+        placeholder="Slug"
+        value={formData.slug}
+        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Title */}
-      <input type="text" placeholder="Title" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} className="border p-3 w-full rounded mb-4"/>
+      <input
+        type="text"
+        placeholder="Title"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Subtitle */}
-      <input type="text" placeholder="Subtitle" value={formData.subtitle} onChange={e => setFormData({ ...formData, subtitle: e.target.value })} className="border p-3 w-full rounded mb-4"/>
+      <input
+        type="text"
+        placeholder="Subtitle"
+        value={formData.subtitle}
+        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Description */}
-      <textarea placeholder="Description (short)" value={formData.description || ""} onChange={e => setFormData({ ...formData, description: e.target.value })} className="border p-3 w-full rounded mb-4" />
+      <textarea
+        placeholder="Description (short)"
+        value={formData.description || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, description: e.target.value })
+        }
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Main Description */}
-      <textarea placeholder="Main Description" value={formData.mainDesc || ""} onChange={e => setFormData({ ...formData, mainDesc: e.target.value })} className="border p-3 w-full rounded mb-4" />
+      <textarea
+        placeholder="Main Description"
+        value={formData.mainDesc || ""}
+        onChange={(e) => setFormData({ ...formData, mainDesc: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Sub Description */}
-      <textarea placeholder="Sub Description" value={formData.subDesc || ""} onChange={e => setFormData({ ...formData, subDesc: e.target.value })} className="border p-3 w-full rounded mb-4" />
+      <textarea
+        placeholder="Sub Description"
+        value={formData.subDesc || ""}
+        onChange={(e) => setFormData({ ...formData, subDesc: e.target.value })}
+        className="border p-3 w-full rounded mb-4"
+      />
 
       {/* Hero Image */}
       <div className="mt-4 mb-4">
         <label className="font-semibold text-[#2E5B84]">Hero Image</label>
-        <div {...getHeroProps()} className="border-2 border-dashed p-6 mt-2 cursor-pointer">
+        <div
+          {...getHeroProps()}
+          className="border-2 border-dashed p-6 mt-2 cursor-pointer"
+        >
           <input {...getHeroInput()} />
           <p>Click or drag & drop hero image here</p>
         </div>
         {formData.heroImgPreview ? (
-          <img src={formData.heroImgPreview} alt="preview" className="w-48 h-48 mt-2 object-cover rounded"/>
+          <img
+            src={formData.heroImgPreview}
+            alt="preview"
+            className="w-48 h-48 mt-2 object-cover rounded"
+          />
         ) : formData.heroImg ? (
-          <img src={formData.heroImg} alt="hero" className="w-48 h-48 mt-2 object-cover rounded"/>
+          <img
+            src={formData.heroImg}
+            alt="hero"
+            className="w-48 h-48 mt-2 object-cover rounded"
+          />
         ) : null}
       </div>
 
       {/* Main Image */}
       <div className="mt-4 mb-4">
         <label className="font-semibold text-[#2E5B84]">Main Image</label>
-        <div {...getMainProps()} className="border-2 border-dashed p-6 mt-2 cursor-pointer">
+        <div
+          {...getMainProps()}
+          className="border-2 border-dashed p-6 mt-2 cursor-pointer"
+        >
           <input {...getMainInput()} />
           <p>Click or drag & drop main image here</p>
         </div>
         {formData.mainImgPreview ? (
-          <img src={formData.mainImgPreview} alt="preview" className="w-48 h-48 mt-2 object-cover rounded"/>
+          <img
+            src={formData.mainImgPreview}
+            alt="preview"
+            className="w-48 h-48 mt-2 object-cover rounded"
+          />
         ) : formData.mainImg ? (
-          <img src={formData.mainImg} alt="main" className="w-48 h-48 mt-2 object-cover rounded"/>
+          <img
+            src={formData.mainImg}
+            alt="main"
+            className="w-48 h-48 mt-2 object-cover rounded"
+          />
         ) : null}
       </div>
 
       {/* Gallery */}
       <div className="mt-6 mb-4">
         <label className="font-semibold text-[#2E5B84]">Gallery Images</label>
-        <div {...getGalleryProps()} className="border-2 border-dashed p-6 mt-2 cursor-pointer">
+        <div
+          {...getGalleryProps()}
+          className="border-2 border-dashed p-6 mt-2 cursor-pointer"
+        >
           <input {...getGalleryInput()} />
           <p>Click or drag & drop multiple images here</p>
         </div>
@@ -202,16 +316,36 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
             if (removed) return null;
             return (
               <div key={i} className="relative">
-                <img src={url} alt={`g-${i}`} className="w-24 h-24 object-cover rounded" />
-                <button type="button" onClick={() => removeExistingGalleryImage(url)} className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs">x</button>
+                <img
+                  src={url}
+                  alt={`g-${i}`}
+                  className="w-24 h-24 object-cover rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeExistingGalleryImage(url)}
+                  className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs"
+                >
+                  x
+                </button>
               </div>
             );
           })}
 
           {(formData.galleryFiles || []).map((f, i) => (
             <div key={`new-${i}`} className="relative">
-              <img src={URL.createObjectURL(f)} alt={`new-${i}`} className="w-24 h-24 object-cover rounded" />
-              <button type="button" onClick={() => removeNewGalleryFile(i)} className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs">x</button>
+              <img
+                src={URL.createObjectURL(f)}
+                alt={`new-${i}`}
+                className="w-24 h-24 object-cover rounded"
+              />
+              <button
+                type="button"
+                onClick={() => removeNewGalleryFile(i)}
+                className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs"
+              >
+                x
+              </button>
             </div>
           ))}
         </div>
@@ -221,17 +355,23 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
       <div className="mt-6 mb-4">
         <h3 className="text-[#2E5B84] font-semibold mb-2">Sub Experiences</h3>
         {(formData.subExperiences || []).map((sub, idx) => (
-  <SubExperienceItem
-    key={idx}
-    sub={sub}
-    idx={idx}
-    updateSubExperience={updateSubExperience}
-    removeSubExperience={removeSubExperience}
-    formData={formData}
-    setFormData={setFormData}
-  />
-))}
-        <button type="button" onClick={addSubExperience} className="bg-[#2E5B84] text-white px-4 py-1 rounded mt-2">+ Add Sub Experience</button>
+          <SubExperienceItem
+            key={idx}
+            sub={sub}
+            idx={idx}
+            updateSubExperience={updateSubExperience}
+            removeSubExperience={removeSubExperience}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={addSubExperience}
+          className="bg-[#2E5B84] text-white px-4 py-1 rounded mt-2"
+        >
+          + Add Sub Experience
+        </button>
       </div>
 
       {/* Tips */}
@@ -239,15 +379,37 @@ export default function ExperienceForm({ formData, setFormData, handleSubmit, su
         <h3 className="text-[#2E5B84] font-semibold mb-2">Tips</h3>
         {(formData.tips || []).map((tip, i) => (
           <div key={i} className="flex gap-2 mb-2">
-            <input placeholder="Tip" value={tip} onChange={e => updateTip(i, e.target.value)} className="border p-2 rounded flex-1"/>
-            <button type="button" onClick={() => removeTip(i)} className="bg-red-600 text-white px-2 rounded">X</button>
+            <input
+              placeholder="Tip"
+              value={tip}
+              onChange={(e) => updateTip(i, e.target.value)}
+              className="border p-2 rounded flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => removeTip(i)}
+              className="bg-red-600 text-white px-2 rounded"
+            >
+              X
+            </button>
           </div>
         ))}
-        <button type="button" onClick={addTip} className="bg-[#2E5B84] text-white px-4 py-1 rounded mt-2">+ Add Tip</button>
+        <button
+          type="button"
+          onClick={addTip}
+          className="bg-[#2E5B84] text-white px-4 py-1 rounded mt-2"
+        >
+          + Add Tip
+        </button>
       </div>
 
       {/* Submit */}
-      <button type="submit" className="w-full bg-[#0d203a] text-white py-3 rounded-xl mt-6">{submitLabel}</button>
+      <button
+        type="submit"
+        className="w-full bg-[#0d203a] text-white py-3 rounded-xl mt-6"
+      >
+        {submitLabel}
+      </button>
     </form>
   );
 }

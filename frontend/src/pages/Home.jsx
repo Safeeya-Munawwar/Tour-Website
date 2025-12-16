@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import VideoSection from '../components/VideoSection'
 import Tours from '../components/Tours'
 import Cards from '../components/Cards'
-import Call from '../components/Call'
+// import Call from '../components/Call'
 import Why from '../components/Why'
 import Destination from '../components/Destination'
 import Testimonials from '../components/Testimonials'
@@ -21,7 +21,7 @@ export default function Home() {
       <Stats/>
       <Tours/>
       <Cards/>
-      <Call/>
+      {/* <Call/> */}
       <Why/>
       <Destination/>
       <Video1/>

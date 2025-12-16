@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
@@ -17,6 +17,7 @@ import {
   MessageCircle,
   NotebookPen,
   CalendarCheck,
+  LogOut,
 } from "lucide-react";
 import { FaTripadvisor } from "react-icons/fa";
 
@@ -29,6 +30,12 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/admin/login");
+  };
+
   return (
     <>
       {sidebarOpen && (
@@ -38,19 +45,27 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
         />
       )}
 
-      <aside
-        className={`fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 transform transition-transform duration-300 z-40 flex flex-col justify-between`}
-      >
+      <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 overflow-y-auto">
         {/* Logo */}
-        <div className="h-20 flex items-center justify-center shadow-md border-b border-gray-800 mb-1">
-          <img src="/images/logo.png" alt="Logo" className="w-28 h-auto object-contain" />
+        <div className="h-16 flex items-center px-6 shadow-md border-b border-gray-800">
+          <img
+            src="/images/logo.png"
+            alt="Logo"
+            className="w-10 h-10 object-contain mr-3"
+          />
+          <h2 className="text-xl font-bold text-gray-200">Admin Panel</h2>
         </div>
 
-        <nav className="p-4 space-y-2 overflow-y-auto flex-1">
+        {/* Navigation */}
+        <nav className="p-4 space-y-2">
           {/* Dashboard */}
           <NavLink
             to="/admin/dashboard"
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
           >
             <LayoutDashboard size={18} />
             Dashboard
@@ -59,7 +74,11 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           {/* Home */}
           <NavLink
             to="/admin/manage-home"
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
           >
             <Home size={18} />
             Home Content
@@ -68,26 +87,62 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           {/* Our Story Menu */}
           <button
             onClick={() => setOpenStoryMenu(!openStoryMenu)}
-            className="flex items-center justify-between w-full px-4 py-3 rounded-lg hover:bg-[#487898]/20 transition"
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
           >
             <span className="flex items-center gap-3">
               <BookOpen size={18} />
               Our Story
             </span>
-            {openStoryMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openStoryMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
+
           {openStoryMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink to="/admin/manage-about" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+              <NavLink
+                to="/admin/manage-about"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Users size={16} /> About Page
               </NavLink>
-              <NavLink to="/admin/manage-team" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/manage-team"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Users size={16} /> Our Team
               </NavLink>
-              <NavLink to="/admin/manage-journey" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/manage-journey"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Compass size={16} /> Our Journey
               </NavLink>
-              <NavLink to="/admin/manage-community" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/manage-community"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Star size={16} /> Community Impact
               </NavLink>
             </div>
@@ -96,112 +151,233 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           {/* Tours Menu */}
           <button
             onClick={() => setOpenToursMenu(!openToursMenu)}
-            className="flex items-center justify-between w-full px-4 py-3 rounded-lg hover:bg-[#487898]/20 transition"
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
           >
             <span className="flex items-center gap-3">
               <Plane size={18} />
               Tours
             </span>
-            {openToursMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openToursMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
+
           {openToursMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink to="/admin/day-tours" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+              <NavLink
+                to="/admin/day-tours"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Map size={16} /> Day Tours
               </NavLink>
-              <NavLink to="/admin/round-tours" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/round-tours"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Compass size={16} /> Round Tours
               </NavLink>
-              <NavLink to="/admin/tailor-made-tours" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/tailor-made-tours"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Star size={16} /> Tailor-Made Tours
               </NavLink>
             </div>
           )}
 
           {/* Destinations */}
-          <NavLink to="/admin/destinations" className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}>
+          <NavLink
+            to="/admin/destinations"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
             <Map size={18} /> Destinations
           </NavLink>
 
           {/* Experiences */}
-          <NavLink to="/admin/experiences" className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}>
+          <NavLink
+            to="/admin/experiences"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
             <PenTool size={18} /> Experiences
           </NavLink>
 
-          {/* Booking Menu */}
+          {/* ---------------- BOOKING MENU ---------------- */}
           <button
             onClick={() => setOpenBookingMenu(!openBookingMenu)}
-            className="flex items-center justify-between w-full px-4 py-3 rounded-lg hover:bg-[#487898]/20 transition"
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
           >
             <span className="flex items-center gap-3">
               <CalendarCheck size={18} />
               Booking
             </span>
-            {openBookingMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openBookingMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
+
           {openBookingMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink to="/admin/day-tour-booking" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+              <NavLink
+                to="/admin/day-tour-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Map size={16} /> Day Tour
               </NavLink>
-              <NavLink to="/admin/round-tour-booking" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/round-tour-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Compass size={16} /> Round Tour
               </NavLink>
-              <NavLink to="/admin/common-booking" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
-                <Star size={16} /> Common Booking
-              </NavLink>
-              <NavLink to="/admin/customize-tour" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              <NavLink
+                to="/admin/customize-tour"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <PenTool size={16} /> Customize Tour
               </NavLink>
             </div>
           )}
 
           {/* Blog */}
-          <NavLink to="/admin/blogs" className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}>
+          <NavLink
+            to="/admin/blogs"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
             <MessageSquare size={18} /> Blog
           </NavLink>
 
-          {/* Comments Menu */}
+          {/* ---------------- COMMENTS MENU ---------------- */}
           <button
             onClick={() => setOpenCommentsMenu(!openCommentsMenu)}
-            className="flex items-center justify-between w-full px-4 py-3 rounded-lg hover:bg-[#487898]/20 transition"
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
           >
             <span className="flex items-center gap-3">
               <MessageCircle size={18} />
               Comments
             </span>
-            {openCommentsMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openCommentsMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
+
           {openCommentsMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink to="/admin/blog-comments" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+              {/* Blog Comments */}
+              <NavLink
+                to="/admin/blog-comments"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <NotebookPen size={16} /> Blog Comments
               </NavLink>
-              <NavLink to="/admin/contact-messages" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              {/* Contact Form Messages */}
+              <NavLink
+                to="/admin/contact-messages"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Mail size={16} /> Contact Messages
               </NavLink>
-              <NavLink to="/admin/tailor-comments" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              {/* Tailor-Made Tour Comments */}
+              <NavLink
+                to="/admin/tailor-comments"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <Star size={16} /> Tailor Reviews
               </NavLink>
-              <NavLink to="/admin/tripadvisor-reviews" className={({ isActive }) => `flex items-center gap-2 px-2 py-2 rounded transition ${isActive ? activeClass : defaultClass}`}>
+
+              {/* TripAdvisor Reviews */}
+              <NavLink
+                to="/admin/tripadvisor-reviews"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
                 <FaTripadvisor size={16} /> TripAdvisor
               </NavLink>
             </div>
           )}
 
           {/* Contact */}
-          <NavLink to="/admin/contacts" className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive ? activeClass : defaultClass}`}>
+          <NavLink
+            to="/admin/contacts"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
             <Mail size={18} /> Contact
           </NavLink>
         </nav>
-
         {/* Logout Button */}
-        <div className="p-4 border-t border-gray-800">
-          <a href="/admin/login" className="flex items-center gap-3 px-4 py-2 text-red-500 rounded-lg hover:bg-red-100 transition">
-            <LayoutDashboard size={18} />
-            Logout
-          </a>
-        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition w-[calc(100%-2rem)] justify-center"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
       </aside>
     </>
   );
