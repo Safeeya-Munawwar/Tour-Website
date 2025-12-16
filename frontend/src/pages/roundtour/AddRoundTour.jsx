@@ -9,6 +9,7 @@ import RoundTourForm from "../../components/admin/RoundTourForm";
 
 export default function AddRoundTour() {
   const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,71 +23,65 @@ export default function AddRoundTour() {
     heroImageFile: null,
     heroImagePreview: "",
     highlights: [],
-    aboutParagraphs: ["", ""],
-    historyTitle: "",
-    historyLeftList: [],
-    historyRightList: [],
     itinerary: [],
-    tourFacts: {},
+    inclusions: [],
+    exclusions: [],
+    offers: [],
+    tourFacts: { duration: "", groupSize: "", difficulty: "" },
     gallerySlides: [],
   });
-
-  const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
 
     try {
-      // ----- Tour Card Data -----
+      // Upload RoundTour
       const tourData = new FormData();
       tourData.append("title", formData.title);
-      tourData.append("days", formData.days || "");
-      tourData.append("location", formData.location || "");
+      tourData.append("days", formData.days);
+      tourData.append("location", formData.location);
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      const tourRes = await axios.post("http://localhost:5000/api/round-tours", tourData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const tourRes = await axios.post(
+        "http://localhost:5000/api/round-tours",
+        tourData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       const tourId = tourRes.data.tour._id;
 
-      // ----- Tour Detail Data -----
+      // Upload RoundTourDetail
       const detailData = new FormData();
       detailData.append("tourId", tourId);
-      detailData.append("heroTitle", formData.heroTitle || "");
-      detailData.append("heroSubtitle", formData.heroSubtitle || "");
+      detailData.append("heroTitle", formData.heroTitle);
+      detailData.append("heroSubtitle", formData.heroSubtitle);
       if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
+      detailData.append("highlights", JSON.stringify(formData.highlights));
+      detailData.append("itinerary", JSON.stringify(formData.itinerary));
+      detailData.append("inclusions", JSON.stringify(formData.inclusions));
+      detailData.append("exclusions", JSON.stringify(formData.exclusions));
+      detailData.append("offers", JSON.stringify(formData.offers));
+      detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
 
-      // Highlights
-      detailData.append(
-        "highlights",
-        JSON.stringify((formData.highlights || []).map(h => ({ title: h.title, desc: h.desc, image: h.imagePreview || "" })))
+      const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
+        title: slide.title,
+        desc: slide.desc,
+      }));
+      detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
+
+      formData.gallerySlides.forEach((slide, idx) => {
+        if (slide.imageFile) {
+          detailData.append(`galleryImage_${idx}`, slide.imageFile);
+        }
+      });
+
+      await axios.post(
+        "http://localhost:5000/api/round-tours/detail",
+        detailData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-      (formData.highlights || []).forEach((h, idx) => {
-        if (h.imageFile) detailData.append(`highlightImage_${idx}`, h.imageFile);
-      });
-
-      // Gallery
-      detailData.append(
-        "gallerySlides",
-        JSON.stringify((formData.gallerySlides || []).map(g => ({ title: g.title, desc: g.desc, image: g.imagePreview || "" })))
-      );
-      (formData.gallerySlides || []).forEach((g, idx) => {
-        if (g.imageFile) detailData.append(`galleryImage_${idx}`, g.imageFile);
-      });
-
-      // Other info
-      detailData.append("aboutParagraphs", JSON.stringify(formData.aboutParagraphs || []));
-      detailData.append("historyTitle", formData.historyTitle || "");
-      detailData.append("historyLeftList", JSON.stringify(formData.historyLeftList || []));
-      detailData.append("historyRightList", JSON.stringify(formData.historyRightList || []));
-      detailData.append("itinerary", JSON.stringify(formData.itinerary || []));
-      detailData.append("tourFacts", JSON.stringify(formData.tourFacts || {}));
-
-      await axios.post("http://localhost:5000/api/round-tours/detail", detailData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
 
       toast.success("Round Tour added successfully!", {
         onClose: () => navigate("/admin/round-tours"),
@@ -94,7 +89,7 @@ export default function AddRoundTour() {
       });
     } catch (err) {
       console.error(err);
-      toast.error("Error adding round tour: " + (err.response?.data?.error || err.message));
+      toast.error("Error adding round tour!");
     } finally {
       setIsSaving(false);
     }
@@ -103,7 +98,9 @@ export default function AddRoundTour() {
   return (
     <div className="flex min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-full"><AdminSidebar /></div>
+      <div className="w-64 fixed h-full">
+        <AdminSidebar />
+      </div>
       <div className="flex-1 ml-64 p-6 bg-gray-50">
         <RoundTourForm
           formData={formData}
