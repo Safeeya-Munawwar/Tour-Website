@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   FaPhoneAlt,
+  FaWhatsapp,
   FaEnvelope,
   FaClock,
   FaMapMarkerAlt,
@@ -10,7 +11,7 @@ import Testimonials from "../components/Testimonials";
 import ContactForm from "../components/admin/ContactForm";
 import axios from "axios";
 import L from "leaflet";
-import "leaflet-routing-machine"; // import after L is global
+import "leaflet-routing-machine"; 
 
 // Make Leaflet global for routing machine
 window.L = L;
@@ -50,21 +51,21 @@ const Contact = () => {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* HERO */}
+      {/* HERO HEADER */}
       <div
-        className="w-full h-[260px] sm:h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/contact-header.jpg')" }}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div
-          className={`absolute bottom-4 sm:bottom-6 md:bottom-10 right-3 sm:right-6 md:right-10 max-w-[90%] md:w-[320px] bg-black/70 text-white p-3 sm:p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[320px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-lg sm:text-xl md:text-3xl leading-snug text-right mr-3 sm:mr-4">
-            Contact Us Anytime
+         <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
+           Contact Us Anytime
           </h2>
-          <div className="w-[2px] bg-white h-8 sm:h-10 md:h-12"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
@@ -105,11 +106,19 @@ const Contact = () => {
             <h4 className="font-bold text-lg sm:text-xl text-[#122453] mb-2 flex items-center gap-2">
               <FaPhoneAlt /> Phone
             </h4>
-            {contact.phones.map((p, i) => (
-              <p key={i} className="pl-6 mb-1 text-sm sm:text-base">
-                {p}
-              </p>
-            ))}
+            <p className="pl-6 mb-1 text-sm sm:text-base">
+            {contact.phone}
+            </p>
+          </div>
+
+          {/* WHATSAPP */}
+          <div>
+            <h4 className="font-bold text-lg sm:text-xl text-[#122453] mb-2 flex items-center gap-2">
+              <FaWhatsapp /> WhatsApp
+            </h4>
+            <p className="pl-6 mb-1 text-sm sm:text-base">
+            {contact.whatsapp}
+            </p>
           </div>
 
           {/* EMAIL */}

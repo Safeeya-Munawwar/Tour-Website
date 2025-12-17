@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   FaPhoneAlt,
+  FaWhatsapp,
   FaEnvelope,
   FaMapMarkerAlt,
   FaClock,
   FaStar,
 } from "react-icons/fa";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Footer() {
@@ -28,7 +29,9 @@ export default function Footer() {
     e.preventDefault();
 
     if (!name || !email || !message || rating === 0) {
-      toast.warning("Please fill all fields including rating!");
+      toast.warning("Please fill all fields including rating!", {
+        theme: "colored",
+      });
       return;
     }
 
@@ -41,48 +44,44 @@ export default function Footer() {
       });
 
       if (res.data.success) {
-        toast.success("Review submitted!");
+        toast.success("Review submitted!", { theme: "colored" });
 
-        // Reset
+        // Reset form
         setName("");
         setEmail("");
         setMessage("");
         setRating(0);
       } else {
-        toast.error("Submission failed");
+        toast.error("Submission failed", { theme: "colored" });
       }
     } catch (err) {
       console.log(err);
-      toast.error("Server error");
+      toast.error("Server error", { theme: "colored" });
     }
   };
 
   return (
-    <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]">
-      <ToastContainer position="top-right" autoClose={3000} />
-
+    <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins] relative z-0">
       {/* MAIN GRID */}
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
         {/* 1) LOGO + DESCRIPTION */}
         <div>
           <img
             src="/images/logo.png"
-            alt="img"
+            alt="Logo"
             className="w-40 mb-5 opacity-95"
           />
-
           <p className="text-gray-200 text-[15px] leading-relaxed pr-6">
             NetLanka Tours is your trusted travel partner in Sri Lanka, offering
             tailor-made tours, day tours, adventures and premium travel
             experiences.
           </p>
-
           <div className="flex gap-4 mt-7">
             {contact?.socialMedia?.map((sm, i) => (
               <a key={i} href={sm.url}>
                 <img
                   src={sm.icon}
-                  alt="img"
+                  alt="social"
                   className="w-8 h-8 hover:scale-110"
                 />
               </a>
@@ -91,42 +90,68 @@ export default function Footer() {
         </div>
 
         {/* 2) CONTACT INFO */}
+<div>
+  <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
+  <div className="space-y-5">
+    {/* Phone */}
+    {contact?.phone && (
+      <div className="flex gap-3">
+        <FaPhoneAlt className="mt-1" />
+        <a href={`tel:${contact.phone}`} className="hover:text-blue-300">
+          {contact.phone}
+        </a>
+      </div>
+    )}
+
+    {/* WhatsApp */}
+    {contact?.whatsapp && (
+      <div className="flex gap-3">
+        <FaWhatsapp className="mt-1" />
+        <a
+          href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-green-400"
+        >
+          {contact.whatsapp}
+        </a>
+      </div>
+    )}
+
+    {/* Emails */}
+    {contact?.emails?.[0] && (
+  <div className="flex gap-3">
+    <FaEnvelope className="mt-1" />
+    <a
+      href={`mailto:${contact.emails[0]}`}
+      className="hover:text-blue-400"
+    >
+      {contact.emails[0]}
+    </a>
+  </div>
+)}
+
+    {/* Offices */}
+    {contact?.offices?.map((o, i) => (
+      <div key={i} className="flex gap-3">
+        <FaMapMarkerAlt className="mt-1" />
         <div>
-          <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
-
-          <div className="space-y-5">
-            {contact?.phones?.map((p, i) => (
-              <div key={i} className="flex gap-3">
-                <FaPhoneAlt />
-                <span>{p}</span>
-              </div>
-            ))}
-
-            {contact?.emails?.map((e, i) => (
-              <div key={i} className="flex gap-3">
-                <FaEnvelope />
-                <span>{e}</span>
-              </div>
-            ))}
-
-            {contact?.offices?.map((o, i) => (
-              <div key={i} className="flex gap-3">
-                <FaMapMarkerAlt className="mt-1" />
-                <div>
-                  <p className="font-medium">{o.name}</p>
-                  <p className="text-gray-300">{o.address}</p>
-                </div>
-              </div>
-            ))}
-
-            <div className="flex gap-3">
-              <FaClock />
-              <span>
-                {contact?.workingHours?.start} - {contact?.workingHours?.end}
-              </span>
-            </div>
-          </div>
+          <p className="font-medium">{o.name}</p>
+          <p className="text-gray-300">{o.address}</p>
         </div>
+      </div>
+    ))}
+
+    {/* Working Hours */}
+    <div className="flex gap-3">
+      <FaClock className="mt-1" />
+      <span>
+        {contact?.workingHours?.start} - {contact?.workingHours?.end}
+      </span>
+    </div>
+  </div>
+</div>
+
 
         {/* 3) QUICK LINKS */}
         <div>
@@ -152,9 +177,7 @@ export default function Footer() {
         {/* 4) REVIEW FORM */}
         <div>
           <h3 className="text-xl font-semibold mb-6">Leave a Review</h3>
-
           <form className="space-y-4" onSubmit={submitReview}>
-            {/* Name */}
             <input
               type="text"
               placeholder="Your Name"
@@ -162,8 +185,6 @@ export default function Footer() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-
-            {/* Email */}
             <input
               type="email"
               placeholder="Email Address"
@@ -171,7 +192,6 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-
             {/* Rating */}
             <div className="flex gap-2 text-2xl">
               {[1, 2, 3, 4, 5].map((n) => (
@@ -184,8 +204,6 @@ export default function Footer() {
                 />
               ))}
             </div>
-
-            {/* Message */}
             <textarea
               rows="4"
               placeholder="Write your review..."
@@ -193,7 +211,6 @@ export default function Footer() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             ></textarea>
-
             <button className="w-full py-3 bg-white text-black rounded-full font-semibold">
               Submit Review
             </button>
@@ -203,7 +220,7 @@ export default function Footer() {
 
       <hr className="border-gray-900 my-8" />
 
-      <div className="max-w-[1400px] mx-auto px-6  text-black font-semibold text-xs md:text-sm flex justify-between">
+      <div className="max-w-[1400px] mx-auto px-6 text-black font-semibold text-xs md:text-sm flex flex-col sm:flex-row justify-between gap-2">
         <p>© {new Date().getFullYear()} NetLanka Tours. All rights reserved.</p>
         <p>Website Design & Development by NetIT Technology</p>
       </div>

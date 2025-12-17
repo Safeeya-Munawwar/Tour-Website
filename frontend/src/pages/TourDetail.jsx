@@ -5,17 +5,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
 import BookDayTour from "../components/BookDayTour";
-
-
+import { useNavigate } from "react-router-dom";
 
 export default function TourDetail() {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
-
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchTour() {
@@ -37,7 +36,7 @@ export default function TourDetail() {
   const slides = details.gallerySlides || [];
 
   return (
-    <>
+    <div className="font-poppins">
       {/* HERO SECTION */}
       <section className="relative flex flex-col md:flex-row h-screen w-full overflow-hidden bg-white">
         <div className="w-full md:w-1/2 h-80 md:h-full overflow-hidden rounded-r-[45%] relative">
@@ -59,7 +58,9 @@ export default function TourDetail() {
           </p>
 
           <div className="flex gap-4 mt-10">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-sm font-semibold">
+            <button 
+            onClick={() => navigate("/destinations")}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-sm font-semibold">
               EXPLORE DESTINATIONS
             </button>
 
@@ -186,6 +187,6 @@ export default function TourDetail() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

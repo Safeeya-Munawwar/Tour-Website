@@ -118,14 +118,20 @@ router.put("/detail/:id", upload.fields([
   { name: "galleryImages", maxCount: 20 }
 ]), async (req, res) => {
   try {
-    const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
+    const existingDetail = await RoundTourDetail.findOne({ tourId: req.params.id });
 
-    // Attach new uploaded gallery images
-    (req.files["galleryImages"] || []).forEach((file, idx) => {
-      if (gallerySlides[idx]) gallerySlides[idx].image = file.path;
-    });
+    let gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
 
-    const heroFile = req.files["heroImage"]?.[0];
+    // Preserve old images if no new image uploaded
+    gallerySlides = gallerySlides.map((slide, idx) => ({
+      ...slide,
+      image:
+        (req.files?.galleryImages && req.files.galleryImages[idx]?.path) ||
+        existingDetail?.gallerySlides?.[idx]?.image ||
+        "",
+    }));
+
+    const heroFile = req.files?.heroImage?.[0];
 
     const updateData = {
       heroTitle: req.body.heroTitle,
@@ -140,6 +146,7 @@ router.put("/detail/:id", upload.fields([
     };
 
     if (heroFile) updateData.heroImage = heroFile.path;
+    else if (existingDetail?.heroImage) updateData.heroImage = existingDetail.heroImage;
 
     const updatedDetail = await RoundTourDetail.findOneAndUpdate(
       { tourId: req.params.id },
@@ -149,10 +156,11 @@ router.put("/detail/:id", upload.fields([
 
     res.json({ success: true, detail: updatedDetail });
   } catch (err) {
-    console.error(err);
+    console.error("UPDATE DETAIL ERROR:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 // ---------------- DELETE TOUR + DETAIL ----------------
 router.delete("/:id", async (req, res) => {

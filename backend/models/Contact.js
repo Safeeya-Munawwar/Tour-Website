@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 
 const ContactSchema = new mongoose.Schema(
   {
-    phones: { type: [String], default: ["+94 XXX XXX XXX"] },
+    phone: { type: String, default: "+94 XXX XXX XXX" },
+    whatsapp: { type: String, default: "+94 XXX XXX XXX" },
+
     emails: { type: [String], default: ["example@gmail.com"] },
+
     offices: [
       {
         name: { type: String, default: "Head Office" },
@@ -11,15 +14,17 @@ const ContactSchema = new mongoose.Schema(
         coords: { type: [Number], default: [0, 0] },
       },
     ],
+
     workingHours: {
       start: { type: String, default: "09:00" },
       end: { type: String, default: "17:00" },
     },
+
     socialMedia: [
       {
-        platform: { type: String },
-        icon: { type: String },
-        url: { type: String },
+        platform: String,
+        icon: String,
+        url: String,
       },
     ],
   },

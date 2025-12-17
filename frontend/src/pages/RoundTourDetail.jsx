@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import BookRoundTour from "../components/BookRoundTour";
 import { FiMapPin, FiPhone, FiMail, FiCalendar } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
+import { useNavigate } from "react-router-dom";
 
 export default function RoundTourDetail() {
   const { id } = useParams();
@@ -14,11 +16,22 @@ export default function RoundTourDetail() {
   const [showForm, setShowForm] = useState(false);
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
+  const [contact, setContact] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
 
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/round-tours/${id}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/round-tours/${id}`
+        );
         if (res.data.success) {
           setTour(res.data.tour);
           setDetails(res.data.details || {});
@@ -58,18 +71,24 @@ export default function RoundTourDetail() {
           <h1 className="font-playfair text-5xl md:text-6xl font-bold leading-[1.05] tracking-[-1px] max-w-xl">
             {details.heroTitle || tour.title}
             <br />
-            <span className="block text-2xl text-[#D4AF37] mt-1">{tour.days}</span>
+            <span className="block text-2xl text-[#D4AF37] mt-1">
+              {tour.days}
+            </span>
           </h1>
           <p className="text-2xl md:text-3xl text-gray-700 mt-6 leading-snug tracking-[-0.5px] max-w-xl">
             {details.heroSubtitle || tour.desc}
           </p>
           <div className="flex gap-4 mt-10">
-            <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white px-8 py-4 rounded-full font-semibold">
+            <button
+              onClick={() => navigate("/destinations")}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-sm font-semibold"
+            >
               EXPLORE DESTINATIONS
             </button>
+
             <button
               onClick={() => setShowForm(true)}
-              className="bg-[#D4AF37] hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-semibold"
+              className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-full text-sm font-semibold"
             >
               BOOK THIS TOUR
             </button>
@@ -78,7 +97,7 @@ export default function RoundTourDetail() {
       </section>
 
       {/* MAIN CONTENT + SIDEBAR */}
-      <section className="w-full bg-[#F7FAFC] py-16">
+      <section className="w-full bg-[#F7FAFC] pb-8 pt-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* LEFT CONTENT */}
           <div className="lg:col-span-2 space-y-16">
@@ -117,7 +136,9 @@ export default function RoundTourDetail() {
                           </div>
                           <h3 className="text-xl font-semibold">{day.title}</h3>
                         </div>
-                        <p className="text-gray-600 mb-6 max-w-4xl">{day.desc}</p>
+                        <p className="text-gray-600 mb-6 max-w-4xl">
+                          {day.desc}
+                        </p>
                         <div className="flex flex-wrap gap-x-8 gap-y-4 text-sm text-gray-700">
                           {(day.activities || []).map((activity, i) => (
                             <div key={i} className="flex items-center gap-2">
@@ -182,7 +203,9 @@ export default function RoundTourDetail() {
                       className="flex items-start gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#F0F9F5] to-[#F5FBFF]"
                     >
                       <span className="w-1 h-2 rounded-full bg-blue-600 mt-2"></span>
-                      <p className="text-gray-700 text-sm leading-relaxed">{item}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {item}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -196,15 +219,21 @@ export default function RoundTourDetail() {
               <div className="space-y-6">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Duration</span>
-                  <span className="font-semibold">{details.tourFacts?.duration || "14 Days / 13 Nights"}</span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.duration || "14 Days / 13 Nights"}
+                  </span>
                 </div>
                 <div className="border-t pt-4 flex justify-between">
                   <span className="text-gray-500">Group Size</span>
-                  <span className="font-semibold">{details.tourFacts?.groupSize || "2–20 people"}</span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.groupSize || "2–20 people"}
+                  </span>
                 </div>
                 <div className="border-t pt-4 flex justify-between">
                   <span className="text-gray-500">Difficulty</span>
-                  <span className="font-semibold">{details.tourFacts?.difficulty || "Easy – Moderate"}</span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.difficulty || "Easy – Moderate"}
+                  </span>
                 </div>
                 <button
                   onClick={() => setShowForm(true)}
@@ -215,12 +244,48 @@ export default function RoundTourDetail() {
 
                 <div className="border-t pt-6">
                   <h4 className="font-semibold mb-4">Need Help?</h4>
-                  <div className="flex gap-3 items-center text-gray-600 mb-3">
-                    <FiPhone className="text-blue-600" /> +94 76 204 4065
-                  </div>
-                  <div className="flex gap-3 items-center text-gray-600">
-                    <FiMail className="text-blue-600" /> mishellankatours@gmail.com
-                  </div>
+
+                  {contact && (
+                    <>
+                      {/* Phone */}
+                      <div className="flex gap-3 items-center text-gray-600 mb-3">
+                        <FiPhone className="text-blue-600" />
+                        <a
+                          href={`tel:${contact.phone}`}
+                          className="hover:text-blue-600"
+                        >
+                          {contact.phone}
+                        </a>
+                      </div>
+
+                      {/* WhatsApp */}
+                      <div className="flex gap-3 items-center text-gray-600 mb-3">
+                        <FaWhatsapp className="text-green-600" />
+                        <a
+                          href={`https://wa.me/${contact.whatsapp.replace(
+                            /\D/g,
+                            ""
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-green-600"
+                        >
+                          {contact.whatsapp}
+                        </a>
+                      </div>
+
+                      {/* Email (first email from array) */}
+                      <div className="flex gap-3 items-center text-gray-600">
+                        <FiMail className="text-blue-600" />
+                        <a
+                          href={`mailto:${contact.emails?.[0]}`}
+                          className="hover:text-blue-600"
+                        >
+                          {contact.emails?.[0]}
+                        </a>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -249,7 +314,9 @@ export default function RoundTourDetail() {
                   className="h-full w-full object-cover brightness-[0.6] rounded-2xl"
                 />
                 <div className="absolute top-1/2 right-10 -translate-y-1/2 w-full md:w-1/3 text-white flex flex-col gap-4">
-                  <h2 className="text-4xl md:text-5xl font-playfair font-bold">{title}</h2>
+                  <h2 className="text-4xl md:text-5xl font-playfair font-bold">
+                    {title}
+                  </h2>
                   <p className="text-sm md:text-base">{desc}</p>
                 </div>
               </div>
@@ -271,7 +338,11 @@ export default function RoundTourDetail() {
             {slides.map(({ image, title }, idx) => (
               <SwiperSlide key={idx}>
                 <div className="h-full w-full relative rounded-xl overflow-hidden cursor-pointer">
-                  <img src={image} alt={title} className="h-full w-full object-cover" />
+                  <img
+                    src={image}
+                    alt={title}
+                    className="h-full w-full object-cover"
+                  />
                   <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-xs text-center py-1">
                     {title}
                   </div>

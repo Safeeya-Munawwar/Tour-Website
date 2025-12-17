@@ -11,6 +11,7 @@ export default function EditRoundTour() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: "",
     days: "",
@@ -30,6 +31,18 @@ export default function EditRoundTour() {
     tourFacts: { duration: "", groupSize: "", difficulty: "" },
     gallerySlides: [],
   });
+
+  const sanitizeArray = (arr) =>
+    arr.map(item => typeof item === "string" ? item : item.text || "");
+  
+  const cleanFormData = {
+    ...formData,
+    highlights: sanitizeArray(formData.highlights),
+    inclusions: sanitizeArray(formData.inclusions),
+    exclusions: sanitizeArray(formData.exclusions),
+    offers: sanitizeArray(formData.offers),
+  };
+  
 
   // ---------- Fetch Tour & Detail ----------
   useEffect(() => {
@@ -95,12 +108,15 @@ export default function EditRoundTour() {
       detailData.append("heroSubtitle", formData.heroSubtitle);
       if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
 
-      detailData.append("highlights", JSON.stringify(formData.highlights));
+
       detailData.append("itinerary", JSON.stringify(formData.itinerary));
-      detailData.append("inclusions", JSON.stringify(formData.inclusions));
-      detailData.append("exclusions", JSON.stringify(formData.exclusions));
-      detailData.append("offers", JSON.stringify(formData.offers));
       detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
+
+      detailData.append("highlights", JSON.stringify(cleanFormData.highlights));
+detailData.append("inclusions", JSON.stringify(cleanFormData.inclusions));
+detailData.append("exclusions", JSON.stringify(cleanFormData.exclusions));
+detailData.append("offers", JSON.stringify(cleanFormData.offers));
+
 
       formData.gallerySlides.forEach(slide => {
         if (slide.imageFile) detailData.append("galleryImages", slide.imageFile);

@@ -23,22 +23,22 @@ export default function RoundTour() {
   }, []);
 
   return (
-    <section className="font-poppins bg-white text-[#222] mb-20">
+    <div className="font-poppins bg-white text-[#222] pb-16">
+      {/* HERO HEADER */}
       <div
-        className="w-full h-[400px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{ backgroundImage: "url('/images/d2.jpg')" }}
       >
-        <div className="absolute inset-0 bg-black/40"></div>
-
+        <div className="absolute inset-0 bg-black/20"></div>
         <div
-          className={`absolute bottom-10 right-10 w-[380px] bg-black/80 text-white p-7 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[360px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-2xl md:text-3xl leading-snug text-right mr-4">
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
             Explore Sri Lanka With <br /> Our Round Tours
           </h2>
-          <div className="w-[2px] bg-white h-14"></div>
+          <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
@@ -107,6 +107,6 @@ export default function RoundTour() {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }

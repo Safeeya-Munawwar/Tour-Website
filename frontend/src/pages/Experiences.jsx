@@ -28,7 +28,7 @@ export default function Experiences() {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
-      {/* ---------------------------- HERO HEADER ---------------------------- */}
+      {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
@@ -37,9 +37,8 @@ export default function Experiences() {
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-
         <div
-          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[480px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[460px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >

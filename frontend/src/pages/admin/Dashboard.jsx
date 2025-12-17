@@ -43,7 +43,6 @@ export default function Dashboard() {
   const [bookings, setBookings] = useState([]);
   const [monthlyBookings, setMonthlyBookings] = useState([]);
 
-  // ---------------- STATUS BADGE COLOR ----------------
   const getStatusClass = (status) => {
     switch (status) {
       case "Approved":
@@ -58,12 +57,11 @@ export default function Dashboard() {
     }
   };
 
-  // ---------------- FETCH STATS ----------------
   const loadStats = async () => {
     try {
       const [
-        roundToursRes,
-        dayToursRes,
+        ,
+        ,
         experiencesRes,
         destinationsRes,
         blogRes,
@@ -72,7 +70,8 @@ export default function Dashboard() {
         inquiriesRes,
         dayTourBookingsRes,
         roundTourBookingsRes,
-      ] = await Promise.all([
+        commonBookingsRes,
+      ]= await Promise.all([
         axios.get("http://localhost:5000/api/round-tours"),
         axios.get("http://localhost:5000/api/day-tours"),
         axios.get("http://localhost:5000/api/experience"),
@@ -83,12 +82,31 @@ export default function Dashboard() {
         axios.get("http://localhost:5000/api/contact-form"),
         axios.get("http://localhost:5000/api/day-tour-booking"),
         axios.get("http://localhost:5000/api/round-tour-booking"),
+        axios.get("http://localhost:5000/api/book-tour"),
       ]);
 
       // ---------------- STATS ----------------
+      const allRoundBookings = [
+        ...(roundTourBookingsRes.data.bookings || []).map((b) => ({
+          ...b,
+          type: "Round Tour",
+        })),
+        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "round") ||
+          []).map((b) => ({ ...b, type: "Round Tour" })),
+      ];
+
+      const allDayBookings = [
+        ...(dayTourBookingsRes.data.bookings || []).map((b) => ({
+          ...b,
+          type: "Day Tour",
+        })),
+        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "day") ||
+          []).map((b) => ({ ...b, type: "Day Tour" })),
+      ];
+
       setStats({
-        roundTours: roundToursRes.data.tours?.length || 0,
-        dayTours: dayToursRes.data.tours?.length || 0,
+        roundTours: allRoundBookings.length,
+        dayTours: allDayBookings.length,
         experiences: experiencesRes.data.length || 0,
         destinations: destinationsRes.data.destinations?.length || 0,
         blog: blogRes.data.blogs?.length || 0,
@@ -97,52 +115,23 @@ export default function Dashboard() {
         inquiries: inquiriesRes.data?.length || 0,
       });
 
-      // ---------------- RECENT BOOKINGS (3 + 3) ----------------
-      const latestDayBookings = (dayTourBookingsRes.data.bookings || [])
+      // ---------------- RECENT BOOKINGS ----------------
+      const recentBookings = [...allRoundBookings, ...allDayBookings]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3)
-        .map((b) => ({ ...b, type: "Day Tour" }));
-
-      const latestRoundBookings = (roundTourBookingsRes.data.bookings || [])
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3)
-        .map((b) => ({ ...b, type: "Round Tour" }));
-
-      const recentBookings = [
-        ...latestDayBookings,
-        ...latestRoundBookings,
-      ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        .slice(0, 6); // latest 6 bookings
 
       setBookings(recentBookings);
 
-      // ---------------- MONTHLY LINE CHART ----------------
+      // ---------------- MONTHLY BOOKINGS ----------------
       const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "Jan","Feb","Mar","Apr","May","Jun",
+        "Jul","Aug","Sep","Oct","Nov","Dec"
       ];
-
       const dayCounts = Array(12).fill(0);
       const roundCounts = Array(12).fill(0);
 
-      (dayTourBookingsRes.data.bookings || []).forEach((b) => {
-        const m = new Date(b.startDate).getMonth();
-        dayCounts[m]++;
-      });
-
-      (roundTourBookingsRes.data.bookings || []).forEach((b) => {
-        const m = new Date(b.startDate).getMonth();
-        roundCounts[m]++;
-      });
+      allDayBookings.forEach((b) => dayCounts[new Date(b.startDate).getMonth()]++);
+      allRoundBookings.forEach((b) => roundCounts[new Date(b.startDate).getMonth()]++);
 
       const chartData = months.map((m, i) => ({
         month: m,
@@ -151,6 +140,7 @@ export default function Dashboard() {
       }));
 
       setMonthlyBookings(chartData);
+
     } catch (err) {
       console.error("Dashboard loading error:", err);
     }
@@ -160,7 +150,6 @@ export default function Dashboard() {
     loadStats();
   }, []);
 
-  // ---------------- PIE CHART ----------------
   const pieData = [
     { name: "Round Tours", value: stats.roundTours },
     { name: "Day Tours", value: stats.dayTours },
@@ -182,40 +171,21 @@ export default function Dashboard() {
           {/* ---------------- STATS CARDS ---------------- */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             {Object.entries(stats).map(([name, count]) => (
-              <div
-                key={name}
-                className="bg-white shadow rounded-lg p-5 flex justify-between"
-              >
+              <div key={name} className="bg-white shadow rounded-lg p-5 flex justify-between">
                 <div>
                   <h2 className="text-gray-500 text-sm capitalize">
                     {name.replace(/([A-Z])/g, " $1")}
                   </h2>
                   <p className="text-3xl font-bold">{count}</p>
                 </div>
-                {name === "dayTours" && (
-                  <Plane size={36} className="text-blue-500" />
-                )}
-                {name === "roundTours" && (
-                  <Map size={36} className="text-green-500" />
-                )}
-                {name === "tailorMade" && (
-                  <Users size={36} className="text-yellow-500" />
-                )}
-                {name === "inquiries" && (
-                  <MessageSquare size={36} className="text-red-500" />
-                )}
-                {name === "experiences" && (
-                  <Star size={36} className="text-purple-500" />
-                )}
-                {name === "destinations" && (
-                  <MapPin size={36} className="text-pink-500" />
-                )}
-                {name === "blog" && (
-                  <FileText size={36} className="text-indigo-500" />
-                )}
-                {name === "team" && (
-                  <User size={36} className="text-teal-500" />
-                )}
+                {name === "dayTours" && <Plane size={36} className="text-blue-500" />}
+                {name === "roundTours" && <Map size={36} className="text-green-500" />}
+                {name === "tailorMade" && <Users size={36} className="text-yellow-500" />}
+                {name === "inquiries" && <MessageSquare size={36} className="text-red-500" />}
+                {name === "experiences" && <Star size={36} className="text-purple-500" />}
+                {name === "destinations" && <MapPin size={36} className="text-pink-500" />}
+                {name === "blog" && <FileText size={36} className="text-indigo-500" />}
+                {name === "team" && <User size={36} className="text-teal-500" />}
               </div>
             ))}
           </div>
@@ -231,18 +201,8 @@ export default function Dashboard() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line
-                    dataKey="day"
-                    stroke="#2563eb"
-                    strokeWidth={3}
-                    name="Day Tours"
-                  />
-                  <Line
-                    dataKey="round"
-                    stroke="#16a34a"
-                    strokeWidth={3}
-                    name="Round Tours"
-                  />
+                  <Line dataKey="day" stroke="#2563eb" strokeWidth={3} name="Day Tours" />
+                  <Line dataKey="round" stroke="#16a34a" strokeWidth={3} name="Round Tours" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -252,9 +212,7 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie data={pieData} dataKey="value" outerRadius={100} label>
-                    {pieData.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i]} />
-                    ))}
+                    {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
                   </Pie>
                   <Tooltip />
                 </PieChart>
@@ -281,15 +239,9 @@ export default function Dashboard() {
                     <td className="px-4 py-2">{b.type}</td>
                     <td className="px-4 py-2">{b.tourId?.title || "—"}</td>
                     <td className="px-4 py-2">{b.name}</td>
+                    <td className="px-4 py-2">{new Date(b.startDate).toLocaleDateString("en-GB")}</td>
                     <td className="px-4 py-2">
-                      {new Date(b.startDate).toLocaleDateString("en-GB")}
-                    </td>
-                    <td className="px-4 py-2">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
-                          b.status
-                        )}`}
-                      >
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(b.status)}`}>
                         {b.status}
                       </span>
                     </td>

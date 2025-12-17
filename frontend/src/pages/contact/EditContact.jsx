@@ -28,7 +28,8 @@ export default function EditContact() {
         const res = await axios.get("http://localhost:5000/api/contact");
         const data = res.data;
         setFormData({
-          phones: data.phones || (data.phone ? [data.phone] : [""]),
+          phone: data.phone || "",
+          whatsapp: data.whatsapp || "",
           emails: data.emails || (data.email ? [data.email] : [""]),
           offices: data.offices || [
             {
@@ -46,7 +47,7 @@ export default function EditContact() {
           socialMedia: data.socialMedia || [
             { platform: "", url: "", iconPreview: "", iconFile: null },
           ],
-        });
+        });        
         const firstOfficeCoords = data.corporateCoords || [7.0, 80.0];
         setMapCenter(firstOfficeCoords);
       } catch (err) {
@@ -143,7 +144,8 @@ export default function EditContact() {
       dataToSend.append(
         "data",
         JSON.stringify({
-          phones: formData.phones,
+          phone: formData.phone,
+          whatsapp: formData.whatsapp,
           emails: formData.emails,
           offices: formData.offices,
           workingHours: formData.workingHours,
@@ -153,7 +155,7 @@ export default function EditContact() {
             iconFileName: sm.iconFileName,
           })),
         })
-      );
+      );      
       await axios.put("http://localhost:5000/api/contact", dataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -183,41 +185,23 @@ export default function EditContact() {
             Update Contact Information
           </h2>
 
-          {/* Phones */}
-          <h3 className="font-semibold mt-4 mb-2">Phones</h3>
-          {formData.phones.map((phone, idx) => (
-            <div key={idx} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => {
-                  const newPhones = [...formData.phones];
-                  newPhones[idx] = e.target.value;
-                  setFormData({ ...formData, phones: newPhones });
-                }}
-                className="border p-2 rounded w-full"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  const newPhones = formData.phones.filter((_, i) => i !== idx);
-                  setFormData({ ...formData, phones: newPhones });
-                }}
-                className="bg-red-500 text-white px-2 rounded"
-              >
-                X
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() =>
-              setFormData({ ...formData, phones: [...formData.phones, ""] })
-            }
-            className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
-          >
-            Add Phone
-          </button>
+{/* Phone */}
+<h3 className="font-semibold mt-4 mb-2">Phone</h3>
+<input
+  type="text"
+  value={formData.phone}
+  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+  className="border p-2 rounded w-full mb-4"
+/>
+
+{/* WhatsApp */}
+<h3 className="font-semibold mt-4 mb-2">WhatsApp</h3>
+<input
+  type="text"
+  value={formData.whatsapp}
+  onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+  className="border p-2 rounded w-full mb-4"
+/>
 
           {/* Emails */}
           <h3 className="font-semibold mt-4 mb-2">Emails</h3>

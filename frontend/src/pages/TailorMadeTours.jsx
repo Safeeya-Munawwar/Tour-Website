@@ -112,22 +112,22 @@ const TailorMadeTours = () => {
           What You Can Customize
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {customizeOptions.map(({ icon: Icon, label }, idx) => (
             <div
               key={idx}
               className="border rounded-xl p-6 text-center shadow-sm 
-                 hover:shadow-md transition group"
+                   hover:shadow-md transition group"
             >
               <div className="flex justify-center mb-4">
                 <div
                   className="w-14 h-14 rounded-full bg-blue-50 
-                     flex items-center justify-center
-                     group-hover:bg-blue-800 transition"
+                       flex items-center justify-center
+                       group-hover:bg-blue-800 transition"
                 >
                   <Icon
                     className="w-7 h-7 text-blue-800 
-                       group-hover:text-white transition"
+                         group-hover:text-white transition"
                   />
                 </div>
               </div>
