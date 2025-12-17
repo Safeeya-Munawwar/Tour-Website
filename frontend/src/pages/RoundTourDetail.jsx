@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import BookRoundTour from "../components/BookRoundTour";
 import { FiMapPin, FiPhone, FiMail, FiCalendar } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
+import { useNavigate } from "react-router-dom";
 
 export default function RoundTourDetail() {
   const { id } = useParams();
@@ -15,6 +17,15 @@ export default function RoundTourDetail() {
 
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
+  const [contact, setContact] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
 
   useEffect(() => {
     async function fetchTour() {
@@ -78,7 +89,7 @@ export default function RoundTourDetail() {
 
             <button
               onClick={() => setShowForm(true)}
-              className="bg-[#D4AF37] hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-semibold"
+              className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-full text-sm font-semibold"
             >
               BOOK THIS TOUR
             </button>
@@ -202,6 +213,9 @@ export default function RoundTourDetail() {
                   <span className="font-semibold">
                     {details.tourFacts?.duration || "14 Days / 13 Nights"}
                   </span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.duration || "14 Days / 13 Nights"}
+                  </span>
                 </div>
 
                 <div className="border-t pt-4 flex justify-between">
@@ -209,10 +223,16 @@ export default function RoundTourDetail() {
                   <span className="font-semibold">
                     {details.tourFacts?.groupSize || "2–20 people"}
                   </span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.groupSize || "2–20 people"}
+                  </span>
                 </div>
 
                 <div className="border-t pt-4 flex justify-between">
                   <span className="text-gray-500">Difficulty</span>
+                  <span className="font-semibold">
+                    {details.tourFacts?.difficulty || "Easy – Moderate"}
+                  </span>
                   <span className="font-semibold">
                     {details.tourFacts?.difficulty || "Easy – Moderate"}
                   </span>
@@ -227,12 +247,48 @@ export default function RoundTourDetail() {
 
                 <div className="border-t pt-6">
                   <h4 className="font-semibold mb-4">Need Help?</h4>
-                  <div className="flex gap-3 items-center text-gray-600 mb-3">
-                    <FiPhone className="text-blue-600" /> +94 76 204 4065
-                  </div>
-                  <div className="flex gap-3 items-center text-gray-600">
-                    <FiMail className="text-blue-600" /> mishellankatours@gmail.com
-                  </div>
+
+                  {contact && (
+                    <>
+                      {/* Phone */}
+                      <div className="flex gap-3 items-center text-gray-600 mb-3">
+                        <FiPhone className="text-blue-600" />
+                        <a
+                          href={`tel:${contact.phone}`}
+                          className="hover:text-blue-600"
+                        >
+                          {contact.phone}
+                        </a>
+                      </div>
+
+                      {/* WhatsApp */}
+                      <div className="flex gap-3 items-center text-gray-600 mb-3">
+                        <FaWhatsapp className="text-green-600" />
+                        <a
+                          href={`https://wa.me/${contact.whatsapp.replace(
+                            /\D/g,
+                            ""
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-green-600"
+                        >
+                          {contact.whatsapp}
+                        </a>
+                      </div>
+
+                      {/* Email (first email from array) */}
+                      <div className="flex gap-3 items-center text-gray-600">
+                        <FiMail className="text-blue-600" />
+                        <a
+                          href={`mailto:${contact.emails?.[0]}`}
+                          className="hover:text-blue-600"
+                        >
+                          {contact.emails?.[0]}
+                        </a>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

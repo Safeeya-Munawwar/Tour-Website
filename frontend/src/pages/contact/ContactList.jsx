@@ -128,47 +128,52 @@ export default function AdminContactList() {
               </tr>
             </thead>
             <tbody>
-              {contact.phones?.map((phone, idx) => (
-                <tr
-                  key={`phone-${idx}`}
-                  className="border-b border-[#2E5B84] hover:bg-blue-50"
-                >
-                  {idx === 0 && (
-                    <td
-                      className="p-3 border border-[#2E5B84] font-semibold"
-                      rowSpan={contact.phones.length}
-                    >
-                      Phone
-                    </td>
-                  )}
-                  <td className="p-3 border border-[#2E5B84]">{phone}</td>
-                </tr>
-              ))}
-              {contact.emails?.map((email, idx) => (
-                <tr
-                  key={`email-${idx}`}
-                  className="border-b border-[#2E5B84] hover:bg-blue-50"
-                >
-                  {idx === 0 && (
-                    <td
-                      className="p-3 border border-[#2E5B84] font-semibold"
-                      rowSpan={contact.emails.length}
-                    >
-                      Email
-                    </td>
-                  )}
-                  <td className="p-3 border border-[#2E5B84]">{email}</td>
-                </tr>
-              ))}
-              <tr className="border-b border-[#2E5B84] hover:bg-blue-50">
-                <td className="p-3 border border-[#2E5B84] font-semibold">
-                  Working Hours
-                </td>
-                <td className="p-3 border border-[#2E5B84]">
-                  {contact.workingHours?.start} - {contact.workingHours?.end}
-                </td>
-              </tr>
-            </tbody>
+  <tr className="border-b border-[#2E5B84] hover:bg-blue-50">
+    <td className="p-3 border border-[#2E5B84] font-semibold">Phone</td>
+    <td className="p-3 border border-[#2E5B84]">{contact.phone}</td>
+  </tr>
+
+  <tr className="border-b border-[#2E5B84] hover:bg-blue-50">
+  <td className="p-3 border border-[#2E5B84] font-semibold">WhatsApp</td>
+  <td className="p-3 border border-[#2E5B84]">
+    {contact.whatsapp ? (
+      <a
+        href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium hover:underline"
+      >
+        {contact.whatsapp}
+      </a>
+    ) : (
+      "-"
+    )}
+  </td>
+</tr>
+
+
+  {contact.emails?.map((email, idx) => (
+    <tr key={idx} className="border-b border-[#2E5B84] hover:bg-blue-50">
+      {idx === 0 && (
+        <td
+          rowSpan={contact.emails.length}
+          className="p-3 border border-[#2E5B84] font-semibold"
+        >
+          Email
+        </td>
+      )}
+      <td className="p-3 border border-[#2E5B84]">{email}</td>
+    </tr>
+  ))}
+
+  <tr className="border-b border-[#2E5B84] hover:bg-blue-50">
+    <td className="p-3 border border-[#2E5B84] font-semibold">Working Hours</td>
+    <td className="p-3 border border-[#2E5B84]">
+      {contact.workingHours?.start} - {contact.workingHours?.end}
+    </td>
+  </tr>
+</tbody>
+
           </table>
         )}
 

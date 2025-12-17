@@ -306,51 +306,53 @@ export default function BlogDetail() {
         </section>
 
         {/* RELATED BLOGS */}
-        <section className="max-w-7xl mx-auto">
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
-            Related Blogs
-          </h3>
+<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
+    Related Blogs
+  </h3>
 
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            loop
-            autoplay={{ delay: 3000 }}
-            breakpoints={{
-              640: { slidesPerView: 1, spaceBetween: 16 },
-              768: { slidesPerView: 2, spaceBetween: 24 },
-              1024: { slidesPerView: 3, spaceBetween: 28 },
-            }}
-            pagination={{ clickable: true }}
-          >
-            {otherBlogs.map((b, idx) => (
-              <SwiperSlide key={idx}>
-                <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden cursor-pointer">
-                  <img
-                    src={b.heroImg}
-                    alt={b.title}
-                    className="w-full h-56 sm:h-64 object-cover"
-                  />
-                  <div className="p-4 sm:p-5">
-                    <h4 className="text-lg sm:text-xl font-semibold text-gray-900">
-                      {b.title}
-                    </h4>
-                    <p className="text-gray-500 text-sm sm:text-base mt-1">
-                      {b.subtitle}
-                    </p>
-                    <a
-                      href={`/blog/${b.slug}`}
-                      className="inline-flex items-center mt-3 text-[#8C1F28] font-semibold text-sm hover:underline"
-                    >
-                      Read More <IoIosArrowForward className="ml-1" />
-                    </a>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </section>
+  <Swiper
+    modules={[Pagination, Autoplay]}
+    spaceBetween={16}
+    slidesPerView={1}
+    loop
+    autoplay={{ delay: 3000, disableOnInteraction: false }}
+    breakpoints={{
+      640: { slidesPerView: 1, spaceBetween: 12 }, // Small mobile
+      768: { slidesPerView: 2, spaceBetween: 16 }, // Tablets
+      1024: { slidesPerView: 3, spaceBetween: 20 }, // Laptops
+      1280: { slidesPerView: 4, spaceBetween: 24 }, // Desktop
+    }}
+    pagination={{ clickable: true }}
+  >
+    {otherBlogs.map((b, idx) => (
+      <SwiperSlide key={idx}>
+        <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden cursor-pointer flex flex-col h-full">
+          <img
+            src={b.heroImg}
+            alt={b.title}
+            className="w-full h-48 sm:h-56 md:h-64 object-cover"
+          />
+          <div className="p-4 sm:p-5 flex flex-col flex-1">
+            <h4 className="text-lg sm:text-xl font-semibold text-gray-900">
+              {b.title}
+            </h4>
+            <p className="text-gray-500 text-sm sm:text-base mt-2 flex-1">
+              {b.subtitle}
+            </p>
+            <a
+              href={`/blog/${b.slug}`}
+              className="inline-flex items-center mt-4 text-[#8C1F28] font-semibold text-sm hover:underline"
+            >
+              Read More <IoIosArrowForward className="ml-1" />
+            </a>
+          </div>
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</section>
+
       </section>
     </div>
   );

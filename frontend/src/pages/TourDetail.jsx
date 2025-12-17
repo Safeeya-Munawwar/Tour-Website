@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // added useNavigate import
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
@@ -11,9 +11,9 @@ export default function TourDetail() {
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
-
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchTour() {
@@ -49,17 +49,17 @@ export default function TourDetail() {
           />
         </div>
 
-        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-20 mt-10 md:mt-0">
-          <h1 className="font-playfair text-3xl sm:text-4xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
+        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-20 mt-10 md:mt-0 text-center md:text-left">
+          <h1 className="font-playfair text-3xl sm:text-4xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl mx-auto md:mx-0">
             {tour.title}
             <span className="block">{tour.location} Day Tour</span>
           </h1>
 
-          <p className="font-playfair text-lg sm:text-xl md:text-3xl text-gray-700 mt-4 md:mt-6 max-w-xl">
+          <p className="font-playfair text-lg sm:text-xl md:text-3xl text-gray-700 mt-4 md:mt-6 max-w-xl mx-auto md:mx-0">
             {details.heroSubtitle}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10">
+          <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10 justify-center md:justify-start">
             <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-sm font-semibold">
               EXPLORE DESTINATIONS
             </button>
@@ -74,30 +74,27 @@ export default function TourDetail() {
         </div>
       </section>
 
-{/* ================= ABOUT SECTION ================= */}
-<section className="w-full px-4 sm:px-6 md:px-24 lg:px-32 py-10 md:py-16">
-  <div className="mx-auto max-w-4xl">
-    {details.aboutParagraphs.map((para, idx) => (
-      <p
-        key={idx}
-        className="
-          font-inter
-          text-sm sm:text-base md:text-lg
-          leading-relaxed md:leading-loose
-          text-gray-800
-          mb-6
-          text-left md:text-center
-          break-words overflow-hidden
-        "
-      >
-        {para}
-      </p>
-    ))}
-  </div>
-</section>
-
-
-
+      {/* ================= ABOUT SECTION ================= */}
+      <section className="w-full px-4 sm:px-6 md:px-24 lg:px-32 py-10 md:py-16">
+        <div className="mx-auto max-w-4xl">
+          {details.aboutParagraphs.map((para, idx) => (
+            <p
+              key={idx}
+              className="
+                font-inter
+                text-sm sm:text-base md:text-lg
+                leading-relaxed md:leading-loose
+                text-gray-800
+                mb-6
+                text-left md:text-center
+                break-words overflow-hidden
+              "
+            >
+              {para}
+            </p>
+          ))}
+        </div>
+      </section>
 
       {/* ================= HISTORY SECTION ================= */}
       <section className="w-full px-6 md:px-32 py-10 mt-6">
