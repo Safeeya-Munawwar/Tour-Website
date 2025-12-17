@@ -11,7 +11,7 @@ export default function TourDetail() {
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const mainSwiperRef = useRef(null);
+  const mainSwiperRef = useRef(null);ri
   const thumbSwiperRef = useRef(null);
   const navigate = useNavigate();
 
