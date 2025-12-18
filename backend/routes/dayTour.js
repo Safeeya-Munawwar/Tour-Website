@@ -78,7 +78,12 @@ router.post("/detail", upload.any(), async (req, res) => {
       historyLeftList: JSON.parse(req.body.historyLeftList || "[]"),
       historyRightList: JSON.parse(req.body.historyRightList || "[]"),
       gallerySlides,
+      highlights: JSON.parse(req.body.highlights || "[]"),
+      duration: req.body.duration || "",
+      includes: JSON.parse(req.body.includes || "[]"),
+      startLocation: req.body.startLocation || "",
     });
+    
 
     await newDetail.save();
     res.json({ success: true, detail: newDetail });
@@ -134,7 +139,12 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
       historyLeftList: JSON.parse(req.body.historyLeftList || "[]"),
       historyRightList: JSON.parse(req.body.historyRightList || "[]"),
       gallerySlides,
+      highlights: JSON.parse(req.body.highlights || "[]"),
+      duration: req.body.duration || "",
+      includes: JSON.parse(req.body.includes || "[]"),
+      startLocation: req.body.startLocation || "",
     };
+    
 
     const heroFile = req.files.find((f) => f.fieldname === "heroImage");
     if (heroFile) updateData.heroImage = heroFile.path;

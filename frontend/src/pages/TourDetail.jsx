@@ -1,134 +1,194 @@
+// src/pages/DayTourDetail.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // added useNavigate import
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import BookDayTour from "../components/BookDayTour";
+import { FiMapPin, FiPhone, FiMail } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
-import BookDayTour from "../components/BookDayTour";
 
-export default function TourDetail() {
+export default function DayTourDetail() {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
-  const [details, setDetails] = useState(null);
+  const [details, setDetails] = useState({});
+  const [contact, setContact] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const mainSwiperRef = useRef(null);ri
-  const thumbSwiperRef = useRef(null);
-  const navigate = useNavigate();
 
+  const mainSwiperRef = useRef(null);
+  const thumbSwiperRef = useRef(null);
+
+  // Fetch contact info
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
+
+  // Fetch day tour details
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/day-tours/${id}`
-        );
+        const res = await axios.get(`http://localhost:5000/api/day-tours/${id}`);
         if (res.data.success) {
           setTour(res.data.tour);
-          setDetails(res.data.details);
+          setDetails(res.data.details || {});
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching day tour detail:", err);
       }
     }
     fetchTour();
   }, [id]);
 
-  if (!tour || !details)
-    return <div className="text-center mt-20">Loading...</div>;
+  if (!tour) return <div className="p-8 text-center">Loading...</div>;
 
-  const slides = details.gallerySlides || [];
+  const slides =
+    details.gallerySlides?.length > 0
+      ? details.gallerySlides
+      : [{ image: details.heroImage || tour.img, title: tour.title, desc: tour.desc }];
 
   return (
-    <>
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative flex flex-col md:flex-row min-h-screen w-full overflow-hidden bg-white">
-        <div className="w-full md:w-1/2 h-[280px] sm:h-[350px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
-          <img
-            src={details.heroImage || "/images/d1.jpg"}
-            alt={tour.title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
+    <div className="font-poppins">
+      {/* ================= HERO ================= */}
+      <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
+  <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
+    <img
+      src={details.heroImage || tour.img}
+      alt={tour.title}
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+  </div>
 
-        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-20 mt-10 md:mt-0 text-center md:text-left">
-          <h1 className="font-playfair text-3xl sm:text-4xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl mx-auto md:mx-0">
-            {tour.title}
-            <span className="block">{tour.location} Day Tour</span>
-          </h1>
+  <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
+    <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
+      {details.heroTitle || tour.title}
+    </h1>
+    <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
+      {details.heroSubtitle || tour.desc}
+    </p>
 
-          <p className="font-playfair text-lg sm:text-xl md:text-3xl text-gray-700 mt-4 md:mt-6 max-w-xl mx-auto md:mx-0">
-            {details.heroSubtitle}
-          </p>
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+      <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
+        EXPLORE DESTINATIONS
+      </button>
+      <button
+        onClick={() => setShowForm(true)}
+        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
+      >
+        BOOK THIS TOUR
+      </button>
+    </div>
+  </div>
+</section>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10 justify-center md:justify-start">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-sm font-semibold">
-              EXPLORE DESTINATIONS
-            </button>
 
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-full text-sm font-semibold"
-            >
-              BOOK THIS TOUR
-            </button>
+      {/* ================= CONTENT ================= */}
+      <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* LEFT CONTENT */}
+          <div className="lg:col-span-2 space-y-16">
+            {/* About Paragraphs */}
+            {details.aboutParagraphs?.length > 0 && (
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">About This Tour</h2>
+                {details.aboutParagraphs.map((p, i) => (
+                  <p key={i} className="text-gray-700 mb-4 break-words">{p}</p>
+                ))}
+              </div>
+            )}
+
+            {/* Highlights */}
+            {details.highlights?.length > 0 && (
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">Highlights</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {details.highlights.map((item, i) => (
+                    <div key={i} className="flex gap-4 p-5 rounded-xl bg-gradient-to-r from-[#F0F9F5] to-[#F5FBFF]">
+                      <FiMapPin className="text-green-500 text-xl mt-1" />
+                      <p className="text-gray-700 break-words">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* History Section */}
+            {details.historyTitle && (
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-6">{details.historyTitle}</h2>
+                <div className="flex flex-col md:flex-row gap-6">
+                  <ul className="flex-1 list-disc pl-5 space-y-2 text-gray-700">
+                    {details.historyLeftList?.map((item, i) => <li key={i}>{item}</li>)}
+                  </ul>
+                  <ul className="flex-1 list-disc pl-5 space-y-2 text-gray-700">
+                    {details.historyRightList?.map((item, i) => <li key={i}>{item}</li>)}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* SIDEBAR */}
+          <div className="relative lg:sticky lg:top-24 h-fit">
+            <div className="bg-white rounded-3xl p-8 shadow-lg space-y-6">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Duration</span>
+                <span className="font-semibold">{details.duration || "Full day"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Start Location</span>
+                <span className="font-semibold">{details.startLocation || "Colombo"}</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Includes</h3>
+                <ul className="space-y-2 text-gray-700">
+                  {details.includes?.map((inc, i) => <li key={i}>✓ {inc}</li>)}
+                </ul>
+              </div>
+
+              <button
+                onClick={() => setShowForm(true)}
+                className="w-full py-4 rounded-full text-white font-semibold bg-gradient-to-r from-green-500 to-blue-600"
+              >
+                Book Now
+              </button>
+
+              {contact && (
+                <div className="border-t pt-6">
+                  <h4 className="font-semibold mb-4">Need Help?</h4>
+                  <div className="flex gap-3 items-center text-gray-600 mb-3">
+                    <FiPhone className="text-blue-600" />
+                    <a href={`tel:${contact.phone}`} className="hover:text-blue-600">{contact.phone}</a>
+                  </div>
+                  <div className="flex gap-3 items-center text-gray-600 mb-3">
+                    <FaWhatsapp className="text-green-600" />
+                    <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="hover:text-green-600">{contact.whatsapp}</a>
+                  </div>
+                  <div className="flex gap-3 items-center text-gray-600">
+                    <FiMail className="text-blue-600" />
+                    <a href={`mailto:${contact.emails?.[0]}`} className="hover:text-blue-600">{contact.emails?.[0]}</a>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ================= ABOUT SECTION ================= */}
-      <section className="w-full px-4 sm:px-6 md:px-24 lg:px-32 py-10 md:py-16">
-        <div className="mx-auto max-w-4xl">
-          {details.aboutParagraphs.map((para, idx) => (
-            <p
-              key={idx}
-              className="
-                font-inter
-                text-sm sm:text-base md:text-lg
-                leading-relaxed md:leading-loose
-                text-gray-800
-                mb-6
-                text-left md:text-center
-                break-words overflow-hidden
-              "
-            >
-              {para}
-            </p>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= HISTORY SECTION ================= */}
-      <section className="w-full px-6 md:px-32 py-10 mt-6">
-        <h2 className="font-playfair text-3xl md:text-4xl mb-10 text-center">
-          {details.historyTitle || "Historical prominence"}
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-base leading-relaxed">
-          <ul className="list-disc pl-5 space-y-1">
-            {details.historyLeftList.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-
-          <ul className="list-disc pl-5 space-y-1">
-            {details.historyRightList.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {/* ================= GALLERY ================= */}
-      <h2 className="font-playfair text-3xl md:text-4xl mb-10 text-center mt-10">
+      <h2 className="font-playfair text-3xl md:text-4xl mb-6 mt-16 text-center">
         Gallery
       </h2>
 
       <section className="relative w-full px-4 md:px-10 py-10">
-        {/* Main Swiper */}
         <Swiper
           modules={[Autoplay, Controller]}
           loop
           autoplay={{ delay: 4000, disableOnInteraction: false }}
-          onSwiper={(swiper) => (mainSwiperRef.current = swiper)}
+          onSwiper={(s) => (mainSwiperRef.current = s)}
           controller={{ control: thumbSwiperRef.current }}
           className="w-full h-[320px] sm:h-[450px] md:h-[600px]"
         >
@@ -138,40 +198,40 @@ export default function TourDetail() {
                 <img
                   src={image}
                   alt={title}
-                  className="h-full w-full object-cover brightness-[0.6]"
+                  className="h-full w-full object-cover brightness-[0.6] rounded-2xl"
                 />
-
-                <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white max-w-full md:max-w-[40%] md:ml-auto">
+                <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white max-w-full md:max-w-[35%] md:ml-auto">
                   <h2 className="text-2xl sm:text-3xl md:text-5xl font-playfair font-bold">
                     {title}
                   </h2>
-                  <p className="text-sm sm:text-base mt-2">{desc}</p>
+                  <p className="text-sm sm:text-base mt-2 break-words">
+                    {desc}
+                  </p>
                 </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* Thumbnail Swiper (Desktop only) */}
-        <div className="hidden md:block absolute bottom-6 left-6 w-[420px]">
+        <div className="hidden md:block absolute bottom-8 left-6 md:left-10 w-[500px] px-4 py-4">
           <Swiper
             modules={[Controller]}
             loop
             slidesPerView={3}
-            spaceBetween={10}
-            onSwiper={(swiper) => (thumbSwiperRef.current = swiper)}
+            spaceBetween={12}
+            onSwiper={(s) => (thumbSwiperRef.current = s)}
             controller={{ control: mainSwiperRef.current }}
-            className="h-40"
+            className="h-44"
           >
             {slides.map(({ image, title }, idx) => (
               <SwiperSlide key={idx}>
-                <div className="h-full w-full relative rounded overflow-hidden cursor-pointer">
+                <div className="h-full w-full relative rounded-xl overflow-hidden cursor-pointer">
                   <img
                     src={image}
                     alt={title}
                     className="h-full w-full object-cover"
                   />
-                  <div className="absolute bottom-0 w-full bg-black/60 text-white text-xs text-center py-1">
+                  <div className="absolute bottom-0 w-full bg-black/50 text-white text-xs text-center py-1">
                     {title}
                   </div>
                 </div>
@@ -181,37 +241,21 @@ export default function TourDetail() {
         </div>
       </section>
 
-      {/* ================= BOOKING MODAL ================= */}
+      {/* ================= MODAL BOOKING ================= */}
       {showForm && (
         <>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]" onClick={() => setShowForm(false)} />
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
-            onClick={() => setShowForm(false)}
-          />
-
-          <div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
-            bg-white shadow-2xl p-4 sm:p-6 z-[20001] overflow-auto"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-4 sm:p-6 z-[20001] overflow-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end mb-4">
-              <button
-                onClick={() => setShowForm(false)}
-                className="text-gray-500 hover:text-black text-2xl font-bold"
-              >
-                ×
-              </button>
+              <button className="text-3xl font-bold text-gray-600 hover:text-black" onClick={() => setShowForm(false)}>×</button>
             </div>
-
-            <BookDayTour
-              tourId={tour._id}
-              tourTitle={tour.title}
-              tourLocation={tour.location}
-            />
+            <BookDayTour tourId={tour._id} tourTitle={tour.title} tourLocation={tour.location} />
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

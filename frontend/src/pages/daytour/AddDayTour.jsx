@@ -11,21 +11,21 @@ export default function AddDayTour() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    title: "",
-    location: "",
-    desc: "",
-    imgFile: null,
-    imgPreview: "",
-    heroTitle: "",
-    heroSubtitle: "",
     heroImageFile: null,
     heroImagePreview: "",
+    heroTitle: "",
+    heroSubtitle: "",
     aboutParagraphs: ["", ""],
     historyTitle: "",
-    historyLeftList: [],
-    historyRightList: [],
+    historyLeftList: [""],
+    historyRightList: [""],
     gallerySlides: [],
+    highlights: [""],
+    duration: "",
+    includes: [""],
+    startLocation: "",
   });
+  
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -59,7 +59,11 @@ export default function AddDayTour() {
       detailData.append("historyTitle", formData.historyTitle);
       detailData.append("historyLeftList", JSON.stringify(formData.historyLeftList));
       detailData.append("historyRightList", JSON.stringify(formData.historyRightList));
-
+      detailData.append("highlights", JSON.stringify(formData.highlights));
+      detailData.append("duration", formData.duration);
+      detailData.append("includes", JSON.stringify(formData.includes));
+      detailData.append("startLocation", formData.startLocation);
+      
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,

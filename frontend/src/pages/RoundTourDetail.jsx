@@ -7,7 +7,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
-import { useNavigate } from "react-router-dom";
 
 export default function RoundTourDetail() {
   const { id } = useParams();
@@ -18,7 +17,6 @@ export default function RoundTourDetail() {
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
   const [contact, setContact] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -60,42 +58,42 @@ export default function RoundTourDetail() {
   return (
     <div className="font-poppins">
       {/* ================= HERO ================= */}
-      <section className="relative flex flex-col md:flex-row min-h-screen w-full overflow-hidden bg-white">
-        <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
-          <img
-            src={details.heroImage || tour.img}
-            alt={tour.title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
+      <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
+  <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
+    <img
+      src={details.heroImage || tour.img}
+      alt={tour.title}
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+  </div>
 
-        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-20 mt-8 md:mt-0 text-center md:text-left">
+  <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
+    <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
+      {details.heroTitle || tour.title}
+      <span className="block text-lg md:text-2xl text-[#D4AF37] mt-1">
+        {tour.days}
+      </span>
+    </h1>
 
-          <h1 className="font-playfair text-3xl sm:text-4xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
-            {details.heroTitle || tour.title}
-            <span className="block text-xl md:text-2xl text-[#D4AF37] mt-1">
-              {tour.days}
-            </span>
-          </h1>
+    <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
+      {details.heroSubtitle || tour.desc}
+    </p>
 
-          <p className="text-lg sm:text-xl md:text-3xl text-gray-700 mt-4 md:mt-6 max-w-xl break-words">
-            {details.heroSubtitle || tour.desc}
-          </p>
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+      <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
+        EXPLORE DESTINATIONS
+      </button>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10">
-            <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-8 py-4 rounded-full font-semibold">
-              EXPLORE DESTINATIONS
-            </button>
+      <button
+        onClick={() => setShowForm(true)}
+        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
+      >
+        BOOK THIS TOUR
+      </button>
+    </div>
+  </div>
+</section>
 
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-full text-sm font-semibold"
-            >
-              BOOK THIS TOUR
-            </button>
-          </div>
-        </div>
-      </section>
 
       {/* ================= CONTENT ================= */}
       <section className="w-full bg-[#F7FAFC] py-12 md:py-16">

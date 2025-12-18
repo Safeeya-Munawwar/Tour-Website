@@ -66,33 +66,52 @@ export default function DayTour() {
       </div>
 
       {/* CARD GRID */}
-      <div className="max-w-[1350px] mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
+      <div className="space-y-10 px-6 sm:px-10 md:px-32 mt-16">
         {tours.map((t) => (
           <div
             key={t._id}
-            className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
+            className="flex flex-col lg:flex-row bg-gray-100 shadow-lg rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl"
           >
-            <img
-              src={t.img}
-              alt={t.title}
-              className="w-full h-[260px] object-cover"
-            />
-            <div className="px-8 py-10 flex flex-col flex-grow">
-              <h3 className="text-2xl font-serif font-semibold mb-3">
-                {t.title}
-              </h3>
+            {/* IMAGE */}
+            <div
+              className="relative shrink-0 shadow-lg rounded-2xl overflow-hidden mx-auto mt-4 lg:mt-0"
+              style={{
+                width: "100%",
+                maxWidth: "380px",
+                borderRadius: "0 0 50% 0 / 0 0 50% 0",
+                boxShadow: "12px 0 25px rgba(0,0,0,0.18)",
+              }}
+            >
+              {/* Use aspect ratio for mobile */}
+              <div className="w-full aspect-[19/20] lg:aspect-[19/20]">
+                <img
+                  src={t.img}
+                  alt={t.title}
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+            </div>
 
-              <div className="font-semibold text-gray-700 mb-4">
+            {/* CONTENT */}
+            <div className="flex flex-col justify-center px-4 py-6 sm:px-6 md:px-14 flex-1 text-center lg:text-left">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
+                {t.title}
+              </h2>
+
+              <div className="text-sm font-semibold tracking-widest text-[#2E5B84] uppercase mb-3">
                 {t.location}
               </div>
 
-              <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
+              <p className="text-gray-600 leading-relaxed max-w-full mb-6 sm:mb-8">
                 {t.desc}
               </p>
 
-              <Link to={`/day-tour-detail/${t._id}`} className="mx-auto">
-                <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 flex items-center gap-2 transition">
-                  READ MORE →
+              <Link
+                to={`/day-tour-detail/${t._id}`}
+                className="mx-auto lg:mx-0"
+              >
+                <button className="inline-flex items-center gap-2 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 sm:px-8 py-2 sm:py-3 transition">
+                  View Tour →
                 </button>
               </Link>
             </div>

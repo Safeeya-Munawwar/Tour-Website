@@ -156,6 +156,69 @@ export default function DayTourForm({
         />
       ))}
 
+      {/* Highlights */}
+<h3 className="text-xl font-semibold text-[#0d203a] mb-2">Highlights</h3>
+{formData.highlights.map((h, idx) => (
+  <div key={idx} className="flex gap-2 mb-2">
+    <input
+      type="text"
+      placeholder={`Highlight ${idx + 1}`}
+      value={h}
+      onChange={(e) => {
+        const newHighlights = [...formData.highlights];
+        newHighlights[idx] = e.target.value;
+        setFormData({ ...formData, highlights: newHighlights });
+      }}
+      className="border p-2 w-full rounded"
+    />
+    <button
+      type="button"
+      onClick={() => {
+        const newHighlights = [...formData.highlights];
+        newHighlights.splice(idx, 1);
+        setFormData({ ...formData, highlights: newHighlights });
+      }}
+      className="bg-red-600 text-white px-2 rounded"
+    >
+      Remove
+    </button>
+  </div>
+))}
+<button
+  type="button"
+  onClick={() => setFormData({ ...formData, highlights: [...formData.highlights, ""] })}
+  className="bg-[#2E5B84] text-white px-4 py-2 rounded mb-4"
+>
+  + Add Highlight
+</button>
+
+{/* Duration */}
+<input
+  type="text"
+  placeholder="Duration (e.g., Full day)"
+  value={formData.duration}
+  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+  className="border p-3 w-full rounded mb-4"
+/>
+
+{/* Includes */}
+<input
+  type="text"
+  placeholder="Includes (comma separated)"
+  value={formData.includes.join(",")}
+  onChange={(e) => setFormData({ ...formData, includes: e.target.value.split(",") })}
+  className="border p-3 w-full rounded mb-4"
+/>
+
+{/* Start Location */}
+<input
+  type="text"
+  placeholder="Start Location"
+  value={formData.startLocation}
+  onChange={(e) => setFormData({ ...formData, startLocation: e.target.value })}
+  className="border p-3 w-full rounded mb-4"
+/>
+
       {/* History Section */}
       <h3 className="text-xl font-semibold text-[#0d203a] mb-2">
         History Section

@@ -12,21 +12,21 @@ export default function EditDayTour() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    title: "",
-    location: "",
-    desc: "",
-    imgFile: null,
-    imgPreview: "",
-    heroTitle: "",
-    heroSubtitle: "",
     heroImageFile: null,
     heroImagePreview: "",
+    heroTitle: "",
+    heroSubtitle: "",
     aboutParagraphs: ["", ""],
     historyTitle: "",
-    historyLeftList: [],
-    historyRightList: [],
+    historyLeftList: [""],
+    historyRightList: [""],
     gallerySlides: [],
+    highlights: [""],
+    duration: "",
+    includes: [""],
+    startLocation: "",
   });
+  
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -36,6 +36,7 @@ export default function EditDayTour() {
         const res = await axios.get(`http://localhost:5000/api/day-tours/${id}`);
         if (res.data.success) {
           const { tour, details } = res.data;
+  
           setFormData({
             title: tour.title || "",
             location: tour.location || "",
@@ -46,16 +47,22 @@ export default function EditDayTour() {
             heroSubtitle: details?.heroSubtitle || "",
             heroImageFile: null,
             heroImagePreview: details?.heroImage || "",
-            aboutParagraphs: details?.aboutParagraphs?.length ? details.aboutParagraphs : ["", ""],
+            aboutParagraphs: Array.isArray(details?.aboutParagraphs) ? details.aboutParagraphs : ["", ""],
             historyTitle: details?.historyTitle || "",
-            historyLeftList: details?.historyLeftList || [],
-            historyRightList: details?.historyRightList || [],
-            gallerySlides: details?.gallerySlides?.map(s => ({
-              title: s.title || "",
-              desc: s.desc || "",
-              imageFile: null,
-              imagePreview: s.image || "",
-            })) || [],
+            historyLeftList: Array.isArray(details?.historyLeftList) ? details.historyLeftList : [""],
+            historyRightList: Array.isArray(details?.historyRightList) ? details.historyRightList : [""],
+            highlights: Array.isArray(details?.highlights) ? details.highlights : [""],
+            includes: Array.isArray(details?.includes) ? details.includes : [""],
+            duration: details?.duration || "",
+            startLocation: details?.startLocation || "",
+            gallerySlides: Array.isArray(details?.gallerySlides) 
+              ? details.gallerySlides.map(s => ({
+                  title: s.title || "",
+                  desc: s.desc || "",
+                  imageFile: null,
+                  imagePreview: s.image || "",
+                }))
+              : [],
           });
         }
       } catch (err) {
@@ -65,6 +72,7 @@ export default function EditDayTour() {
     }
     fetchTour();
   }, [id]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +99,11 @@ export default function EditDayTour() {
       detailData.append("historyTitle", formData.historyTitle);
       detailData.append("historyLeftList", JSON.stringify(formData.historyLeftList));
       detailData.append("historyRightList", JSON.stringify(formData.historyRightList));
-
+      detailData.append("highlights", JSON.stringify(formData.highlights));
+      detailData.append("duration", formData.duration);
+      detailData.append("includes", JSON.stringify(formData.includes));
+      detailData.append("startLocation", formData.startLocation);
+      
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,

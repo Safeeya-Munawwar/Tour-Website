@@ -24,6 +24,12 @@ const DayTourDetailSchema = new mongoose.Schema({
       desc: String,
     },
   ],
+
+  // ✅ New Fields
+  highlights: [String],          // e.g., ["Galle Face Green", "Colombo Fort"]
+  duration: String,              // e.g., "Full day"
+  includes: [String],            // e.g., ["Transport", "Water Bottle", "King Coconut"]
+  startLocation: String,         // e.g., "Colombo, Downsouth"
 });
 
 module.exports = mongoose.model("DayTourDetail", DayTourDetailSchema);
