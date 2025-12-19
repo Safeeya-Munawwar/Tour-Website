@@ -1,4 +1,4 @@
-# Tour Website Project
+# Tour Website - Full-Stack Project
 
 ## Project Overview
 
