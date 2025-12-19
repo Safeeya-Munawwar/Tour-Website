@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -25,7 +25,7 @@ const AdminManageTeam = () => {
   // Fetch existing team data
   const fetchTeam = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/team");
+      const res = await axiosInstance.get("/team");
       if (res.data) {
         setTeamData({
           ...res.data,
@@ -155,7 +155,7 @@ const AdminManageTeam = () => {
         if (file) formData.append(`members[${idx}][image]`, file); // By index
       });
 
-      const res = await axios.post("http://localhost:5000/api/team", formData, {
+      const res = await axiosInstance.post("/team", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

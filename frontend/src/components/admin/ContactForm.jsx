@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { axiosInstance } from "../../lib/axios"; 
 
-const ContactForm = ({ contact }) => {
+const ContactForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,10 +24,7 @@ const ContactForm = ({ contact }) => {
     const data = { firstName, lastName, email, rating, message };
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/contact-form",
-        data
-      );
+      const res = await axiosInstance.post("/contact-form", data);
       if (res.data.success) {
         toast.success("Form submitted successfully!");
 
@@ -42,7 +39,7 @@ const ContactForm = ({ contact }) => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Server error: could not submit form");
+      toast.error(err.response?.data?.message || "Server error: could not submit form");
     }
   };
 

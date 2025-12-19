@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -14,13 +14,13 @@ const DayTourBookingAdmin = () => {
 const fetchBookings = async () => {
   try {
     // Day Tour Booking API
-    const resDay = await axios.get("http://localhost:5000/api/day-tour-booking");
+    const resDay = await axiosInstance.get("/day-tour-booking");
     const dayBookings = resDay.data.success
       ? resDay.data.bookings.map(b => ({ ...b, source: "day" }))
       : [];
 
     // Common Tour Booking API (filter day tours only)
-    const resCommon = await axios.get("http://localhost:5000/api/book-tour");
+    const resCommon = await axiosInstance.get("/book-tour");
     const commonDayBookings = resCommon.data.success
       ? resCommon.data.bookings
           .filter(b => b.tourType === "day")
@@ -45,16 +45,16 @@ const fetchBookings = async () => {
 
   // ---------------- UPDATE STATUS ----------------
   const handleStatusChange = async (id, newStatus, source) => {
-    const apiUrl =
+    const apiPath =
       source === "day"
-        ? `http://localhost:5000/api/day-tour-booking/${id}`
-        : `http://localhost:5000/api/book-tour/${id}`;
+        ? `/day-tour-booking/${id}`
+        : `/book-tour/${id}`;
   
-    // Show "Updating..." toast
     const toastId = toast.info("Updating status...", { autoClose: false });
   
     try {
-      const res = await axios.patch(apiUrl, { status: newStatus });
+      const res = await axiosInstance.patch(apiPath, { status: newStatus });
+  
       if (res.data.success) {
         toast.update(toastId, {
           render: "Status updated successfully!",
@@ -82,19 +82,17 @@ const fetchBookings = async () => {
     }
   };
   
-  
-
   // ---------------- DELETE BOOKING ----------------
   const handleDelete = async (id, source) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
   
     try {
-      const apiUrl =
+      const apiPath =
         source === "day"
-          ? `http://localhost:5000/api/day-tour-booking/${id}`
-          : `http://localhost:5000/api/book-tour/${id}`;
+          ? `/day-tour-booking/${id}`
+          : `/book-tour/${id}`;
   
-      const res = await axios.delete(apiUrl);
+      const res = await axiosInstance.delete(apiPath);
   
       if (res.data.success) {
         toast.success("Booking deleted");
@@ -104,7 +102,7 @@ const fetchBookings = async () => {
       console.error(err);
       toast.error("Delete failed");
     }
-  };  
+  };   
 
   // ---------------- PAGINATION LOGIC ----------------
   const indexOfLastRow = currentPage * rowsPerPage;

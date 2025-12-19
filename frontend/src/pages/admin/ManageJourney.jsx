@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -24,7 +24,7 @@ const AdminManageJourney = () => {
 
   const fetchJourney = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/journey");
+      const res = await axiosInstance.get("/journey");
       if (res.data) {
         setJourneyData({
           fullDescription: res.data.fullDescription || [{ description: "" }],
@@ -155,8 +155,8 @@ const AdminManageJourney = () => {
         if (f) formData.append(`milestones[${idx}][image]`, f);
       });
 
-      const res = await axios.post(
-        "http://localhost:5000/api/journey",
+      const res = await axiosInstance.post(
+        "/journey",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Check, Settings } from "lucide-react";
 
 export default function Header() {
@@ -11,7 +11,7 @@ export default function Header() {
   useEffect(() => {
     const fetchHome = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/home");
+        const res = await axiosInstance.get("/home");
         if (res.data) {
           setHomeData({
             name: res.data.name || "",

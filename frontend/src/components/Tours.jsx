@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function PopularTours() {
@@ -11,15 +11,15 @@ export default function PopularTours() {
     const fetchTours = async () => {
       try {
         // Last 2 day tours
-        const dayRes = await axios.get("http://localhost:5000/api/day-tours");
+        const dayRes = await axiosInstance.get("/day-tours");
         const lastTwoDayTours = dayRes.data.tours
           .sort((a, b) => (b._id > a._id ? 1 : -1))
           .slice(0, 2);
         setDayTours(lastTwoDayTours);
 
         // Last 2 round tours
-        const roundRes = await axios.get(
-          "http://localhost:5000/api/round-tours"
+        const roundRes = await axiosInstance.get(
+          "/round-tours"
         );
         if (roundRes.data.success) {
           const lastTwoRoundTours = roundRes.data.tours

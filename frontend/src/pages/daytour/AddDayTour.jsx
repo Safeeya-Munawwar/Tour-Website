@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,8 +41,8 @@ export default function AddDayTour() {
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      const tourRes = await axios.post(
-        "http://localhost:5000/api/day-tours",
+      const tourRes = await axiosInstance.post(
+        "/day-tours",
         tourData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -76,8 +76,8 @@ export default function AddDayTour() {
         }
       });
 
-      await axios.post(
-        "http://localhost:5000/api/day-tours/detail",
+      await axiosInstance.post(
+        "/day-tours/detail",
         detailData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

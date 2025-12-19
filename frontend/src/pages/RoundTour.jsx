@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function RoundTour() {
   const [tours, setTours] = useState([]);
@@ -13,7 +13,7 @@ export default function RoundTour() {
   useEffect(() => {
     async function fetchTours() {
       try {
-        const res = await axios.get("http://localhost:5000/api/round-tours");
+        const res = await axiosInstance.get("/round-tours");
         if (res.data.success) setTours(res.data.tours || []);
       } catch (err) {
         console.error("Error fetching round tours:", err);

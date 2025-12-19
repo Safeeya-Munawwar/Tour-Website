@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 const OurTeam = () => {
   const [teamData, setTeamData] = useState({
@@ -16,7 +16,7 @@ const OurTeam = () => {
 
     const fetchTeam = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/team");
+        const res = await axiosInstance.get("/team");
         if (res.data) {
           setTeamData(res.data);
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SocialMediaItem from "../../components/admin/SocialMediaItem";
@@ -25,7 +25,7 @@ export default function EditContact() {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact");
+        const res = await axiosInstance.get("/contact");
         const data = res.data;
         setFormData({
           phone: data.phone || "",
@@ -156,7 +156,7 @@ export default function EditContact() {
           })),
         })
       );      
-      await axios.put("http://localhost:5000/api/contact", dataToSend, {
+      await axiosInstance.put("/contact", dataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Contact updated successfully!");

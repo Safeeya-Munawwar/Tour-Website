@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import "swiper/css";
 
 const OurCommunity = () => {
@@ -15,8 +15,8 @@ const OurCommunity = () => {
   useEffect(() => {
     const fetchCommunityData = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/communityImpact"
+        const res = await axiosInstance.get(
+          "/communityImpact"
         );
         if (res.data) setCommunityData(res.data);
       } catch (err) {

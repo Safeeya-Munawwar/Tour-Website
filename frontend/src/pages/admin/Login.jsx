@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -25,11 +25,10 @@ export default function AdminLogin() {
     }
 
     try {
-      // Replace with your real backend API
-      const response = await axios.post("http://localhost:5000/api/admin/login", {
+      const response = await axiosInstance.post("/admin/login", {
         email,
         password,
-      });      
+      });          
 
       // Assuming response returns a token
       if (response.data.token) {

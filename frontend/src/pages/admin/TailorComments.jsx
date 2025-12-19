@@ -1,6 +1,5 @@
-// C:\Users\Administrator\Projects\tour-website\frontend\src\pages\admin\TailorComments.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -13,7 +12,7 @@ const TailorComments = () => {
   // ---------------- FETCH ALL TESTIMONIALS ----------------
   const fetchTestimonials = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/testimonials");
+      const res = await axiosInstance.get("/testimonials");
       if (res.data.success) {
         setTestimonials(res.data.testimonials);
       }
@@ -31,7 +30,7 @@ const TailorComments = () => {
     if (!window.confirm("Are you sure you want to delete this testimonial?")) return;
 
     try {
-      const res = await axios.delete(`http://localhost:5000/api/testimonials/${id}`);
+      const res = await axiosInstance.delete(`/testimonials/${id}`);
       if (res.data.success) {
         toast.success("Testimonial deleted");
         fetchTestimonials();

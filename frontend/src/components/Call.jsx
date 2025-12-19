@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function Call() {
   const [contact, setContact] = useState(null);
@@ -8,7 +8,7 @@ export default function Call() {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact");
+        const res = await axiosInstance.get("/contact");
         setContact(res.data);
       } catch (err) {
         console.error("Failed to fetch contact info", err);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -31,7 +31,7 @@ export default function AdminContactList() {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact");
+        const res = await axiosInstance.get("/contact");
         setContact(res.data);
       } catch (err) {
         console.error("Failed to fetch contact info", err);
@@ -45,7 +45,7 @@ export default function AdminContactList() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact-form");
+        const res = await axiosInstance.get("/contact-form");
         setMessages(res.data);
       } catch (err) {
         console.error("Failed to fetch form messages", err);
@@ -60,7 +60,7 @@ export default function AdminContactList() {
       return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/contact-form/${id}`);
+      await axiosInstance.delete(`/contact-form/${id}`);
       setMessages(messages.filter((msg) => msg._id !== id));
       toast.success("Message deleted successfully");
     } catch (err) {

@@ -3,7 +3,7 @@ import { IoChevronDown } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(null); // desktop dropdown
@@ -27,7 +27,7 @@ export default function Navbar() {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact");
+        const res = await axiosInstance.get("/contact");
         setWhatsapp(res.data.whatsapp || "");
       } catch (err) {
         console.log(err);

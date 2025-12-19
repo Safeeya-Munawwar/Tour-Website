@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 const OurJourney = () => {
   const [showText, setShowText] = useState(false);
@@ -19,7 +19,7 @@ const OurJourney = () => {
   useEffect(() => {
     const fetchJourneyData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/journey");
+        const res = await axiosInstance.get("/journey");
         if (res.data) {
           setJourneyData(res.data);
         }

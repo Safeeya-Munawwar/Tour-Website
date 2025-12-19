@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 
 export default function AddDayTourDetail() {
@@ -37,7 +37,7 @@ export default function AddDayTourDetail() {
     data.append("gallerySlides", JSON.stringify(formData.gallerySlides));
     if(formData.heroImageFile) data.append("heroImage", formData.heroImageFile);
 
-    await axios.post("http://localhost:5000/api/day-tours/detail", data);
+    await axiosInstance.post("/day-tours/detail", data);
     navigate("/admin/day-tours");
   };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -12,7 +12,7 @@ const TripadvisorReviews = () => {
   // ---------------- FETCH ALL REVIEWS ----------------
   const fetchReviews = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/reviews");
+      const res = await axiosInstance.get("/reviews");
       if (res.data.success) setReviews(res.data.reviews);
     } catch (err) {
       console.error("Error fetching TripAdvisor reviews:", err);
@@ -28,7 +28,7 @@ const TripadvisorReviews = () => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
 
     try {
-      const res = await axios.delete(`http://localhost:5000/api/reviews/${id}`);
+      const res = await axiosInstance.delete(`/reviews/${id}`);
       if (res.data.success) {
         toast.success("Review deleted");
         fetchReviews();

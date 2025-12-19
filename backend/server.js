@@ -2,10 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
+// Import routes
 const aboutRoute = require("./routes/about");
 const teamRoute = require("./routes/team");
 const journeyRoute = require("./routes/journey");
@@ -25,19 +24,36 @@ const testimonialRoute = require("./routes/testimonials");
 const reviewRoute = require("./routes/review");
 const dayTourBookingRoute = require("./routes/dayTourBooking");
 const roundTourBookingRoute = require("./routes/roundTourBooking");
-const Admin = require("./models/Admin");
 const tourBookingRoute = require("./routes/tourBookings");
+const loginRoute = require("./routes/login"); 
+
+// Import allowedOrigins
+const allowedOrigins = require("./config/cors.config");
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+// -------------------- MIDDLEWARE --------------------
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, 
+  })
+);
+
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
+app.use(cookieParser());
+
+// Serve uploads folder
 app.use("/uploads", express.static("uploads"));
 
-// Routes
+// -------------------- ROUTES --------------------
+
+// Admin login
+app.use("/api/admin", loginRoute);
+
+// Other routes
 app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);
 app.use("/api/about", aboutRoute);
@@ -59,46 +75,7 @@ app.use("/api/day-tour-booking", dayTourBookingRoute);
 app.use("/api/round-tour-booking", roundTourBookingRoute);
 app.use("/api/book-tour", tourBookingRoute);
 
-// ----------------- LOGIN ROUTE -----------------
-app.post("/api/admin/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const admin = await Admin.findOne({ email });
-    if (!admin) return res.status(401).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid credentials" });
-
-    const token = jwt.sign(
-      { id: admin._id, email: admin.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "2h" }
-    );
-
-    res.json({ token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// ----------------- PROTECTED ROUTE EXAMPLE -----------------
-app.get("/api/admin/dashboard", (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "Unauthorized" });
-
-  const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ message: `Welcome admin ${decoded.email}` });
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
-  }
-});
-
-// Connect to MongoDB
+// -------------------- CONNECT TO MONGODB --------------------
 const PORT = process.env.PORT || 5000;
 
 mongoose
@@ -109,5 +86,5 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
-// Start server
+// -------------------- START SERVER --------------------
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import BookTour from "./BookTour";
 
 export default function Why() {
@@ -9,7 +9,7 @@ export default function Why() {
   // Fetch "Why Choose Us" items from backend
   const fetchItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/home");
+      const res = await axiosInstance.get("/home");
       if (res.data && Array.isArray(res.data.whyChooseUs)) {
         setItems(res.data.whyChooseUs);
       }

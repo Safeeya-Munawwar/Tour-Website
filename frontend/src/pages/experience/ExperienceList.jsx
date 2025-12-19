@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
@@ -7,7 +7,7 @@ export default function ExperienceList() {
   const [experiences, setExperiences] = useState([]);
 
   const fetchExperiences = async () => {
-    const res = await axios.get("http://localhost:5000/api/experience");
+    const res = await axiosInstance.get("/experience");
     setExperiences(res.data || []);
   };
 
@@ -17,7 +17,7 @@ export default function ExperienceList() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this experience?")) return;
-    await axios.delete(`http://localhost:5000/api/experience/${id}`);
+    await axiosInstance.delete(`/experience/${id}`);
     fetchExperiences();
   };
 

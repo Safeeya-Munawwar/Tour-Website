@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -16,8 +16,8 @@ const CustomizeTourBookingAdmin = () => {
 
   const fetchInquiries = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/tailor-made-tours/inquiries"
+      const res = await axiosInstance.get(
+        "/tailor-made-tours/inquiries"
       );
       setInquiries(res.data);
     } catch (err) {
@@ -28,8 +28,8 @@ const CustomizeTourBookingAdmin = () => {
   // ---------------- UPDATE STATUS ----------------
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/tailor-made-tours/inquiries/${id}`,
+      await axiosInstance.put(
+        `/tailor-made-tours/inquiries/${id}`,
         { status: newStatus },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -44,8 +44,8 @@ const CustomizeTourBookingAdmin = () => {
 
   const deleteInquiry = async (id) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/tailor-made-tours/inquiries/${id}`
+      await axiosInstance.delete(
+        `/tailor-made-tours/inquiries/${id}`
       );
       toast.success("Inquiry deleted!");
       fetchInquiries();

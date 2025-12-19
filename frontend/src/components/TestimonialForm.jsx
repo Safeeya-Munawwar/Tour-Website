@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 const TestimonialForm = () => {
   const [testimonialForm, setTestimonialForm] = useState({
@@ -30,8 +30,7 @@ const TestimonialForm = () => {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/testimonials",
+      const res = await axiosInstance.post("/testimonials",
         testimonialForm
       );
       if (res.data.success || res.status === 200) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,7 +15,7 @@ export default function ManageDestination() {
   // ---------------- FETCH DESTINATIONS ----------------
   const fetchDestinations = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/destination");
+      const res = await axiosInstance.get("/destination");
       if (res.data) {
         setDestinations(res.data.destinations || []);
       }
@@ -95,7 +95,7 @@ export default function ManageDestination() {
     });
 
     try {
-      const res = await axios.post("http://localhost:5000/api/destinations", formData, {
+      const res = await axiosInstance.post("/destinations", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

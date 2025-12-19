@@ -8,6 +8,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { axiosInstance } from ".././lib/axios";
 
 const About = () => {
   const [showFull, setShowFull] = useState(false);
@@ -18,9 +19,8 @@ const About = () => {
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/about");
-        const data = await res.json();
-        setAbout(data);
+        const res = await axiosInstance.get("/about");
+        setAbout(res.data);
       } catch (err) {
         console.error("Failed to load About page", err);
       }

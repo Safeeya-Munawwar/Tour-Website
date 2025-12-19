@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function ExperienceSection() {
   const [activities, setActivities] = useState([]);
@@ -7,7 +7,7 @@ export default function ExperienceSection() {
   // Fetch top activities from backend
   const fetchActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/home");
+      const res = await axiosInstance.get("/home");
       if (res.data && Array.isArray(res.data.topActivities)) {
         setActivities(res.data.topActivities);
       }

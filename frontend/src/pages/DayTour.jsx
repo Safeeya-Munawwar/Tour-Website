@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function DayTour() {
   const [tours, setTours] = useState([]);
@@ -10,7 +10,7 @@ export default function DayTour() {
   useEffect(() => {
     async function fetchTours() {
       try {
-        const res = await axios.get("http://localhost:5000/api/day-tours");
+        const res = await axiosInstance.get("/day-tours");
         if (res.data.success) setTours(res.data.tours);
       } catch (err) {
         console.error("Error fetching tours:", err);

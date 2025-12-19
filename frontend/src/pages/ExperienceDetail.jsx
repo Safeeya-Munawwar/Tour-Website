@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -22,12 +22,12 @@ useEffect(() => {
   setTimeout(() => setShowText(true), 200);
   const fetchExperience = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/experience/slug/${slug}`
+      const res = await axiosInstance.get(
+        `/experience/slug/${slug}`
       );
       setExperience(res.data);
 
-      const allRes = await axios.get(`http://localhost:5000/api/experience`);
+      const allRes = await axiosInstance.get(`/api/experience`);
       setOtherExperiences(allRes.data.filter((exp) => exp.slug !== slug));
 
       setLoading(false);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 
 const TailorMadeForm = () => {
@@ -55,8 +55,8 @@ const TailorMadeForm = () => {
     }
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/tailor-made-tours/inquiry",
+      await axiosInstance.post(
+        "/tailor-made-tours/inquiry",
         formData
       );
       toast.success("Your trip plan has been submitted!");

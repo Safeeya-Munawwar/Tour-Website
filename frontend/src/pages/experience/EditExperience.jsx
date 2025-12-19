@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,8 +37,8 @@ export default function EditExperience() {
   useEffect(() => {
     const fetchExperience = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/experience/${id}`
+        const res = await axiosInstance.get(
+          `/experience/${id}`
         );
         const exp = res.data;
         setFormData({
@@ -97,8 +97,8 @@ export default function EditExperience() {
         data.append(`subExperienceImages${i}`, file)
       );
 
-      const res = await axios.put(
-        `http://localhost:5000/api/experience/${id}`,
+      const res = await axiosInstance.put(
+        `/experience/${id}`,
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },

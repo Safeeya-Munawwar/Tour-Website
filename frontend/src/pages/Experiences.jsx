@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function Experiences() {
   const [showText, setShowText] = useState(false);
@@ -12,7 +12,7 @@ export default function Experiences() {
 
     const fetchExperiences = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/experience");
+        const res = await axiosInstance.get("/experience");
         setExperiences(res.data);
       } catch (err) {
         console.error("Failed to fetch experiences:", err);

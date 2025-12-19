@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
@@ -7,7 +7,7 @@ export default function DestinationList() {
   const [destinations, setDestinations] = useState([]);
 
   const fetchDestinations = async () => {
-    const res = await axios.get("http://localhost:5000/api/destination");
+    const res = await axiosInstance.get("/destination");
     setDestinations(res.data.destinations || []);
   };
 
@@ -17,7 +17,7 @@ export default function DestinationList() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this destination?")) return;
-    await axios.delete(`http://localhost:5000/api/destination/${id}`);
+    await axiosInstance.delete(`/destination/${id}`);
     fetchDestinations();
   };
 

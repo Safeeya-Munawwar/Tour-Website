@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import {
   LayoutDashboard,
   Plane,
@@ -72,17 +72,17 @@ export default function Dashboard() {
         roundTourBookingsRes,
         commonBookingsRes,
       ]= await Promise.all([
-        axios.get("http://localhost:5000/api/round-tours"),
-        axios.get("http://localhost:5000/api/day-tours"),
-        axios.get("http://localhost:5000/api/experience"),
-        axios.get("http://localhost:5000/api/destination"),
-        axios.get("http://localhost:5000/api/blog"),
-        axios.get("http://localhost:5000/api/tailor-made-tours/inquiries"),
-        axios.get("http://localhost:5000/api/team"),
-        axios.get("http://localhost:5000/api/contact-form"),
-        axios.get("http://localhost:5000/api/day-tour-booking"),
-        axios.get("http://localhost:5000/api/round-tour-booking"),
-        axios.get("http://localhost:5000/api/book-tour"),
+        axiosInstance.get("/round-tours"),
+        axiosInstance.get("/day-tours"),
+        axiosInstance.get("/experience"),
+        axiosInstance.get("/destination"),
+        axiosInstance.get("/blog"),
+        axiosInstance.get("/tailor-made-tours/inquiries"),
+        axiosInstance.get("/team"),
+        axiosInstance.get("/contact-form"),
+        axiosInstance.get("/day-tour-booking"),
+        axiosInstance.get("/round-tour-booking"),
+        axiosInstance.get("/book-tour"),
       ]);
 
       // ---------------- STATS ----------------

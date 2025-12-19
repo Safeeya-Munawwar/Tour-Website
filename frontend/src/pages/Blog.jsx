@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
-import axios from "axios";
+import { axiosInstance } from ".././lib/axios";
 import { Link } from "react-router-dom";
 
 export default function Blog() {
@@ -16,7 +16,7 @@ export default function Blog() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blog");
+        const res = await axiosInstance.get("/blog");
         setStories(res.data.blogs || []);
       } catch (err) {
         console.error("Failed to fetch blogs:", err);

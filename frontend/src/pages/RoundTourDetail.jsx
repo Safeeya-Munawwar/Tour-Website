@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import BookRoundTour from "../components/BookRoundTour";
 import { FiMapPin, FiPhone, FiMail, FiCalendar } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
@@ -19,8 +19,8 @@ export default function RoundTourDetail() {
   const [contact, setContact] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/contact")
+    axiosInstance
+      .get("/contact")
       .then((res) => setContact(res.data || {}))
       .catch((err) => console.error(err));
   }, []);
@@ -28,8 +28,8 @@ export default function RoundTourDetail() {
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/round-tours/${id}`
+        const res = await axiosInstance.get(
+          `/round-tours/${id}`
         );
         if (res.data.success) {
           setTour(res.data.tour);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function Stats() {
   const [statsData, setStatsData] = useState([]);
@@ -8,7 +8,7 @@ export default function Stats() {
   // Fetch stats from backend
   const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/home");
+      const res = await axiosInstance.get("/home");
       if (res.data && Array.isArray(res.data.stats)) {
         setStatsData(res.data.stats);
         setCounts(res.data.stats.map(() => 0));

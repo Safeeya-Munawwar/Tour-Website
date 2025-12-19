@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import Testimonials from "../components/Testimonials";
 import ContactForm from "../components/admin/ContactForm";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import L from "leaflet";
 import "leaflet-routing-machine"; 
 
@@ -35,8 +35,8 @@ const Contact = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/contact")
+    axiosInstance
+      .get("/contact")
       .then((res) => setContact(res.data || {}))
       .catch((err) => console.error(err));
   }, []);

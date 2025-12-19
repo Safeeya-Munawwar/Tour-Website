@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import BlogForm from "../../components/admin/BlogForm";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 
 export default function AddBlog() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
 
 
     try {
-      await axios.post("http://localhost:5000/api/blog", data, {
+      await axiosInstance.post("/blog", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Blog added successfully!", {

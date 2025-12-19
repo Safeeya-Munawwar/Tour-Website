@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import BlogForm from "../../components/admin/BlogForm";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 
 export default function EditBlog() {
   const { id } = useParams();
@@ -26,7 +26,7 @@ export default function EditBlog() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/blog/${id}`);
+        const res = await axiosInstance.get(`/blog/${id}`);
         const blog = res.data;
 
         setFormData({
@@ -61,7 +61,7 @@ data.append("description", formData.description);
     if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
 
     try {
-      await axios.put(`http://localhost:5000/api/blog/${id}`, data, {
+      await axiosInstance.put(`/blog/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Blog updated successfully!", {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
+import { axiosInstance } from "../../lib/axios";
 
 const BlogComments = () => {
   const [comments, setComments] = useState([]);
@@ -14,8 +14,8 @@ const BlogComments = () => {
   const fetchComments = async () => {
     try {
       const [commentsRes, blogsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/blog-comments"),
-        axios.get("http://localhost:5000/api/blog")
+        axiosInstance.get("/blog-comments"),
+        axiosInstance.get("/blog")
       ]);
 
       if (commentsRes.data.success) setComments(commentsRes.data.comments);
@@ -34,7 +34,7 @@ const BlogComments = () => {
     if (!window.confirm("Are you sure you want to delete this comment?")) return;
 
     try {
-      const res = await axios.delete(`http://localhost:5000/api/blog-comments/${id}`);
+      const res = await axiosInstance.delete(`/blog-comments/${id}`);
       if (res.data.success) {
         toast.success("Comment deleted");
         fetchComments();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import DestinationForm from "../../components/admin/DestinationForm";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,8 +15,7 @@ export default function EditDestination() {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/destination/${id}`)
+    axiosInstance.get(`/destination/${id}`)
       .then((res) => {
         const d = res.data;
         if (!d) {
@@ -52,7 +51,7 @@ export default function EditDestination() {
       fd.append("title", formData.title);
       if (formData.imgFile) fd.append("imgFile", formData.imgFile);
 
-      await axios.put(`http://localhost:5000/api/destination/${id}`, fd, {
+      await axiosInstance.put(`/destination/${id}`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

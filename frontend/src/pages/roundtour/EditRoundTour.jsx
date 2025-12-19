@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -48,7 +48,7 @@ export default function EditRoundTour() {
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/round-tours/${id}`);
+        const res = await axiosInstance.get(`/round-tours/${id}`);
         const { tour, details } = res.data;
 
         setFormData({
@@ -100,7 +100,7 @@ export default function EditRoundTour() {
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      await axios.put(`http://localhost:5000/api/round-tours/${id}`, tourData);
+      await axiosInstance.put(`/round-tours/${id}`, tourData);
 
       // ---------- Update Tour Detail ----------
       const detailData = new FormData();
@@ -126,7 +126,7 @@ detailData.append("offers", JSON.stringify(cleanFormData.offers));
         JSON.stringify(formData.gallerySlides.map(s => ({ title: s.title, desc: s.desc })))
       );
 
-      await axios.put(`http://localhost:5000/api/round-tours/detail/${id}`, detailData);
+      await axiosInstance.put(`/round-tours/detail/${id}`, detailData);
 
       toast.success("Round Tour updated", { onClose: () => navigate("/admin/round-tours") });
     } catch (err) {

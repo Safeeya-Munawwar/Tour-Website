@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -29,7 +29,7 @@ const AdminManageHome = () => {
   // Fetch Home data
   const fetchHomeData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/home");
+      const response = await axiosInstance.get("/home");
       const data = response.data;
 
       if (data) {
@@ -192,7 +192,7 @@ const AdminManageHome = () => {
         });
       });
 
-      const res = await axios.post("http://localhost:5000/api/home", formData, {
+      const res = await axiosInstance.post("/home", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

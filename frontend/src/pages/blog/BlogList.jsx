@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
 
   const fetchBlogs = async () => {
-    const res = await axios.get("http://localhost:5000/api/blog");
+    const res = await axiosInstance.get("/blog");
     setBlogs(res.data.blogs || []);
   };
 
@@ -17,7 +17,7 @@ export default function BlogList() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this blog?")) return;
-    await axios.delete(`http://localhost:5000/api/blog/${id}`);
+    await axiosInstance.delete(`/blog/${id}`);
     fetchBlogs();
   };
 

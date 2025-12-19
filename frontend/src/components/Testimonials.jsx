@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -14,7 +14,7 @@ export default function Testimonials() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/contact-form");
+        const res = await axiosInstance.get("/contact-form");
         const mapped = res.data.map((msg) => ({
           name: `${msg.firstName} ${msg.lastName}`,
           time: new Date(msg.createdAt).toLocaleDateString(),
@@ -33,7 +33,7 @@ export default function Testimonials() {
   useEffect(() => {
     const fetchSmallReviews = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/reviews");
+        const res = await axiosInstance.get("/reviews");
 
         // Map backend review → small review card
         const mappedSmall = res.data.reviews.map((r) => ({

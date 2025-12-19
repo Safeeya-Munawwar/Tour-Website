@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -10,17 +10,16 @@ const RoundTourBookingAdmin = () => {
   const rowsPerPage = 5;
 
   // FETCH BOOKINGS
-// FETCH BOOKINGS
 const fetchRoundTourBookings = async () => {
   try {
     // Round Tour Booking API
-    const resRound = await axios.get("http://localhost:5000/api/round-tour-booking");
+    const resRound = await axiosInstance.get("/round-tour-booking");
     const roundBookings = resRound.data.success
       ? resRound.data.bookings.map(b => ({ ...b, source: "round" }))
       : [];
 
     // Common Tour Booking API (filter round tours only)
-    const resCommon = await axios.get("http://localhost:5000/api/book-tour");
+    const resCommon = await axiosInstance.get("/book-tour");
     const commonRoundBookings = resCommon.data.success
       ? resCommon.data.bookings
           .filter((b) => b.tourType === "round")
@@ -45,16 +44,16 @@ const fetchRoundTourBookings = async () => {
 
   // UPDATE STATUS
   const handleStatusChange = async (id, newStatus, source) => {
-    const apiUrl =
+    const apiPath =
       source === "round"
-        ? `http://localhost:5000/api/round-tour-booking/${id}`
-        : `http://localhost:5000/api/book-tour/${id}`;
+        ? `/round-tour-booking/${id}`
+        : `/book-tour/${id}`;
   
-    // Show "Updating..." toast
     const toastId = toast.info("Updating status...", { autoClose: false });
   
     try {
-      const res = await axios.patch(apiUrl, { status: newStatus });
+      const res = await axiosInstance.patch(apiPath, { status: newStatus });
+  
       if (res.data.success) {
         toast.update(toastId, {
           render: "Status updated successfully!",
@@ -80,19 +79,19 @@ const fetchRoundTourBookings = async () => {
         isLoading: false,
       });
     }
-  };  
-
+  };
+  
   // DELETE BOOKING
   const handleDelete = async (id, source) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
   
     try {
-      const apiUrl =
+      const apiPath =
         source === "round"
-        ? `http://localhost:5000/api/round-tour-booking/${id}`
-          : `http://localhost:5000/api/book-tour/${id}`;
+          ? `/round-tour-booking/${id}`
+          : `/book-tour/${id}`;
   
-      const res = await axios.delete(apiUrl);
+      const res = await axiosInstance.delete(apiPath);
   
       if (res.data.success) {
         toast.success("Booking deleted");
@@ -102,8 +101,8 @@ const fetchRoundTourBookings = async () => {
       console.error(err);
       toast.error("Delete failed");
     }
-  };  
-
+  };
+  
   // PAGINATION
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;

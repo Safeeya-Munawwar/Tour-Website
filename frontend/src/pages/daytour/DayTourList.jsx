@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function DayTourList() {
@@ -9,7 +9,7 @@ export default function DayTourList() {
   // Fetch all tours
   const fetchTours = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/day-tours");
+      const res = await axiosInstance.get("/day-tours");
       // Fix: tours array is inside res.data.tours
       setTours(res.data.tours || []);
     } catch (err) {
@@ -27,7 +27,7 @@ export default function DayTourList() {
     if (!window.confirm("Delete this day tour?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/day-tours/${id}`);
+      await axiosInstance.delete(`/day-tours/${id}`);
       fetchTours();
     } catch (err) {
       console.error(err);

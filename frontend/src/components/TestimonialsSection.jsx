@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { FaStar } from "react-icons/fa";
@@ -11,7 +11,7 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/testimonials");
+        const res = await axiosInstance.get("/testimonials");
         if (res.data.success) {
           setTestimonials(res.data.testimonials);
         }

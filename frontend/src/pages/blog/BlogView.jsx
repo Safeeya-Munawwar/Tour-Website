@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useParams, Link } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
@@ -11,7 +11,7 @@ export default function BlogView() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/blog/${id}`);
+        const res = await axiosInstance.get(`/blog/${id}`);
         setBlog(res.data);
       } catch (err) {
         console.error("Error fetching blog:", err);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function Destination() {
   const [showText, setShowText] = useState(false);
@@ -15,7 +15,7 @@ export default function Destination() {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/destination");
+        const res = await axiosInstance.get("/destination");
         setDestinations(res.data.destinations || []);
       } catch (err) {
         console.error("Error fetching destinations:", err);

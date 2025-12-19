@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -29,7 +29,7 @@ const AdminManageAbout = () => {
 
   const fetchAbout = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/about");
+      const res = await axiosInstance.get("/about");
       if (res.data) {
         setAboutData({
           ...res.data,
@@ -170,8 +170,8 @@ const AdminManageAbout = () => {
         if (file) formData.append("galleryFiles", file);
       });
 
-      const res = await axios.post(
-        "http://localhost:5000/api/about",
+      const res = await axiosInstance.post(
+        "/about",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

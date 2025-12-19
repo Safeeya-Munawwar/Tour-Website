@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function BookTour() {
   const [tourType, setTourType] = useState("");
@@ -25,12 +25,10 @@ export default function BookTour() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const dayRes = await axios.get("http://localhost:5000/api/day-tours");
+        const dayRes = await axiosInstance.get("/day-tours");
         setDayTours(Array.isArray(dayRes.data?.tours) ? dayRes.data.tours : []);
 
-        const roundRes = await axios.get(
-          "http://localhost:5000/api/round-tours"
-        );
+        const roundRes = await axiosInstance.get("/round-tours");
         setRoundTours(
           Array.isArray(roundRes.data?.tours) ? roundRes.data.tours : []
         );
@@ -70,7 +68,7 @@ export default function BookTour() {
     setIsError(false);
 
     try {
-      await axios.post("http://localhost:5000/api/book-tour", {
+      await axiosInstance.post("/book-tour", {
         ...formData,
         tourId: selectedTour._id,
         tourType,

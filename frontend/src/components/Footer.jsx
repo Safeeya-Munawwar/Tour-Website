@@ -7,7 +7,7 @@ import {
   FaClock,
   FaStar,
 } from "react-icons/fa";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -19,10 +19,10 @@ export default function Footer() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/contact")
-      .then((res) => res.json())
-      .then((data) => setContact(data))
-      .catch((err) => console.log(err));
+    axiosInstance
+      .get("/contact")
+      .then((res) => setContact(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   const submitReview = async (e) => {
@@ -36,7 +36,7 @@ export default function Footer() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/reviews", {
+      const res = await axiosInstance.post("/reviews", {
         name,
         email,
         rating,

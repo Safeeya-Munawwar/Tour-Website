@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import Why from ".././components/Why";
 import {
   FaWhatsapp,
@@ -43,8 +43,8 @@ const TailorMadeTours = () => {
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/tailor-made-tours"
+        const res = await axiosInstance.get(
+          "/tailor-made-tours"
         );
         if (res.data) {
           setTourData(res.data);

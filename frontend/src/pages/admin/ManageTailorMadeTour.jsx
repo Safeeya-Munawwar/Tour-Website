@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -30,8 +30,8 @@ const AdminManageTailorMadeTour = () => {
 
   const fetchTour = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/tailor-made-tours"
+      const res = await axiosInstance.get(
+        "/tailor-made-tours"
       );
       if (res.data) {
         setTourData({
@@ -140,8 +140,8 @@ const AdminManageTailorMadeTour = () => {
         (file) => file && formData.append("galleryFiles", file)
       );
 
-      const res = await axios.post(
-        "http://localhost:5000/api/tailor-made-tours",
+      const res = await axiosInstance.post(
+        "/tailor-made-tours",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

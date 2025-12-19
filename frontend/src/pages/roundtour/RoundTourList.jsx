@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function RoundTourList() {
@@ -8,7 +8,7 @@ export default function RoundTourList() {
 
   const fetchTours = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/round-tours");
+      const res = await axiosInstance.get("/round-tours");
       setTours(res.data.tours || []);
     } catch (err) {
       console.error(err);
@@ -23,7 +23,7 @@ export default function RoundTourList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this round tour?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/round-tours/${id}`);
+      await axiosInstance.delete(`/round-tours/${id}`);
       fetchTours();
     } catch (err) {
       console.error(err);

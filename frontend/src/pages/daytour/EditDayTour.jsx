@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,7 +33,7 @@ export default function EditDayTour() {
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/day-tours/${id}`);
+        const res = await axiosInstance.get(`/day-tours/${id}`);
         if (res.data.success) {
           const { tour, details } = res.data;
   
@@ -86,7 +86,7 @@ export default function EditDayTour() {
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
 
-      await axios.put(`http://localhost:5000/api/day-tours/${id}`, tourData, {
+      await axiosInstance.put(`/day-tours/${id}`, tourData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -116,7 +116,7 @@ export default function EditDayTour() {
         }
       });
 
-      await axios.put(`http://localhost:5000/api/day-tours/detail/${id}`, detailData, {
+      await axiosInstance.put(`/day-tours/detail/${id}`, detailData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

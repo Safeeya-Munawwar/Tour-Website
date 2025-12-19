@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
   const [formData, setFormData] = useState({
@@ -28,9 +28,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     setIsError(false);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/round-tour-booking",
-        {
+      const res = await axiosInstance.post("/round-tour-booking", {
           ...formData,
           tourId,
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { Link } from "react-router-dom";
 
 export default function Stories() {
@@ -10,7 +10,7 @@ export default function Stories() {
   useEffect(() => {
     const fetchLatestBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blog");
+        const res = await axiosInstance.get("/blog");
         const sortedBlogs = res.data.blogs
           .sort((a, b) => new Date(b.date) - new Date(a.date))
           .slice(0, 3);

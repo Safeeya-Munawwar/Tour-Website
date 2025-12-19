@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -37,16 +37,16 @@ export default function BlogDetail() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/blog/slug/${slug}`
+        const res = await axiosInstance.get(
+          `/blog/slug/${slug}`
         );
         setBlog(res.data);
 
-        const allRes = await axios.get(`http://localhost:5000/api/blog`);
+        const allRes = await axiosInstance.get(`/blog`);
         setOtherBlogs(allRes.data.blogs.filter((b) => b.slug !== slug));
 
-        const commentsRes = await axios.get(
-          `http://localhost:5000/api/blog-comments/${res.data._id}`
+        const commentsRes = await axiosInstance.get(
+          `/blog-comments/${res.data._id}`
         );
         if (commentsRes.data.success) setComments(commentsRes.data.comments);
 
@@ -86,8 +86,8 @@ export default function BlogDetail() {
     }
     setSubmitting(true);
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/blog-comments/${blog._id}`,
+      const res = await axiosInstance.post(
+        `/blog-comments/${blog._id}`,
         comment
       );
       if (res.data.success) {

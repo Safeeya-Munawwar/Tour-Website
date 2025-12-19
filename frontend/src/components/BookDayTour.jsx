@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const [formData, setFormData] = useState({
@@ -28,12 +28,10 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     setIsError(false);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/day-tour-booking",
-        {
-          ...formData,
-          tourId,
-        }
+      const res = await axiosInstance.post("/day-tour-booking", {
+        ...formData,
+        tourId,
+      }
       );
 
       if (res.data.success) {

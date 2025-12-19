@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -22,7 +22,7 @@ const AdminCommunityImpact = () => {
 
   const fetchCommunity = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/communityImpact");
+      const res = await axiosInstance.get("/communityImpact");
       if (res.data) {
         setCommunityData({
           description: Array.isArray(res.data.description)
@@ -137,8 +137,8 @@ const AdminCommunityImpact = () => {
         });
       });
 
-      const res = await axios.post(
-        "http://localhost:5000/api/communityImpact",
+      const res = await axiosInstance.post(
+        "/communityImpact",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

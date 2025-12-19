@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 export default function VideoSection() {
   const videoRef = useRef(null);
@@ -14,7 +14,7 @@ export default function VideoSection() {
   // Fetch home info from backend
   const fetchHomeData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/home");
+      const res = await axiosInstance.get("/home");
       if (res.data && res.data.info && res.data.info.video) {
         setHomeInfo({
           title: res.data.info.title,

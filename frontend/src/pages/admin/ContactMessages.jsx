@@ -1,6 +1,5 @@
-// C:\Users\Administrator\Projects\tour-website\frontend\src\pages\admin\ContactMessages.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -13,7 +12,7 @@ const ContactMessages = () => {
   // ---------------- FETCH ALL CONTACT MESSAGES ----------------
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/contact-form");
+      const res = await axiosInstance.get("/contact-form");
       setMessages(res.data);
     } catch (err) {
       console.error("Error fetching contact messages:", err);
@@ -29,7 +28,7 @@ const ContactMessages = () => {
     if (!window.confirm("Are you sure you want to delete this message?")) return;
 
     try {
-      const res = await axios.delete(`http://localhost:5000/api/contact-form/${id}`);
+      const res = await axiosInstance.delete(`/contact-form/${id}`);
       if (res.data.success) {
         toast.success("Message deleted");
         fetchMessages();

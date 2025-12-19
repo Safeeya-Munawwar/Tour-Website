@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -56,8 +56,8 @@ export default function AddExperience() {
         data.append(`subExperienceImages${i}`, file)
       );
 
-      const res = await axios.post(
-        "http://localhost:5000/api/experience",
+      const res = await axiosInstance.post(
+        "/experience",
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },

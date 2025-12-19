@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosInstance } from "../../lib/axios";
 import DestinationForm from "../../components/admin/DestinationForm";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ export default function AddDestination() {
       fd.append("title", formData.title);
       if (formData.imgFile) fd.append("imgFile", formData.imgFile);
 
-      await axios.post("http://localhost:5000/api/destination", fd, {
+      await axiosInstance.post("/destination", fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
