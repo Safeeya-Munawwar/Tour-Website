@@ -1,4 +1,4 @@
-# Tour Website Project
+# Tour Website - Full Stack Project
 
 ## Project Overview
 
@@ -22,7 +22,6 @@ tour-website-project/
 │   ├── models/
 │   ├── server.js
 │   └── package.json
-├── mongodb-details-tour-website.pdf  # Database details PDF
 └── README.md
 ```
 
@@ -44,7 +43,6 @@ tour-website-project/
 * Tour Details Pages with highlights, duration, and images
 * Booking & Inquiry forms
 * Admin Panel:
-
   * Manage Tours
   * Manage Bookings
   * Manage Gallery
@@ -145,10 +143,3 @@ npm start
 * Frontend can be deployed on **Vercel**
 * Backend can be hosted on **Node.js server / Render / Railway**
 * MongoDB remains hosted on **Atlas Cloud**
-
----
-
-## Contacts
-
-* Developer: **Shafiya Munawwar**
-* GitHub: [https://github.com/Safeeya-Munawwar](https://github.com/Safeeya-Munawwar)

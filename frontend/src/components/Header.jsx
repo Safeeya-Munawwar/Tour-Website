@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { axiosInstance } from "../lib/axios";
 import { Check, Settings } from "lucide-react";
 
 export default function Header() {
