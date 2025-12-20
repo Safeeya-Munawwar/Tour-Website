@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 
 // Import routes
 const aboutRoute = require("./routes/about");
@@ -43,7 +42,6 @@ app.use(
 
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
-app.use(cookieParser());
 
 // Serve uploads folder
 app.use("/uploads", express.static("uploads"));
