@@ -5,6 +5,7 @@ const DayTourDetail = require("../models/DayTourDetail");
 const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const adminAuth = require("../middleware/adminAuth");
 
 // ------------------------ Cloudinary Upload Setup ------------------------
 const storage = new CloudinaryStorage({
@@ -38,7 +39,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // ------------------------ ADMIN — CREATE LIST ITEM ------------------------
-router.post("/", upload.single("img"), async (req, res) => {
+router.post("/", adminAuth, upload.single("img"), async (req, res) => {
   try {
     const newTour = new DayTour({
       title: req.body.title,
@@ -54,7 +55,7 @@ router.post("/", upload.single("img"), async (req, res) => {
 });
 
 // ------------------------ ADMIN — CREATE DETAIL ITEM -----------------------
-router.post("/detail", upload.any(), async (req, res) => {
+router.post("/detail", adminAuth, upload.any(), async (req, res) => {
   try {
     const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
 
@@ -94,7 +95,7 @@ router.post("/detail", upload.any(), async (req, res) => {
 });
 
 // ------------------------ ADMIN — UPDATE LIST ITEM ------------------------
-router.put("/:id", upload.single("img"), async (req, res) => {
+router.put("/:id", adminAuth, upload.single("img"), async (req, res) => {
   try {
     const updateData = {
       title: req.body.title,
@@ -119,7 +120,7 @@ router.put("/:id", upload.single("img"), async (req, res) => {
   }
 });
 
-router.put("/detail/:id", upload.any(), async (req, res) => {
+router.put("/detail/:id", adminAuth, upload.any(), async (req, res) => {
   try {
     const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
 
@@ -170,7 +171,7 @@ router.put("/detail/:id", upload.any(), async (req, res) => {
 });
 
 // ----------------------- ADMIN — DELETE TOUR + DETAIL ------------------------
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const tour = await DayTour.findByIdAndDelete(req.params.id);
     if (!tour) {

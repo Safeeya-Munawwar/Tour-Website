@@ -32,7 +32,7 @@ export default function AdminLogin() {
 
       // Assuming response returns a token
       if (response.data.token) {
-        localStorage.setItem("adminToken", response.data.token);
+        sessionStorage.setItem("adminToken", response.data.token);
         navigate("/admin/dashboard");
       } else {
         setError("Invalid credentials");

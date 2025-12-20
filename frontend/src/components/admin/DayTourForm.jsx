@@ -1,6 +1,52 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
+// ---------------- Gallery Slide Component ----------------
+function GalleryUpload({ slide, index, onFile, onTitleChange, onDescChange, onRemove }) {
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop: (files) => onFile(index, files[0]),
+  });
+
+  return (
+    <div className="border p-3 rounded mt-3">
+      <div {...getRootProps()} className="border-2 border-dashed p-4 cursor-pointer">
+        <input {...getInputProps()} />
+        <p>Click or drag & drop gallery image</p>
+      </div>
+
+      {slide.imagePreview && (
+        <img
+          src={slide.imagePreview}
+          className="w-48 h-32 mt-2 object-cover rounded"
+          alt="Gallery"
+        />
+      )}
+
+      <input
+        placeholder="Title"
+        value={slide.title}
+        onChange={(e) => onTitleChange(index, e.target.value)}
+        className="border p-2 w-full rounded mt-2"
+      />
+
+      <textarea
+        placeholder="Description"
+        value={slide.desc}
+        onChange={(e) => onDescChange(index, e.target.value)}
+        className="border p-2 w-full rounded mt-2"
+      />
+
+      <button
+        type="button"
+        onClick={() => onRemove(index)}
+        className="bg-red-600 text-white px-3 py-1 rounded mt-2"
+      >
+        Remove
+      </button>
+    </div>
+  );
+}
 export default function DayTourForm({
   formData,
   setFormData,
@@ -30,25 +76,30 @@ export default function DayTourForm({
         }),
     });
 
-  // Gallery slides
-  const addGallerySlide = () => {
+  // ---------- Gallery ----------
+  const addGallery = () =>
     setFormData({
       ...formData,
-      gallerySlides: [
-        ...formData.gallerySlides,
-        { title: "", desc: "", imageFile: null, imagePreview: "" },
-      ],
+      gallerySlides: [...(formData.gallerySlides || []), { title: "", desc: "", imageFile: null, imagePreview: "" }],
     });
+
+  const updateGalleryFile = (i, file) => {
+    const arr = [...formData.gallerySlides];
+    arr[i].imageFile = file;
+    arr[i].imagePreview = file ? URL.createObjectURL(file) : arr[i].imagePreview;
+    setFormData({ ...formData, gallerySlides: arr });
   };
-  const updateGallerySlide = (index, key, value) => {
-    const slides = [...formData.gallerySlides];
-    slides[index][key] = value;
-    setFormData({ ...formData, gallerySlides: slides });
+
+  const updateGalleryField = (i, key, value) => {
+    const arr = [...formData.gallerySlides];
+    arr[i][key] = value;
+    setFormData({ ...formData, gallerySlides: arr });
   };
-  const removeGallerySlide = (index) => {
-    const slides = [...formData.gallerySlides];
-    slides.splice(index, 1);
-    setFormData({ ...formData, gallerySlides: slides });
+
+  const removeGallery = (i) => {
+    const arr = [...formData.gallerySlides];
+    arr.splice(i, 1);
+    setFormData({ ...formData, gallerySlides: arr });
   };
 
   return (
@@ -257,61 +308,25 @@ export default function DayTourForm({
         className="border p-3 w-full rounded mb-4"
       />
 
-      {/* Gallery Section */}
-      <h3 className="text-xl font-semibold text-[#0d203a] mb-2">
-        Gallery Slides
-      </h3>
-      {formData.gallerySlides.map((slide, idx) => (
-        <div key={idx} className="border p-4 rounded mb-4 space-y-2">
-          <input
-            type="text"
-            placeholder="Slide Title"
-            value={slide.title}
-            onChange={(e) => updateGallerySlide(idx, "title", e.target.value)}
-            className="border p-2 w-full rounded"
-          />
-          <textarea
-            placeholder="Slide Description"
-            value={slide.desc}
-            onChange={(e) => updateGallerySlide(idx, "desc", e.target.value)}
-            className="border p-2 w-full rounded"
-          />
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              updateGallerySlide(idx, "imageFile", file);
-              updateGallerySlide(
-                idx,
-                "imagePreview",
-                URL.createObjectURL(file)
-              );
-            }}
-            className="border p-2 w-full rounded"
-          />
-          {slide.imagePreview && (
-            <img
-              src={slide.imagePreview}
-              alt="Slide"
-              className="w-48 h-48 object-cover rounded"
-            />
-          )}
-          <button
-            type="button"
-            onClick={() => removeGallerySlide(idx)}
-            className="bg-red-600 text-white px-2 py-1 rounded"
-          >
-            Remove Slide
-          </button>
+
+      {/* ---------- Gallery Slides ---------- */}
+      <div>
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Gallery Slides</h3>
+          <button type="button" onClick={addGallery} className="bg-[#2E5B84] text-white px-4 py-1 rounded">+ Add Slide</button>
         </div>
-      ))}
-      <button
-        type="button"
-        onClick={addGallerySlide}
-        className="bg-[#2E5B84] text-white px-4 py-2 rounded mb-4"
-      >
-        + Add Slide
-      </button>
+        {(formData.gallerySlides || []).map((slide, i) => (
+          <GalleryUpload
+            key={i}
+            slide={slide}
+            index={i}
+            onFile={updateGalleryFile}
+            onTitleChange={(idx, v) => updateGalleryField(idx, "title", v)}
+            onDescChange={(idx, v) => updateGalleryField(idx, "desc", v)}
+            onRemove={removeGallery}
+          />
+        ))}
+      </div>
 
       <button
         type="submit"

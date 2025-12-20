@@ -3,6 +3,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 const Blog = require("../models/Blog");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -46,7 +47,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // -------------------- POST create blog --------------------
-router.post("/", parser, async (req, res) => {
+router.post("/", adminAuth, parser, async (req, res) => {
   try {
     const { title, slug, subtitle, description, content } = req.body;
 
@@ -71,7 +72,7 @@ router.post("/", parser, async (req, res) => {
 });
 
 // -------------------- PUT update blog --------------------
-router.put("/:id", parser, async (req, res) => {
+router.put("/:id", adminAuth, parser, async (req, res) => {
   try {
     const { title, slug, subtitle, description, content } = req.body;
 
@@ -94,7 +95,7 @@ router.put("/:id", parser, async (req, res) => {
 });
 
 // -------------------- DELETE blog --------------------
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
     if (!deletedBlog) return res.status(404).json({ error: "Blog not found" });

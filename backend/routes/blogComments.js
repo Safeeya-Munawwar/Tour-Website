@@ -1,5 +1,6 @@
 const express = require("express");
 const BlogComment = require("../models/BlogComment");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -54,7 +55,7 @@ router.get("/:blogId", async (req, res) => {
 });
 
 // DELETE a comment by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deleted = await BlogComment.findByIdAndDelete(req.params.id);
     if (!deleted) {

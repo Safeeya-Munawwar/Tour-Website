@@ -221,10 +221,10 @@ export default function AdminContactList() {
                   <td className="p-3 border flex justify-center items-center">
                     {sm.icon || sm.iconPreview ? (
                       <img
-                        src={sm.icon ? sm.icon : sm.iconPreview}
-                        alt={sm.platform}
-                        className="w-10 h-10 object-contain"
-                      />
+                      src={sm.iconPreview || sm.icon || ""}
+                      alt={sm.platform}
+                      className="w-12 h-12 object-cover rounded"
+                    />                    
                     ) : (
                       <span>—</span>
                     )}

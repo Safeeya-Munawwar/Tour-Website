@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const DayTourBooking = require("../models/DayTourBooking");
+const adminAuth = require("../middleware/adminAuth");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
 });
 
 // ---------------- UPDATE STATUS ----------------
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
     const booking = await DayTourBooking.findByIdAndUpdate(
@@ -49,7 +50,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // ---------------- DELETE BOOKING ----------------
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const booking = await DayTourBooking.findByIdAndDelete(req.params.id);
     if (!booking)

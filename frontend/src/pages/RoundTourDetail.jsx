@@ -211,9 +211,6 @@ export default function RoundTourDetail() {
                   <span className="font-semibold">
                     {details.tourFacts?.duration || "14 Days / 13 Nights"}
                   </span>
-                  <span className="font-semibold">
-                    {details.tourFacts?.duration || "14 Days / 13 Nights"}
-                  </span>
                 </div>
 
                 <div className="border-t pt-4 flex justify-between">
@@ -221,16 +218,10 @@ export default function RoundTourDetail() {
                   <span className="font-semibold">
                     {details.tourFacts?.groupSize || "2–20 people"}
                   </span>
-                  <span className="font-semibold">
-                    {details.tourFacts?.groupSize || "2–20 people"}
-                  </span>
                 </div>
 
                 <div className="border-t pt-4 flex justify-between">
                   <span className="text-gray-500">Difficulty</span>
-                  <span className="font-semibold">
-                    {details.tourFacts?.difficulty || "Easy – Moderate"}
-                  </span>
                   <span className="font-semibold">
                     {details.tourFacts?.difficulty || "Easy – Moderate"}
                   </span>

@@ -137,10 +137,12 @@ export default function EditContact() {
           const uniqueName = Date.now() + "-" + sm.iconFile.name;
           dataToSend.append("socialIcons", sm.iconFile, uniqueName);
           sm.iconFileName = uniqueName;
+        } else if (sm.icon) {
+          sm.iconFileName = sm.icon.split("/").pop();
         } else {
-          sm.iconFileName = sm.icon || "";
+          sm.iconFileName = "";
         }
-      });
+      });      
       dataToSend.append(
         "data",
         JSON.stringify({

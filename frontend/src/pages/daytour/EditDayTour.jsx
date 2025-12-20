@@ -107,7 +107,9 @@ export default function EditDayTour() {
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,
+        image: slide.imagePreview,
       }));
+      
       detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
 
       formData.gallerySlides.forEach((slide, idx) => {

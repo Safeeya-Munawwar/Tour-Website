@@ -4,7 +4,7 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const TailorMadeTour = require("../models/TailorMadeTour");
 const Inquiry = require("../models/TailorMadeTourInquiry");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 cloudinary.config({
@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST / update
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
     const data =
@@ -129,7 +129,7 @@ router.get("/inquiries", async (req, res) => {
 });
 
 // Update status
-router.put("/inquiries/:id", async (req, res) => {
+router.put("/inquiries/:id", adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
     if (!status) return res.status(400).json({ message: "Status is required" });

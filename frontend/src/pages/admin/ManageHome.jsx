@@ -12,14 +12,13 @@ const AdminManageHome = () => {
 
   const [homeData, setHomeData] = useState({
     name: "",
-    info: { title: "", subtitle: "", description: "", video: "" },
+    info: { title: "", subtitle: "", description: "", video: "", videoPreview: "" },
     stats: [],
     topActivities: [],
     whyChooseUs: [],
   });
 
   const [files, setFiles] = useState({
-    name: "",
     infoVideo: null,
     stats: {},
     topActivities: {},
@@ -40,13 +39,17 @@ const AdminManageHome = () => {
             subtitle: data.info?.subtitle || "",
             description: data.info?.description || "",
             video: data.info?.video || "",
-            videoPreview: data.info?.video || "", // ⭐ FIXED ⭐
+            videoPreview: data.info?.video || "",
           },
-          stats: Array.isArray(data.stats) ? data.stats : [],
-          topActivities: Array.isArray(data.topActivities)
-            ? data.topActivities
+          stats: Array.isArray(data.stats)
+            ? data.stats.map((s) => ({ ...s, preview: s.icon || "" }))
             : [],
-          whyChooseUs: Array.isArray(data.whyChooseUs) ? data.whyChooseUs : [],
+          topActivities: Array.isArray(data.topActivities)
+            ? data.topActivities.map((a) => ({ ...a, preview: a.icon || "" }))
+            : [],
+          whyChooseUs: Array.isArray(data.whyChooseUs)
+            ? data.whyChooseUs.map((w) => ({ ...w, preview: w.icon || "" }))
+            : [],
         });
       }
     } catch (err) {
@@ -89,16 +92,12 @@ const AdminManageHome = () => {
 
   // Handle file drop
   const handleDrop = (acceptedFiles, section, index) => {
-    const oversizedFiles = acceptedFiles.filter(
-      (file) => file.size > MAX_FILE_SIZE
-    );
+    const oversizedFiles = acceptedFiles.filter((file) => file.size > MAX_FILE_SIZE);
     if (oversizedFiles.length > 0) {
       toast.error("File exceeds 50MB and was not added.");
     }
 
-    const validFiles = acceptedFiles.filter(
-      (file) => file.size <= MAX_FILE_SIZE
-    );
+    const validFiles = acceptedFiles.filter((file) => file.size <= MAX_FILE_SIZE);
     if (!validFiles[0]) return;
 
     const file = validFiles[0];
@@ -109,17 +108,17 @@ const AdminManageHome = () => {
       [section]: { ...prev[section], [index]: file },
     }));
 
-    // Update preview in homeData for images
-    if (section !== "infoVideo") {
-      const updated = [...homeData[section]];
-      updated[index].preview = URL.createObjectURL(file);
-
-      setHomeData({ ...homeData, [section]: updated });
-    } else {
+    // Update preview in homeData
+    if (section === "infoVideo") {
+      setFiles((prev) => ({ ...prev, infoVideo: file }));
       setHomeData({
         ...homeData,
-        info: { ...homeData.info, video: URL.createObjectURL(file) },
+        info: { ...homeData.info, videoPreview: URL.createObjectURL(file) }, // preview before upload
       });
+    } else {
+      const updated = [...homeData[section]];
+      updated[index].preview = URL.createObjectURL(file);
+      setHomeData({ ...homeData, [section]: updated });
     }
   };
 
@@ -140,9 +139,7 @@ const AdminManageHome = () => {
         {currentImage ? (
           acceptVideo ? (
             <video
-              src={
-                currentImage?.startsWith("blob:") ? currentImage : currentImage
-              }
+              src={currentImage} // will be either preview or backend URL
               controls
               className="w-64 h-36 mx-auto rounded mt-2"
             />
@@ -155,9 +152,7 @@ const AdminManageHome = () => {
           )
         ) : (
           <p className="text-[#2E5B84] text-sm">
-            {acceptVideo
-              ? "Drag & drop video or click"
-              : "Drag & drop image or click"}
+            {acceptVideo ? "Drag & drop video or click" : "Drag & drop image or click"}
           </p>
         )}
       </div>
@@ -198,7 +193,7 @@ const AdminManageHome = () => {
 
       if (res.status === 200) {
         toast.success("Home page updated successfully!");
-        fetchHomeData();
+        fetchHomeData(); // ✅ fetch saved URLs from backend
         setFiles({
           infoVideo: null,
           stats: {},
@@ -320,7 +315,7 @@ const AdminManageHome = () => {
                   <Dropzone
                     type="infoVideo"
                     index={0}
-                    currentImage={homeData.info.video}
+                    currentImage={homeData.info.videoPreview}
                     acceptVideo
                   />
                 </td>
@@ -336,7 +331,7 @@ const AdminManageHome = () => {
               <button
                 type="button"
                 onClick={() =>
-                  handleAddItem("stats", { icon: "", title: "", count: 0 })
+                  handleAddItem("stats", { icon: "", title: "", count: 0, preview: "" })
                 }
                 className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
               >
@@ -361,11 +356,7 @@ const AdminManageHome = () => {
                     className="border-b border-[#2E5B84] hover:bg-blue-50"
                   >
                     <td className="p-3 border border-[#2E5B84] text-center">
-                      <Dropzone
-                        type="stats"
-                        index={idx}
-                        currentImage={stat.icon}
-                      />
+                      <Dropzone type="stats" index={idx} currentImage={stat.preview} />
                     </td>
                     <td className="p-3 border border-[#2E5B84]">
                       <input
@@ -405,7 +396,7 @@ const AdminManageHome = () => {
               <button
                 type="button"
                 onClick={() =>
-                  handleAddItem("topActivities", { icon: "", title: "" })
+                  handleAddItem("topActivities", { icon: "", title: "", preview: "" })
                 }
                 className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
               >
@@ -429,18 +420,12 @@ const AdminManageHome = () => {
                     className="border-b border-[#2E5B84] hover:bg-blue-50"
                   >
                     <td className="p-3 border border-[#2E5B84] text-center">
-                      <Dropzone
-                        type="topActivities"
-                        index={idx}
-                        currentImage={act.icon}
-                      />
+                      <Dropzone type="topActivities" index={idx} currentImage={act.preview} />
                     </td>
                     <td className="p-3 border border-[#2E5B84]">
                       <input
                         value={act.title}
-                        onChange={(e) =>
-                          handleChange(e, "topActivities", idx, "title")
-                        }
+                        onChange={(e) => handleChange(e, "topActivities", idx, "title")}
                         className="border p-2 w-full rounded focus:ring-2 focus:ring-[#2E5B84]"
                       />
                     </td>
@@ -467,11 +452,7 @@ const AdminManageHome = () => {
               <button
                 type="button"
                 onClick={() =>
-                  handleAddItem("whyChooseUs", {
-                    icon: "",
-                    title: "",
-                    description: "",
-                  })
+                  handleAddItem("whyChooseUs", { icon: "", title: "", description: "", preview: "" })
                 }
                 className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
               >
@@ -496,18 +477,12 @@ const AdminManageHome = () => {
                     className="border-b border-[#2E5B84] hover:bg-blue-50"
                   >
                     <td className="p-3 border border-[#2E5B84] text-center">
-                      <Dropzone
-                        type="whyChooseUs"
-                        index={idx}
-                        currentImage={item.icon}
-                      />
+                      <Dropzone type="whyChooseUs" index={idx} currentImage={item.preview} />
                     </td>
                     <td className="p-3 border border-[#2E5B84]">
                       <input
                         value={item.title}
-                        onChange={(e) =>
-                          handleChange(e, "whyChooseUs", idx, "title")
-                        }
+                        onChange={(e) => handleChange(e, "whyChooseUs", idx, "title")}
                         className="border p-2 w-full rounded focus:ring-2 focus:ring-[#2E5B84]"
                       />
                     </td>

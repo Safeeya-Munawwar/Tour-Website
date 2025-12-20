@@ -3,7 +3,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 const Destination = require("../models/Destination");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 // Cloudinary storage for multer
@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST create destination
-router.post("/", parser.single("imgFile"), async (req, res) => {
+router.post("/", adminAuth, parser.single("imgFile"), async (req, res) => {
   try {
     const { title, subtitle } = req.body;
     const img = req.file.path;
@@ -55,7 +55,7 @@ router.post("/", parser.single("imgFile"), async (req, res) => {
 });
 
 // PUT update destination
-router.put("/:id", parser.single("imgFile"), async (req, res) => {
+router.put("/:id", adminAuth, parser.single("imgFile"), async (req, res) => {
   try {
     const { title, subtitle } = req.body;
     const updateData = { title, subtitle };
@@ -80,7 +80,7 @@ router.put("/:id", parser.single("imgFile"), async (req, res) => {
 });
 
 // DELETE destination
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deletedDestination = await Destination.findByIdAndDelete(
       req.params.id

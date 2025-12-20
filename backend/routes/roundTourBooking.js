@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const RoundTourBooking = require("../models/RoundTourBooking");
+const adminAuth = require("../middleware/adminAuth");
 
 // POST: create booking
 router.post("/", async (req, res) => {
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
 });
 
 // PATCH: update status
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
     const booking = await RoundTourBooking.findByIdAndUpdate(req.params.id, { status }, { new: true });
@@ -42,7 +43,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // DELETE: delete booking
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     await RoundTourBooking.findByIdAndDelete(req.params.id);
     res.json({ success: true });

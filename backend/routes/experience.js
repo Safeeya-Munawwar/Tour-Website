@@ -3,7 +3,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const Experience = require("../models/Experience");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 cloudinary.config({
@@ -68,7 +68,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // =================================CREATE EXPERIENCE================================
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
 
@@ -116,7 +116,7 @@ router.post("/", upload.any(), async (req, res) => {
 });
 
 // ============================UPDATE EXPERIENCE===============================
-router.put("/:id", upload.any(), async (req, res) => {
+router.put("/:id", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
 
@@ -124,6 +124,9 @@ router.put("/:id", upload.any(), async (req, res) => {
       typeof req.body.data === "string"
         ? JSON.parse(req.body.data)
         : req.body.data;
+
+    const experience = await Experience.findById(req.params.id);
+    if (!experience) return res.status(404).json({ error: "Experience not found" });
 
     // heroImg update
     const hero = req.files.find((f) => f.fieldname === "heroImg");
@@ -147,12 +150,20 @@ router.put("/:id", upload.any(), async (req, res) => {
       });
     }
 
-    // gallery update (append new)
+    // ===== Gallery =====
+    let updatedGallery = experience.gallery || []; // start with existing gallery
+    // Remove images marked for deletion
+    if (data.removeGallery && Array.isArray(data.removeGallery)) {
+      updatedGallery = updatedGallery.filter(
+        (url) => !data.removeGallery.includes(url)
+      );
+    }
+    // Add new uploads
     const galleryFiles = req.files.filter(
       (f) => f.fieldname === "galleryFiles"
     );
-    if (!data.gallery) data.gallery = [];
-    data.gallery.push(...galleryFiles.map((f) => f.path));
+    updatedGallery.push(...galleryFiles.map((f) => f.path));
+    data.gallery = updatedGallery;
 
     const updated = await Experience.findByIdAndUpdate(req.params.id, data, {
       new: true,
@@ -165,8 +176,9 @@ router.put("/:id", upload.any(), async (req, res) => {
   }
 });
 
+
 // ===============================DELETE EXPERIENCE=============================
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     await Experience.findByIdAndDelete(req.params.id);
     res.json({ message: "Experience deleted" });

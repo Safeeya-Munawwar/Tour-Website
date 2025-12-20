@@ -27,7 +27,7 @@ useEffect(() => {
       );
       setExperience(res.data);
 
-      const allRes = await axiosInstance.get(`/api/experience`);
+      const allRes = await axiosInstance.get(`/experience`);
       setOtherExperiences(allRes.data.filter((exp) => exp.slug !== slug));
 
       setLoading(false);

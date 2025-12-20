@@ -3,7 +3,7 @@ const Team = require("../models/Team");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 cloudinary.config({
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 });
 
 // CREATE / UPDATE team
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
 
@@ -89,7 +89,7 @@ router.post("/", upload.any(), async (req, res) => {
 });
 
 // DELETE a member by index
-router.delete("/member/:index", async (req, res) => {
+router.delete("/member/:index", adminAuth, async (req, res) => {
   try {
     const idx = parseInt(req.params.index, 10);
     if (isNaN(idx)) throw new Error("Invalid index");

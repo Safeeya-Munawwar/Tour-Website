@@ -1,9 +1,10 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const router = express.Router();
+const adminAuth = require("../middleware/adminAuth");
 
 // POST /api/send-email
-router.post("/", async (req, res) => {
+router.post("/", adminAuth, async (req, res) => {
   const { to, subject, message } = req.body;
 
   if (!to || !subject || !message) {

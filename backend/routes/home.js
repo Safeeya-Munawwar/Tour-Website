@@ -3,7 +3,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const Home = require("../models/Home");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 // Cloudinary config
@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
 
     return {
       folder,
-      resource_type: file.mimetype.startsWith("video") ? "video" : "image",
+      resource_type: file.fieldname === "infoVideo" ? "video" : "image", // 🔑 video explicitly
       allowed_formats: ["jpg", "jpeg", "png", "mp4", "mov", "webm"],
     };
   },
@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST / update Home data
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
     const data =
@@ -50,12 +50,11 @@ router.post("/", upload.any(), async (req, res) => {
 
     // Handle info video
     const videoFile = req.files.find((f) => f.fieldname === "infoVideo");
-    if (videoFile) data.info.video = videoFile.path;
+    if (videoFile) data.info.video = videoFile.path; // Cloudinary video URL
 
-    // Handle icons/images for stats, activities, whyChooseUs
+    // Handle icons/images
     const imageFiles = req.files.filter((f) => f.fieldname !== "infoVideo");
 
-    // Map icons/images based on fieldname convention
     if (data.stats && Array.isArray(data.stats)) {
       data.stats = data.stats.map((item, idx) => {
         const file = imageFiles.find((f) => f.fieldname === `stats${idx}`);

@@ -3,7 +3,7 @@ const Journey = require("../models/Journey");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 // ---------------- CLOUDINARY CONFIG ----------------
@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
 });
 
 // ---------------- CREATE / UPDATE JOURNEY ----------------
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
 
@@ -90,7 +90,7 @@ router.post("/", upload.any(), async (req, res) => {
 });
 
 // ---------------- DELETE MILESTONE ----------------
-router.delete("/milestone/:index", async (req, res) => {
+router.delete("/milestone/:index", adminAuth, async (req, res) => {
   try {
     const idx = parseInt(req.params.index, 10);
     if (isNaN(idx)) throw new Error("Invalid index");
@@ -108,7 +108,7 @@ router.delete("/milestone/:index", async (req, res) => {
 });
 
 // ---------------- DELETE FULL DESCRIPTION PARAGRAPH ----------------
-router.delete("/paragraph/:index", async (req, res) => {
+router.delete("/paragraph/:index", adminAuth, async (req, res) => {
   try {
     const idx = parseInt(req.params.index, 10);
     if (isNaN(idx)) throw new Error("Invalid index");
@@ -126,7 +126,7 @@ router.delete("/paragraph/:index", async (req, res) => {
 });
 
 // ---------------- DELETE WHOLE JOURNEY ----------------
-router.delete("/", async (req, res) => {
+router.delete("/", adminAuth, async (req, res) => {
   try {
     await Journey.deleteMany();
     res.json({ message: "Journey deleted successfully" });

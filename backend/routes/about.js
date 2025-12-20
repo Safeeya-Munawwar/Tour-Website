@@ -3,7 +3,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const About = require("../models/About");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 cloudinary.config({
@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST About data
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
     const data =

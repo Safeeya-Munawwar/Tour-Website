@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Testimonial = require("../models/Testimonial");
+const adminAuth = require("../middleware/adminAuth");
 
 // Create a new testimonial
 router.post("/", async (req, res) => {
@@ -27,7 +28,7 @@ router.get("/", async (req, res) => {
 });
 
 // DELETE a testimonial by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
     try {
       const deleted = await Testimonial.findByIdAndDelete(req.params.id);
       if (!deleted) {

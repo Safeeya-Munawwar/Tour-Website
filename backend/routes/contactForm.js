@@ -1,6 +1,6 @@
 const express = require("express");
 const ContactForm = require("../models/ContactForm");
-
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 // POST a new form submission
@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
 });
 
 // DELETE a form submission by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deleted = await ContactForm.findByIdAndDelete(req.params.id);
     if (!deleted)

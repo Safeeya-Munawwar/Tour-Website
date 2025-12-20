@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const TourBooking = require("../models/TourBooking");
+const adminAuth = require("../middleware/adminAuth");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
@@ -43,7 +44,7 @@ router.get("/", async (req, res) => {
 });
 
 // ---------------- UPDATE BOOKING STATUS ----------------
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
 
@@ -65,7 +66,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // ---------------- DELETE BOOKING ----------------
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     await TourBooking.findByIdAndDelete(req.params.id);
     res.json({ success: true });

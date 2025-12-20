@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review");
+const adminAuth = require("../middleware/adminAuth");
 
 // CREATE REVIEW
 router.post("/", async (req, res) => {
@@ -32,7 +33,7 @@ router.get("/", async (req, res) => {
 });
 
 // DELETE review
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
     try {
       const { id } = req.params;
       const review = await Review.findById(id);

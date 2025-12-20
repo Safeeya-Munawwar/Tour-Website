@@ -1,9 +1,8 @@
-// routes/roundTours.js
 const express = require("express");
 const router = express.Router();
 const RoundTour = require("../models/RoundTour");
 const RoundTourDetail = require("../models/RoundTourDetail");
-
+const adminAuth = require("../middleware/adminAuth");
 const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -40,7 +39,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // ---------------- CREATE TOUR (CARD) ----------------
-router.post("/", upload.single("img"), async (req, res) => {
+router.post("/", adminAuth, upload.single("img"), async (req, res) => {
   try {
     const newTour = new RoundTour({
       title: req.body.title,
@@ -58,7 +57,7 @@ router.post("/", upload.single("img"), async (req, res) => {
 });
 
 // ---------------- CREATE TOUR DETAIL (HERO + GALLERY) ----------------
-router.post("/detail", upload.fields([
+router.post("/detail", adminAuth, upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "galleryImages", maxCount: 20 }
 ]), async (req, res) => {
@@ -95,7 +94,7 @@ router.post("/detail", upload.fields([
 });
 
 // ---------------- UPDATE TOUR (CARD) ----------------
-router.put("/:id", upload.single("img"), async (req, res) => {
+router.put("/:id", adminAuth, upload.single("img"), async (req, res) => {
   try {
     const updateData = {
       title: req.body.title,
@@ -113,7 +112,7 @@ router.put("/:id", upload.single("img"), async (req, res) => {
 });
 
 // ---------------- UPDATE TOUR DETAIL (HERO + GALLERY) ----------------
-router.put("/detail/:id", upload.fields([
+router.put("/detail/:id", adminAuth, upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "galleryImages", maxCount: 20 }
 ]), async (req, res) => {
@@ -163,7 +162,7 @@ router.put("/detail/:id", upload.fields([
 
 
 // ---------------- DELETE TOUR + DETAIL ----------------
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     await RoundTour.findByIdAndDelete(req.params.id);
     await RoundTourDetail.deleteOne({ tourId: req.params.id });

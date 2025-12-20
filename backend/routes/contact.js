@@ -3,6 +3,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const Contact = require("../models/Contact");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ router.get("/", async (req, res) => {
 });
 
 // UPDATE contact with icon upload
-router.put("/", upload.array("socialIcons"), async (req, res) => {
+router.put("/", adminAuth, upload.array("socialIcons"), async (req, res) => {
   try {
     let contact = await Contact.findOne();
     if (!contact) contact = new Contact({});
@@ -46,16 +47,17 @@ router.put("/", upload.array("socialIcons"), async (req, res) => {
       typeof req.body.data === "string"
         ? JSON.parse(req.body.data)
         : req.body.data;
-    if (data.socialMedia && Array.isArray(data.socialMedia)) {
-      data.socialMedia = data.socialMedia.map((sm) => {
-        const file = req.files.find((f) => f.originalname === sm.iconFileName);
-        return {
-          platform: sm.platform,
-          url: sm.url,
-          icon: file ? file.path : sm.icon || "",
-        };
-      });
-    }
+        if (data.socialMedia && Array.isArray(data.socialMedia)) {
+          data.socialMedia = data.socialMedia.map((sm, idx) => {
+            const file = req.files.find(f => f.originalname === sm.iconFileName);
+            const existing = contact.socialMedia[idx] || {};
+            return {
+              platform: sm.platform,
+              url: sm.url,
+              icon: file ? file.path : existing.icon || "",
+            };
+          });
+        }        
     Object.assign(contact, data);
     await contact.save();
 
