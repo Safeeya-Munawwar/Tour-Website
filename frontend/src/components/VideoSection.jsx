@@ -79,9 +79,10 @@ export default function VideoSection() {
               {homeInfo.title}
             </h1>
 
-            <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
-              {homeInfo.description}
-            </p>
+            <p className="text-base sm:text-lg text-gray-500 leading-relaxed text-justify">
+  {homeInfo.description}
+</p>
+
           </div>
         </div>
 

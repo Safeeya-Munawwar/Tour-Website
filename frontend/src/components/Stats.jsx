@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { axiosInstance } from "../lib/axios";
 
 export default function Stats() {
   const [statsData, setStatsData] = useState([]);
   const [counts, setCounts] = useState([]);
+  const sectionRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   // Fetch stats from backend
   const fetchStats = async () => {
@@ -22,9 +24,31 @@ export default function Stats() {
     fetchStats();
   }, []);
 
-  // Animate counts
+  // Animate counts when section is in view
   useEffect(() => {
     if (!statsData.length) return;
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setHasAnimated(true);
+        } else {
+          setHasAnimated(false);
+          setCounts(statsData.map(() => 0)); // reset counts when leaving
+        }
+      },
+      { threshold: 0.5 } // trigger when 50% of section is visible
+    );
+
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [statsData]);
+
+  // Count animation
+  useEffect(() => {
+    if (!hasAnimated) return;
 
     const durations = statsData.map((s) => s.count / 30 || 1);
     const intervals = statsData.map((stat, index) =>
@@ -39,11 +63,13 @@ export default function Stats() {
         });
       }, 30)
     );
+
     return () => intervals.forEach(clearInterval);
-  }, [statsData]);
+  }, [hasAnimated, statsData]);
 
   return (
     <div
+      ref={sectionRef}
       className="w-full bg-cover bg-center bg-fixed relative flex items-center py-16 md:py-20"
       style={{
         backgroundImage: "url('/images/12.jpg')",
@@ -52,8 +78,7 @@ export default function Stats() {
       <div className="absolute inset-0 bg-black/50"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 text-center px-6 gap-8 md:gap-12">
-
-{statsData.map((stat, i) => (
+        {statsData.map((stat, i) => (
           <div
             key={i}
             className="text-white flex flex-col items-center px-4 sm:px-6"

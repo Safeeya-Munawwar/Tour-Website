@@ -19,8 +19,8 @@ export default function Home() {
 </div>
       <VideoSection videoSrc="/tr1.mp4"/>
       <Stats/>
-      <Tours/>
       <Cards/>
+      <Tours/>
       {/* <Call/> */}
       <Why/>
       <Destination/>
