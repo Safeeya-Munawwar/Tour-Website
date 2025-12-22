@@ -10,6 +10,7 @@ import { axiosInstance } from "../../lib/axios";
 export default function EditBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -18,11 +19,13 @@ export default function EditBlog() {
     contentParagraphs: [],
     heroImgFile: null,
     heroImgPreview: "",
+    galleryImgFiles: [],
+    galleryImgPreviews: [],
   });
-  
+
   const [isSaving, setIsSaving] = useState(false);
 
-  // Fetch blog data
+  // -------------------- Fetch blog --------------------
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -34,20 +37,24 @@ export default function EditBlog() {
           title: blog.title || "",
           subtitle: blog.subtitle || "",
           description: blog.description || "",
-          contentParagraphs: blog.content ? blog.content.split("\n\n") : [],
+          contentParagraphs: blog.content
+            ? blog.content.split("\n\n")
+            : [],
           heroImgPreview: blog.heroImg || "",
           heroImgFile: null,
+          galleryImgPreviews: blog.galleryImgs || [],
+          galleryImgFiles: [],
         });
-        
       } catch (err) {
         console.error(err);
         toast.error("Error fetching blog!");
       }
     };
+
     fetchBlog();
   }, [id]);
 
-  // Submit updated blog
+  // -------------------- Submit update --------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -56,14 +63,27 @@ export default function EditBlog() {
     data.append("slug", formData.slug);
     data.append("title", formData.title);
     data.append("subtitle", formData.subtitle);
-data.append("description", formData.description);
-    data.append("content", (formData.contentParagraphs || []).join("\n\n"));
-    if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
+    data.append("description", formData.description);
+    data.append(
+      "content",
+      (formData.contentParagraphs || []).join("\n\n")
+    );
+
+    if (formData.heroImgFile) {
+      data.append("heroImg", formData.heroImgFile);
+    }
+
+    if (formData.galleryImgFiles?.length > 0) {
+      formData.galleryImgFiles.forEach((img) =>
+        data.append("galleryImgs", img)
+      );
+    }
 
     try {
       await axiosInstance.put(`/blog/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       toast.success("Blog updated successfully!", {
         onClose: () => navigate("/admin/blogs"),
         autoClose: 3000,
@@ -79,9 +99,11 @@ data.append("description", formData.description);
   return (
     <div className="flex min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="w-64 fixed h-full">
         <AdminSidebar />
       </div>
+
       <div className="flex-1 ml-64 p-6 bg-gray-50">
         <BlogForm
           formData={formData}

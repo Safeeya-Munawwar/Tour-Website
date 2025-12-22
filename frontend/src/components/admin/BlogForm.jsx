@@ -7,8 +7,9 @@ export default function BlogForm({
   handleSubmit,
   submitLabel,
 }) {
-  const { getRootProps, getInputProps } = useDropzone({
+  const heroDropzone = useDropzone({
     accept: { "image/*": [] },
+    maxFiles: 1,
     onDrop: (files) =>
       setFormData({
         ...formData,
@@ -17,7 +18,19 @@ export default function BlogForm({
       }),
   });
 
-  // Add new paragraph
+  const galleryDropzone = useDropzone({
+    accept: { "image/*": [] },
+    maxFiles: 5,
+    onDrop: (files) =>
+      setFormData({
+        ...formData,
+        galleryImgFiles: files,
+        galleryImgPreviews: files.map((f) =>
+          URL.createObjectURL(f)
+        ),
+      }),
+  });
+
   const addParagraph = () => {
     setFormData({
       ...formData,
@@ -25,14 +38,12 @@ export default function BlogForm({
     });
   };
 
-  // Update paragraph text
   const updateParagraph = (idx, value) => {
     const updated = [...(formData.contentParagraphs || [])];
     updated[idx] = value;
     setFormData({ ...formData, contentParagraphs: updated });
   };
 
-  // Remove paragraph
   const removeParagraph = (idx) => {
     const updated = [...(formData.contentParagraphs || [])];
     updated.splice(idx, 1);
@@ -52,7 +63,9 @@ export default function BlogForm({
         type="text"
         placeholder="Slug"
         value={formData.slug}
-        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, slug: e.target.value })
+        }
         className="border p-3 w-full rounded mb-4"
       />
 
@@ -60,7 +73,9 @@ export default function BlogForm({
         type="text"
         placeholder="Title"
         value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, title: e.target.value })
+        }
         className="border p-3 w-full rounded mb-4"
       />
 
@@ -68,7 +83,9 @@ export default function BlogForm({
         type="text"
         placeholder="Subtitle"
         value={formData.subtitle}
-        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, subtitle: e.target.value })
+        }
         className="border p-3 w-full rounded mb-4"
       />
 
@@ -82,7 +99,7 @@ export default function BlogForm({
         rows={3}
       />
 
-      {/* Paragraphs */}
+      {/* Content Paragraphs */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <label className="font-semibold text-[#2E5B84]">
@@ -100,44 +117,69 @@ export default function BlogForm({
         {(formData.contentParagraphs || []).map((para, idx) => (
           <div key={idx} className="mb-2 flex gap-2">
             <textarea
-              placeholder={`Paragraph ${idx + 1}`}
               value={para}
-              onChange={(e) => updateParagraph(idx, e.target.value)}
+              onChange={(e) =>
+                updateParagraph(idx, e.target.value)
+              }
               className="border p-3 w-full rounded"
             />
             <button
               type="button"
               onClick={() => removeParagraph(idx)}
-              className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+              className="bg-red-600 text-white px-3 py-1 rounded"
             >
               Remove
             </button>
           </div>
         ))}
-
-        {(!formData.contentParagraphs ||
-          formData.contentParagraphs.length === 0) && (
-          <p className="text-gray-500 text-sm">No paragraphs added yet.</p>
-        )}
       </div>
 
       {/* Hero Image */}
       <div className="mb-4">
-        <label className="font-semibold text-[#2E5B84]">Hero Image</label>
+        <label className="font-semibold text-[#2E5B84]">
+          Hero Image
+        </label>
         <div
-          {...getRootProps()}
+          {...heroDropzone.getRootProps()}
           className="border-2 border-dashed p-6 mt-2 cursor-pointer"
         >
-          <input {...getInputProps()} />
+          <input {...heroDropzone.getInputProps()} />
           <p>Click or drag & drop image here</p>
         </div>
+
         {formData.heroImgPreview && (
           <img
             src={formData.heroImgPreview}
-            alt="img"
             className="w-48 h-48 mt-2 object-cover rounded"
+            alt=""
           />
         )}
+      </div>
+
+      {/* Gallery Images */}
+      <div className="mb-4">
+        <label className="font-semibold text-[#2E5B84]">
+          Gallery Images (Max 5)
+        </label>
+
+        <div
+          {...galleryDropzone.getRootProps()}
+          className="border-2 border-dashed p-6 mt-2 cursor-pointer"
+        >
+          <input {...galleryDropzone.getInputProps()} />
+          <p>Click or drag & drop images</p>
+        </div>
+
+        <div className="flex gap-3 mt-3 flex-wrap">
+          {formData.galleryImgPreviews?.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              className="w-24 h-24 object-cover rounded"
+              alt=""
+            />
+          ))}
+        </div>
       </div>
 
       <button

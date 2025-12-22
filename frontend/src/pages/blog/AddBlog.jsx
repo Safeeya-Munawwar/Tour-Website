@@ -31,8 +31,16 @@ data.append("title", formData.title);
 data.append("subtitle", formData.subtitle);
 data.append("description", formData.description);
 data.append("content", (formData.contentParagraphs || []).join("\n\n"));
-if (formData.heroImgFile) data.append("heroImg", formData.heroImgFile);
 
+
+if (formData.heroImgFile)
+  data.append("heroImg", formData.heroImgFile);
+
+if (formData.galleryImgFiles) {
+  formData.galleryImgFiles.forEach((img) =>
+    data.append("galleryImgs", img)
+  );
+}
 
     try {
       await axiosInstance.post("/blog", data, {

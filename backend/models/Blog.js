@@ -7,7 +7,19 @@ const BlogSchema = new mongoose.Schema(
     subtitle: { type: String, required: true },
     description: { type: String, required: true },
     content: { type: String, required: true },
+
     heroImg: { type: String, required: true },
+
+    // ✅ NEW: Gallery Images (max 5)
+    galleryImgs: {
+      type: [String],
+      default: [],
+      validate: [
+        (arr) => arr.length <= 5,
+        "Maximum 5 gallery images allowed",
+      ],
+    },
+
     date: { type: Date, default: Date.now },
   },
   { timestamps: true }

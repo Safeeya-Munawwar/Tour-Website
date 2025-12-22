@@ -10,9 +10,19 @@ const router = express.Router();
 // -------------------- Cloudinary storage --------------------
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: { folder: "blogs", allowed_formats: ["jpg", "jpeg", "png"] },
+  params: {
+    folder: "blogs",
+    allowed_formats: ["jpg", "jpeg", "png"],
+  },
 });
-const parser = multer({ storage }).single("heroImg");
+
+const upload = multer({ storage });
+
+// heroImg = 1 image | galleryImgs = max 5 images
+const uploadFields = upload.fields([
+  { name: "heroImg", maxCount: 1 },
+  { name: "galleryImgs", maxCount: 5 },
+]);
 
 // -------------------- GET all blogs --------------------
 router.get("/", async (req, res) => {
@@ -24,7 +34,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// -------------------- GET single blog by slug --------------------
+// -------------------- GET blog by slug --------------------
 router.get("/slug/:slug", async (req, res) => {
   try {
     const blog = await Blog.findOne({ slug: req.params.slug });
@@ -35,7 +45,7 @@ router.get("/slug/:slug", async (req, res) => {
   }
 });
 
-// -------------------- GET single blog by ID --------------------
+// -------------------- GET blog by ID --------------------
 router.get("/:id", async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -46,14 +56,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// -------------------- POST create blog --------------------
-router.post("/", adminAuth, parser, async (req, res) => {
+// -------------------- CREATE blog --------------------
+router.post("/", adminAuth, uploadFields, async (req, res) => {
   try {
     const { title, slug, subtitle, description, content } = req.body;
 
-    if (!title || !slug || !subtitle || !description || !content || !req.file) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!req.files?.heroImg) {
+      return res.status(400).json({ error: "Hero image required" });
     }
+
+    const heroImg = req.files.heroImg[0].path;
+
+    const galleryImgs = req.files.galleryImgs
+      ? req.files.galleryImgs.map((img) => img.path)
+      : [];
 
     const newBlog = new Blog({
       title,
@@ -61,7 +77,8 @@ router.post("/", adminAuth, parser, async (req, res) => {
       subtitle,
       description,
       content,
-      heroImg: req.file.path,
+      heroImg,
+      galleryImgs,
     });
 
     await newBlog.save();
@@ -71,14 +88,28 @@ router.post("/", adminAuth, parser, async (req, res) => {
   }
 });
 
-// -------------------- PUT update blog --------------------
-router.put("/:id", adminAuth, parser, async (req, res) => {
+// -------------------- UPDATE blog --------------------
+router.put("/:id", adminAuth, uploadFields, async (req, res) => {
   try {
     const { title, slug, subtitle, description, content } = req.body;
 
-    const updateData = { title, slug, subtitle, description, content };
+    const updateData = {
+      title,
+      slug,
+      subtitle,
+      description,
+      content,
+    };
 
-    if (req.file) updateData.heroImg = req.file.path;
+    if (req.files?.heroImg) {
+      updateData.heroImg = req.files.heroImg[0].path;
+    }
+
+    if (req.files?.galleryImgs) {
+      updateData.galleryImgs = req.files.galleryImgs.map(
+        (img) => img.path
+      );
+    }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
@@ -86,7 +117,8 @@ router.put("/:id", adminAuth, parser, async (req, res) => {
       { new: true }
     );
 
-    if (!updatedBlog) return res.status(404).json({ error: "Blog not found" });
+    if (!updatedBlog)
+      return res.status(404).json({ error: "Blog not found" });
 
     res.json(updatedBlog);
   } catch (err) {
@@ -98,7 +130,8 @@ router.put("/:id", adminAuth, parser, async (req, res) => {
 router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
-    if (!deletedBlog) return res.status(404).json({ error: "Blog not found" });
+    if (!deletedBlog)
+      return res.status(404).json({ error: "Blog not found" });
     res.json({ message: "Blog deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });

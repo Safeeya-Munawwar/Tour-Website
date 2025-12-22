@@ -12,14 +12,15 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function BlogDetail() {
+  const [expandedSections, setExpandedSections] = useState({});
+
   const { slug } = useParams();
-  const [showText, setShowText] = useState(false);
   const [blog, setBlog] = useState(null);
   const [otherBlogs, setOtherBlogs] = useState([]);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showText, setShowText] = useState(false);
 
-  // Comment form state
   const [comment, setComment] = useState({
     name: "",
     email: "",
@@ -28,29 +29,22 @@ export default function BlogDetail() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  // Hero animation
   useEffect(() => {
-    setTimeout(() => setShowText(true), 200);
-  }, []);
-
-  // Fetch blog, comments, and related blogs
-  useEffect(() => {
+    setShowText(false);
     const fetchBlog = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/blog/slug/${slug}`
-        );
+        const res = await axiosInstance.get(`/blog/slug/${slug}`);
         setBlog(res.data);
 
         const allRes = await axiosInstance.get(`/blog`);
         setOtherBlogs(allRes.data.blogs.filter((b) => b.slug !== slug));
 
-        const commentsRes = await axiosInstance.get(
-          `/blog-comments/${res.data._id}`
-        );
+        const commentsRes = await axiosInstance.get(`/blog-comments/${res.data._id}`);
         if (commentsRes.data.success) setComments(commentsRes.data.comments);
 
         setLoading(false);
+
+        setTimeout(() => setShowText(true), 500);
       } catch (err) {
         console.error("Error fetching blog or comments:", err);
         setLoading(false);
@@ -67,7 +61,16 @@ export default function BlogDetail() {
       </div>
     );
 
-  const paragraphs = blog.content ? blog.content.split(/\r?\n\r?\n|\r?\n/) : [];
+  // --- SPLIT CONTENT INTO 5 PARAGRAPHS ---
+  let paragraphs = [];
+  if (blog.content) {
+    const sentences = blog.content.match(/[^\.!\?]+[\.!\?]+/g) || [blog.content];
+    for (let i = 0; i < 5; i++) {
+      const start = Math.floor((i * sentences.length) / 5);
+      const end = Math.floor(((i + 1) * sentences.length) / 5);
+      paragraphs.push(sentences.slice(start, end).join(" ").trim());
+    }
+  }
 
   const handleCommentChange = (e) => {
     const { name, value } = e.target;
@@ -86,17 +89,11 @@ export default function BlogDetail() {
     }
     setSubmitting(true);
     try {
-      const res = await axiosInstance.post(
-        `/blog-comments/${blog._id}`,
-        comment
-      );
+      const res = await axiosInstance.post(`/blog-comments/${blog._id}`, comment);
       if (res.data.success) {
         toast.success("Comment submitted successfully!");
         setComment({ name: "", email: "", rating: 0, message: "" });
-        setComments((prev) => [
-          { ...comment, createdAt: new Date().toISOString() },
-          ...prev,
-        ]);
+        setComments((prev) => [{ ...comment, createdAt: new Date().toISOString() }, ...prev]);
       } else {
         toast.error("Failed to submit comment. Try again!");
       }
@@ -115,9 +112,7 @@ export default function BlogDetail() {
       {/* HERO */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{
-          backgroundImage: `url('${blog.heroImg || "/images/default.jpg"}')`,
-        }}
+        style={{ backgroundImage: `url(${blog.heroImg || "/images/default.jpg"})` }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
         <div
@@ -125,234 +120,237 @@ export default function BlogDetail() {
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
-            {blog.subtitle}
-          </h2>
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">{blog.subtitle}</h2>
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
       {/* MAIN CONTENT */}
-      <section className="w-full py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
-            {blog.subtitle}
-          </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
-            {blog.title}
-          </h2>
-          <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-            {blog.description}
-          </p>
-          <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">{blog.title}</h1>
+          <p className="text-gray-600 max-w-3xl mx-auto">{blog.description}</p>
+          <div className="w-16 h-1 bg-[#D4AF37] mx-auto mt-4 rounded"></div>
         </div>
 
-        {/* Blog Image + Content */}
-        <section className="relative flex flex-col md:flex-row w-full bg-white overflow-hidden py-10 md:py-16 px-4 md:px-16">
-          <div className="w-full md:w-1/2 h-64 md:h-auto overflow-hidden relative mb-6 md:mb-0">
+        <section className="flex flex-col gap-20 max-w-6xl mx-auto px-4 sm:px-6 py-16">
+  {paragraphs.map((para, idx) => {
+    const imgSrc =
+      blog.galleryImgs && blog.galleryImgs[idx]
+        ? blog.galleryImgs[idx]
+        : blog.heroImg || "/images/default.jpg";
+
+    const isExpanded = expandedSections[idx];
+    const isImageRight = idx % 2 === 0;
+
+    return (
+      <div
+        key={idx}
+        className={`max-w-5xl mx-auto flex flex-col md:flex-row ${
+          !isImageRight ? "md:flex-row-reverse" : ""
+        } gap-6`}
+      >
+        {/* IMAGE */}
+        <div className="md:w-1/3 w-full">
+          <div
+            className={`overflow-hidden rounded-lg shadow-md transition-all duration-300 ${
+              isExpanded ? "max-h-[1000px]" : "max-h-56"
+            }`}
+          >
             <img
-              src={blog.heroImg}
-              alt={blog.title}
-              className="w-full h-full object-cover object-center"
+              src={imgSrc}
+              alt={`Section ${idx + 1}`}
+              className="w-full h-[500px] object-cover"
             />
           </div>
-          <div className="md:w-1/2 flex flex-col gap-4 md:pl-12 justify-center">
-            {paragraphs.map((para, idx) => (
-              <p
-                key={idx}
-                className="text-gray-700 text-base sm:text-lg leading-relaxed"
-              >
-                {para}
-              </p>
-            ))}
-          </div>
-        </section>
+        </div>
 
-        {/* COMMENTS SECTION */}
-        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-32 mt-10 lg:mt-16 flex flex-col md:flex-row gap-10 lg:gap-16 pb-20">
-          {/* COMMENT FORM */}
-          <div className="md:w-1/2 bg-gray-50 rounded-xl shadow-md p-6 sm:p-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
-              Leave a Comment
-            </h3>
-            <form
-              onSubmit={handleCommentSubmit}
-              className="flex flex-col gap-4"
-            >
-              <label className="font-medium text-gray-700">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={comment.name}
-                onChange={handleCommentChange}
-                placeholder="Your Name"
-                required
-                className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-              />
-              <label className="font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={comment.email}
-                onChange={handleCommentChange}
-                placeholder="Your Email"
-                required
-                className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-              />
-              <div className="flex flex-col space-y-1">
-          <label className="font-medium text-gray-700">Rate</label>
-          <div className="flex items-center gap-2">
+        {/* TEXT */}
+        <div className="md:w-2/3 w-full">
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              isExpanded ? "max-h-[1000px]" : "max-h-56"
+            }`}
+          >
+            <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+              {para}
+            </p>
+          </div>
+
+          {/* READ MORE */}
+          <button
+            onClick={() =>
+              setExpandedSections((prev) => ({
+                ...prev,
+                [idx]: !prev[idx],
+              }))
+            }
+            className="mt-3 text-xs font-semibold text-[#8C1F28]"
+          >
+            {isExpanded ? "Read less" : "Read more"}
+          </button>
+        </div>
+      </div>
+    );
+  })}
+</section>
+
+      </section>
+
+      {/* COMMENTS SECTION */}
+      <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-32 mt-10 lg:mt-16 flex flex-col md:flex-row gap-10 lg:gap-16 pb-20">
+        {/* COMMENT FORM */}
+        <div className="md:w-1/2 bg-gray-50 rounded-xl shadow-md p-6 sm:p-8">
+          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
+            Leave a Comment
+          </h3>
+          <form onSubmit={handleCommentSubmit} className="flex flex-col gap-4">
+            <label className="font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={comment.name}
+              onChange={handleCommentChange}
+              placeholder="Your Name"
+              required
+              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+            />
+            <label className="font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={comment.email}
+              onChange={handleCommentChange}
+              placeholder="Your Email"
+              required
+              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+            />
+            <div className="flex flex-col space-y-1">
+              <label className="font-medium text-gray-700">Rate</label>
+              <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <FaStar
                     key={star}
                     size={24}
                     className={`cursor-pointer ${
-                      comment.rating >= star
-                        ? "text-yellow-400"
-                        : "text-gray-300"
+                      comment.rating >= star ? "text-yellow-400" : "text-gray-300"
                     }`}
                     onClick={() => handleRating(star)}
                   />
                 ))}
-              <span className="ml-2 text-gray-600 font-medium">{comment.rating} / 5</span>
-          </div>
+                <span className="ml-2 text-gray-600 font-medium">{comment.rating} / 5</span>
+              </div>
+            </div>
+            <label className="font-medium text-gray-700">Comment</label>
+            <textarea
+              name="message"
+              value={comment.message}
+              onChange={handleCommentChange}
+              placeholder="Your Comment"
+              rows={4}
+              required
+              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+            />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="bg-[#2E5B84] text-white px-6 py-3 rounded hover:bg-[#1E3A60] transition"
+            >
+              {submitting ? "Submitting..." : "Submit Comment"}
+            </button>
+          </form>
         </div>
-              <label className="font-medium text-gray-700">Comment</label>
-              <textarea
-                name="message"
-                value={comment.message}
-                onChange={handleCommentChange}
-                placeholder="Your Comment"
-                rows={4}
-                required
-                className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-              />
-              <button
-                type="submit"
-                disabled={submitting}
-                className="bg-[#2E5B84] text-white px-6 py-3 rounded hover:bg-[#1E3A60] transition"
+
+        {/* COMMENTS SWIPER */}
+        <div className="md:w-1/2 flex flex-col justify-center">
+          {comments.length === 0 ? (
+            <p className="text-gray-600 text-center">No comments yet. Be the first to comment!</p>
+          ) : (
+            <div className="relative">
+              <Swiper
+                modules={[Autoplay, Navigation]}
+                navigation={{ prevEl: ".c-prev", nextEl: ".c-next" }}
+                autoplay={{ delay: 4000, disableOnInteraction: false }}
+                loop={true}
+                slidesPerView={1}
+                className="rounded-2xl"
               >
-                {submitting ? "Submitting..." : "Submit Comment"}
-              </button>
-            </form>
-          </div>
-
-          {/* COMMENTS SWIPER */}
-          <div className="md:w-1/2 flex flex-col justify-center">
-            {comments.length === 0 ? (
-              <p className="text-gray-600 text-center">
-                No comments yet. Be the first to comment!
-              </p>
-            ) : (
-              <div className="relative">
-                <Swiper
-                  modules={[Autoplay, Navigation]}
-                  navigation={{ prevEl: ".c-prev", nextEl: ".c-next" }}
-                  autoplay={{ delay: 4000, disableOnInteraction: false }}
-                  loop={true}
-                  slidesPerView={1}
-                  className="rounded-2xl"
-                >
-                  {comments.map((c, idx) => (
-                    <SwiperSlide key={idx}>
-                      <div className="bg-[#f7f7f7] p-8 rounded-2xl shadow-lg flex flex-col items-center text-center gap-4">
-                        {/* User Info */}
-                        <div className="flex flex-col items-center gap-2">
-                          <div className="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold relative">
-                            {c.name[0].toUpperCase()}
-                            <span className="absolute -bottom-1 right-2 text-white bg-[#4285F4] px-1 py-[1px] text-xs rounded-full">
-                              G
-                            </span>
-                          </div>
-                          <h4 className="font-semibold">{c.name}</h4>
-                          <p className="text-gray-500 text-sm">
-                            {new Date(c.createdAt).toLocaleDateString()}
-                          </p>
+                {comments.map((c, idx) => (
+                  <SwiperSlide key={idx}>
+                    <div className="bg-[#f7f7f7] p-8 rounded-2xl shadow-lg flex flex-col items-center text-center gap-4">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold relative">
+                          {c.name[0].toUpperCase()}
                         </div>
-
-                        {/* Rating */}
-                        <div className="flex gap-1 text-yellow-400">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <FaStar
-                              key={star}
-                              className={
-                                c.rating >= star
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }
-                            />
-                          ))}
-                        </div>
-
-                        {/* Comment Message */}
-                        <p className="text-gray-700 leading-relaxed">
-                          {c.message}
+                        <h4 className="font-semibold">{c.name}</h4>
+                        <p className="text-gray-500 text-sm">
+                          {new Date(c.createdAt).toLocaleDateString()}
                         </p>
                       </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-
-                {/* Navigation Arrows */}
-                <button className="c-prev absolute left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
-                  <FaChevronLeft />
-                </button>
-                <button className="c-next absolute right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
-                  <FaChevronRight />
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* RELATED BLOGS */}
-<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
-    Related Blogs
-  </h3>
-
-  <Swiper
-    modules={[Pagination, Autoplay]}
-    spaceBetween={16}
-    slidesPerView={1}
-    loop
-    autoplay={{ delay: 3000, disableOnInteraction: false }}
-    breakpoints={{
-      640: { slidesPerView: 1, spaceBetween: 12 }, // Small mobile
-      768: { slidesPerView: 2, spaceBetween: 16 }, // Tablets
-      1024: { slidesPerView: 3, spaceBetween: 20 }, // Laptops
-      1280: { slidesPerView: 4, spaceBetween: 24 }, // Desktop
-    }}
-    pagination={{ clickable: true }}
-  >
-    {otherBlogs.map((b, idx) => (
-      <SwiperSlide key={idx}>
-        <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden cursor-pointer flex flex-col h-full">
-          <img
-            src={b.heroImg}
-            alt={b.title}
-            className="w-full h-48 sm:h-56 md:h-64 object-cover"
-          />
-          <div className="p-4 sm:p-5 flex flex-col flex-1">
-            <h4 className="text-lg sm:text-xl font-semibold text-gray-900">
-              {b.title}
-            </h4>
-            <p className="text-gray-500 text-sm sm:text-base mt-2 flex-1">
-              {b.subtitle}
-            </p>
-            <a
-              href={`/blog/${b.slug}`}
-              className="inline-flex items-center mt-4 text-[#8C1F28] font-semibold text-sm hover:underline"
-            >
-              Read More <IoIosArrowForward className="ml-1" />
-            </a>
-          </div>
+                      <div className="flex gap-1 text-yellow-400">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <FaStar
+                            key={star}
+                            className={c.rating >= star ? "text-yellow-400" : "text-gray-300"}
+                          />
+                        ))}
+                      </div>
+                      <p className="text-gray-700 leading-relaxed">{c.message}</p>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <button className="c-prev absolute left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
+                <FaChevronLeft />
+              </button>
+              <button className="c-next absolute right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
+                <FaChevronRight />
+              </button>
+            </div>
+          )}
         </div>
-      </SwiperSlide>
-    ))}
-  </Swiper>
-</section>
+      </section>
 
+      {/* RELATED BLOGS */}
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-10 text-center">
+          Related Blogs
+        </h3>
+        <Swiper
+          modules={[Pagination, Autoplay]}
+          spaceBetween={24}
+          slidesPerView={1}
+          loop
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          breakpoints={{
+            640: { slidesPerView: 1, spaceBetween: 16 },
+            768: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 },
+          }}
+          pagination={{ clickable: true }}
+        >
+          {otherBlogs.map((b, idx) => (
+            <SwiperSlide key={idx}>
+              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer flex flex-col h-full">
+                <img
+                  src={b.heroImg}
+                  alt={b.title}
+                  className="w-full h-48 sm:h-56 md:h-60 object-cover"
+                />
+                <div className="p-5 flex flex-col flex-1">
+                  <h4 className="text-lg sm:text-xl font-semibold text-gray-900">{b.title}</h4>
+                  <p className="text-gray-500 text-sm sm:text-base mt-2 flex-1">{b.subtitle}</p>
+                  <a
+                    href={`/blog/${b.slug}`}
+                    className="mt-4 inline-flex items-center text-[#8C1F28] font-semibold hover:underline"
+                  >
+                    Read More <IoIosArrowForward className="ml-1" />
+                  </a>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </section>
     </div>
   );

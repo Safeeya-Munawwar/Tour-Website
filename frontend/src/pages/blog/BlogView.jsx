@@ -20,10 +20,13 @@ export default function BlogView() {
         setLoading(false);
       }
     };
+
     fetchBlog();
   }, [id]);
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (loading)
+    return <div className="text-center py-20">Loading...</div>;
+
   if (!blog)
     return (
       <div className="text-center py-20">
@@ -31,7 +34,9 @@ export default function BlogView() {
       </div>
     );
 
-  const paragraphs = blog.content ? blog.content.split(/\r?\n\r?\n/) : [];
+  const paragraphs = blog.content
+    ? blog.content.split(/\r?\n\r?\n/)
+    : [];
 
   return (
     <div className="flex font-poppins bg-gray-50 min-h-screen">
@@ -65,7 +70,9 @@ export default function BlogView() {
 
         {/* Subtitle & Description */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">{blog.subtitle}</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            {blog.subtitle}
+          </h2>
           <p className="text-gray-700">{blog.description}</p>
         </div>
 
@@ -82,27 +89,55 @@ export default function BlogView() {
 
         {/* Hero Image */}
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Hero Image</h3>
+          <h3 className="text-2xl font-semibold mb-4">
+            Hero Image
+          </h3>
           <div className="w-full md:w-96 h-64 md:h-72 overflow-hidden rounded-xl shadow-lg">
             <img
-              src={blog.heroImg || "/images/default.jpg"}
+              src={blog.heroImg}
               alt={blog.title}
               className="w-full h-full object-cover object-center"
             />
           </div>
         </div>
 
+        {/* Gallery Images */}
+        {blog.galleryImgs?.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold mb-4">
+              Gallery Images
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {blog.galleryImgs.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`Gallery ${i + 1}`}
+                  className="rounded-lg h-40 w-full object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Blog Content */}
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Content</h3>
+          <h3 className="text-2xl font-semibold mb-4">
+            Content
+          </h3>
           {paragraphs.length > 0 ? (
             paragraphs.map((p, i) => (
-              <p key={i} className="text-gray-700 mb-4 leading-relaxed">
+              <p
+                key={i}
+                className="text-gray-700 mb-4 leading-relaxed"
+              >
                 {p}
               </p>
             ))
           ) : (
-            <p className="text-gray-500">No content available.</p>
+            <p className="text-gray-500">
+              No content available.
+            </p>
           )}
         </div>
       </div>
