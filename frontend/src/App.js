@@ -58,6 +58,7 @@ import TripadvisorReviews from "./pages/admin/TripadvisorReviews";
 import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
 import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
 import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const location = useLocation();
@@ -68,7 +69,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
-
+      <ScrollToTop /> 
       <main className="flex-grow">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}

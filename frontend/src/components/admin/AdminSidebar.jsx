@@ -45,19 +45,20 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
         />
       )}
 
-      <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 overflow-y-auto">
-        {/* Logo */}
-        <div className="h-16 flex items-center px-6 shadow-md border-b border-gray-800">
-          <img
-            src="/images/logo.png"
-            alt="Logo"
-            className="w-10 h-10 object-contain mr-3"
-          />
-          <h2 className="text-xl font-bold text-gray-200">Admin Panel</h2>
-        </div>
+     <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
+
+        <div className="h-auto flex items-center justify-center shadow-md border-b border-gray-800">
+    <img
+      src="/images/logo.png"
+      alt="Logo"
+      className="w-32 h-auto object-contain"
+    />
+  </div>
+     
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
+       <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto">
+
           {/* Dashboard */}
           <NavLink
             to="/admin/dashboard"
@@ -370,14 +371,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <Mail size={18} /> Contact
           </NavLink>
         </nav>
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition w-[calc(100%-2rem)] justify-center"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
+       <button
+  onClick={handleLogout}
+  className="mt-auto flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition justify-center"
+>
+  <LogOut size={18} />
+  Logout
+</button>
+
       </aside>
     </>
   );
