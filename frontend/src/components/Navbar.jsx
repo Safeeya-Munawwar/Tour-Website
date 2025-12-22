@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
-import { FaWhatsapp } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+  FaTripadvisor,
+  FaEnvelope,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedinIn,
+} from "react-icons/fa";
+
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(null); // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(null); // mobile dropdown
   const [sidebar, setSidebar] = useState(false); // mobile sidebar
   const [scrolled, setScrolled] = useState(false);
-  const [whatsapp, setWhatsapp] = useState("");
+  const [contact, setContact] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,12 +33,12 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch WhatsApp contact
+  /* FETCH CONTACT (WhatsApp + Social Media) */
   useEffect(() => {
     const fetchContact = async () => {
       try {
         const res = await axiosInstance.get("/contact");
-        setWhatsapp(res.data.whatsapp || "");
+        setContact(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -36,6 +46,17 @@ export default function Navbar() {
     fetchContact();
   }, []);
 
+  const socialIcons = {
+    facebook: FaFacebookF,
+    instagram: FaInstagram,
+    youtube: FaYoutube,
+    tripadvisor: FaTripadvisor,
+    email: FaEnvelope,
+    whatsapp: FaWhatsapp,
+    twitter: FaTwitter,
+    linkedin: FaLinkedinIn,
+  };  
+  
   const menuItems = [
     { name: "HOME" },
     { name: "TAILOR-MADE TOURS" },
@@ -113,32 +134,53 @@ export default function Navbar() {
             scrolled ? "opacity-0 h-0 overflow-hidden mb-0 mt-0" : "opacity-100 h-auto mb-7 mt-10"
           }`}
         >
-          {/* Logo */}
-          <div className="absolute left-1/2 -translate-x-1/2">
+
+{/* SOCIAL ICONS – LEFT OF LOGO */}
+<div className="hidden md:flex items-center gap-4">
+  {contact?.socialMedia?.map((sm, i) => {
+    const Icon = socialIcons[sm.platform?.toLowerCase()];
+    if (!Icon) return null;
+
+    return (
+      <a
+        key={i}
+        href={sm.url}
+        target="_blank"
+        rel="noreferrer"
+        className="text-white hover:scale-110 transition-transform"
+      >
+        <Icon size={20} />
+      </a>
+    );
+  })}
+</div>
+
+ {/* LOGO (SPACE BELOW ADDED) */}
+ <div className="absolute left-1/2 -translate-x-1/2 mb-4">
             <img
               src="/images/logo.png"
               alt="Logo"
-              className="w-[170px] opacity-95 transition-transform duration-300 hover:scale-105"
+              className="w-[150px] opacity-95 transition-transform duration-300 hover:scale-105"
             />
           </div>
 
-          {/* Right side: WhatsApp + Enquire (desktop) */}
+{/* RIGHT SIDE */}
           <div className="hidden md:flex items-center gap-8 text-white ml-auto">
             <div className="flex items-center gap-2 text-[15px]">
               <FaWhatsapp className="text-xl" />
-              {whatsapp || "(+94) 77 730 0852"}
+              {contact?.whatsapp || "(+94) 77 730 0852"}
             </div>
             <button
-              className="px-6 py-[9px] border border-white text-white rounded-full text-[14px] font-medium hover:bg-white hover:text-black transition"
+              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-white hover:text-black transition"
               onClick={() => navigate("/contact")}
             >
               ENQUIRE NOW
             </button>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* MOBILE HAMBURGER (FORCED RIGHT) */}
           <button
-            className="text-white text-3xl md:hidden"
+            className="text-white text-3xl md:hidden ml-auto"
             onClick={() => setSidebar(true)}
           >
             <FiMenu />
@@ -270,7 +312,7 @@ export default function Navbar() {
         <div className="px-6 mt-10 text-white">
           <div className="flex items-center gap-2 mb-4 text-white">
             <FaWhatsapp className="text-2xl text-green-400" />
-            {whatsapp || "(+94) 77 730 0852"}
+             {contact?.whatsapp || "(+94) 77 730 0852"}
           </div>
           <button
             className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
