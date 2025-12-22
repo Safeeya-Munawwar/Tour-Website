@@ -5,6 +5,9 @@ import { axiosInstance } from "../lib/axios";
 export default function RoundTour() {
   const [tours, setTours] = useState([]);
   const [showText, setShowText] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const perPage = 9; // ✅ 9 cards per page
 
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
@@ -21,6 +24,12 @@ export default function RoundTour() {
     }
     fetchTours();
   }, []);
+
+  // Pagination logic
+  const totalPages = Math.ceil(tours.length / perPage);
+  const indexOfLast = currentPage * perPage;
+  const indexOfFirst = indexOfLast - perPage;
+  const currentTours = tours.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
@@ -42,6 +51,7 @@ export default function RoundTour() {
         </div>
       </div>
 
+      {/* INTRO */}
       <div className="max-w-[1100px] mx-auto text-center px-6 mt-14">
         <div className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
           Round Tours
@@ -54,59 +64,109 @@ export default function RoundTour() {
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
           Our expertly crafted round tours take you through the island’s most
           breathtaking landscapes — from ancient kingdoms to misty mountains,
-          wildlife parks, and sun-kissed beaches. Each journey offers a perfect
-          balance of culture, nature, and adventure.
+          wildlife parks, and sun-kissed beaches.
         </p>
 
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </div>
 
+      {/* CARD GRID */}
       <div className="max-w-[1350px] mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
-        {tours.map((t) => (
-          <div
-            key={t._id}
-            className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
-          >
-            <img
-              src={t.img}
-              alt={t.title}
-              className="w-full h-[260px] object-cover"
-            />
+        {currentTours.length > 0 ? (
+          currentTours.map((t) => (
+            <div
+              key={t._id}
+              className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
+            >
+              <img
+                src={t.img}
+                alt={t.title}
+                className="w-full h-[260px] object-cover"
+              />
 
-            <div className="px-8 py-10 flex flex-col flex-grow">
-              <h3 className="text-2xl font-serif font-semibold mb-2">
-                {t.title}
-              </h3>
+              <div className="px-8 py-10 flex flex-col flex-grow">
+                <h3 className="text-2xl font-serif font-semibold mb-2">
+                  {t.title}
+                </h3>
 
-              {/* Location */}
-              {t.location && (
-                <div className="text-gray-500 italic mb-2">{t.location}</div>
-              )}
+                {t.location && (
+                  <div className="text-gray-500 italic mb-2">
+                    {t.location}
+                  </div>
+                )}
 
-              {/* Days */}
-              {t.days && (
-                <div className="font-semibold text-gray-700 mb-4">{t.days}</div>
-              )}
+                {t.days && (
+                  <div className="font-semibold text-gray-700 mb-4">
+                    {t.days}
+                  </div>
+                )}
 
-              <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
-                {t.desc}
-              </p>
+                <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
+                  {t.desc}
+                </p>
 
-              <Link to={`/round-tours/${t._id}`} className="mx-auto">
-                <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 flex items-center gap-2 transition">
-                  READ MORE →
-                </button>
-              </Link>
+                <Link to={`/round-tours/${t._id}`} className="mx-auto">
+                  <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 transition">
+                    READ MORE →
+                  </button>
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-
-        {tours.length === 0 && (
+          ))
+        ) : (
           <div className="col-span-3 text-center text-gray-500 p-8">
             No tours available.
           </div>
         )}
       </div>
+
+      {/* PAGINATION */}
+      {totalPages >= 1 && (
+        <div className="flex justify-center items-center gap-2 mt-16 flex-wrap">
+          {/* Prev */}
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-2 rounded-lg border text-sm font-medium
+                       disabled:opacity-40 disabled:cursor-not-allowed
+                       hover:bg-gray-100"
+          >
+            Prev
+          </button>
+
+          {/* Page Numbers */}
+          {[...Array(totalPages)].map((_, i) => {
+            const page = i + 1;
+            return (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-4 py-2 rounded-lg border text-sm font-semibold
+                  ${
+                    currentPage === page
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          {/* Next */}
+          <button
+            onClick={() =>
+              setCurrentPage((p) => Math.min(p + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 rounded-lg border text-sm font-medium
+                       disabled:opacity-40 disabled:cursor-not-allowed
+                       hover:bg-gray-100"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

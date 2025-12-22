@@ -98,55 +98,54 @@ export default function Destination() {
             )}
           </div>
 
-          {/* PAGINATION */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-16 flex-wrap">
-              {/* Prev */}
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.max(p - 1, 1))
-                }
-                disabled={currentPage === 1}
-                className="px-3 py-2 rounded-lg border text-sm font-medium 
-                           disabled:opacity-40 hover:bg-gray-100"
-              >
-                Prev
-              </button>
+       {/* PAGINATION */}
+{totalPages >= 1 && (
+  <div className="flex justify-center items-center gap-2 mt-16 flex-wrap">
+    {/* Prev */}
+    <button
+      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+      disabled={currentPage === 1}
+      className="px-3 py-2 rounded-lg border text-sm font-medium
+                 disabled:opacity-40 disabled:cursor-not-allowed
+                 hover:bg-gray-100"
+    >
+      Prev
+    </button>
 
-              {/* Page Numbers */}
-              {[...Array(totalPages)].map((_, index) => {
-                const page = index + 1;
-                return (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-4 py-2 rounded-lg border text-sm font-semibold
-                      ${
-                        currentPage === page
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-gray-700 hover:bg-gray-100"
-                      }`}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
+    {/* Page Numbers */}
+    {[...Array(totalPages)].map((_, index) => {
+      const page = index + 1;
+      return (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`px-4 py-2 rounded-lg border text-sm font-semibold
+            ${
+              currentPage === page
+                ? "bg-black text-white border-black"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+        >
+          {page}
+        </button>
+      );
+    })}
 
-              {/* Next */}
-              <button
-                onClick={() =>
-                  setCurrentPage((p) =>
-                    Math.min(p + 1, totalPages)
-                  )
-                }
-                disabled={currentPage === totalPages}
-                className="px-3 py-2 rounded-lg border text-sm font-medium 
-                           disabled:opacity-40 hover:bg-gray-100"
-              >
-                Next
-              </button>
-            </div>
-          )}
+    {/* Next */}
+    <button
+      onClick={() =>
+        setCurrentPage((p) => Math.min(p + 1, totalPages))
+      }
+      disabled={currentPage === totalPages}
+      className="px-3 py-2 rounded-lg border text-sm font-medium
+                 disabled:opacity-40 disabled:cursor-not-allowed
+                 hover:bg-gray-100"
+    >
+      Next
+    </button>
+  </div>
+)}
+
         </div>
       </section>
     </div>
