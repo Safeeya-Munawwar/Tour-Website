@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
-import { FaWhatsapp } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+  FaTripadvisor,
+  FaEnvelope,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedinIn,
+} from "react-icons/fa";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(null); // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(null); // mobile dropdown
   const [sidebar, setSidebar] = useState(false); // mobile sidebar
   const [scrolled, setScrolled] = useState(false);
-  const [whatsapp, setWhatsapp] = useState("");
+  const [contact, setContact] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,18 +32,29 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch WhatsApp contact
+  /* FETCH CONTACT (WhatsApp + Social Media) */
   useEffect(() => {
     const fetchContact = async () => {
       try {
         const res = await axiosInstance.get("/contact");
-        setWhatsapp(res.data.whatsapp || "");
+        setContact(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchContact();
   }, []);
+
+  const socialIcons = {
+    facebook: FaFacebookF,
+    instagram: FaInstagram,
+    youtube: FaYoutube,
+    tripadvisor: FaTripadvisor,
+    email: FaEnvelope,
+    whatsapp: FaWhatsapp,
+    twitter: FaTwitter,
+    linkedin: FaLinkedinIn,
+  };
 
   const menuItems = [
     { name: "HOME" },
@@ -104,41 +124,65 @@ export default function Navbar() {
       {/* HEADER AREA */}
       <div
         className={`w-full px-[6%] transition-all duration-300 ${
-          scrolled ? "bg-black/90 py-4 shadow-lg" : "bg-header-gradient pt-6 pb-10"
+          scrolled
+            ? "bg-black/90 py-4 shadow-lg"
+            : "bg-header-gradient pt-6 pb-10"
         }`}
       >
         {/* TOP ROW */}
         <div
           className={`w-full flex items-center justify-between transition-all duration-300 ${
-            scrolled ? "opacity-0 h-0 overflow-hidden mb-0 mt-0" : "opacity-100 h-auto mb-7 mt-10"
+            scrolled
+              ? "opacity-0 h-0 overflow-hidden mb-0 mt-0"
+              : "opacity-100 h-auto mb-7 mt-10"
           }`}
         >
-          {/* Logo */}
-          <div className="absolute left-1/2 -translate-x-1/2">
+          {/* SOCIAL ICONS – LEFT OF LOGO */}
+          <div className="hidden md:flex items-center gap-4">
+            {contact?.socialMedia?.map((sm, i) => {
+              const Icon = socialIcons[sm.platform?.toLowerCase()];
+              if (!Icon) return null;
+
+              return (
+                <a
+                  key={i}
+                  href={sm.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white hover:scale-110 transition-transform"
+                >
+                  <Icon size={20} />
+                </a>
+              );
+            })}
+          </div>
+
+          {/* LOGO (SPACE BELOW ADDED) */}
+          <div className="absolute left-1/2 -translate-x-1/2 mb-4">
             <img
               src="/images/logo.png"
               alt="Logo"
-              className="w-[170px] opacity-95 transition-transform duration-300 hover:scale-105"
+              className="w-[150px] opacity-95 transition-transform duration-300 hover:scale-105"
             />
           </div>
 
-          {/* Right side: WhatsApp + Enquire (desktop) */}
+          {/* RIGHT SIDE */}
           <div className="hidden md:flex items-center gap-8 text-white ml-auto">
             <div className="flex items-center gap-2 text-[15px]">
               <FaWhatsapp className="text-xl" />
-              {whatsapp || "(+94) 77 730 0852"}
+              {contact?.whatsapp || "(+94) 77 730 0852"}
             </div>
             <button
-              className="px-6 py-[9px] border border-white text-white rounded-full text-[14px] font-medium hover:bg-white hover:text-black transition"
+              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-white hover:text-black transition"
               onClick={() => navigate("/contact")}
             >
               ENQUIRE NOW
             </button>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* MOBILE HAMBURGER (FORCED RIGHT) */}
           <button
-            className="text-white text-3xl md:hidden"
+            className="text-white text-3xl md:hidden ml-auto"
             onClick={() => setSidebar(true)}
           >
             <FiMenu />
@@ -154,13 +198,17 @@ export default function Navbar() {
           {/* LOGO WHEN SCROLLED */}
           <div
             className={`absolute flex items-center transition-all duration-300 ${
-              scrolled ? "left-[2%] opacity-100" : "opacity-0 pointer-events-none"
+              scrolled
+                ? "left-[2%] opacity-100"
+                : "opacity-0 pointer-events-none"
             }`}
           >
             <img
               src="/images/logo.png"
               alt="logo"
-              className={`transition-all duration-300 ${scrolled ? "w-[100px]" : "w-[0px]"}`}
+              className={`transition-all duration-300 ${
+                scrolled ? "w-[100px]" : "w-[0px]"
+              }`}
             />
           </div>
 
@@ -172,7 +220,9 @@ export default function Navbar() {
                   <Link
                     to={getPath(item.name)}
                     className={`nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap transition-transform duration-300 hover:scale-110 ${
-                      window.location.pathname === getPath(item.name) ? "active" : ""
+                      window.location.pathname === getPath(item.name)
+                        ? "active"
+                        : ""
                     }`}
                   >
                     {item.name}
@@ -216,7 +266,10 @@ export default function Navbar() {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/20">
           <img src="/images/logo.png" alt="logo" className="w-28" />
-          <button onClick={() => setSidebar(false)} className="text-white text-3xl">
+          <button
+            onClick={() => setSidebar(false)}
+            className="text-white text-3xl"
+          >
             <FiX />
           </button>
         </div>
@@ -236,7 +289,9 @@ export default function Navbar() {
               ) : (
                 <>
                   <button
-                    onClick={() => setMobileOpen(mobileOpen === idx ? null : idx)}
+                    onClick={() =>
+                      setMobileOpen(mobileOpen === idx ? null : idx)
+                    }
                     className="flex justify-between items-center w-full text-[16px] font-medium py-2"
                   >
                     {item.name}
@@ -270,7 +325,7 @@ export default function Navbar() {
         <div className="px-6 mt-10 text-white">
           <div className="flex items-center gap-2 mb-4 text-white">
             <FaWhatsapp className="text-2xl text-green-400" />
-            {whatsapp || "(+94) 77 730 0852"}
+            {contact?.whatsapp || "(+94) 77 730 0852"}
           </div>
           <button
             className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
@@ -281,6 +336,24 @@ export default function Navbar() {
           >
             ENQUIRE NOW
           </button>
+          <div className="flex items-center gap-4 mb-6 mt-6 text-white">
+            {contact?.socialMedia?.map((sm, i) => {
+              const Icon = socialIcons[sm.platform?.toLowerCase()];
+              if (!Icon) return null;
+
+              return (
+                <a
+                  key={i}
+                  href={sm.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white hover:scale-110 transition-transform"
+                >
+                  <Icon size={20} />
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

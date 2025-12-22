@@ -45,7 +45,7 @@ export default function Header() {
 
       {/* Main Text */}
       <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl text-white">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-snug sm:leading-relaxed font-serif-custom">
+        <h1 className="mt-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-snug sm:leading-relaxed font-serif-custom">
           {homeData.name || "Net Lanka Tours"}
         </h1>
 
