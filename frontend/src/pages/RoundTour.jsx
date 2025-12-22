@@ -24,7 +24,10 @@ export default function RoundTour() {
     }
     fetchTours();
   }, []);
-
+ // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   // Pagination logic
   const totalPages = Math.ceil(tours.length / perPage);
   const indexOfLast = currentPage * perPage;

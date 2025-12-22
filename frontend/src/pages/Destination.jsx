@@ -24,6 +24,10 @@ export default function Destination() {
     };
     fetchDestinations();
   }, []);
+   // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   const totalPages = Math.ceil(destinations.length / perPage);
   const indexOfLast = currentPage * perPage;

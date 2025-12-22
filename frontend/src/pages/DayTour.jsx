@@ -26,7 +26,10 @@ export default function DayTour() {
     const t = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(t);
   }, []);
-
+ // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   // Pagination logic
   const totalPages = Math.ceil(tours.length / perPage);
   const indexOfLast = currentPage * perPage;
