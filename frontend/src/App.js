@@ -91,330 +91,329 @@ function App() {
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
 
           {/* ---------------------------ADMIN ROUTES--------------------------- */}
-{/* ---------------------------ADMIN ROUTES--------------------------- */}
-<Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
 
-<Route
-  path="/admin/dashboard"
-  element={
-    <AdminProtectedRoute>
-      <AdminDashboard />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Our Story */}
-<Route
-  path="/admin/manage-about"
-  element={
-    <AdminProtectedRoute>
-      <AdminManageAbout />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Our Story */}
+          <Route
+            path="/admin/manage-about"
+            element={
+              <AdminProtectedRoute>
+                <AdminManageAbout />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/manage-team"
-  element={
-    <AdminProtectedRoute>
-      <AdminManageTeam />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/manage-team"
+            element={
+              <AdminProtectedRoute>
+                <AdminManageTeam />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/manage-journey"
-  element={
-    <AdminProtectedRoute>
-      <AdminManageJourney />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/manage-journey"
+            element={
+              <AdminProtectedRoute>
+                <AdminManageJourney />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/manage-community"
-  element={
-    <AdminProtectedRoute>
-      <AdminManageCommunityImpact />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/manage-community"
+            element={
+              <AdminProtectedRoute>
+                <AdminManageCommunityImpact />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Destinations */}
-<Route
-  path="/admin/manage-destination"
-  element={
-    <AdminProtectedRoute>
-      <ManageDestination />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Destinations */}
+          <Route
+            path="/admin/manage-destination"
+            element={
+              <AdminProtectedRoute>
+                <ManageDestination />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/destinations"
-  element={
-    <AdminProtectedRoute>
-      <DestinationList />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/destinations"
+            element={
+              <AdminProtectedRoute>
+                <DestinationList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/destinations/new"
-  element={
-    <AdminProtectedRoute>
-      <AddDestination />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/destinations/new"
+            element={
+              <AdminProtectedRoute>
+                <AddDestination />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/destinations/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditDestination />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/destinations/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditDestination />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Experiences */}
-<Route
-  path="/admin/experiences"
-  element={
-    <AdminProtectedRoute>
-      <ExperienceList />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Experiences */}
+          <Route
+            path="/admin/experiences"
+            element={
+              <AdminProtectedRoute>
+                <ExperienceList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/experiences/new"
-  element={
-    <AdminProtectedRoute>
-      <AddExperience />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/experiences/new"
+            element={
+              <AdminProtectedRoute>
+                <AddExperience />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/experiences/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditExperience />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/experiences/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditExperience />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/experiences/view/:id"
-  element={
-    <AdminProtectedRoute>
-      <ExperienceView />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/experiences/view/:id"
+            element={
+              <AdminProtectedRoute>
+                <ExperienceView />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Blogs */}
-<Route
-  path="/admin/blogs"
-  element={
-    <AdminProtectedRoute>
-      <BlogList />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Blogs */}
+          <Route
+            path="/admin/blogs"
+            element={
+              <AdminProtectedRoute>
+                <BlogList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/blogs/new"
-  element={
-    <AdminProtectedRoute>
-      <AddBlog />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/blogs/new"
+            element={
+              <AdminProtectedRoute>
+                <AddBlog />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/blogs/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditBlog />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/blogs/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditBlog />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/blogs/view/:id"
-  element={
-    <AdminProtectedRoute>
-      <BlogView />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/blogs/view/:id"
+            element={
+              <AdminProtectedRoute>
+                <BlogView />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Tailor Made Tours */}
-<Route
-  path="/admin/tailor-made-tours"
-  element={
-    <AdminProtectedRoute>
-      <AdminTailorMade />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Tailor Made Tours */}
+          <Route
+            path="/admin/tailor-made-tours"
+            element={
+              <AdminProtectedRoute>
+                <AdminTailorMade />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Day Tours */}
-<Route
-  path="/admin/day-tours"
-  element={
-    <AdminProtectedRoute>
-      <DayTourList />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Day Tours */}
+          <Route
+            path="/admin/day-tours"
+            element={
+              <AdminProtectedRoute>
+                <DayTourList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/day-tours/new"
-  element={
-    <AdminProtectedRoute>
-      <AddDayTour />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/day-tours/new"
+            element={
+              <AdminProtectedRoute>
+                <AddDayTour />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/day-tours/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditDayTour />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/day-tours/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditDayTour />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Round Tours */}
-<Route
-  path="/admin/round-tours"
-  element={
-    <AdminProtectedRoute>
-      <RoundTourList />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Round Tours */}
+          <Route
+            path="/admin/round-tours"
+            element={
+              <AdminProtectedRoute>
+                <RoundTourList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/round-tours/new"
-  element={
-    <AdminProtectedRoute>
-      <AddRoundTour />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/round-tours/new"
+            element={
+              <AdminProtectedRoute>
+                <AddRoundTour />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/round-tours/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditRoundTour />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/round-tours/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditRoundTour />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Contact */}
-<Route
-  path="/admin/contacts"
-  element={
-    <AdminProtectedRoute>
-      <ContactList />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Contact */}
+          <Route
+            path="/admin/contacts"
+            element={
+              <AdminProtectedRoute>
+                <ContactList />
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/contacts/edit"
-  element={
-    <AdminProtectedRoute>
-      <EditContact />
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/contacts/edit"
+            element={
+              <AdminProtectedRoute>
+                <EditContact />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Admin Home */}
-<Route
-  path="/admin/manage-home"
-  element={
-    <AdminProtectedRoute>
-      <AdminManageHome />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Admin Home */}
+          <Route
+            path="/admin/manage-home"
+            element={
+              <AdminProtectedRoute>
+                <AdminManageHome />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Blog Comments */}
-<Route
-  path="/admin/blog-comments"
-  element={
-    <AdminProtectedRoute>
-      <BlogComments />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Blog Comments */}
+          <Route
+            path="/admin/blog-comments"
+            element={
+              <AdminProtectedRoute>
+                <BlogComments />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Contact Messages */}
-<Route
-  path="/admin/contact-messages"
-  element={
-    <AdminProtectedRoute>
-      <ContactMessages />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Contact Messages */}
+          <Route
+            path="/admin/contact-messages"
+            element={
+              <AdminProtectedRoute>
+                <ContactMessages />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Tailor Comments */}
-<Route
-  path="/admin/tailor-comments"
-  element={
-    <AdminProtectedRoute>
-      <TailorComments />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Tailor Comments */}
+          <Route
+            path="/admin/tailor-comments"
+            element={
+              <AdminProtectedRoute>
+                <TailorComments />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Tripadvisor Reviews */}
-<Route
-  path="/admin/tripadvisor-reviews"
-  element={
-    <AdminProtectedRoute>
-      <TripadvisorReviews />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Tripadvisor Reviews */}
+          <Route
+            path="/admin/tripadvisor-reviews"
+            element={
+              <AdminProtectedRoute>
+                <TripadvisorReviews />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Day Tour Bookings */}
-<Route
-  path="/admin/day-tour-booking"
-  element={
-    <AdminProtectedRoute>
-      <DayTourBookingAdmin />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Day Tour Bookings */}
+          <Route
+            path="/admin/day-tour-booking"
+            element={
+              <AdminProtectedRoute>
+                <DayTourBookingAdmin />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Round Tour Bookings */}
-<Route
-  path="/admin/round-tour-booking"
-  element={
-    <AdminProtectedRoute>
-      <RoundTourBookingAdmin />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Round Tour Bookings */}
+          <Route
+            path="/admin/round-tour-booking"
+            element={
+              <AdminProtectedRoute>
+                <RoundTourBookingAdmin />
+              </AdminProtectedRoute>
+            }
+          />
 
-{/* Customize Tour Bookings */}
-<Route
-  path="/admin/customize-tour"
-  element={
-    <AdminProtectedRoute>
-      <CustomizeTourBookingAdmin />
-    </AdminProtectedRoute>
-  }
-/>
+          {/* Customize Tour Bookings */}
+          <Route
+            path="/admin/customize-tour"
+            element={
+              <AdminProtectedRoute>
+                <CustomizeTourBookingAdmin />
+              </AdminProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
