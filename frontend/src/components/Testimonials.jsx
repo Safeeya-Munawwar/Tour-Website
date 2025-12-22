@@ -54,7 +54,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="w-full py-24 bg-white font-sans">
+    <section className="w-full py-24 bg-slate-100 font-sans">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20">
         {/* LEFT CONTENT */}
         <div>

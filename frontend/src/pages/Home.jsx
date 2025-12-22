@@ -10,6 +10,7 @@ import Testimonials from '../components/Testimonials'
 import Stats from '../components/Stats'
 import Video1 from '../components/Video1'
 import Stories from '../components/Stories'
+import ExploreMapSection from '../components/ExploreMapSection';
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
       <Destination/>
       <Video1/>
       <Stories/>
+      <ExploreMapSection />
       <Testimonials/>
     
      

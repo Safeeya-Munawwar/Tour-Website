@@ -21,7 +21,7 @@ export default function ExperienceSection() {
   }, []);
 
   return (
-    <section className="w-full bg-slate-100 py-16">
+    <section className="w-full bg-white py-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Subtitle */}
         <p className="text-center text-gray-500 text-lg font-semibold tracking-wide">
