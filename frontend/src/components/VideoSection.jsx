@@ -80,9 +80,7 @@ export default function VideoSection() {
 
         {/* RIGHT VIDEO */}
         <div className="lg:col-span-6 flex justify-center lg:justify-end">
-          <div
-            className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]"
-          >
+          <div className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]">
             {homeInfo.video && (
               <div className="relative w-full h-full overflow-hidden">
                 {/* Blurred background video */}

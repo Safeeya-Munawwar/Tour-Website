@@ -58,9 +58,9 @@ const TestimonialForm = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto space-y-5 flex flex-col items-center">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-2">
-        Share Your Experience With Us
+    <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
+      <h2 className="text-2xl font-bold text-center text-[#0B2545]">
+        Share Your Experience With Us 
       </h2>
 
       <form
@@ -159,7 +159,7 @@ const TestimonialForm = () => {
           </p>
         )}
       </form>
-    </section>
+    </div>
   );
 };
 

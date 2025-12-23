@@ -1,22 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BookTour from "./BookTour";
+import { axiosInstance } from "../lib/axios";
 
 export default function Video1() {
   const [showForm, setShowForm] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+
+  // Fetch video from backend
+  const fetchVideo = async () => {
+    try {
+      const res = await axiosInstance.get("/home");
+      if (res.data && res.data.info && res.data.info.video) {
+        setVideoUrl(res.data.info.video);
+      }
+    } catch (err) {
+      console.error("Failed to fetch video:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideo();
+  }, []);
 
   return (
     <>
       <section className="relative w-full h-screen overflow-hidden">
         {/* Background Video */}
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src="/tr.mp4" type="video/mp4" />
-        </video>
+        {videoUrl && (
+          <video
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        )}
 
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
@@ -49,22 +69,20 @@ export default function Video1() {
 
       {/* Modal Overlay */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]">
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                          w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl 
-                          p-6 z-[20001] flex flex-col overflow-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center">
+          <div className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden">
             {/* Close Button */}
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowForm(false)}
-                className="text-3xl font-bold text-gray-600 hover:text-black"
-              >
-                &times;
-              </button>
-            </div>
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-black z-10"
+            >
+              &times;
+            </button>
 
-            {/* Booking Form */}
-            <BookTour />
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-auto p-6 relative rounded-2xl">
+              <BookTour />
+            </div>
           </div>
         </div>
       )}

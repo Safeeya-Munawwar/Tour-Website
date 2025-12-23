@@ -61,16 +61,16 @@ export default function BlogDetail() {
       </div>
     );
 
-  // --- SPLIT CONTENT INTO 5 PARAGRAPHS ---
-  let paragraphs = [];
-  if (blog.content) {
-    const sentences = blog.content.match(/[^\.!\?]+[\.!\?]+/g) || [blog.content];
-    for (let i = 0; i < 5; i++) {
-      const start = Math.floor((i * sentences.length) / 5);
-      const end = Math.floor(((i + 1) * sentences.length) / 5);
-      paragraphs.push(sentences.slice(start, end).join(" ").trim());
-    }
+// --- SPLIT CONTENT INTO 5 PARAGRAPHS ---
+let paragraphs = [];
+if (blog.content) {
+  const sentences = blog.content.match(/[^.!?]+[.!?]+/g) || [blog.content];
+  for (let i = 0; i < 5; i++) {
+    const start = Math.floor((i * sentences.length) / 5);
+    const end = Math.floor(((i + 1) * sentences.length) / 5);
+    paragraphs.push(sentences.slice(start, end).join(" ").trim());
   }
+}
 
   const handleCommentChange = (e) => {
     const { name, value } = e.target;

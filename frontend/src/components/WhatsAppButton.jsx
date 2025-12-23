@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   FaWhatsapp,
-  FaGlobeAmericas,
-  FaStar,
-  FaTimes,
+  
 } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";

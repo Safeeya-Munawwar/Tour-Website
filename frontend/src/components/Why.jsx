@@ -67,32 +67,33 @@ export default function Why() {
             </div>
           ))}
         </div>
- 
+
         {/* Button */}
         <button
-  onClick={() => setShowForm(true)}
-  className="mt-16 bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition"
->
-  Book Now
-</button>
+          onClick={() => setShowForm(true)}
+          className="mt-16 bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition"
+        >
+          Book Now
+        </button>
 
         {showForm && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]">
-    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto">
-      {/* Close button */}
-      <div className="flex justify-end">
-      <button
-        onClick={() => setShowForm(false)}
-        className="text-3xl font-bold text-gray-600 hover:text-black"
-      >
-        &times;
-      </button>
-</div>
-      {/* Booking Form */}
-      <BookTour />
-    </div>
-  </div>
-)}
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center">
+            <div className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden">
+              {/* Close button */}
+              <button
+                onClick={() => setShowForm(false)}
+                className="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-black z-10"
+              >
+                &times;
+              </button>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-auto p-6 relative rounded-2xl">
+                {/* Booking Form */}
+                <BookTour />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

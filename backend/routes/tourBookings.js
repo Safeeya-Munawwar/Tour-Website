@@ -30,11 +30,11 @@ router.post("/", async (req, res) => {
 });
 
 // ---------------- GET ALL BOOKINGS (ADMIN) ----------------
-router.get("/", async (req, res) => {
+router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await TourBooking.find()
       .sort({ createdAt: -1 })
-      .populate("tourId", "title location");
+      .populate("tourId", "title location days itinerary"); // populate more fields if needed
 
     res.json({ success: true, bookings });
   } catch (err) {

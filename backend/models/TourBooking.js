@@ -11,7 +11,7 @@ const TourBookingSchema = new mongoose.Schema(
     tourId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      refPath: "tourRef",
+      refPath: "tourRef", // dynamic reference based on tourRef
     },
 
     tourRef: {
@@ -24,10 +24,14 @@ const TourBookingSchema = new mongoose.Schema(
     email: { type: String, required: true },
     phone: { type: String, required: true },
 
-    members: { type: Number, default: 1 },
-    startDate: String,
-    startTime: String,
-    message: String,
+    adults: { type: Number, default: 1 },
+    children: { type: Number, default: 0 },
+    members: { type: Number }, // optional: can calculate as adults + children
+
+    pickupLocation: { type: String },
+    startDate: { type: String },
+    startTime: { type: String },
+    message: { type: String },
 
     status: {
       type: String,
@@ -37,5 +41,11 @@ const TourBookingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Middleware to calculate members automatically
+TourBookingSchema.pre("save", function (next) {
+  this.members = Number(this.adults || 0) + Number(this.children || 0);
+  next();
+});
 
 module.exports = mongoose.model("TourBooking", TourBookingSchema);
