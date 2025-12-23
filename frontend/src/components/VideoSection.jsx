@@ -3,7 +3,6 @@ import { axiosInstance } from "../lib/axios";
 
 export default function VideoSection() {
   const videoRef = useRef(null);
-  const containerRef = useRef(null);
   const [homeInfo, setHomeInfo] = useState({
     title: "",
     subtitle: "",
@@ -32,28 +31,22 @@ export default function VideoSection() {
     fetchHomeData();
   }, []);
 
-  // autoplay only when visible
+  // Auto-play audio on mount (persistent)
   useEffect(() => {
     const videoEl = videoRef.current;
-    if (!videoEl || typeof IntersectionObserver === "undefined") return;
+    if (!videoEl) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            videoEl.muted = true;
-            videoEl.play().catch(() => {});
-          } else {
-            videoEl.pause();
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    // Some browsers block autoplay with sound, so we attempt to play and catch errors
+    const playVideo = async () => {
+      try {
+        await videoEl.play();
+      } catch (err) {
+        console.warn("Autoplay failed. User interaction may be required.", err);
+      }
+    };
 
-    if (containerRef.current) io.observe(containerRef.current);
-    return () => io.disconnect();
-  }, []);
+    playVideo();
+  }, [homeInfo.video]);
 
   return (
     <section className="w-full bg-white py-16 md:py-32">
@@ -80,29 +73,47 @@ export default function VideoSection() {
             </h1>
 
             <p className="text-base sm:text-lg text-gray-500 leading-relaxed text-justify">
-  {homeInfo.description}
-</p>
-
+              {homeInfo.description}
+            </p>
           </div>
         </div>
 
         {/* RIGHT VIDEO */}
         <div className="lg:col-span-6 flex justify-center lg:justify-end">
           <div
-            ref={containerRef}
             className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]"
           >
             {homeInfo.video && (
-              <video
-                ref={videoRef}
-                src={homeInfo.video}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                className="w-full h-full object-cover block"
-              />
+              <div className="relative w-full h-full overflow-hidden">
+                {/* Blurred background video */}
+                <video
+                  src={homeInfo.video}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="absolute top-0 left-0 w-full h-full object-cover filter blur-xl brightness-50"
+                />
+
+                {/* Main video with audio */}
+                <video
+                  ref={videoRef}
+                  src={homeInfo.video}
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="relative w-full h-full object-contain"
+                  controls={false} // hide controls if you want automatic audio
+                  // muted removed so audio plays
+                />
+
+                {/* Watermark / text */}
+                <div className="absolute bottom-3 right-4 text-white text-sm md:text-base font-semibold opacity-60 pointer-events-none select-none">
+                  Net Lanka Travels
+                </div>
+              </div>
             )}
           </div>
         </div>

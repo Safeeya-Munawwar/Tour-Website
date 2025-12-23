@@ -11,7 +11,9 @@ export default function BookTour() {
     name: "",
     email: "",
     phone: "",
-    members: 1,
+    adults: 1,
+    children: 0,
+    pickupLocation: "",
     startDate: "",
     startTime: "",
     message: "",
@@ -79,7 +81,9 @@ export default function BookTour() {
         name: "",
         email: "",
         phone: "",
-        members: 1,
+        adults: 1,
+        children: 0,
+        pickupLocation: "",
         startDate: "",
         startTime: "",
         message: "",
@@ -97,39 +101,45 @@ export default function BookTour() {
 
   // ---------------- UI ----------------
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto">
+    <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
       <h2 className="text-2xl font-bold text-center text-[#0B2545]">
         Book a Tour
       </h2>
 
       {/* TOUR TYPE */}
-      <select
-        value={tourType}
-        onChange={(e) => {
-          setTourType(e.target.value);
-          setSelectedTour(null);
-        }}
-        className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-      >
-        <option value="">Select Tour Type</option>
-        <option value="day">Day Tour</option>
-        <option value="round">Round Tour</option>
-      </select>
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">Tour Type</label>
+        <select
+          value={tourType}
+          onChange={(e) => {
+            setTourType(e.target.value);
+            setSelectedTour(null);
+          }}
+          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+        >
+          <option value="">Select Tour Type</option>
+          <option value="day">Day Tour</option>
+          <option value="round">Round Tour</option>
+        </select>
+      </div>
 
       {/* TOUR LIST */}
       {tourType && (
-        <select
-          value={selectedTour?._id || ""}
-          onChange={(e) => handleTourSelect(e.target.value)}
-          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-        >
-          <option value="">Select Tour</option>
-          {(tourType === "day" ? dayTours : roundTours).map((tour) => (
-            <option key={tour._id} value={tour._id}>
-              {tour.title} – {tour.location}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium">Select Tour</label>
+          <select
+            value={selectedTour?._id || ""}
+            onChange={(e) => handleTourSelect(e.target.value)}
+            className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+          >
+            <option value="">Select Tour</option>
+            {(tourType === "day" ? dayTours : roundTours).map((tour) => (
+              <option key={tour._id} value={tour._id}>
+                {tour.title} – {tour.location}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
 
       {/* TOUR DETAILS */}
@@ -151,8 +161,7 @@ export default function BookTour() {
                 <ul className="list-decimal list-inside text-sm">
                   {selectedTour.itinerary.map((item, i) => (
                     <li key={i} className="mb-1">
-                      <strong>Day {selectedTour.day}:</strong>{" "}
-                      {selectedTour.title} — {selectedTour.desc}
+                      <strong>Day {i + 1}:</strong> {item.title} — {item.desc}
                     </li>
                   ))}
                 </ul>
@@ -163,54 +172,106 @@ export default function BookTour() {
 
       {/* FORM */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Name, Email, Phone */}
         {["name", "email", "phone"].map((field) => (
+          <div key={field} className="flex flex-col text-left">
+            <label className="mb-1 font-medium text-left">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type={field === "email" ? "email" : "text"}
+              name={field}
+              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+        ))}
+
+        {/* Number of Travellers */}
+        <div className="flex gap-4">
+          <div className="flex-1 flex flex-col text-left">
+            <label className="mb-1 font-medium text-left">Adults</label>
+            <input
+              type="number"
+              name="adults"
+              min="1"
+              value={formData.adults}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+          <div className="flex-1 flex flex-col text-left">
+            <label className="mb-1 font-medium text-left">Children</label>
+            <input
+              type="number"
+              name="children"
+              min="0"
+              value={formData.children}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Pickup Location */}
+        <div className="flex flex-col text-left">
+          <label className="mb-1 font-medium text-left">Pickup Location</label>
           <input
-            key={field}
-            type={field === "email" ? "email" : "text"}
-            name={field}
-            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            value={formData[field]}
+            type="text"
+            name="pickupLocation"
+            placeholder="Enter pickup location"
+            value={formData.pickupLocation}
             onChange={handleChange}
             required
             className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
           />
-        ))}
+        </div>
 
-        <input
-          type="number"
-          name="members"
-          min="1"
-          value={formData.members}
-          onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-        />
+        {/* Date & Time */}
+        <div className="flex gap-4">
+          <div className="flex-1 flex flex-col text-left">
+            <label className="mb-1 font-medium text-left">Pickup Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+          <div className="flex-1 flex flex-col text-left">
+            <label className="mb-1 font-medium text-left">Pickup Time</label>
+            <input
+              type="time"
+              name="startTime"
+              value={formData.startTime}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+        </div>
 
-        <input
-          type="date"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-        />
+        {/* Additional Message */}
+        <div className="flex flex-col text-left">
+          <label className="mb-1 font-medium text-left">
+            Additional Message
+          </label>
+          <textarea
+            name="message"
+            placeholder="Additional Message"
+            value={formData.message}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
+          />
+        </div>
 
-        <input
-          type="time"
-          name="startTime"
-          value={formData.startTime}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-        />
-
-        <textarea
-          name="message"
-          placeholder="Additional Message"
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
-        />
-
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
