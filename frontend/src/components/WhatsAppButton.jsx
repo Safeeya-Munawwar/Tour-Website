@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FaWhatsapp,
   FaGlobeAmericas,
-  FaPlane,
   FaStar,
-  FaCompass,
   FaChevronUp,
 } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
