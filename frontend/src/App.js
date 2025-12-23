@@ -59,6 +59,7 @@ import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
 import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
 import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import ScrollToTop from "./components/ScrollToTop";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 function App() {
   const location = useLocation();
@@ -70,6 +71,7 @@ function App() {
     <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
       <ScrollToTop /> 
+      <WhatsAppButton />
       <main className="flex-grow">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}

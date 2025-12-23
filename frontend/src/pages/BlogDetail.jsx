@@ -160,7 +160,7 @@ export default function BlogDetail() {
             <img
               src={imgSrc}
               alt={`Section ${idx + 1}`}
-              className="w-full h-[500px] object-cover"
+              className="w-full h-auto object-cover"
             />
           </div>
         </div>

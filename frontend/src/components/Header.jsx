@@ -33,7 +33,7 @@ export default function Header() {
 
   return (
     <header
-      className="w-full h-[600px] sm:h-[650px] md:h-[750px] flex flex-col items-center justify-center relative top-0"
+      className="w-full h-[650px] sm:h-[700px] md:h-[750px] flex flex-col items-center justify-center relative top-0"
       style={{
         backgroundImage: `url('/images/12.jpg')`,
         backgroundSize: "cover",
