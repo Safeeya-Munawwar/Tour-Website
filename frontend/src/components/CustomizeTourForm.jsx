@@ -1,26 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 
 const TailorMadeForm = () => {
   const [step, setStep] = useState(1);
   const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [destinations, setDestinations] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     fullName: "",
-    nationality: "",
+    country: "",
     email: "",
     phone: "",
     pickupLocation: "",
     dropLocation: "",
     startDate: "",
     endDate: "",
-    travelers: "",
+    adults: 1,
+    children: 0,
     budget: "",
     currency: "USD",
     notes: "",
-    interests: [],
+    selectedDestinations: [],
   });
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const res = await axiosInstance.get("/destination");
+        setDestinations(res.data.destinations || []);
+      } catch (err) {
+        console.error("Error fetching destinations:", err);
+      }
+    };
+    fetchDestinations();
+  }, []);  
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -37,47 +51,69 @@ const TailorMadeForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleInterestChange = (e) => {
+  const handleDestinationChange = (e) => {
     const { value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      interests: checked
-        ? [...prev.interests, value]
-        : prev.interests.filter((i) => i !== value),
+      selectedDestinations: checked
+        ? [...prev.selectedDestinations, value]
+        : prev.selectedDestinations.filter((d) => d !== value),
     }));
+  };  
+
+  const validateForm = () => {
+    // required fields for submission
+    const requiredFields = [
+      "title",
+      "fullName",
+      "country",
+      "email",
+      "phone",
+      "pickupLocation",
+      "dropLocation",
+      "startDate",
+      "endDate",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        return false;
+      }
+    }
+
+    if (!captchaChecked) return false;
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!captchaChecked) {
-      toast.error("Please verify captcha!");
+    if (!validateForm()) {
+      toast.error("Please fill all required fields and verify captcha!");
       return;
     }
 
     try {
-      await axiosInstance.post(
-        "/tailor-made-tours/inquiry",
-        formData
-      );
+      await axiosInstance.post("/tailor-made-tours/inquiry", formData);
       toast.success("Your trip plan has been submitted!");
 
-      // Reset form after a short delay to prevent toast conflicts
       setTimeout(() => {
         setFormData({
           title: "",
           fullName: "",
-          nationality: "",
+          country: "",
           email: "",
           phone: "",
           pickupLocation: "",
           dropLocation: "",
           startDate: "",
           endDate: "",
-          travelers: "",
+          adults: 1,
+          children: 0,
           budget: "",
-          currency: "USD", // add this
+          currency: "USD",
           notes: "",
-          interests: [],
+          selectedDestinations: [],
         });
         setStep(1);
         setCaptchaChecked(false);
@@ -105,7 +141,7 @@ const TailorMadeForm = () => {
       </p>
 
       <div className="max-w-xl mx-auto px-3 md:px-5">
-        {/* Step 1: Personal Info */}
+        {/* Step 1 */}
         {step === 1 && (
           <form className="space-y-4">
             <h2 className="text-xl font-bold mb-4">
@@ -160,15 +196,15 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Nationality*
+                Country*
               </label>
               <input
                 type="text"
-                name="nationality"
-                value={formData.nationality}
+                name="country"
+                value={formData.country}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md p-2"
-                placeholder="Your nationality"
+                placeholder="Your country name"
               />
             </div>
 
@@ -221,7 +257,7 @@ const TailorMadeForm = () => {
           </form>
         )}
 
-        {/* Step 2: Trip Details */}
+        {/* Step 2 */}
         {step === 2 && (
           <form className="space-y-4">
             <h2 className="text-xl font-bold mb-4">
@@ -283,54 +319,62 @@ const TailorMadeForm = () => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-gray-700 font-semibold mb-1">
-                Number of Travelers*
-              </label>
-              <input
-                type="number"
-                name="travelers"
-                value={formData.travelers}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2"
-                placeholder="Number of travelers"
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Travel Interests
-              </label>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {[
-                  "Beaches",
-                  "Wildlife",
-                  "Cultural Sites",
-                  "Adventure",
-                  "Nature & Tea Country",
-                  "Luxury & Relaxation",
-                ].map((interest) => (
-                  <label key={interest} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      value={interest}
-                      checked={formData.interests.includes(interest)}
-                      onChange={handleInterestChange}
-                      className="accent-blue-600"
-                    />
-                    <span>{interest}</span>
-                  </label>
-                ))}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Adults*
+                </label>
+                <input
+                  type="number"
+                  name="adults"
+                  value={formData.adults}
+                  min={1}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Children
+                </label>
+                <input
+                  type="number"
+                  name="children"
+                  value={formData.children}
+                  min={0}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
               </div>
             </div>
 
+            {/* Destinations */}
+            <div>
+  <label className="block text-gray-700 font-semibold mb-2">
+    Select Destinations / Travel Interests
+  </label>
+  <div className="grid grid-cols-2 gap-2 text-sm">
+    {destinations.map((d) => (
+      <label key={d._id} className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          value={d.title || d.name} // Use title if name is undefined
+          checked={formData.selectedDestinations.includes(d.title || d.name)}
+          onChange={handleDestinationChange}
+          className="accent-blue-600"
+        />
+        <span>{d.title || d.name}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+            {/* Estimated Budget */}
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Estimated Budget (Per Person or Total)
+                Estimated Budget
               </label>
-
               <div className="flex gap-2">
-                {/* Currency */}
                 <select
                   name="currency"
                   value={formData.currency}
@@ -342,22 +386,19 @@ const TailorMadeForm = () => {
                   <option value="EUR">EUR (€)</option>
                   <option value="GBP">GBP (£)</option>
                   <option value="AUD">AUD (A$)</option>
+                  <option value="No Idea">No Idea</option>
                 </select>
 
-                {/* Amount */}
                 <input
                   type="number"
                   name="budget"
                   value={formData.budget}
                   onChange={handleChange}
-                  placeholder="Enter amount"
+                  placeholder="Enter amount or leave blank"
                   className="w-full border border-gray-300 rounded-md p-2"
+                  disabled={formData.currency === "No Idea"}
                 />
               </div>
-
-              <p className="text-xs text-gray-500 mt-1">
-                Enter an approximate budget. We will tailor your trip to fit it.
-              </p>
             </div>
 
             <div>
@@ -407,7 +448,7 @@ const TailorMadeForm = () => {
                 <strong>Full Name:</strong> {formData.fullName}
               </p>
               <p>
-                <strong>Nationality:</strong> {formData.nationality}
+                <strong>Country:</strong> {formData.country}
               </p>
               <p>
                 <strong>Email:</strong> {formData.email}
@@ -426,20 +467,25 @@ const TailorMadeForm = () => {
                 {formData.endDate}
               </p>
               <p>
-                <strong>Number of Travelers:</strong> {formData.travelers}
+                <strong>Adults:</strong> {formData.adults}
               </p>
               <p>
-                <strong>Travel Interests:</strong>{" "}
-                {formData.interests.length > 0
-                  ? formData.interests.join(", ")
-                  : "Not specified"}
+                <strong>Children:</strong> {formData.children}
               </p>
+              <p>
+  <strong>Destinations / Interests:</strong>{" "}
+  {formData.selectedDestinations.length > 0
+    ? formData.selectedDestinations.join(", ")
+    : "Not specified"}
+</p>
               <p>
                 <strong>Estimated Budget:</strong>{" "}
                 {formData.budget
                   ? `${formData.currency || "USD"} ${Number(
                       formData.budget
                     ).toLocaleString()}`
+                  : formData.currency === "No Idea"
+                  ? "No Idea"
                   : "Not specified"}
               </p>
               <p>

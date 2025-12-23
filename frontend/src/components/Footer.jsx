@@ -116,7 +116,7 @@ export default function Footer() {
             experiences.
           </p>
           <div className="flex gap-4 mt-3">
-          {contact?.socialMedia?.map((sm, i) => {
+            {contact?.socialMedia?.map((sm, i) => {
               const Icon = socialIcons[sm.platform?.toLowerCase()];
               if (!Icon) return null;
 
@@ -142,7 +142,10 @@ export default function Footer() {
             {contact?.phone && (
               <div className="flex gap-3">
                 <FaPhoneAlt className="mt-1" />
-                <a href={`tel:${contact.phone}`} className="hover:text-blue-300">
+                <a
+                  href={`tel:${contact.phone}`}
+                  className="hover:text-blue-300"
+                >
                   {contact.phone}
                 </a>
               </div>
@@ -163,7 +166,10 @@ export default function Footer() {
             {contact?.emails?.[0] && (
               <div className="flex gap-3">
                 <FaEnvelope className="mt-1" />
-                <a href={`mailto:${contact.emails[0]}`} className="hover:text-blue-400">
+                <a
+                  href={`mailto:${contact.emails[0]}`}
+                  className="hover:text-blue-400"
+                >
                   {contact.emails[0]}
                 </a>
               </div>
@@ -207,7 +213,9 @@ export default function Footer() {
 
         {/* 4) NEWSLETTER SUBSCRIPTION */}
         <div>
-          <h3 className="text-xl font-semibold mb-6">Subscribe to our Newsletter</h3>
+          <h3 className="text-xl font-semibold mb-6">
+            Subscribe to our Newsletter
+          </h3>
           <p className="text-gray-300 text-sm mb-4">
             Get updates, offers, and travel tips directly in your inbox.
           </p>
