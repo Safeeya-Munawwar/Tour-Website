@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const ContactSchema = new mongoose.Schema(
   {
-    phone: { type: String, default: "+94 XXX XXX XXX" },
-    whatsapp: { type: String, default: "+94 XXX XXX XXX" },
+    phone: { type: String, default: "+94 776 301 329" },
+    whatsapp: { type: String, default: "+94 776 301 329" },
 
     emails: { type: [String], default: ["example@gmail.com"] },
 

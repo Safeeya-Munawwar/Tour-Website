@@ -19,6 +19,20 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("94729171089"); // fallback number
+
+  // Fetch WhatsApp number from backend
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => {
+        const p = res.data?.whatsapp || res.data?.phone;
+        if (p) setWhatsappNumber(p.replace(/\D/g, ""));
+      })
+      .catch(() => {
+        // fallback already set
+      });
+  }, []);
 
   // Update members dynamically
   useEffect(() => {
@@ -45,12 +59,12 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     if (Number(formData.adults) < 1) newErrors.adults = "At least 1 adult is required";
     if (Number(formData.children) < 0) newErrors.children = "Children cannot be negative";
     if (!formData.pickupLocation.trim()) newErrors.pickupLocation = "Pickup location is required";
-    if (!formData.startDate) {
-      newErrors.startDate = "Pickup date is required";
-    } else {
+    if (!formData.startDate) newErrors.startDate = "Pickup date is required";
+    else {
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
       const selected = new Date(formData.startDate);
-      if (selected < today.setHours(0, 0, 0, 0)) newErrors.startDate = "Date cannot be in the past";
+      if (selected < today) newErrors.startDate = "Date cannot be in the past";
     }
     if (!formData.startTime) newErrors.startTime = "Pickup time is required";
     return newErrors;
@@ -106,6 +120,49 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     }
   };
 
+  // Professional WhatsApp Booking Message
+  const sendBookingViaWhatsApp = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setResponseMsg("Please fix the errors above before sending to WhatsApp");
+      setIsError(true);
+      return;
+    }
+
+    const message = `
+* Net Lanka Travel - Day Tour Booking *
+
+*Tour:* ${tourTitle}
+*Location:* ${tourLocation}
+
+*Customer Details:*
+ -Name: ${formData.name}
+ -Email: ${formData.email}
+ -Phone: ${formData.phone}
+
+*Participants:*
+ -Adults: ${formData.adults}
+ -Children: ${formData.children}
+ -Total Members: ${formData.members}
+
+*Pickup & Schedule:*
+ -Pickup Location: ${formData.pickupLocation}
+ -Pickup Date: ${formData.startDate}
+ -Pickup Time: ${formData.startTime}
+
+*Additional Message:*
+${formData.message || "–"}
+
+*We will contact you soon*
+
+*Thank you for booking with Net Lanka Travel!*
+    `;
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto">
       <h2 className="text-2xl font-bold text-center text-[#0B2545] mb-4">
@@ -116,7 +173,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Name */}
         <div>
-          <label htmlFor="name" className="font-medium text-left mb-1">
+          <label htmlFor="name" className="font-medium mb-1">
             Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -135,7 +192,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="font-medium text-left mb-1">
+          <label htmlFor="email" className="font-medium mb-1">
             Email <span className="text-red-500">*</span>
           </label>
           <input
@@ -154,7 +211,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
 
         {/* Phone */}
         <div>
-          <label htmlFor="phone" className="font-medium text-left mb-1">
+          <label htmlFor="phone" className="font-medium mb-1">
             Phone <span className="text-red-500">*</span>
           </label>
           <input
@@ -287,12 +344,22 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
           Final total is confirmed upon booking.
         </p>
 
+        {/* Submit to Backend */}
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+          className="w-full bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
         >
           {loading ? "Submitting..." : "Book Tour"}
+        </button>
+
+        {/* WhatsApp Booking */}
+        <button
+          type="button"
+          onClick={sendBookingViaWhatsApp}
+          className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+        >
+          Book Now via WhatsApp
         </button>
 
         {responseMsg && (

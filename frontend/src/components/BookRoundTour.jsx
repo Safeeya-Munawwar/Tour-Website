@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import { axiosInstance } from "../lib/axios";
 
 export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
@@ -19,6 +19,20 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("94729171089"); // fallback
+
+  // Fetch WhatsApp number from backend
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => {
+        const p = res.data?.whatsapp || res.data?.phone;
+        if (p) setWhatsappNumber(p.replace(/\D/g, ""));
+      })
+      .catch(() => {
+        // fallback number already set
+      });
+  }, []);
 
   // Auto-calculate members
   useEffect(() => {
@@ -46,9 +60,8 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     if (Number(formData.adults) < 1) newErrors.adults = "At least 1 adult is required";
     if (Number(formData.children) < 0) newErrors.children = "Children cannot be negative";
 
-    if (!formData.startDate) {
-      newErrors.startDate = "Start date is required";
-    } else {
+    if (!formData.startDate) newErrors.startDate = "Start date is required";
+    else {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const selected = new Date(formData.startDate);
@@ -109,6 +122,49 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
       setLoading(false);
     }
   };
+
+  // Professional WhatsApp Booking Message
+  const sendBookingViaWhatsApp = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setResponseMsg("Please fix the errors above before sending to WhatsApp");
+      setIsError(true);
+      return;
+    }
+
+    const message = `
+* Net Lanka Travel - Tour Booking *
+
+*Tour:* ${tourTitle}
+*Location:* ${tourLocation}
+
+*Customer Details:*
+ -Name: ${formData.name}
+ -Email: ${formData.email}
+ -Phone: ${formData.phone}
+
+*Participants:*
+ -Adults: ${formData.adults}
+ -Children: ${formData.children}
+ -Total Members: ${formData.members}
+
+*Pickup & Schedule:*
+ -Pickup Location: ${formData.pickupLocation}
+ -Start Date: ${formData.startDate}
+ -Start Time: ${formData.startTime}
+
+*Additional Message:*
+${formData.message || "–"}
+
+*We will contact you soon *
+
+*Thank you for booking with Net Lanka Travel!*
+    `;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
 
   return (
     <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto">
@@ -292,12 +348,22 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
           Final total is confirmed upon booking.
         </p>
 
+        {/* Submit to Backend */}
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+          className="w-full bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
         >
           {loading ? "Submitting..." : "Book Tour"}
+        </button>
+
+        {/* Professional WhatsApp Booking */}
+        <button
+          type="button"
+          onClick={sendBookingViaWhatsApp}
+          className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+        >
+          Book Now via WhatsApp
         </button>
 
         {responseMsg && (
