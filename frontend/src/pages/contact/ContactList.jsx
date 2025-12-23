@@ -272,7 +272,6 @@ export default function AdminContactList() {
               <tr>
                 <th className="p-3 border border-[#1a354e]">Name</th>
                 <th className="p-3 border border-[#1a354e]">Email</th>
-                <th className="p-3 border border-[#1a354e]">Rating</th>
                 <th className="p-3 border border-[#1a354e]">Message</th>
                 <th className="p-3 border border-[#1a354e]">Date</th>
                 <th className="p-3 border border-[#1a354e]">Action</th>
@@ -295,9 +294,6 @@ export default function AdminContactList() {
                       {msg.firstName} {msg.lastName}
                     </td>
                     <td className="p-3 border border-[#2E5B84]">{msg.email}</td>
-                    <td className="p-3 border border-[#2E5B84]">
-                      {msg.rating || "-"}
-                    </td>
                     <td className="p-3 border border-[#2E5B84]">
                       {msg.message}
                     </td>

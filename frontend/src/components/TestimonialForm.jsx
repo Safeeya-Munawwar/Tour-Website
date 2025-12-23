@@ -77,7 +77,7 @@ const TestimonialForm = () => {
         {/* Title */}
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="title" className="font-medium text-[#0B2545]">
-            Title
+            Title <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -98,7 +98,7 @@ const TestimonialForm = () => {
         {/* Message */}
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="text" className="font-medium text-[#0B2545]">
-            Message
+            Message <span className="text-red-500">*</span>
           </label>
           <textarea
             id="text"
@@ -119,7 +119,7 @@ const TestimonialForm = () => {
         {/* Name */}
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="name" className="font-medium text-[#0B2545]">
-            Your Name
+            Your Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -140,7 +140,7 @@ const TestimonialForm = () => {
         {/* Email */}
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="email" className="font-medium text-[#0B2545]">
-            Your Email
+            Your Email <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -161,7 +161,7 @@ const TestimonialForm = () => {
         {/* Rating */}
         <div className="w-full flex flex-col gap-1">
           <label className="font-medium text-[#0B2545]">
-            Rating
+            Rating <span className="text-red-500">*</span>
           </label>
           <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (

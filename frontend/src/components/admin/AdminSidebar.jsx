@@ -19,7 +19,7 @@ import {
   CalendarCheck,
   LogOut,
 } from "lucide-react";
-import { FaTripadvisor } from "react-icons/fa";
+import { FaTripadvisor, FaStarHalfAlt, } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
@@ -323,14 +323,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
               {/* Contact Form Messages */}
               <NavLink
-                to="/admin/contact-messages"
+                to="/admin/tour-reviews"
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-2 py-2 rounded transition ${
                     isActive ? activeClass : defaultClass
                   }`
                 }
               >
-                <Mail size={16} /> Contact Messages
+                <FaStarHalfAlt size={16} /> Tour Reviews
               </NavLink>
 
               {/* Tailor-Made Tour Comments */}

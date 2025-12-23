@@ -7,16 +7,17 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
+import TourReview from "../components/TourReview";
 
 export default function RoundTourDetail() {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState({});
   const [showForm, setShowForm] = useState(false);
-
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
   const [contact, setContact] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   useEffect(() => {
     axiosInstance
@@ -28,9 +29,7 @@ export default function RoundTourDetail() {
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axiosInstance.get(
-          `/round-tours/${id}`
-        );
+        const res = await axiosInstance.get(`/round-tours/${id}`);
         if (res.data.success) {
           setTour(res.data.tour);
           setDetails(res.data.details || {});
@@ -59,41 +58,40 @@ export default function RoundTourDetail() {
     <div className="font-poppins">
       {/* ================= HERO ================= */}
       <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
-  <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
-    <img
-      src={details.heroImage || tour.img}
-      alt={tour.title}
-      className="absolute inset-0 w-full h-full object-cover"
-    />
-  </div>
+        <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
+          <img
+            src={details.heroImage || tour.img}
+            alt={tour.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
 
-  <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
-    <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
-      {details.heroTitle || tour.title}
-      <span className="block text-lg md:text-2xl text-[#D4AF37] mt-1">
-        {tour.days}
-      </span>
-    </h1>
+        <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
+          <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
+            {details.heroTitle || tour.title}
+            <span className="block text-lg md:text-2xl text-[#D4AF37] mt-1">
+              {tour.days}
+            </span>
+          </h1>
 
-    <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
-      {details.heroSubtitle || tour.desc}
-    </p>
+          <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
+            {details.heroSubtitle || tour.desc}
+          </p>
 
-    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-      <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
-        EXPLORE DESTINATIONS
-      </button>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+            <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
+              EXPLORE DESTINATIONS
+            </button>
 
-      <button
-        onClick={() => setShowForm(true)}
-        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
-      >
-        BOOK THIS TOUR
-      </button>
-    </div>
-  </div>
-</section>
-
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
+            >
+              BOOK THIS TOUR
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ================= CONTENT ================= */}
       <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
@@ -279,6 +277,13 @@ export default function RoundTourDetail() {
                     </>
                   )}
                 </div>
+                {/* ================= TOUR REVIEW ================= */}
+                <button
+                  onClick={() => setShowReviewForm(true)}
+                  className="w-full py-4 rounded-full text-white font-semibold bg-gradient-to-r from-yellow-500 to-orange-600 mt-4"
+                >
+                  Leave a Review
+                </button>
               </div>
             </div>
           </div>
@@ -357,24 +362,65 @@ export default function RoundTourDetail() {
           />
           <div
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
-            bg-white shadow-2xl p-4 sm:p-6 z-[20001] overflow-auto"
+  w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
+  bg-white shadow-2xl
+  z-[20001]
+  rounded-2xl
+  overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-end mb-4">
-              <button
-                className="text-3xl font-bold text-gray-600 hover:text-black"
-                onClick={() => setShowForm(false)}
-              >
-                ×
-              </button>
-            </div>
+            <div className="h-full overflow-y-auto p-4 sm:p-6">
+              <div className="flex justify-end mb-4">
+                <button
+                  className="text-3xl font-bold text-gray-600 hover:text-black"
+                  onClick={() => setShowForm(false)}
+                >
+                  ×
+                </button>
+              </div>
 
-            <BookRoundTour
-              tourId={tour._id}
-              tourTitle={tour.title}
-              tourLocation={tour.location}
-            />
+              <BookRoundTour
+                tourId={tour._id}
+                tourTitle={tour.title}
+                tourLocation={tour.location}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {showReviewForm && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+            onClick={() => setShowReviewForm(false)}
+          />
+
+          {/* Modal */}
+          <div
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+  w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
+  bg-white shadow-2xl
+  z-[20001]
+  rounded-2xl
+  overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* SCROLL AREA */}
+            <div className="h-full overflow-y-auto p-4 sm:p-6">
+              <div className="flex justify-end mb-4">
+                <button
+                  className="text-3xl font-bold text-gray-600 hover:text-black"
+                  onClick={() => setShowReviewForm(false)}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Review Form */}
+              <TourReview tourId={tour._id} />
+            </div>
           </div>
         </>
       )}

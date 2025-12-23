@@ -1,45 +1,46 @@
 import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { axiosInstance } from "../../lib/axios"; 
+import { axiosInstance } from "../../lib/axios";
 
 const ContactForm = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(null);
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !email || !message) {
+    if (!formData.firstName || !formData.email || !formData.message) {
       toast.warning("Please fill in all required fields!");
       return;
     }
 
-    const data = { firstName, lastName, email, rating, message };
-
+    setSubmitting(true);
     try {
-      const res = await axiosInstance.post("/contact-form", data);
+      const res = await axiosInstance.post("/contact-form", formData);
       if (res.data.success) {
         toast.success("Form submitted successfully!");
-
-        // Reset fields
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setRating(0);
-        setMessage("");
+        setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" });
       } else {
-        toast.error("Failed to submit form");
+        toast.error("Failed to submit form. Please try again.");
       }
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Server error: could not submit form");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -52,9 +53,10 @@ const ContactForm = () => {
           <label className="font-medium text-gray-700">First Name</label>
           <input
             type="text"
+            name="firstName"
             placeholder="Enter your first name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={formData.firstName}
+            onChange={handleChange}
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
@@ -65,9 +67,10 @@ const ContactForm = () => {
           <label className="font-medium text-gray-700">Last Name</label>
           <input
             type="text"
+            name="lastName"
             placeholder="Enter your last name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={formData.lastName}
+            onChange={handleChange}
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
         </div>
@@ -77,45 +80,37 @@ const ContactForm = () => {
           <label className="font-medium text-gray-700">Email</label>
           <input
             type="email"
+            name="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
         </div>
 
-        {/* Rating */}
+        {/* Phone */}
         <div className="flex flex-col space-y-1">
-          <label className="font-medium text-gray-700">Rate</label>
-          <div className="flex items-center gap-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                type="button"
-                key={star}
-                onClick={() => setRating(star)}
-                onMouseEnter={() => setHover(star)}
-                onMouseLeave={() => setHover(null)}
-                className="focus:outline-none"
-              >
-                <FaStar
-                  size={24}
-                  color={(hover || rating) >= star ? "#FFD700" : "#e4e5e9"}
-                />
-              </button>
-            ))}
-            <span className="ml-2 text-gray-600 font-medium">{rating} / 5</span>
-          </div>
+          <label className="font-medium text-gray-700">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="Enter your phone number"
+            value={formData.phone}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+          />
         </div>
 
         {/* Message */}
         <div className="flex flex-col space-y-1">
           <label className="font-medium text-gray-700">Your Message</label>
           <textarea
+            name="message"
             rows="5"
             placeholder="Write your message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={formData.message}
+            onChange={handleChange}
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           ></textarea>
@@ -124,9 +119,10 @@ const ContactForm = () => {
         {/* Submit Button */}
         <button
           type="submit"
+          disabled={submitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-lg font-semibold transition flex items-center gap-2 shadow-lg duration-300 justify-center"
         >
-          Connect with Us
+          {submitting ? "Sending..." : "Connect with Us"}
           <ArrowRight className="w-4" />
         </button>
       </form>

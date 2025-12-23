@@ -6,22 +6,21 @@ const router = express.Router();
 // POST a new form submission
 router.post("/", async (req, res) => {
   try {
-    const { firstName, lastName, email, rating, message } = req.body;
+    const { firstName, lastName, email, phone, message } = req.body;
 
-    const newForm = new ContactForm({
-      firstName,
-      lastName,
-      email,
-      rating,
-      message,
-    });
+    if (!firstName || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "First Name, Email, and Message are required",
+      });
+    }
+
+    const newForm = new ContactForm({ firstName, lastName, email, phone, message });
     await newForm.save();
 
-    res
-      .status(201)
-      .json({ success: true, message: "Form submitted successfully" });
-  } catch (error) {
-    console.error(error);
+    res.status(201).json({ success: true, message: "Form submitted successfully" });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });

@@ -7,6 +7,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
+import TourReview from "../components/TourReview";
 
 export default function DayTourDetail() {
   const { id } = useParams();
@@ -14,9 +15,9 @@ export default function DayTourDetail() {
   const [details, setDetails] = useState({});
   const [contact, setContact] = useState(null);
   const [showForm, setShowForm] = useState(false);
-
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   // Fetch contact info
   useEffect(() => {
@@ -47,42 +48,47 @@ export default function DayTourDetail() {
   const slides =
     details.gallerySlides?.length > 0
       ? details.gallerySlides
-      : [{ image: details.heroImage || tour.img, title: tour.title, desc: tour.desc }];
+      : [
+          {
+            image: details.heroImage || tour.img,
+            title: tour.title,
+            desc: tour.desc,
+          },
+        ];
 
   return (
     <div className="font-poppins">
       {/* ================= HERO ================= */}
       <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
-  <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
-    <img
-      src={details.heroImage || tour.img}
-      alt={tour.title}
-      className="absolute inset-0 w-full h-full object-cover"
-    />
-  </div>
+        <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
+          <img
+            src={details.heroImage || tour.img}
+            alt={tour.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
 
-  <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
-    <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
-      {details.heroTitle || tour.title}
-    </h1>
-    <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
-      {details.heroSubtitle || tour.desc}
-    </p>
+        <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
+          <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
+            {details.heroTitle || tour.title}
+          </h1>
+          <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
+            {details.heroSubtitle || tour.desc}
+          </p>
 
-    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-      <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
-        EXPLORE DESTINATIONS
-      </button>
-      <button
-        onClick={() => setShowForm(true)}
-        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
-      >
-        BOOK THIS TOUR
-      </button>
-    </div>
-  </div>
-</section>
-
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+            <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
+              EXPLORE DESTINATIONS
+            </button>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
+            >
+              BOOK THIS TOUR
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ================= CONTENT ================= */}
       <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
@@ -92,9 +98,13 @@ export default function DayTourDetail() {
             {/* About Paragraphs */}
             {details.aboutParagraphs?.length > 0 && (
               <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">About This Tour</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">
+                  About This Tour
+                </h2>
                 {details.aboutParagraphs.map((p, i) => (
-                  <p key={i} className="text-gray-700 mb-4 break-words">{p}</p>
+                  <p key={i} className="text-gray-700 mb-4 break-words">
+                    {p}
+                  </p>
                 ))}
               </div>
             )}
@@ -102,10 +112,15 @@ export default function DayTourDetail() {
             {/* Highlights */}
             {details.highlights?.length > 0 && (
               <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">Highlights</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10">
+                  Highlights
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {details.highlights.map((item, i) => (
-                    <div key={i} className="flex gap-4 p-5 rounded-xl bg-gradient-to-r from-[#F0F9F5] to-[#F5FBFF]">
+                    <div
+                      key={i}
+                      className="flex gap-4 p-5 rounded-xl bg-gradient-to-r from-[#F0F9F5] to-[#F5FBFF]"
+                    >
                       <FiMapPin className="text-green-500 text-xl mt-1" />
                       <p className="text-gray-700 break-words">{item}</p>
                     </div>
@@ -117,13 +132,19 @@ export default function DayTourDetail() {
             {/* History Section */}
             {details.historyTitle && (
               <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-6">{details.historyTitle}</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+                  {details.historyTitle}
+                </h2>
                 <div className="flex flex-col md:flex-row gap-6">
                   <ul className="flex-1 list-disc pl-5 space-y-2 text-gray-700">
-                    {details.historyLeftList?.map((item, i) => <li key={i}>{item}</li>)}
+                    {details.historyLeftList?.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
                   </ul>
                   <ul className="flex-1 list-disc pl-5 space-y-2 text-gray-700">
-                    {details.historyRightList?.map((item, i) => <li key={i}>{item}</li>)}
+                    {details.historyRightList?.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -135,16 +156,22 @@ export default function DayTourDetail() {
             <div className="bg-white rounded-3xl p-8 shadow-lg space-y-6">
               <div className="flex justify-between">
                 <span className="text-gray-500">Duration</span>
-                <span className="font-semibold">{details.duration || "Full day"}</span>
+                <span className="font-semibold">
+                  {details.duration || "Full day"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Start Location</span>
-                <span className="font-semibold">{details.startLocation || "Colombo"}</span>
+                <span className="font-semibold">
+                  {details.startLocation || "Colombo"}
+                </span>
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-4">Includes</h3>
                 <ul className="space-y-2 text-gray-700">
-                  {details.includes?.map((inc, i) => <li key={i}>✓ {inc}</li>)}
+                  {details.includes?.map((inc, i) => (
+                    <li key={i}>✓ {inc}</li>
+                  ))}
                 </ul>
               </div>
 
@@ -160,18 +187,46 @@ export default function DayTourDetail() {
                   <h4 className="font-semibold mb-4">Need Help?</h4>
                   <div className="flex gap-3 items-center text-gray-600 mb-3">
                     <FiPhone className="text-blue-600" />
-                    <a href={`tel:${contact.phone}`} className="hover:text-blue-600">{contact.phone}</a>
+                    <a
+                      href={`tel:${contact.phone}`}
+                      className="hover:text-blue-600"
+                    >
+                      {contact.phone}
+                    </a>
                   </div>
                   <div className="flex gap-3 items-center text-gray-600 mb-3">
                     <FaWhatsapp className="text-green-600" />
-                    <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="hover:text-green-600">{contact.whatsapp}</a>
+                    <a
+                      href={`https://wa.me/${contact.whatsapp.replace(
+                        /\D/g,
+                        ""
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-green-600"
+                    >
+                      {contact.whatsapp}
+                    </a>
                   </div>
                   <div className="flex gap-3 items-center text-gray-600">
                     <FiMail className="text-blue-600" />
-                    <a href={`mailto:${contact.emails?.[0]}`} className="hover:text-blue-600">{contact.emails?.[0]}</a>
+                    <a
+                      href={`mailto:${contact.emails?.[0]}`}
+                      className="hover:text-blue-600"
+                    >
+                      {contact.emails?.[0]}
+                    </a>
                   </div>
                 </div>
               )}
+
+              {/* ================= TOUR REVIEW ================= */}
+              <button
+                onClick={() => setShowReviewForm(true)}
+                className="w-full py-4 rounded-full text-white font-semibold bg-gradient-to-r from-yellow-500 to-orange-600 mt-4"
+              >
+                Leave a Review
+              </button>
             </div>
           </div>
         </div>
@@ -243,15 +298,72 @@ export default function DayTourDetail() {
       {/* ================= MODAL BOOKING ================= */}
       {showForm && (
         <>
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]" onClick={() => setShowForm(false)} />
           <div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-4 sm:p-6 z-[20001] overflow-auto"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+            onClick={() => setShowForm(false)}
+          />
+          <div
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+  w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
+  bg-white shadow-2xl
+  z-[20001]
+  rounded-2xl
+  overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-end mb-4">
-              <button className="text-3xl font-bold text-gray-600 hover:text-black" onClick={() => setShowForm(false)}>×</button>
+            {/* SCROLL AREA */}
+            <div className="h-full overflow-y-auto p-4 sm:p-6">
+              <div className="flex justify-end mb-4">
+                <button
+                  className="text-3xl font-bold text-gray-600 hover:text-black"
+                  onClick={() => setShowForm(false)}
+                >
+                  ×
+                </button>
+              </div>
+
+              <BookDayTour
+                tourId={tour._id}
+                tourTitle={tour.title}
+                tourLocation={tour.location}
+              />
             </div>
-            <BookDayTour tourId={tour._id} tourTitle={tour.title} tourLocation={tour.location} />
+          </div>
+        </>
+      )}
+
+      {showReviewForm && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000]"
+            onClick={() => setShowReviewForm(false)}
+          />
+
+          {/* Modal */}
+          <div
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+  w-[95vw] sm:w-[90vw] max-w-[700px] h-[90vh]
+  bg-white shadow-2xl
+  z-[20001]
+  rounded-2xl
+  overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* SCROLL AREA */}
+            <div className="h-full overflow-y-auto p-4 sm:p-6">
+              <div className="flex justify-end mb-4">
+                <button
+                  className="text-3xl font-bold text-gray-600 hover:text-black"
+                  onClick={() => setShowReviewForm(false)}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Review Form */}
+              <TourReview tourId={tour._id} />
+            </div>
           </div>
         </>
       )}
