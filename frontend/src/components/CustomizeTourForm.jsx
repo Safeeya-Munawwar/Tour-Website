@@ -61,68 +61,101 @@ const TailorMadeForm = () => {
     }));
   };  
 
-  const validateForm = () => {
-    // required fields for submission
-    const requiredFields = [
-      "title",
-      "fullName",
-      "country",
-      "email",
-      "phone",
-      "pickupLocation",
-      "dropLocation",
-      "startDate",
-      "endDate",
-    ];
+// ---------------- VALIDATION FUNCTION ----------------
+const validateForm = () => {
+  const errors = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Reset time to compare only dates
 
-    for (const field of requiredFields) {
-      if (!formData[field]) {
-        return false;
-      }
+  // Step 1: Personal Info
+  if (!formData.title) errors.push("Title is required");
+  if (!formData.fullName.trim()) errors.push("Full name is required");
+  if (!formData.country.trim()) errors.push("Country is required");
+
+  if (!formData.email.trim()) {
+    errors.push("Email is required");
+  } else {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) errors.push("Invalid email format");
+  }
+
+  if (!formData.phone.trim()) errors.push("Phone number is required");
+
+  // CAPTCHA check
+  if (!captchaChecked) errors.push("Please confirm you are not a robot");
+
+  // Step 2: Trip Details
+  if (!formData.pickupLocation.trim()) errors.push("Pickup location is required");
+  if (!formData.dropLocation.trim()) errors.push("Drop location is required");
+
+  if (!formData.startDate) errors.push("Start date is required");
+  if (!formData.endDate) errors.push("End date is required");
+
+  // Start date should be before end date
+  if (formData.startDate && formData.endDate) {
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+
+    if (start > end) {
+      errors.push("Start date cannot be after end date");
     }
 
-    if (!captchaChecked) return false;
+    // Dates cannot be in the past
+    if (start < today) errors.push("Start date cannot be in the past");
+    if (end < today) errors.push("End date cannot be in the past");
+  }
 
-    return true;
-  };
+  if (!formData.adults || Number(formData.adults) < 1)
+    errors.push("At least 1 adult is required");
+  if (formData.children < 0) errors.push("Children cannot be negative");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      toast.error("Please fill all required fields and verify captcha!");
-      return;
-    }
+  // Step 3: Optional Budget validation
+  if (formData.budget && Number(formData.budget) < 0)
+    errors.push("Budget cannot be negative");
 
-    try {
-      await axiosInstance.post("/tailor-made-tours/inquiry", formData);
-      toast.success("Your trip plan has been submitted!");
+  return errors;
+};
 
-      setTimeout(() => {
-        setFormData({
-          title: "",
-          fullName: "",
-          country: "",
-          email: "",
-          phone: "",
-          pickupLocation: "",
-          dropLocation: "",
-          startDate: "",
-          endDate: "",
-          adults: 1,
-          children: 0,
-          budget: "",
-          currency: "USD",
-          notes: "",
-          selectedDestinations: [],
-        });
-        setStep(1);
-        setCaptchaChecked(false);
-      }, 500);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to submit your plan. Try again.");
-    }
-  };
+// ---------------- HANDLE SUBMIT ----------------
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const errors = validateForm();
+
+  if (errors.length > 0) {
+    errors.forEach((err) => toast.error(err));
+    return;
+  }
+
+  try {
+    await axiosInstance.post("/tailor-made-tours/inquiry", formData);
+    toast.success("Your trip plan has been submitted!");
+
+    // Reset form
+    setFormData({
+      title: "",
+      fullName: "",
+      country: "",
+      email: "",
+      phone: "",
+      pickupLocation: "",
+      dropLocation: "",
+      startDate: "",
+      endDate: "",
+      adults: 1,
+      children: 0,
+      budget: "",
+      currency: "USD",
+      notes: "",
+      selectedDestinations: [],
+    });
+    setStep(1);
+    setCaptchaChecked(false);
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to submit your plan. Try again.");
+  }
+};
+
 
   return (
     <div className="lg:col-span-1 w-full">
@@ -165,7 +198,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Title*
+                Title <span className="text-red-500">*</span>
               </label>
               <select
                 name="title"
@@ -182,7 +215,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Full Name*
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -196,7 +229,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Country*
+                Country <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -210,7 +243,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Email*
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -224,7 +257,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Phone*
+                Phone <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -266,7 +299,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Pickup Location*
+                Pickup Location <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -280,7 +313,7 @@ const TailorMadeForm = () => {
 
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
-                Drop Location*
+                Drop Location <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -295,7 +328,7 @@ const TailorMadeForm = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-gray-700 font-semibold mb-1">
-                  Start Date*
+                  Start Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -307,7 +340,7 @@ const TailorMadeForm = () => {
               </div>
               <div>
                 <label className="block text-gray-700 font-semibold mb-1">
-                  End Date*
+                  End Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -322,7 +355,7 @@ const TailorMadeForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-gray-700 font-semibold mb-1">
-                  Adults*
+                  Adults <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"

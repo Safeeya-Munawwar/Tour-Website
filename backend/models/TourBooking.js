@@ -11,7 +11,7 @@ const TourBookingSchema = new mongoose.Schema(
     tourId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      refPath: "tourRef", // dynamic reference based on tourRef
+      refPath: "tourRef",
     },
 
     tourRef: {
@@ -26,7 +26,7 @@ const TourBookingSchema = new mongoose.Schema(
 
     adults: { type: Number, default: 1 },
     children: { type: Number, default: 0 },
-    members: { type: Number }, // optional: can calculate as adults + children
+    members: { type: Number },
 
     pickupLocation: { type: String },
     startDate: { type: String },

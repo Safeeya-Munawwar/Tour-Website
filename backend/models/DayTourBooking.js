@@ -5,6 +5,11 @@ const DayTourBookingSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
+
+  adults: { type: Number, default: 1 },
+  children: { type: Number, default: 0 },
+  pickupLocation: { type: String },
+
   members: { type: Number, default: 1 },
   startDate: { type: String },
   startTime: { type: String },
@@ -13,5 +18,10 @@ const DayTourBookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Optional: auto calculate members
+DayTourBookingSchema.pre("save", function (next) {
+  this.members = (this.adults || 0) + (this.children || 0);
+  next();
+});
+
 module.exports = mongoose.model("DayTourBooking", DayTourBookingSchema);
- 
