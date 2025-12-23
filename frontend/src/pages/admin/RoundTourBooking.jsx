@@ -10,33 +10,33 @@ const RoundTourBookingAdmin = () => {
   const rowsPerPage = 5;
 
   // FETCH BOOKINGS
-const fetchRoundTourBookings = async () => {
-  try {
-    // Round Tour Booking API
-    const resRound = await axiosInstance.get("/round-tour-booking");
-    const roundBookings = resRound.data.success
-      ? resRound.data.bookings.map(b => ({ ...b, source: "round" }))
-      : [];
+  const fetchRoundTourBookings = async () => {
+    try {
+      // Round Tour Booking API
+      const resRound = await axiosInstance.get("/round-tour-booking");
+      const roundBookings = resRound.data.success
+        ? resRound.data.bookings.map((b) => ({ ...b, source: "round" }))
+        : [];
 
-    // Common Tour Booking API (filter round tours only)
-    const resCommon = await axiosInstance.get("/book-tour");
-    const commonRoundBookings = resCommon.data.success
-      ? resCommon.data.bookings
-          .filter((b) => b.tourType === "round")
-          .map(b => ({ ...b, source: "common" }))
-      : [];
+      // Common Tour Booking API (filter round tours only)
+      const resCommon = await axiosInstance.get("/book-tour");
+      const commonRoundBookings = resCommon.data.success
+        ? resCommon.data.bookings
+            .filter((b) => b.tourType === "round")
+            .map((b) => ({ ...b, source: "common" }))
+        : [];
 
-    // Combine and sort by createdAt descending (newest first)
-    const allBookings = [...roundBookings, ...commonRoundBookings].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
+      // Combine and sort by createdAt descending (newest first)
+      const allBookings = [...roundBookings, ...commonRoundBookings].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
 
-    setBookings(allBookings);
-  } catch (err) {
-    console.error("Error fetching round tour bookings:", err);
-    toast.error("Failed to fetch bookings");
-  }
-}; 
+      setBookings(allBookings);
+    } catch (err) {
+      console.error("Error fetching round tour bookings:", err);
+      toast.error("Failed to fetch bookings");
+    }
+  };
 
   useEffect(() => {
     fetchRoundTourBookings();
@@ -45,15 +45,13 @@ const fetchRoundTourBookings = async () => {
   // UPDATE STATUS
   const handleStatusChange = async (id, newStatus, source) => {
     const apiPath =
-      source === "round"
-        ? `/round-tour-booking/${id}`
-        : `/book-tour/${id}`;
-  
+      source === "round" ? `/round-tour-booking/${id}` : `/book-tour/${id}`;
+
     const toastId = toast.info("Updating status...", { autoClose: false });
-  
+
     try {
       const res = await axiosInstance.patch(apiPath, { status: newStatus });
-  
+
       if (res.data.success) {
         toast.update(toastId, {
           render: "Status updated successfully!",
@@ -80,19 +78,18 @@ const fetchRoundTourBookings = async () => {
       });
     }
   };
-  
+
   // DELETE BOOKING
   const handleDelete = async (id, source) => {
-    if (!window.confirm("Are you sure you want to delete this booking?")) return;
-  
+    if (!window.confirm("Are you sure you want to delete this booking?"))
+      return;
+
     try {
       const apiPath =
-        source === "round"
-          ? `/round-tour-booking/${id}`
-          : `/book-tour/${id}`;
-  
+        source === "round" ? `/round-tour-booking/${id}` : `/book-tour/${id}`;
+
       const res = await axiosInstance.delete(apiPath);
-  
+
       if (res.data.success) {
         toast.success("Booking deleted");
         fetchRoundTourBookings();
@@ -102,7 +99,7 @@ const fetchRoundTourBookings = async () => {
       toast.error("Delete failed");
     }
   };
-  
+
   // PAGINATION
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
@@ -144,7 +141,13 @@ const fetchRoundTourBookings = async () => {
                   Phone
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Members
+                  Adults
+                </th>
+                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
+                  Children
+                </th>
+                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
+                  Pickup Location
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
                   Date
@@ -177,7 +180,7 @@ const fetchRoundTourBookings = async () => {
                     key={b._id}
                     className="border-b border-[#2E5B84] hover:bg-blue-50"
                   >
-<td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
+                    <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
                       {b.tourId?.title || "—"}
                     </td>
                     <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
@@ -194,8 +197,15 @@ const fetchRoundTourBookings = async () => {
                       {b.phone}
                     </td>
                     <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                      {b.members}
+                      {b.adults || 0}
                     </td>
+                    <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
+                      {b.children || 0}
+                    </td>
+                    <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
+                      {b.pickupLocation || "—"}
+                    </td>
+
                     <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
                       {b.startDate || "—"}
                     </td>
@@ -208,8 +218,10 @@ const fetchRoundTourBookings = async () => {
                     <td className="p-2 border border-[#2E5B84] text-sm">
                       <div className="flex justify-center">
                         <select
-                           value={b.status || "Pending"}
-                           onChange={(e) => handleStatusChange(b._id, e.target.value, b.source)}
+                          value={b.status || "Pending"}
+                          onChange={(e) =>
+                            handleStatusChange(b._id, e.target.value, b.source)
+                          }
                           className={`px-2 py-1 rounded text-sm w-full max-w-[140px]
             ${
               b.status === "Approved"

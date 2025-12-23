@@ -104,10 +104,13 @@ const CustomizeTourBookingAdmin = () => {
                   <span className="text-m text-gray-300">(End Date)</span>
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Travelers
+                  Adults
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Interests
+                  Children
+                </th>
+                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
+                  Destinations
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
                   Budget
@@ -166,18 +169,21 @@ const CustomizeTourBookingAdmin = () => {
                     </span>
                   </td>
                   <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.travelers}
+                    {inq.adults}
                   </td>
                   <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.interests?.join(", ") || "—"}
+                    {inq.children}
                   </td>
                   <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.budget != null && inq.budget !== ""
-                      ? `${inq.currency || "USD"} ${Number(
-                          inq.budget
-                        ).toLocaleString()}`
-                      : "—"}
+                    {inq.selectedDestinations?.join(", ") || "—"}
                   </td>
+                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
+  {inq.currency === "No Idea"
+    ? "No Idea"
+    : inq.budget != null && inq.budget !== ""
+    ? `${inq.currency || "USD"} ${Number(inq.budget).toLocaleString()}`
+    : "—"}
+</td>
                   <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
                     {inq.notes}
                   </td>

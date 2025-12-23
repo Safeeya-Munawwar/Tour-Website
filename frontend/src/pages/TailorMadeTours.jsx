@@ -43,9 +43,7 @@ const TailorMadeTours = () => {
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const res = await axiosInstance.get(
-          "/tailor-made-tours"
-        );
+        const res = await axiosInstance.get("/tailor-made-tours");
         if (res.data) {
           setTourData(res.data);
         }
@@ -227,7 +225,11 @@ const TailorMadeTours = () => {
               e.target === e.currentTarget && setIsModalOpen(false)
             }
           >
-            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl p-6 z-[20001] flex flex-col overflow-auto">
+            <div
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl 
+                    p-6 z-[20001] flex flex-col overflow-hidden rounded-2xl"
+            >
               {/* Close button */}
               <div className="flex justify-end mb-4">
                 <button
@@ -238,15 +240,15 @@ const TailorMadeTours = () => {
                 </button>
               </div>
 
-              {/* Modal content */}
-              <div className="flex-1">
+              {/* Scrollable modal content */}
+              <div className="flex-1 overflow-auto relative">
                 <TestimonialForm />
               </div>
             </div>
           </div>
         )}
       </div>
-
+      
       {/* ------------------------------ REVIEWS ------------------------------ */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         {/* Review Icons */}

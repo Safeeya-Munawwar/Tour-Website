@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const TailorMadeTourInquirySchema = new mongoose.Schema({
   title: { type: String, required: true },
   fullName: { type: String, required: true },
-  nationality: { type: String, required: true },
+  country: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
 
@@ -13,9 +13,10 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
 
-  travelers: { type: Number, required: true },
+  adults: { type: Number, required: true },
+  children: { type: Number },
 
-  interests: {
+  selectedDestinations: {
     type: [String],
     default: [],
   },
@@ -27,7 +28,7 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
 
   currency: {
     type: String,
-    default: "USD",
+    default: "No Idea",
   },
 
   notes: {

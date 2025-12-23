@@ -95,17 +95,18 @@ router.post("/inquiry", async (req, res) => {
     const inquiry = new Inquiry({
       title: req.body.title,
       fullName: req.body.fullName,
-      nationality: req.body.nationality,
+      country: req.body.country,
       email: req.body.email,
       phone: req.body.phone,
       pickupLocation: req.body.pickupLocation,
       dropLocation: req.body.dropLocation,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      travelers: req.body.travelers,
-      interests: req.body.interests || [],
-      budget: req.body.budget || null,
-      currency: req.body.currency || null,
+      adults: req.body.adults,
+      children: req.body.children,
+      selectedDestinations: req.body.selectedDestinations || [],
+      budget: req.body.currency === "No Idea" ? null : req.body.budget || null,
+      currency: req.body.currency || "No Idea",      
       notes: req.body.notes || "",
     });
 
