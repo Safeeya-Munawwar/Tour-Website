@@ -11,7 +11,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     members: 1,
     pickupLocation: "",
     startDate: "",
-    startTime: "",
+    startTime: "00:00",
     message: "",
   });
 
@@ -164,7 +164,7 @@ ${formData.message || "–"}
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto">
+    <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
       <h2 className="text-2xl font-bold text-center text-[#0B2545] mb-4">
         {tourTitle}
         <span className="block">{tourLocation} - Day Tour</span>
@@ -310,15 +310,16 @@ ${formData.message || "–"}
               Pickup Time <span className="text-red-500">*</span>
             </label>
             <input
-              id="startTime"
-              type="time"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
-                errors.startTime ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
-            />
+  id="startTime"
+  type="time"
+  name="startTime"
+  value={formData.startTime}
+  onChange={handleChange}
+  step="60"        // minutes
+  className={`w-full px-4 py-3 rounded border ${
+    errors.startTime ? "border-red-500" : "border-gray-300"
+  } focus:ring-2 focus:ring-blue-500 outline-none`}
+/>
             {errors.startTime && <span className="text-red-500 text-sm">{errors.startTime}</span>}
           </div>
         </div>

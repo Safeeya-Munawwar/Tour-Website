@@ -15,7 +15,7 @@ export default function BookTour() {
     children: 0,
     pickupLocation: "",
     startDate: "",
-    startTime: "",
+    startTime: "00:00",
     message: "",
   });
 
@@ -32,7 +32,9 @@ export default function BookTour() {
         setDayTours(Array.isArray(dayRes.data?.tours) ? dayRes.data.tours : []);
 
         const roundRes = await axiosInstance.get("/round-tours");
-        setRoundTours(Array.isArray(roundRes.data?.tours) ? roundRes.data.tours : []);
+        setRoundTours(
+          Array.isArray(roundRes.data?.tours) ? roundRes.data.tours : []
+        );
       } catch (err) {
         console.error("Fetch error:", err);
         setDayTours([]);
@@ -67,7 +69,8 @@ export default function BookTour() {
       if (!emailRegex.test(formData.email)) newErrors.email = "Invalid email";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    if (!formData.pickupLocation.trim()) newErrors.pickupLocation = "Pickup location is required";
+    if (!formData.pickupLocation.trim())
+      newErrors.pickupLocation = "Pickup location is required";
 
     if (!formData.startDate) {
       newErrors.startDate = "Pickup date is required";
@@ -81,8 +84,10 @@ export default function BookTour() {
 
     if (!formData.startTime) newErrors.startTime = "Pickup time is required";
 
-    if (Number(formData.adults) < 1) newErrors.adults = "At least 1 adult is required";
-    if (Number(formData.children) < 0) newErrors.children = "Children cannot be negative";
+    if (Number(formData.adults) < 1)
+      newErrors.adults = "At least 1 adult is required";
+    if (Number(formData.children) < 0)
+      newErrors.children = "Children cannot be negative";
 
     return newErrors;
   };
@@ -138,11 +143,15 @@ export default function BookTour() {
   // ---------------- UI ----------------
   return (
     <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
-      <h2 className="text-4xl font-bold text-center text-[#0B2545]">Book a Tour</h2>
+      <h2 className="text-4xl font-bold text-center text-[#0B2545]">
+        Book a Tour
+      </h2>
 
       {/* TOUR TYPE */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Tour Type <span className="text-red-500">*</span></label> 
+        <label className="mb-1 font-medium">
+          Tour Type <span className="text-red-500">*</span>
+        </label>
         <select
           value={tourType}
           onChange={(e) => {
@@ -157,13 +166,17 @@ export default function BookTour() {
           <option value="day">Day Tour</option>
           <option value="round">Round Tour</option>
         </select>
-        {errors.tourType && <span className="text-red-500 text-sm">{errors.tourType}</span>}
+        {errors.tourType && (
+          <span className="text-red-500 text-sm">{errors.tourType}</span>
+        )}
       </div>
 
       {/* TOUR LIST */}
       {tourType && (
         <div className="flex flex-col">
-          <label className="mb-1 font-medium">Select Tour <span className="text-red-500">*</span></label>
+          <label className="mb-1 font-medium">
+            Select Tour <span className="text-red-500">*</span>
+          </label>
           <select
             value={selectedTour?._id || ""}
             onChange={(e) => handleTourSelect(e.target.value)}
@@ -178,7 +191,9 @@ export default function BookTour() {
               </option>
             ))}
           </select>
-          {errors.selectedTour && <span className="text-red-500 text-sm">{errors.selectedTour}</span>}
+          {errors.selectedTour && (
+            <span className="text-red-500 text-sm">{errors.selectedTour}</span>
+          )}
         </div>
       )}
 
@@ -186,7 +201,10 @@ export default function BookTour() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
         {["name", "email", "phone"].map((field) => (
           <div key={field} className="flex flex-col">
-            <label className="mb-1 font-medium">{field.charAt(0).toUpperCase() + field.slice(1)} <span className="text-red-500">*</span></label>
+            <label className="mb-1 font-medium">
+              {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
+              <span className="text-red-500">*</span>
+            </label>
             <input
               type={field === "email" ? "email" : "text"}
               name={field}
@@ -197,14 +215,18 @@ export default function BookTour() {
                 errors[field] ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors[field] && <span className="text-red-500 text-sm">{errors[field]}</span>}
+            {errors[field] && (
+              <span className="text-red-500 text-sm">{errors[field]}</span>
+            )}
           </div>
         ))}
 
         {/* Number of Travellers */}
         <div className="flex gap-4">
           <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">Adults <span className="text-red-500">*</span></label>
+            <label className="mb-1 font-medium">
+              Adults <span className="text-red-500">*</span>
+            </label>
             <input
               type="number"
               name="adults"
@@ -215,7 +237,9 @@ export default function BookTour() {
                 errors.adults ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.adults && <span className="text-red-500 text-sm">{errors.adults}</span>}
+            {errors.adults && (
+              <span className="text-red-500 text-sm">{errors.adults}</span>
+            )}
           </div>
           <div className="flex-1 flex flex-col">
             <label className="mb-1 font-medium">Children</label>
@@ -229,13 +253,17 @@ export default function BookTour() {
                 errors.children ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.children && <span className="text-red-500 text-sm">{errors.children}</span>}
+            {errors.children && (
+              <span className="text-red-500 text-sm">{errors.children}</span>
+            )}
           </div>
         </div>
 
         {/* Pickup Location */}
         <div className="flex flex-col">
-          <label className="mb-1 font-medium">Pickup Location <span className="text-red-500">*</span></label>
+          <label className="mb-1 font-medium">
+            Pickup Location <span className="text-red-500">*</span>
+          </label>
           <input
             type="text"
             name="pickupLocation"
@@ -246,13 +274,19 @@ export default function BookTour() {
               errors.pickupLocation ? "border-red-500" : "border-gray-300"
             } focus:ring-2 focus:ring-blue-500 outline-none`}
           />
-          {errors.pickupLocation && <span className="text-red-500 text-sm">{errors.pickupLocation}</span>}
+          {errors.pickupLocation && (
+            <span className="text-red-500 text-sm">
+              {errors.pickupLocation}
+            </span>
+          )}
         </div>
 
         {/* Date & Time */}
         <div className="flex gap-4">
           <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">Pickup Date <span className="text-red-500">*</span></label>
+            <label className="mb-1 font-medium">
+              Pickup Date <span className="text-red-500">*</span>
+            </label>
             <input
               type="date"
               name="startDate"
@@ -262,20 +296,28 @@ export default function BookTour() {
                 errors.startDate ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.startDate && <span className="text-red-500 text-sm">{errors.startDate}</span>}
+            {errors.startDate && (
+              <span className="text-red-500 text-sm">{errors.startDate}</span>
+            )}
           </div>
           <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">Pickup Time <span className="text-red-500">*</span></label>
+            <label className="mb-1 font-medium">
+              Pickup Time <span className="text-red-500">*</span>
+            </label>
             <input
+              id="startTime"
               type="time"
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
+              step="60" // minutes
               className={`w-full px-4 py-3 rounded border ${
                 errors.startTime ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.startTime && <span className="text-red-500 text-sm">{errors.startTime}</span>}
+            {errors.startTime && (
+              <span className="text-red-500 text-sm">{errors.startTime}</span>
+            )}
           </div>
         </div>
 
@@ -301,7 +343,11 @@ export default function BookTour() {
         </button>
 
         {responseMsg && (
-          <p className={`text-center font-medium ${isError ? "text-red-600" : "text-green-600"}`}>
+          <p
+            className={`text-center font-medium ${
+              isError ? "text-red-600" : "text-green-600"
+            }`}
+          >
             {responseMsg}
           </p>
         )}

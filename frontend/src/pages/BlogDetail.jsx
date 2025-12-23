@@ -12,8 +12,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function BlogDetail() {
-  const [expandedSections, setExpandedSections] = useState({});
-
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [otherBlogs, setOtherBlogs] = useState([]);
@@ -39,7 +37,9 @@ export default function BlogDetail() {
         const allRes = await axiosInstance.get(`/blog`);
         setOtherBlogs(allRes.data.blogs.filter((b) => b.slug !== slug));
 
-        const commentsRes = await axiosInstance.get(`/blog-comments/${res.data._id}`);
+        const commentsRes = await axiosInstance.get(
+          `/blog-comments/${res.data._id}`
+        );
         if (commentsRes.data.success) setComments(commentsRes.data.comments);
 
         setLoading(false);
@@ -61,16 +61,10 @@ export default function BlogDetail() {
       </div>
     );
 
-// --- SPLIT CONTENT INTO 5 PARAGRAPHS ---
-let paragraphs = [];
-if (blog.content) {
-  const sentences = blog.content.match(/[^.!?]+[.!?]+/g) || [blog.content];
-  for (let i = 0; i < 5; i++) {
-    const start = Math.floor((i * sentences.length) / 5);
-    const end = Math.floor(((i + 1) * sentences.length) / 5);
-    paragraphs.push(sentences.slice(start, end).join(" ").trim());
-  }
-}
+  // --- USE BACKEND PARAGRAPHS AS-IS ---
+  const paragraphs = blog.content
+    ? blog.content.split(/\n\s*\n/).filter((p) => p.trim() !== "")
+    : [];
 
   const handleCommentChange = (e) => {
     const { name, value } = e.target;
@@ -89,11 +83,17 @@ if (blog.content) {
     }
     setSubmitting(true);
     try {
-      const res = await axiosInstance.post(`/blog-comments/${blog._id}`, comment);
+      const res = await axiosInstance.post(
+        `/blog-comments/${blog._id}`,
+        comment
+      );
       if (res.data.success) {
         toast.success("Comment submitted successfully!");
         setComment({ name: "", email: "", rating: 0, message: "" });
-        setComments((prev) => [{ ...comment, createdAt: new Date().toISOString() }, ...prev]);
+        setComments((prev) => [
+          { ...comment, createdAt: new Date().toISOString() },
+          ...prev,
+        ]);
       } else {
         toast.error("Failed to submit comment. Try again!");
       }
@@ -112,7 +112,9 @@ if (blog.content) {
       {/* HERO */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: `url(${blog.heroImg || "/images/default.jpg"})` }}
+        style={{
+          backgroundImage: `url(${blog.heroImg || "/images/default.jpg"})`,
+        }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
         <div
@@ -120,82 +122,92 @@ if (blog.content) {
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">{blog.subtitle}</h2>
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
+            {blog.subtitle}
+          </h2>
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
       {/* MAIN CONTENT */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">{blog.title}</h1>
-          <p className="text-gray-600 max-w-3xl mx-auto">{blog.description}</p>
-          <div className="w-16 h-1 bg-[#D4AF37] mx-auto mt-4 rounded"></div>
-        </div>
+{/* ---------------------------- BLOG MAIN SECTION ---------------------------- */}
+<section className="relative flex flex-col md:flex-row w-full bg-white pt-10 md:pt-0">
 
-        <section className="flex flex-col gap-20 max-w-6xl mx-auto px-4 sm:px-6 py-16">
-  {paragraphs.map((para, idx) => {
-    const imgSrc =
-      blog.galleryImgs && blog.galleryImgs[idx]
-        ? blog.galleryImgs[idx]
-        : blog.heroImg || "/images/default.jpg";
+  {/* LEFT IMAGE */}
+  <div
+    className="
+      w-full md:w-1/2
+      overflow-hidden
+      rounded-br-[40%] md:rounded-r-[45%]
+      relative
+    "
+  >
+    <img
+      src={
+        blog.galleryImgs && blog.galleryImgs[2]
+          ? blog.galleryImgs[2]
+          : blog.heroImg
+      }
+      alt={blog.title}
+      className="w-full h-full object-cover object-center"
+    />
+  </div>
 
-    const isExpanded = expandedSections[idx];
-    const isImageRight = idx % 2 === 0;
+  {/* RIGHT CONTENT */}
+  <div
+    className="
+      w-full md:w-1/2
+      flex flex-col
+      justify-center
+      px-6 sm:px-10 md:px-20
+      mt-6 sm:mt-10 md:mt-20
+      pb-10
+      space-y-6
+      text-left
+    "
+  >
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
+      {blog.title}
+    </h2>
 
-    return (
-      <div
+    {paragraphs.map((para, idx) => (
+      <p
         key={idx}
-        className={`max-w-5xl mx-auto flex flex-col md:flex-row ${
-          !isImageRight ? "md:flex-row-reverse" : ""
-        } gap-6`}
+        className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed"
       >
-        {/* IMAGE */}
-        <div className="md:w-1/3 w-full">
-          <div
-            className={`overflow-hidden rounded-lg shadow-md transition-all duration-300 ${
-              isExpanded ? "max-h-[1000px]" : "max-h-56"
-            }`}
-          >
-            <img
-              src={imgSrc}
-              alt={`Section ${idx + 1}`}
-              className="w-full h-auto object-cover"
-            />
-          </div>
-        </div>
-
-        {/* TEXT */}
-        <div className="md:w-2/3 w-full">
-          <div
-            className={`overflow-hidden transition-all duration-300 ${
-              isExpanded ? "max-h-[1000px]" : "max-h-56"
-            }`}
-          >
-            <p className="text-gray-700 text-sm md:text-base leading-relaxed">
-              {para}
-            </p>
-          </div>
-
-          {/* READ MORE */}
-          <button
-            onClick={() =>
-              setExpandedSections((prev) => ({
-                ...prev,
-                [idx]: !prev[idx],
-              }))
-            }
-            className="mt-3 text-xs font-semibold text-[#8C1F28]"
-          >
-            {isExpanded ? "Read less" : "Read more"}
-          </button>
-        </div>
-      </div>
-    );
-  })}
+        {para}
+      </p>
+    ))}
+  </div>
 </section>
 
-      </section>
+
+      {/* ---------------------------- BLOG GALLERY ---------------------------- */}
+      {blog.galleryImgs && blog.galleryImgs.length > 0 && (
+        <section className="w-full py-12 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
+              Blog Gallery
+            </h2>
+
+            <div className="grid place-items-center gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+              {blog.galleryImgs.slice(0, 5).map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-full max-w-[220px] overflow-hidden rounded-xl shadow-md"
+                >
+                  <img
+                    src={img}
+                    alt={`Blog Gallery ${idx + 1}`}
+                    className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* COMMENTS SECTION */}
       <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-32 mt-10 lg:mt-16 flex flex-col md:flex-row gap-10 lg:gap-16 pb-20">
@@ -233,12 +245,16 @@ if (blog.content) {
                     key={star}
                     size={24}
                     className={`cursor-pointer ${
-                      comment.rating >= star ? "text-yellow-400" : "text-gray-300"
+                      comment.rating >= star
+                        ? "text-yellow-400"
+                        : "text-gray-300"
                     }`}
                     onClick={() => handleRating(star)}
                   />
                 ))}
-                <span className="ml-2 text-gray-600 font-medium">{comment.rating} / 5</span>
+                <span className="ml-2 text-gray-600 font-medium">
+                  {comment.rating} / 5
+                </span>
               </div>
             </div>
             <label className="font-medium text-gray-700">Comment</label>
@@ -264,7 +280,9 @@ if (blog.content) {
         {/* COMMENTS SWIPER */}
         <div className="md:w-1/2 flex flex-col justify-center">
           {comments.length === 0 ? (
-            <p className="text-gray-600 text-center">No comments yet. Be the first to comment!</p>
+            <p className="text-gray-600 text-center">
+              No comments yet. Be the first to comment!
+            </p>
           ) : (
             <div className="relative">
               <Swiper
@@ -291,11 +309,17 @@ if (blog.content) {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <FaStar
                             key={star}
-                            className={c.rating >= star ? "text-yellow-400" : "text-gray-300"}
+                            className={
+                              c.rating >= star
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            }
                           />
                         ))}
                       </div>
-                      <p className="text-gray-700 leading-relaxed">{c.message}</p>
+                      <p className="text-gray-700 leading-relaxed">
+                        {c.message}
+                      </p>
                     </div>
                   </SwiperSlide>
                 ))}
@@ -338,8 +362,12 @@ if (blog.content) {
                   className="w-full h-48 sm:h-56 md:h-60 object-cover"
                 />
                 <div className="p-5 flex flex-col flex-1">
-                  <h4 className="text-lg sm:text-xl font-semibold text-gray-900">{b.title}</h4>
-                  <p className="text-gray-500 text-sm sm:text-base mt-2 flex-1">{b.subtitle}</p>
+                  <h4 className="text-lg sm:text-xl font-semibold text-gray-900">
+                    {b.title}
+                  </h4>
+                  <p className="text-gray-500 text-sm sm:text-base mt-2 flex-1">
+                    {b.subtitle}
+                  </p>
                   <a
                     href={`/blog/${b.slug}`}
                     className="mt-4 inline-flex items-center text-[#8C1F28] font-semibold hover:underline"

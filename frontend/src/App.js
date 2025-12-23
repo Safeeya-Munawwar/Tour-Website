@@ -52,7 +52,7 @@ import EditContact from "./pages/contact/EditContact";
 import ContactList from "./pages/contact/ContactList";
 import AdminManageHome from "./pages/admin/ManageHome";
 import BlogComments from "./pages/admin/BlogComments";
-import ContactMessages from "./pages/admin/ContactMessages";
+import TourReviews from "./pages/admin/TourReviews";
 import TailorComments from "./pages/admin/TailorComments";
 import TripadvisorReviews from "./pages/admin/TripadvisorReviews";
 import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
@@ -359,10 +359,10 @@ function App() {
 
           {/* Contact Messages */}
           <Route
-            path="/admin/contact-messages"
+            path="/admin/tour-reviews"
             element={
               <AdminProtectedRoute>
-                <ContactMessages />
+                <TourReviews />
               </AdminProtectedRoute>
             }
           />

@@ -7,50 +7,48 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 export default function Testimonials() {
-  const [bigReviews, setBigReviews] = useState([]);
-  const [smallReviews, setSmallReviews] = useState([]);
-
+  const [reviews, setReviews] = useState([]);
+  const [messages, setMessages] = useState([]);
   // Fetch backend messages
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axiosInstance.get("/contact-form");
-        const mapped = res.data.map((msg) => ({
-          name: `${msg.firstName} ${msg.lastName}`,
-          time: new Date(msg.createdAt).toLocaleDateString(),
-          review: msg.message,
-          avatar: msg.firstName.charAt(0).toUpperCase(),
-          rating: msg.rating || 0,
-        }));
-        setBigReviews(mapped.reverse()); // latest first
+        const res = await axiosInstance.get(`/tour-reviews`);
+        setReviews(res.data);
       } catch (err) {
-        console.error("Failed to fetch reviews", err);
+        console.error("Error fetching reviews:", err);
       }
     };
+
     fetchReviews();
   }, []);
 
+  // calculate Google rating average
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
+
+  function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++)
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    const color = `hsl(${hash % 360}, 60%, 50%)`;
+    return color;
+  }
+
+  // Fetch contact form messages
+  const fetchMessages = async () => {
+    try {
+      const res = await axiosInstance.get("/contact-form"); // fetch from backend
+      setMessages(res.data);
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchSmallReviews = async () => {
-      try {
-        const res = await axiosInstance.get("/reviews");
-
-        // Map backend review → small review card
-        const mappedSmall = res.data.reviews.map((r) => ({
-          name: r.name,
-          time: new Date(r.createdAt).toLocaleDateString(),
-          review: r.message,
-          rating: r.rating,
-          img: "/images/profile-user.PNG",
-        }));
-
-        setSmallReviews(mappedSmall.reverse()); // latest first
-      } catch (error) {
-        console.error("Failed to load small reviews", error);
-      }
-    };
-
-    fetchSmallReviews();
+    fetchMessages();
   }, []);
 
   return (
@@ -83,41 +81,42 @@ export default function Testimonials() {
             slidesPerView={1}
             className="bg-[#f7f7f7] rounded-2xl shadow-lg"
           >
-            {bigReviews.map((item, i) => (
+            {reviews.map((item, i) => (
               <SwiperSlide key={i}>
                 <div className="bg-[#f7f7f7] p-10 rounded-2xl">
                   {/* user */}
                   <div className="flex flex-col items-center text-center mb-4">
-                    <div className="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold relative">
-                      {item.avatar}
+                    <div
+                      className="w-20 h-20 text-white rounded-full flex items-center justify-center text-3xl font-bold relative"
+                      style={{ backgroundColor: stringToColor(item.name) }}
+                    >
+                      {item.name[0].toUpperCase()}
                       <span className="absolute -bottom-1 right-2 text-white bg-[#4285F4] px-1 py-[1px] text-xs rounded-full">
                         G
                       </span>
                     </div>
 
                     <h3 className="font-semibold mt-3">{item.name}</h3>
-                    <p className="text-gray-500 text-sm">{item.time}</p>
+                    <p className="text-gray-500 text-sm">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
 
                   {/* stars */}
                   <div className="flex justify-center gap-1 text-yellow-400 mb-4">
-                    {[...Array(5)].map((_, i) => {
-                      // check if rating exists and fill stars accordingly
-                      const filled = item.rating && i < Number(item.rating);
-                      return (
-                        <FaStar
-                          key={i}
-                          className={
-                            filled ? "text-yellow-400" : "text-gray-300"
-                          }
-                        />
-                      );
-                    })}
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={
+                          i < item.rating ? "text-yellow-400" : "text-gray-300"
+                        }
+                      />
+                    ))}
                   </div>
 
                   {/* review */}
                   <p className="text-gray-700 text-center leading-relaxed">
-                    {item.review}
+                    {item.message}
                   </p>
                 </div>
               </SwiperSlide>
@@ -136,8 +135,10 @@ export default function Testimonials() {
 
       {/* GOOGLE score */}
       <p className="text-center mt-14 text-gray-700 text-lg">
-        Google rating score: <span className="font-bold text-black">5.0</span>{" "}
-        of 5, based on <span className="font-bold">124 reviews</span>
+        Google rating score:{" "}
+        <span className="font-bold text-black">{averageRating.toFixed(1)}</span>{" "}
+        of 5, based on <span className="font-bold">{reviews.length}</span>{" "}
+        reviews
       </p>
 
       {/* BOTTOM TRIPADVISOR SECTION */}
@@ -156,7 +157,8 @@ export default function Testimonials() {
             </div>
 
             <p className="mt-2 text-gray-700">
-              Based on <span className="font-bold">271 reviews</span>
+              Based on{" "}
+              <span className="font-bold">{messages.length} reviews</span>
             </p>
 
             <div className="flex items-center gap-2 mt-3">
@@ -179,22 +181,22 @@ export default function Testimonials() {
                 1280: { slidesPerView: 3 },
               }}
             >
-              {smallReviews.map((item, i) => (
+              {messages.map((item, i) => (
                 <SwiperSlide key={i}>
                   <div className="bg-white p-6 rounded-3xl shadow-md border border-gray-200 min-h-[260px] h-full flex flex-col">
                     {/* TOP ROW */}
                     <div className="flex items-center gap-4 mb-4">
-                      <img
-                        src={item.img}
-                        alt="img"
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
+                      <div className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                        {item.firstName[0]} {/* first letter */}
+                      </div>
 
                       <div>
                         <h4 className="font-semibold text-lg text-gray-900">
-                          {item.name}
+                          {item.firstName} {item.lastName}
                         </h4>
-                        <p className="text-gray-400 text-sm">{item.time}</p>
+                        <p className="text-gray-400 text-sm">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </p>
                       </div>
 
                       <img src="/f.svg" alt="img" className="w-6 h-6 ml-auto" />
@@ -206,7 +208,7 @@ export default function Testimonials() {
                         <FaStar
                           key={n}
                           className={
-                            n <= item.rating
+                            n <= (item.rating || 5)
                               ? "text-green-600"
                               : "text-gray-300"
                           }
@@ -214,9 +216,9 @@ export default function Testimonials() {
                       ))}
                     </div>
 
-                    {/* REVIEW TEXT — flex-1 makes all cards equal height */}
+                    {/* REVIEW TEXT */}
                     <p className="text-gray-700 text-sm leading-relaxed line-clamp-4 flex-1">
-                      {item.review}
+                      {item.message}
                     </p>
                   </div>
                 </SwiperSlide>
