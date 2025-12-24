@@ -119,7 +119,7 @@ const QuickTaxi = () => {
 
       {/* VEHICLES GRID */}
       <section className="max-w-7xl mx-auto px-4 py-10">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {vehicles.map((v) => {
             const vehicle = v.vehicles?.[0];
             if (!vehicle) return null;
@@ -127,38 +127,38 @@ const QuickTaxi = () => {
             return (
               <div
                 key={v._id}
-                className="bg-blue-50 rounded-xl overflow-hidden shadow-md border-2 border-blue-950 cursor-pointer transform transition hover:scale-105 hover:shadow-lg"
+                className="bg-blue-50 rounded-lg overflow-hidden shadow-md border border-blue-950 cursor-pointer transform transition hover:scale-105 hover:shadow-lg"
               >
                 <img
                   src={v.image}
                   alt={vehicle.type}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-40 object-cover"
                 />
 
-                <div className="p-6 text-center">
-                  <h3 className="text-xl font-semibold text-blue-950 mb-4">
+                <div className="p-4 text-center">
+                  <h3 className="text-lg font-semibold text-blue-950 mb-2">
                     {vehicle.type}
                   </h3>
 
-                  <div className="flex justify-between text-blue-900">
+                  <div className="flex justify-between text-blue-900 text-sm">
                     <div className="flex flex-col items-center">
-                      <FaUser className="text-xl mb-1" />
+                      <FaUser className="text-lg mb-1" />
                       <span>{vehicle.seats}</span>
                     </div>
                     <div className="flex flex-col items-center">
-                      <GiGearStick className="text-xl mb-1" />
+                      <GiGearStick className="text-lg mb-1" />
                       <span>Manual / Auto</span>
                     </div>
                     <div className="flex flex-col items-center">
-                      <FaSuitcase className="text-xl mb-1" />
+                      <FaSuitcase className="text-lg mb-1" />
                       <span>{vehicle.luggage}</span>
                     </div>
                     <div className="flex flex-col items-center">
-                      <FaCarSide className="text-xl mb-1" />
+                      <FaCarSide className="text-lg mb-1" />
                       <span>{vehicle.capacity}</span>
                     </div>
                     <div className="flex flex-col items-center">
-                      <FaSnowflake className="text-xl mb-1" />
+                      <FaSnowflake className="text-lg mb-1" />
                       <span>{vehicle.ac ? "AC" : "Non-AC"}</span>
                     </div>
                   </div>
