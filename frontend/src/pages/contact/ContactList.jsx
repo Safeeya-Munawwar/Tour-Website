@@ -76,7 +76,7 @@ export default function AdminContactList() {
     { key: "offices", label: "Offices" },
     { key: "social", label: "Social Links" },
     { key: "map", label: "Map" },
-    { key: "messages", label: "Customer Reviews" },
+    { key: "messages", label: "Customer Messages" },
   ];
 
   return (

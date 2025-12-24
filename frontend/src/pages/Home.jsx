@@ -6,7 +6,7 @@ import Cards from '../components/Cards'
 // import Call from '../components/Call'
 import Why from '../components/Why'
 import Destination from '../components/Destination'
-import Testimonials from '../components/Testimonials'
+import TripAdvisor from '../components/TripAdvisor'
 import Stats from '../components/Stats'
 import Video1 from '../components/Video1'
 import Stories from '../components/Stories'
@@ -28,7 +28,7 @@ export default function Home() {
       <Video1/>
       <Stories/>
       <ExploreMapSection />
-      <Testimonials/>
+      <TripAdvisor />
     
      
     </div>
