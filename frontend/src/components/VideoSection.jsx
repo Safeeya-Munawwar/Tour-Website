@@ -3,6 +3,7 @@ import { axiosInstance } from "../lib/axios";
 
 export default function VideoSection() {
   const videoRef = useRef(null);
+
   const [homeInfo, setHomeInfo] = useState({
     title: "",
     subtitle: "",
@@ -10,65 +11,55 @@ export default function VideoSection() {
     video: "",
   });
 
-  // Fetch home info from backend
-  const fetchHomeData = async () => {
-    try {
-      const res = await axiosInstance.get("/home");
-      if (res.data && res.data.info && res.data.info.video) {
-        setHomeInfo({
-          title: res.data.info.title,
-          subtitle: res.data.info.subtitle,
-          description: res.data.info.description,
-          video: res.data.info.video,
-        });
-      }
-    } catch (err) {
-      console.error("Failed to fetch home info:", err);
-    }
-  };
-
+  // Fetch home info
   useEffect(() => {
-    fetchHomeData();
-  }, []);
-
-  // Auto-play audio on mount (persistent)
-  useEffect(() => {
-    const videoEl = videoRef.current;
-    if (!videoEl) return;
-
-    // Some browsers block autoplay with sound, so we attempt to play and catch errors
-    const playVideo = async () => {
+    const fetchHomeData = async () => {
       try {
-        await videoEl.play();
+        const res = await axiosInstance.get("/home");
+        if (res?.data?.info) {
+          setHomeInfo({
+            title: res.data.info.title || "",
+            subtitle: res.data.info.subtitle || "",
+            description: res.data.info.description || "",
+            video: res.data.info.video || "",
+          });
+        }
       } catch (err) {
-        console.warn("Autoplay failed. User interaction may be required.", err);
+        console.error("Failed to fetch home info:", err);
       }
     };
 
-    playVideo();
+    fetchHomeData();
+  }, []);
+
+  // Guaranteed autoplay (muted)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.playsInline = true;
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        console.warn("Autoplay blocked");
+      });
+    }
   }, [homeInfo.video]);
 
   return (
-    <section className="w-full bg-white py-16 md:py-32">
-      <div className="max-w-[1350px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-8">
-        {/* LEFT TEXT */}
+    <section className="w-full bg-white py-16 md:py-28">
+      <div className="max-w-[1350px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-10">
+
+        {/* LEFT CONTENT */}
         <div className="lg:col-span-6">
-          <div className="max-w-[680px] mx-auto lg:mx-0">
-            <div
-              className="text-lg sm:text-sm tracking-widest uppercase mb-6 text-gray-400"
-              style={{ letterSpacing: "2px" }}
-            >
+          <div className="max-w-[680px]">
+            <div className="text-xs tracking-widest uppercase mb-5 text-gray-400">
               {homeInfo.subtitle}
             </div>
 
-            <h1
-              className="font-extrabold leading-tight mb-6 text-4xl sm:text-5xl md:text-6xl"
-              style={{
-                lineHeight: 1.1,
-                color: "#111827",
-                letterSpacing: "-1px",
-              }}
-            >
+            <h1 className="font-extrabold mb-6 text-4xl sm:text-5xl md:text-6xl leading-tight text-gray-900">
               {homeInfo.title}
             </h1>
 
@@ -80,41 +71,34 @@ export default function VideoSection() {
 
         {/* RIGHT VIDEO */}
         <div className="lg:col-span-6 flex justify-center lg:justify-end">
-          <div className="relative rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.12)] w-full max-w-[720px] aspect-[720/460] overflow-hidden border border-[rgba(0,0,0,0.06)]">
-            {homeInfo.video && (
-              <div className="relative w-full h-full overflow-hidden">
-                {/* Blurred background video */}
-                <video
-                  src={homeInfo.video}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  className="absolute top-0 left-0 w-full h-full object-cover filter blur-xl brightness-50"
-                />
+          <div className="relative w-full max-w-[720px] aspect-video rounded-2xl overflow-hidden shadow-xl border border-black/5">
 
-                {/* Main video with audio */}
+            {homeInfo.video && (
+              <>
+                {/* Video */}
                 <video
                   ref={videoRef}
                   src={homeInfo.video}
                   autoPlay
+                  muted
                   loop
                   playsInline
                   preload="auto"
-                  className="relative w-full h-full object-contain"
-                  controls={false} // hide controls if you want automatic audio
-                  // muted removed so audio plays
+                  className="w-full h-full object-cover"
                 />
 
-                {/* Watermark / text */}
-                <div className="absolute bottom-3 right-4 text-white text-sm md:text-base font-semibold opacity-60 pointer-events-none select-none">
+                {/* Soft overlay for premium look */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/10 pointer-events-none" />
+
+                {/* Watermark */}
+                <div className="absolute bottom-4 right-5 text-white text-xs sm:text-sm font-semibold opacity-70 pointer-events-none select-none">
                   Net Lanka Travels
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>
+
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 const TourReviewsAdmin = () => {
   const [reviews, setReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
 
   // ---------------- FETCH ALL REVIEWS ----------------
   const fetchReviews = async () => {

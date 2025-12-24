@@ -7,7 +7,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 const TailorComments = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 3;
+  const rowsPerPage = 6;
 
   // ---------------- FETCH ALL TESTIMONIALS ----------------
   const fetchTestimonials = async () => {

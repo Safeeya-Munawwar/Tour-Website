@@ -54,12 +54,13 @@ import AdminManageHome from "./pages/admin/ManageHome";
 import BlogComments from "./pages/admin/BlogComments";
 import TourReviews from "./pages/admin/TourReviews";
 import TailorComments from "./pages/admin/TailorComments";
-import TripadvisorReviews from "./pages/admin/TripadvisorReviews";
 import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
 import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
 import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import ScrollToTop from "./components/ScrollToTop";
 import WhatsAppButton from "./components/WhatsAppButton";
+import QuickTaxiButton from "./components/QuickTaxiButton";
+import QuickTaxi from "./pages/QuickTaxi";
 
 function App() {
   const location = useLocation();
@@ -72,6 +73,7 @@ function App() {
       {!hideLayout && <Navbar />}
       <ScrollToTop /> 
       <WhatsAppButton />
+      <QuickTaxiButton />
       <main className="flex-grow">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}
@@ -91,6 +93,7 @@ function App() {
           <Route path="/day-tour-detail/:id" element={<TourDetail />} />
           <Route path="/round-tours/:id" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
+          <Route path="/quick-taxi" element={<QuickTaxi />} />
 
           {/* ---------------------------ADMIN ROUTES--------------------------- */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -373,16 +376,6 @@ function App() {
             element={
               <AdminProtectedRoute>
                 <TailorComments />
-              </AdminProtectedRoute>
-            }
-          />
-
-          {/* Tripadvisor Reviews */}
-          <Route
-            path="/admin/tripadvisor-reviews"
-            element={
-              <AdminProtectedRoute>
-                <TripadvisorReviews />
               </AdminProtectedRoute>
             }
           />

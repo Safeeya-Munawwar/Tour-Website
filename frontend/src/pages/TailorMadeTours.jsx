@@ -265,8 +265,14 @@ const TailorMadeTours = () => {
 
         {/* Main Text */}
         <p className="text-sm sm:text-base text-center text-gray-600 leading-relaxed">
-          Our tailor-made tours are designed around your comfort, interests, and
-          pace — ensuring a seamless Sri Lanka holiday experience.
+        Our tailor-made tours are thoughtfully designed around your comfort, interests, and pace, 
+        ensuring every moment of your Sri Lanka journey is enjoyable. 
+        From exploring hidden gems to visiting iconic landmarks, each itinerary is personalized to 
+        match your travel style. We take care of all the details, from comfortable transport to 
+        carefully selected accommodations, so you can focus on creating memories. Whether you prefer 
+        sightseeing, adventure, or relaxation, your tour flows seamlessly at your own pace. 
+        Our goal is to make your holiday effortless, stress-free, and truly unforgettable. 
+        Experience Sri Lanka the way you’ve always imagined, with every detail crafted just for you.
         </p>
 
         {/* Expandable Content */}

@@ -8,7 +8,7 @@ const BlogComments = () => {
   const [comments, setComments] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 3;
+  const rowsPerPage = 6;
 
   // ---------------- FETCH ALL COMMENTS & BLOGS ----------------
   const fetchComments = async () => {

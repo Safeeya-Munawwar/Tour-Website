@@ -1,175 +1,132 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Tooltip, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import {
-  FaUmbrellaBeach,
-  FaHiking,
-  FaLandmark,
-  FaUtensils,
-  FaShip,
-  FaMountain,
-} from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import { axiosInstance } from "../lib/axios";
+import "swiper/css";
+import "swiper/css/navigation";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-// Fix default Leaflet icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/images/marker-shadow.png",
-});
+export default function ExploreSriLankaSection() {
+  const [experiences, setExperiences] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-// Data for each category
-const categoryPlaces = {
-  Beaches: [
-    { name: "Unawatuna Beach", lat: 6.0171, lng: 80.2498 },
-    { name: "Mirissa Beach", lat: 5.9481, lng: 80.4547 },
-    { name: "Bentota Beach", lat: 6.4205, lng: 79.9939 },
-    { name: "Hikkaduwa Beach", lat: 6.1433, lng: 80.1024 },
-    { name: "Nilaveli Beach", lat: 8.8076, lng: 81.2458 },
-    { name: "Trincomalee Beach", lat: 8.5695, lng: 81.234 },
-    { name: "Arugam Bay", lat: 6.8382, lng: 81.847 },
-    { name: "Tangalle Beach", lat: 5.9565, lng: 80.787 },
-    { name: "Passekudah Beach", lat: 7.5666, lng: 81.233 },
-    { name: "Kalpitiya Beach", lat: 8.0187, lng: 79.658 },
-  ],
-  Adventure: [
-    { name: "Adam's Peak", lat: 6.8003, lng: 80.4912 },
-    { name: "Knuckles Range", lat: 7.333, lng: 80.825 },
-    { name: "Ella Rock", lat: 6.865, lng: 81.044 },
-    { name: "Horton Plains", lat: 6.8027, lng: 80.8128 },
-    { name: "Kitulgala White Water Rafting", lat: 6.964, lng: 80.454 },
-    { name: "Sinharaja Forest Reserve", lat: 6.419, lng: 80.441 },
-    { name: "Pidurutalagala", lat: 7.0034, lng: 80.7659 },
-    { name: "Haputale Trekking", lat: 6.844, lng: 80.981 },
-    { name: "Ritigala Forest Reserve", lat: 8.000, lng: 80.648 },
-    { name: "Knuckles Hiking Trails", lat: 7.340, lng: 80.828 },
-  ],
-  History: [
-    { name: "Sigiriya Rock Fortress", lat: 7.9577, lng: 80.7606 },
-    { name: "Polonnaruwa", lat: 7.9393, lng: 81.0009 },
-    { name: "Galle Fort", lat: 6.0328, lng: 80.217 },
-    { name: "Anuradhapura Ancient City", lat: 8.3114, lng: 80.403 },
-    { name: "Dambulla Cave Temple", lat: 7.856, lng: 80.652 },
-    { name: "Ruwanwelisaya Stupa", lat: 8.353, lng: 80.398 },
-    { name: "Kandy Temple of the Tooth", lat: 7.295, lng: 80.636 },
-    { name: "Jaffna Fort", lat: 9.661, lng: 80.022 },
-    { name: "Mihintale", lat: 8.350, lng: 80.540 },
-    { name: "Dutch Fort Galle", lat: 6.034, lng: 80.217 },
-  ],
-  Gastronomy: [
-    { name: "Colombo Food Street", lat: 6.9271, lng: 79.8612 },
-    { name: "Kandy Market", lat: 7.2906, lng: 80.6337 },
-    { name: "Galle Fort Food Street", lat: 6.032, lng: 80.218 },
-    { name: "Negombo Fish Market", lat: 7.207, lng: 79.835 },
-    { name: "Jaffna Cuisine Tour", lat: 9.661, lng: 80.022 },
-    { name: "Hikkaduwa Seafood Market", lat: 6.143, lng: 80.102 },
-    { name: "Matale Spice Garden", lat: 7.467, lng: 80.623 },
-    { name: "Nuwara Eliya Tea Factory Tour", lat: 6.970, lng: 80.789 },
-    { name: "Ella Local Food Experience", lat: 6.841, lng: 81.045 },
-    { name: "Batticaloa Food Tour", lat: 7.715, lng: 81.700 },
-  ],
-  Cruises: [
-    { name: "Negombo Lagoon Cruise", lat: 7.2096, lng: 79.8353 },
-    { name: "Trincomalee Harbor Cruise", lat: 8.5679, lng: 81.233 },
-    { name: "Bentota River Safari", lat: 6.420, lng: 79.994 },
-    { name: "Madu River Boat Safari", lat: 6.271, lng: 80.060 },
-    { name: "Koggala Lake Cruise", lat: 5.990, lng: 80.313 },
-    { name: "Kalpitiya Dolphin Watching", lat: 8.018, lng: 79.658 },
-    { name: "Negombo Backwaters", lat: 7.210, lng: 79.835 },
-    { name: "Colombo Harbor Cruise", lat: 6.927, lng: 79.861 },
-    { name: "Passikudah Lagoon Cruise", lat: 7.568, lng: 81.233 },
-    { name: "Trincomalee Snorkeling & Cruise", lat: 8.574, lng: 81.236 },
-  ],
-  Mountains: [
-    { name: "Pidurutalagala", lat: 7.0034, lng: 80.7659 },
-    { name: "Horton Plains", lat: 6.8027, lng: 80.8128 },
-    { name: "Adam's Peak", lat: 6.8003, lng: 80.4912 },
-    { name: "Knuckles Range", lat: 7.333, lng: 80.825 },
-    { name: "Ella Rock", lat: 6.865, lng: 81.044 },
-    { name: "Namunukula", lat: 6.816, lng: 81.022 },
-    { name: "Piduruthalagala Peak", lat: 7.003, lng: 80.765 },
-    { name: "Kirigalpotta", lat: 6.966, lng: 80.825 },
-    { name: "Thotupola Kanda", lat: 6.975, lng: 80.790 },
-    { name: "World's End, Horton Plains", lat: 6.802, lng: 80.800 },
-  ],
-};
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const res = await axiosInstance.get("/experience");
+        setExperiences(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch experiences:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExperiences();
+  }, []);
 
-// Map bounds helper
-function FitBounds({ places }) {
-  const map = useMap();
-  if (places.length === 0) return null;
-  const bounds = L.latLngBounds(places.map((p) => [p.lat, p.lng]));
-  map.fitBounds(bounds, { padding: [50, 50] });
-  return null;
-}
-
-export default function ExploreMapSection() {
-  const [selectedCategory, setSelectedCategory] = useState("Beaches");
-
-  // All buttons
-  const buttons = [
-    { title: "Beaches", icon: <FaUmbrellaBeach /> },
-    { title: "Adventure", icon: <FaHiking /> },
-    { title: "History", icon: <FaLandmark /> },
-    { title: "Gastronomy", icon: <FaUtensils /> },
-    { title: "Cruises", icon: <FaShip /> },
-    { title: "Mountains", icon: <FaMountain /> },
+  const mapImage = [
+    { title: "ADVENTURE TRAILS", image: "/images/adventure.jpeg" },
+    { title: "BEACH ESCAPES", image: "/images/beach.jpeg" },
+    { title: "CULTURAL WONDERS", image: "/images/culture.jpeg" },
+    { title: "HIDDEN GEMS", image: "/images/hidden-gems.jpeg" },
+    { title: "WILDLIFE SAFARIS", image: "/images/wildlife.jpeg" },
   ];
 
   return (
-    <section className="w-full bg-white py-16">
-      <div className="max-w-7xl mx-auto px-6 text-center">
-        {/* Subtitle */}
-        <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500 mb-4">
-          EXPLORE WITH US
-        </p>
-
-        {/* Title */}
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-16">
-          Discover Sri Lanka's Best Experiences
-        </h2>
-
-        {/* Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
-          {buttons.map((btn) => (
-            <button
-              key={btn.title}
-              onClick={() => setSelectedCategory(btn.title)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-lg transition w-20 md:w-48 justify-center ${
-                selectedCategory === btn.title
-                  ? "bg-white text-black border-2 border-gray-900"
-                  : "bg-[#1A1A1A] hover:bg-black text-white"
-              }`}
-            >
-              <span className="text-xl">{btn.icon}</span>
-              {/* Hide text on small screens */}
-              <span className="hidden md:inline">{btn.title}</span>
-            </button>
-          ))}
+    <section className="w-full py-12 sm:py-16 bg-white">
+      <div className="max-w-[1350px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        {/* LEFT DESCRIPTION */}
+        <div className="lg:col-span-3 text-left pb-6">
+          <p className="text-sm sm:text-base md:text-lg tracking-wide text-gray-500 font-semibold mb-2">
+            Explore Sri Lanka
+          </p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
+            Things to do In Sri Lanka
+          </h2>
+          <p className="text-gray-600 text-sm sm:text-base mb-4 sm:mb-6">
+            Sri Lanka brings together beaches, mountains, culture, and wildlife
+            in one vibrant island. Every traveler can find something to enjoy -
+            adventure, history, nature, or simply the joy of slowing down beside
+            the ocean.
+          </p>
         </div>
 
-        {/* Map */}
-        <div className="w-full h-[500px] rounded-2xl border-4 border-gray-300 shadow-xl overflow-hidden">
-          <MapContainer center={[7.8731, 80.7718]} zoom={7} className="w-full h-full">
-            <TileLayer
-              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            {categoryPlaces[selectedCategory].map((place, i) => (
-              <Marker key={i} position={[place.lat, place.lng]}>
-                <Tooltip permanent direction="top" offset={[0, -10]}>
-                  {place.name}
-                </Tooltip>
-              </Marker>
+        {/* CENTER MAP */}
+        <div className="lg:col-span-6 flex justify-center pb-6">
+          <Swiper
+            modules={[Autoplay]}
+            autoplay={{ delay: 2500, disableOnInteraction: false }}
+            loop={true}
+            slidesPerView={1}
+            spaceBetween={10}
+          >
+            {mapImage.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div className="text-center">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full sm:h-full md:h-full lg:h-full object-cover mx-auto rounded-lg"
+                  />
+                  <p className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-gray-800">
+                    {item.title}
+                  </p>
+                </div>
+              </SwiperSlide>
             ))}
+          </Swiper>
+        </div>
 
-            <FitBounds places={categoryPlaces[selectedCategory]} />
-          </MapContainer>
+        {/* RIGHT EXPERIENCES SWIPER */}
+        <div className="lg:col-span-3 relative">
+          {loading ? (
+            <p className="text-center text-sm sm:text-base">Loading...</p>
+          ) : experiences.length === 0 ? (
+            <p className="text-center text-sm sm:text-base">No experiences found.</p>
+          ) : (
+            <Swiper
+              modules={[Autoplay, Navigation]}
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              loop={true}
+              navigation={{
+                nextEl: ".trip-next",
+                prevEl: ".trip-prev",
+              }}
+              spaceBetween={20}
+              slidesPerView={1}
+            >
+              {experiences.map((exp, index) => (
+                <SwiperSlide key={index}>
+                  <div className="bg-white rounded-xl border border-gray-900 shadow-lg overflow-hidden mx-auto max-w-full sm:max-w-[300px] transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                    <img
+                      src={exp.mainImg || "/images/placeholder.jpg"}
+                      alt={exp.title}
+                      className="w-full h-48 sm:h-64 object-cover"
+                    />
+                    <div className="p-3 sm:p-4 flex flex-col justify-between h-full">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                          {exp.title}
+                        </h3>
+                        <p className="text-gray-600 mt-1 sm:mt-2 text-xs sm:text-sm">
+                          {exp.description}
+                        </p>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <button className="trip-prev bg-black text-white shadow-lg w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
+                          <FaChevronLeft />
+                        </button>
+                        <div className="flex-1"></div>
+                        <button className="trip-next bg-black text-white shadow-lg w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
+                          <FaChevronRight />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </section>
