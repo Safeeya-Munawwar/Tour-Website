@@ -21,6 +21,13 @@ import RoundTour from "./pages/RoundTour";
 import TourDetail from "./pages/TourDetail";
 import RoundTourDetail from "./pages/RoundTourDetail";
 import TailorMadeTours from "./pages/TailorMadeTours";
+import ScrollToTop from "./components/ScrollToTop";
+import WhatsAppButton from "./components/WhatsAppButton";
+import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
+import BookEventTour from "./components/BookEventTour";
+import QuickTaxiButton from "./components/QuickTaxiButton";
+import QuickTaxi from "./pages/QuickTaxi";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
@@ -57,16 +64,9 @@ import TailorComments from "./pages/admin/TailorComments";
 import DayTourBookingAdmin from "./pages/admin/DayTourBooking";
 import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
 import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
-import ScrollToTop from "./components/ScrollToTop";
-import WhatsAppButton from "./components/WhatsAppButton";
-import Events from "./pages/Events";
-import EventDetail from "./pages/EventDetail";
-import BookEventTour from "./components/BookEventTour";
 import EventList from "./pages/admin/EventList";
 import AddEvent from "./pages/admin/AddEvent";
 import EditEvent from "./pages/admin/EditEvent";
-import QuickTaxiButton from "./components/QuickTaxiButton";
-import QuickTaxi from "./pages/QuickTaxi";
 
 function App() {
   const location = useLocation();

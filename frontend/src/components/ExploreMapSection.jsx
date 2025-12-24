@@ -34,13 +34,13 @@ export default function ExploreSriLankaSection() {
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white">
-      <div className="max-w-[1350px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      <div className="max-w-[1350px] mx-auto px-4 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
         {/* LEFT DESCRIPTION */}
-        <div className="lg:col-span-3 text-left pb-6">
+        <div className="lg:col-span-3 text-left px-6 pb-6">
           <p className="text-sm sm:text-base md:text-lg tracking-wide text-gray-500 font-semibold mb-2">
             Explore Sri Lanka
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
+          <h2 className="text-1xl sm:text-1xl md:text-2xl lg:text-4xl font-extrabold mb-4 sm:mb-6">
             Things to do In Sri Lanka
           </h2>
           <p className="text-gray-600 text-sm sm:text-base mb-4 sm:mb-6">
@@ -52,7 +52,7 @@ export default function ExploreSriLankaSection() {
         </div>
 
         {/* CENTER MAP */}
-        <div className="lg:col-span-6 flex justify-center pb-6">
+        <div className="lg:col-span-5 flex justify-center pb-6">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 2500, disableOnInteraction: false }}
@@ -78,7 +78,7 @@ export default function ExploreSriLankaSection() {
         </div>
 
         {/* RIGHT EXPERIENCES SWIPER */}
-        <div className="lg:col-span-3 relative">
+        <div className="lg:col-span-4 relative">
           {loading ? (
             <p className="text-center text-sm sm:text-base">Loading...</p>
           ) : experiences.length === 0 ? (
