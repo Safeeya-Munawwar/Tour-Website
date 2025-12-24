@@ -60,6 +60,15 @@ import RoundTourBookingAdmin from "./pages/admin/RoundTourBooking";
 import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import ScrollToTop from "./components/ScrollToTop";
 import WhatsAppButton from "./components/WhatsAppButton";
+import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
+import BookEventTour from "./components/BookEventTour";
+import EditEventPage from "./pages/admin/EditEvent";
+import AddEventPage from "./pages/admin/AddEvent";
+import EventListPage from "./pages/admin/EventList";
+import EventList from "./pages/admin/EventList";
+import AddEvent from "./pages/admin/AddEvent";
+import EditEvent from "./pages/admin/EditEvent";
 
 function App() {
   const location = useLocation();
@@ -91,6 +100,9 @@ function App() {
           <Route path="/day-tour-detail/:id" element={<TourDetail />} />
           <Route path="/round-tours/:id" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="/book-event" element={<BookEventTour />} />
 
           {/* ---------------------------ADMIN ROUTES--------------------------- */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -289,6 +301,33 @@ function App() {
               </AdminProtectedRoute>
             }
           />
+          {/* ---------------------------ADMIN EVENT ROUTES--------------------------- */}
+<Route
+  path="/admin/events"
+  element={
+    <AdminProtectedRoute>
+      <EventList />  {/* list page */}
+    </AdminProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/events/new"
+  element={
+    <AdminProtectedRoute>
+      <AddEvent />  {/* add page */}
+    </AdminProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/events/edit/:id"
+  element={
+    <AdminProtectedRoute>
+      <EditEvent />  {/* edit page */}
+    </AdminProtectedRoute>
+  }
+/>
 
           {/* Admin Round Tours */}
           <Route

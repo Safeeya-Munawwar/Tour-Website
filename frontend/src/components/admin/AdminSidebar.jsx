@@ -19,13 +19,14 @@ import {
   CalendarCheck,
   LogOut,
 } from "lucide-react";
-import { FaTripadvisor, FaStarHalfAlt, } from "react-icons/fa";
+import { FaTripadvisor, FaStarHalfAlt } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
   const [openToursMenu, setOpenToursMenu] = useState(false);
   const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
   const [openBookingMenu, setOpenBookingMenu] = useState(false);
+  const [openInsightMenu, setOpenInsightMenu] = useState(false);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
@@ -45,20 +46,17 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
         />
       )}
 
-     <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
-
+      <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
         <div className="h-auto flex items-center justify-center shadow-md border-b border-gray-800">
-    <img
-      src="/images/logo.png"
-      alt="Logo"
-      className="w-32 h-auto object-contain"
-    />
-  </div>
-     
+          <img
+            src="/images/logo.png"
+            alt="Logo"
+            className="w-32 h-auto object-contain"
+          />
+        </div>
 
         {/* Navigation */}
-       <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto">
-
+        <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto">
           {/* Dashboard */}
           <NavLink
             to="/admin/dashboard"
@@ -94,11 +92,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <BookOpen size={18} />
               Our Story
             </span>
-            {openStoryMenu ? (
-              <ChevronDown size={18} />
-            ) : (
-              <ChevronRight size={18} />
-            )}
+            {openStoryMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
 
           {openStoryMenu && (
@@ -158,11 +152,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <Plane size={18} />
               Tours
             </span>
-            {openToursMenu ? (
-              <ChevronDown size={18} />
-            ) : (
-              <ChevronRight size={18} />
-            )}
+            {openToursMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
 
           {openToursMenu && (
@@ -214,6 +204,44 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <Map size={18} /> Destinations
           </NavLink>
 
+          {/* Insight Menu */}
+          <button
+            onClick={() => setOpenInsightMenu(!openInsightMenu)}
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          >
+            <span className="flex items-center gap-3">
+              <NotebookPen size={18} />
+              Insight
+            </span>
+            {openInsightMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+          </button>
+
+          {openInsightMenu && (
+            <div className="ml-10 mt-1 flex flex-col space-y-1">
+              <NavLink
+                to="/admin/blogs"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <MessageSquare size={16} /> Blogs
+              </NavLink>
+
+              <NavLink
+                to="/admin/events"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Map size={16} /> Events
+              </NavLink>
+            </div>
+          )}
+
           {/* Experiences */}
           <NavLink
             to="/admin/experiences"
@@ -226,7 +254,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <PenTool size={18} /> Experiences
           </NavLink>
 
-          {/* ---------------- BOOKING MENU ---------------- */}
+          {/* Booking Menu */}
           <button
             onClick={() => setOpenBookingMenu(!openBookingMenu)}
             className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
@@ -235,11 +263,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <CalendarCheck size={18} />
               Booking
             </span>
-            {openBookingMenu ? (
-              <ChevronDown size={18} />
-            ) : (
-              <ChevronRight size={18} />
-            )}
+            {openBookingMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
 
           {openBookingMenu && (
@@ -279,19 +303,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
           )}
 
-          {/* Blog */}
-          <NavLink
-            to="/admin/blogs"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-                isActive ? activeClass : defaultClass
-              }`
-            }
-          >
-            <MessageSquare size={18} /> Blog
-          </NavLink>
-
-          {/* ---------------- COMMENTS MENU ---------------- */}
+          {/* Comments Menu */}
           <button
             onClick={() => setOpenCommentsMenu(!openCommentsMenu)}
             className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
@@ -300,16 +312,11 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <MessageCircle size={18} />
               Comments
             </span>
-            {openCommentsMenu ? (
-              <ChevronDown size={18} />
-            ) : (
-              <ChevronRight size={18} />
-            )}
+            {openCommentsMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
 
           {openCommentsMenu && (
             <div className="ml-10 mt-1 flex flex-col space-y-1">
-              {/* Blog Comments */}
               <NavLink
                 to="/admin/blog-comments"
                 className={({ isActive }) =>
@@ -321,7 +328,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <NotebookPen size={16} /> Blog Comments
               </NavLink>
 
-              {/* Contact Form Messages */}
               <NavLink
                 to="/admin/tour-reviews"
                 className={({ isActive }) =>
@@ -333,7 +339,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <FaStarHalfAlt size={16} /> Tour Reviews
               </NavLink>
 
-              {/* Tailor-Made Tour Comments */}
               <NavLink
                 to="/admin/tailor-comments"
                 className={({ isActive }) =>
@@ -345,7 +350,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <Star size={16} /> Tailor Reviews
               </NavLink>
 
-              {/* TripAdvisor Reviews */}
               <NavLink
                 to="/admin/tripadvisor-reviews"
                 className={({ isActive }) =>
@@ -371,14 +375,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <Mail size={18} /> Contact
           </NavLink>
         </nav>
-       <button
-  onClick={handleLogout}
-  className="mt-auto flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition justify-center"
->
-  <LogOut size={18} />
-  Logout
-</button>
 
+        <button
+          onClick={handleLogout}
+          className="mt-auto flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition justify-center"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
       </aside>
     </>
   );

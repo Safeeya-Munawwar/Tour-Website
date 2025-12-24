@@ -65,7 +65,11 @@ export default function Navbar() {
       name: "OUR STORY",
       dropdown: ["About", "Our Team", "Our Journey", "Community Impact"],
     },
-    { name: "BLOG" },
+    {
+  name: "INSIGHT",
+  dropdown: ["Blog", "Events"],
+},
+
     { name: "EXPERIENCE" },
     { name: "CONTACT US" },
   ];
@@ -94,8 +98,11 @@ export default function Navbar() {
         return "/our-journey";
       case "Community Impact":
         return "/community-impact";
-      case "BLOG":
-        return "/blog";
+    case "Blog":
+  return "/blog";
+case "Events":
+  return "/events";
+
       case "EXPERIENCE":
         return "/experience";
       case "CONTACT US":
