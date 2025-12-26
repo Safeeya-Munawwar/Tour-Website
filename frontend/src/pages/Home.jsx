@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import VideoSection from '../components/VideoSection'
 import Tours from '../components/Tours'
@@ -13,6 +13,11 @@ import Stories from '../components/Stories'
 import ExploreMapSection from '../components/ExploreMapSection';
 
 export default function Home() {
+  const [currentPage] = useState(1);
+  // Scroll to top on page change
+    useEffect(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, [currentPage]);
   return (
     <div>
     <div className="">

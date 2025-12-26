@@ -26,7 +26,11 @@ export default function BlogDetail() {
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     setShowText(false);
     const fetchBlog = async () => {

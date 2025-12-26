@@ -9,7 +9,11 @@ export default function EventDetail() {
   const [showText, setShowText] = useState(false);
   const [activeImg, setActiveImg] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   // Fetch event + detail from backend
   useEffect(() => {
     async function fetchEvent() {

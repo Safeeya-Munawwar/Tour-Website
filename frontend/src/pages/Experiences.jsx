@@ -27,10 +27,11 @@ export default function Experiences() {
     fetchExperiences();
   }, []);
 
-   // Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
+ 
+  // Scroll to top on page change
+    useEffect(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, [currentPage]);
   if (loading) return <div className="text-center py-20">Loading...</div>;
 
   // Pagination logic

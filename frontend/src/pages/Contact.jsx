@@ -29,7 +29,11 @@ const Contact = () => {
   });
   const [userLocation, setUserLocation] = useState(null);
   const [showText, setShowText] = useState(false);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     setTimeout(() => setShowText(true), 300);
   }, []);

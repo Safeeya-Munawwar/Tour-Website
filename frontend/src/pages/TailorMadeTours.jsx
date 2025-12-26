@@ -30,7 +30,11 @@ const TailorMadeTours = () => {
   const [showText, setShowText] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFull, setShowFull] = useState(false);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   const customizeOptions = [
     { icon: MapPin, label: "Destinations & Routes" },
     { icon: Clock, label: "Tour Duration" },

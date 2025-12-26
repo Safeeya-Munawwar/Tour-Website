@@ -15,7 +15,11 @@ const About = () => {
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
   const [about, setAbout] = useState(null);
-
+ const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     const fetchAbout = async () => {
       try {
