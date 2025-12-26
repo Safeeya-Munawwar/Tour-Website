@@ -44,22 +44,33 @@ export default function TaxiList() {
         <table className="w-full bg-white border border-[#1a354e] rounded shadow">
           <thead className="bg-[#0d203a] text-white">
             <tr>
-            <th className="p-3 border border-[#1a354e] ">Image</th>
-            <th className="p-3 border border-[#1a354e] ">Name</th>
-            <th className="p-3 border border-[#1a354e] ">Seats</th>
-            <th className="p-3 border border-[#1a354e] ">AC</th>
-            <th className="p-3 border border-[#1a354e] text-center w-36">Actions</th>
+              <th className="p-3 border border-[#1a354e] ">Image</th>
+              <th className="p-3 border border-[#1a354e] ">Name</th>
+              <th className="p-3 border border-[#1a354e] ">Seats</th>
+              <th className="p-3 border border-[#1a354e] ">AC</th>
+              <th className="p-3 border border-[#1a354e] text-center w-36">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {taxis.map((t) => (
-              <tr key={t._id} className="border-b border-[#2E5B84] hover:bg-blue-50">
-              <td className="p-2 border border-[#2E5B84] text-center">
-                  <img src={t.image} alt="img" className="h-12 w-12 rounded object-cover mx-auto" />
+              <tr
+                key={t._id}
+                className="border-b border-[#2E5B84] hover:bg-blue-50"
+              >
+                <td className="p-2 border border-[#2E5B84] text-center">
+                  <img
+                    src={t.image}
+                    alt="img"
+                    className="h-12 w-12 rounded object-cover mx-auto"
+                  />
                 </td>
                 <td className="p-3 border border-[#2E5B84]">{t.name}</td>
                 <td className="p-3 border border-[#2E5B84]">{t.seats}</td>
-                <td className="p-3 border border-[#2E5B84]">{t.ac ? "Yes" : "No"}</td>
+                <td className="p-3 border border-[#2E5B84]">
+                  {t.ac ? "Yes" : "No"}
+                </td>
                 <td className=" py-4 flex justify-center items-center gap-2">
                   <Link
                     to={`/admin/taxis/edit/${t._id}`}

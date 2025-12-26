@@ -17,7 +17,7 @@ export default function AddTaxi() {
     transmission: "Manual", // default value
     imageFile: null,
     imagePreview: "",
-  });  
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

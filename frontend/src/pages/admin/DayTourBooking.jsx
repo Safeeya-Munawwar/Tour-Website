@@ -81,7 +81,8 @@ const DayTourBookingAdmin = () => {
 
   // ---------------- DELETE BOOKING ----------------
   const handleDelete = async (id, source) => {
-    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+    if (!window.confirm("Are you sure you want to delete this booking?"))
+      return;
 
     try {
       const apiPath =
@@ -91,7 +92,8 @@ const DayTourBookingAdmin = () => {
       if (res.data.success) {
         toast.success("Booking deleted");
         fetchBookings();
-        if (selectedBooking && selectedBooking._id === id) setSelectedBooking(null);
+        if (selectedBooking && selectedBooking._id === id)
+          setSelectedBooking(null);
       } else toast.error("Delete failed");
     } catch (err) {
       console.error(err);
@@ -145,7 +147,9 @@ const DayTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">Name</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
-                <th className="p-3 border border-[#1a354e] text-sm">Pickup Location</th>
+                <th className="p-3 border border-[#1a354e] text-sm">
+                  Pickup Location
+                </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
@@ -162,20 +166,42 @@ const DayTourBookingAdmin = () => {
                 currentRows.map((b) => {
                   const message = getStatusMessage(b.status, b.name);
                   return (
-                    <tr key={b._id} className="border-b border-[#2E5B84] hover:bg-blue-50">
-                      <td className="p-3 border border-[#2E5B84] text-sm">{b.tourId?.title || "—"}</td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">{b.name}</td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">{b.phone}</td>
-                      <td className="p-3 border border-[#2E5B84] text-sm"> {Number(b.adults || 0) + Number(b.children || 0)}</td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">{b.pickupLocation || "—"}</td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">{b.startDate || "—"}</td>
+                    <tr
+                      key={b._id}
+                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+                    >
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.tourId?.title || "—"}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.name}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.phone}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {" "}
+                        {Number(b.adults || 0) + Number(b.children || 0)}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.pickupLocation || "—"}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.startDate || "—"}
+                      </td>
 
                       {/* Status selector + WhatsApp/Email */}
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         <div className="flex justify-center">
                           <select
                             value={b.status || "Pending"}
-                            onChange={(e) => handleStatusChange(b._id, e.target.value, b.source)}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                b._id,
+                                e.target.value,
+                                b.source
+                              )
+                            }
                             className={`px-2 py-1 rounded w-full max-w-[140px] ${
                               b.status === "Approved"
                                 ? "bg-green-100 text-green-700"
@@ -195,7 +221,9 @@ const DayTourBookingAdmin = () => {
 
                         <div className="flex gap-1 justify-center mt-2">
                           <a
-                            href={`https://wa.me/${getSanitizedPhone(b.phone)}?text=${encodeURIComponent(message)}`}
+                            href={`https://wa.me/${getSanitizedPhone(
+                              b.phone
+                            )}?text=${encodeURIComponent(message)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-green-700 text-white px-2 py-2 rounded text-xs flex items-center justify-center"
@@ -204,7 +232,11 @@ const DayTourBookingAdmin = () => {
                           </a>
                           {b.email && (
                             <a
-                              href={`mailto:${b.email}?subject=Day Tour Booking Update&body=${encodeURIComponent(message)}`}
+                              href={`mailto:${
+                                b.email
+                              }?subject=Day Tour Booking Update&body=${encodeURIComponent(
+                                message
+                              )}`}
                               className="bg-gray-700 text-white px-2 py-2 rounded text-xs flex items-center justify-center"
                             >
                               <FaEnvelope />
@@ -291,7 +323,10 @@ const DayTourBookingAdmin = () => {
                   <strong>Children:</strong> {selectedBooking.children || 0}
                 </p>
                 <p>
-                  <strong>Pickup:</strong> {selectedBooking.pickupLocation || "—"} on {selectedBooking.startDate || "—"} at {selectedBooking.startTime || "—"}
+                  <strong>Pickup:</strong>{" "}
+                  {selectedBooking.pickupLocation || "—"} on{" "}
+                  {selectedBooking.startDate || "—"} at{" "}
+                  {selectedBooking.startTime || "—"}
                 </p>
                 {selectedBooking.message && (
                   <p>
@@ -330,7 +365,14 @@ const DayTourBookingAdmin = () => {
                   Call
                 </a>
                 <a
-                  href={`https://wa.me/${getSanitizedPhone(selectedBooking.phone)}?text=${encodeURIComponent(getStatusMessage(selectedBooking.status, selectedBooking.name))}`}
+                  href={`https://wa.me/${getSanitizedPhone(
+                    selectedBooking.phone
+                  )}?text=${encodeURIComponent(
+                    getStatusMessage(
+                      selectedBooking.status,
+                      selectedBooking.name
+                    )
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 bg-green-700 text-white px-3 py-2 rounded text-center hover:bg-green-800"
@@ -339,7 +381,14 @@ const DayTourBookingAdmin = () => {
                 </a>
                 {selectedBooking.email && (
                   <a
-                    href={`mailto:${selectedBooking.email}?subject=Day Tour Booking Update&body=${encodeURIComponent(getStatusMessage(selectedBooking.status, selectedBooking.name))}`}
+                    href={`mailto:${
+                      selectedBooking.email
+                    }?subject=Day Tour Booking Update&body=${encodeURIComponent(
+                      getStatusMessage(
+                        selectedBooking.status,
+                        selectedBooking.name
+                      )
+                    )}`}
                     className="flex-1 bg-gray-500 text-white px-3 py-2 rounded text-center hover:bg-gray-600"
                   >
                     Email

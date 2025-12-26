@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 
-const QuickTaxiSchema = new mongoose.Schema({
-  name: { type: String, required: true }, 
-  transmission: { 
-    type: String, 
-    enum: ["Manual", "Auto"], 
-    default: "Manual" 
+const QuickTaxiSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    transmission: {
+      type: String,
+      enum: ["Manual", "Auto"],
+      default: "Manual",
+    },
+    seats: { type: Number, default: 4 },
+    luggage: { type: String },
+    capacity: { type: String },
+    type: { type: Boolean, default: true },
+    ac: { type: Boolean, default: true },
+    image: { type: String },
   },
-  seats: { type: Number, default: 4 },
-  luggage: { type: String },
-  capacity: { type: String }, 
-  type: { type: Boolean, default: true },
-  ac: { type: Boolean, default: true },
-  image: { type: String },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("QuickTaxi", QuickTaxiSchema);

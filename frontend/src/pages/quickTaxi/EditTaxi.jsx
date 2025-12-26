@@ -52,9 +52,9 @@ export default function EditTaxi() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData) return;
-  
+
     setIsSaving(true);
-  
+
     try {
       const fd = new FormData();
       fd.append("name", formData.name);
@@ -63,16 +63,16 @@ export default function EditTaxi() {
       fd.append("luggage", formData.luggage);
       fd.append("capacity", formData.capacity);
       fd.append("ac", formData.ac);
-  
+
       if (formData.imageFile) {
         fd.append("imageFile", formData.imageFile); // ✅ FIXED
       }
-  
+
       await axiosInstance.put(
         `/quick-taxi/taxis/${id}`, // ✅ FIXED URL
         fd
       );
-  
+
       toast.success("Vehicle updated successfully!", {
         onClose: () => navigate("/admin/taxis"),
         autoClose: 3000,
@@ -83,7 +83,7 @@ export default function EditTaxi() {
     } finally {
       setIsSaving(false);
     }
-  };  
+  };
 
   // ---------------- LOADING ----------------
   if (loading || !formData) {

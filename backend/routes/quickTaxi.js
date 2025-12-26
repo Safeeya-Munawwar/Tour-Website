@@ -54,7 +54,7 @@ router.post(
         name: req.body.name,
         transmission: req.body.transmission || "Manual",
         seats: req.body.seats,
-        luggage:req.body.luggage,
+        luggage: req.body.luggage,
         capacity: req.body.capacity,
         ac: req.body.ac === "true" || req.body.ac === true,
         image: req.file ? req.file.path : "",
@@ -146,7 +146,9 @@ router.patch("/bookings/:id", adminAuth, async (req, res) => {
     const { status } = req.body;
 
     if (!status) {
-      return res.status(400).json({ success: false, error: "Status is required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Status is required" });
     }
 
     const booking = await QuickTaxiBooking.findByIdAndUpdate(
@@ -156,7 +158,9 @@ router.patch("/bookings/:id", adminAuth, async (req, res) => {
     );
 
     if (!booking) {
-      return res.status(404).json({ success: false, error: "Booking not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Booking not found" });
     }
 
     res.json({ success: true, booking });

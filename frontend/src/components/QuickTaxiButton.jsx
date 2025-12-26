@@ -12,10 +12,10 @@ export default function QuickTaxiButton() {
 
   return (
     <div className="fixed bottom-28 right-6 z-50 flex flex-col items-end">
-      {/* CARD ABOVE BUTTON */}
-      {open && (
-        <div className="fixed bottom-44 mb-4 w-80 bg-white rounded-xl shadow-2xl overflow-hidden animate-slideUp">
-          <div className="bg-blue-600 p-4 text-white flex justify-between">
+    {/* CARD ABOVE BUTTON */}
+    {open && (
+      <div className="fixed bottom-40 w-72 bg-white rounded-xl shadow-lg overflow-hidden animate-slideUp">
+        <div className="bg-blue-600 p-3 text-white flex justify-between">
             <div>
               <p className="font-semibold text-lg">Quick Taxi</p>
               <p className="text-sm opacity-90">Book your ride quickly</p>
@@ -50,9 +50,9 @@ export default function QuickTaxiButton() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-28 w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition"
+        className="fixed bottom-28 bg-blue-600 text-white py-2 px-3 rounded-full shadow-md hover:scale-105 transition text-sm font-semibold"
       >
-        <FaCar className="text-white text-3xl" />
+        Quick Taxi
       </button>
     </div>
   );

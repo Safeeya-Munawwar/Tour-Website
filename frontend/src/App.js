@@ -84,7 +84,7 @@ function App() {
       <ScrollToTop />
       {!hideLayout && <QuickTaxiButton />}
       {!hideLayout && <WhatsAppButton />}
-      <main className="flex-grow">
+      <main className="flex-grow min-h-screen">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}
           <Route path="/" element={<Home />} />

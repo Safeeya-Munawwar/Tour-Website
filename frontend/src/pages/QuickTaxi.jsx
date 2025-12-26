@@ -184,6 +184,9 @@ const QuickTaxi = () => {
               <span className="px-5 py-2 bg-white shadow rounded-full text-sm font-semibold text-gray-900">
                 ✔ 24/7 Support
               </span>
+              <span className="px-5 py-2 bg-white shadow rounded-full text-sm font-semibold text-gray-900">
+                ✔ Verified Tours
+              </span>
             </div>
           </div>
 
