@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import {
   LayoutDashboard,
-  Edit3,
+  Plane,
+  Map,
   Users,
   MessageSquare,
   Star,
   MapPin,
   FileText,
-  Sun,
-  Repeat,
-  CalendarCheck,
-  Car,
-  ArrowRightCircle,
+  User,
 } from "lucide-react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {
@@ -117,10 +114,6 @@ export default function Dashboard() {
         tailorMade: tailorMadeRes.data?.length || 0,
         team: teamRes.data?.members?.length || 0,
         inquiries: inquiriesRes.data?.length || 0,
-        dayTours: allDayBookings.length,
-        roundTours: allRoundBookings.length,
-        quickTaxi: allTaxiBookings.length,
-        tailorMade: tailorMadeRes.data?.length || 0,
       });
 
       const allRoundBookings = [
@@ -178,11 +171,10 @@ export default function Dashboard() {
   const pieData = [
     { name: "Round Tours", value: stats.roundTours },
     { name: "Day Tours", value: stats.dayTours },
-    { name: "Quick Taxi", value: stats.quickTaxi },
     { name: "Tailor Made", value: stats.tailorMade },
   ];
 
-  const COLORS = ["#16a34a", "#2563eb", "#f59e0b", "#facc15"];
+  const COLORS = ["#2563eb", "#10b981", "#f59e0b"];
 
   // Filter bookings by search term
   const filteredBookings = bookings.filter((b) =>
@@ -208,49 +200,19 @@ export default function Dashboard() {
           {/* ---------------- STATS CARDS ---------------- */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             {Object.entries(stats).map(([name, count]) => (
-              <div
-                key={name}
-                className="bg-white shadow rounded-lg p-5 flex justify-between"
-              >
+              <div key={name} className="bg-white shadow rounded-lg p-5 flex justify-between">
                 <div>
                   <h2 className="text-gray-500 text-sm capitalize">{name.replace(/([A-Z])/g, " $1")}</h2>
                   <p className="text-3xl font-bold">{count}</p>
                 </div>
-
-                {/* Icons */}
-                {name === "day" && (
-                  <Sun size={36} className="text-fuchsia-500" />
-                )}
-                {name === "round" && (
-                  <Repeat size={36} className="text-purple-500" />
-                )}
-                {name === "dayTours" && (
-                  <CalendarCheck size={36} className="text-blue-600" />
-                )}
-                {name === "roundTours" && (
-                  <ArrowRightCircle size={36} className="text-green-600" />
-                )}
-                {name === "quickTaxi" && (
-                  <Car size={36} className="text-orange-500" />
-                )}
-                {name === "tailorMade" && (
-                  <Edit3 size={36} className="text-yellow-500" />
-                )}
-                {name === "inquiries" && (
-                  <MessageSquare size={36} className="text-red-500" />
-                )}
-                {name === "experiences" && (
-                  <Star size={36} className="text-pink-500" />
-                )}
-                {name === "destinations" && (
-                  <MapPin size={36} className="text-rose-500" />
-                )}
-                {name === "blog" && (
-                  <FileText size={36} className="text-cyan-500" />
-                )}
-                {name === "team" && (
-                  <Users size={36} className="text-teal-500" />
-                )}
+                {name === "dayTours" && <Plane size={36} className="text-blue-500" />}
+                {name === "roundTours" && <Map size={36} className="text-green-500" />}
+                {name === "tailorMade" && <Users size={36} className="text-yellow-500" />}
+                {name === "inquiries" && <MessageSquare size={36} className="text-red-500" />}
+                {name === "experiences" && <Star size={36} className="text-purple-500" />}
+                {name === "destinations" && <MapPin size={36} className="text-pink-500" />}
+                {name === "blog" && <FileText size={36} className="text-indigo-500" />}
+                {name === "team" && <User size={36} className="text-teal-500" />}
               </div>
             ))}
           </div>
@@ -279,9 +241,7 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie data={pieData} dataKey="value" outerRadius={100} label>
-                    {pieData.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i]} />
-                    ))}
+                    {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
                   </Pie>
                   <Tooltip />
                 </PieChart>
