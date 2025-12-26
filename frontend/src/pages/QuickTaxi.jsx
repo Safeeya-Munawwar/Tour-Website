@@ -10,7 +10,11 @@ const QuickTaxi = () => {
   const [showText, setShowText] = useState(false);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     const timer = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(timer);

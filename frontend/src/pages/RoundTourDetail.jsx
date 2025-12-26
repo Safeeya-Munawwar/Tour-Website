@@ -18,7 +18,11 @@ export default function RoundTourDetail() {
   const thumbSwiperRef = useRef(null);
   const [contact, setContact] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     axiosInstance
       .get("/contact")

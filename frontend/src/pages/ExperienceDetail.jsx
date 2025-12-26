@@ -17,6 +17,13 @@ export default function ExperienceDetail() {
   const [showText, setShowText] = useState(false);
 
   const { slug } = useParams();
+const [currentPage] = useState(1);
+// Scroll to top on page change
+useEffect(() => {
+  if (dataLoaded) {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }
+}, [dataLoaded]);
 
 useEffect(() => {
   setTimeout(() => setShowText(true), 200);

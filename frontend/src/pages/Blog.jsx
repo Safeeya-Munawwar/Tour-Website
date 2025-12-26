@@ -7,7 +7,11 @@ export default function Blog() {
   const [showText, setShowText] = useState(false);
   const [stories, setStories] = useState([]); // fetched blogs
   const [loading, setLoading] = useState(true);
-
+const [currentPage] = useState(1);
+// Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentPage]);
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
   }, []);
