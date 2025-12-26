@@ -105,7 +105,7 @@ return (
           </div>
           <div>
             <p className="font-semibold text-gray-800">
-              Net Lanka Tours
+              Net Lanka Travels
             </p>
             <p className="text-sm text-gray-500">
               Typically replies in a few minutes

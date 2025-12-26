@@ -18,24 +18,25 @@ import {
   NotebookPen,
   CalendarCheck,
   LogOut,
+  Car,
 } from "lucide-react";
-import { FaTripadvisor, FaStarHalfAlt } from "react-icons/fa";
+import { FaTripadvisor, FaStarHalfAlt, FaCarSide } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const navigate = useNavigate();
+
+  // Dropdown states
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
   const [openToursMenu, setOpenToursMenu] = useState(false);
-  const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
-  const [openBookingMenu, setOpenBookingMenu] = useState(false);
   const [openInsightMenu, setOpenInsightMenu] = useState(false);
+  const [openBookingMenu, setOpenBookingMenu] = useState(false);
+  const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
+  const [openTaxiMenu, setOpenTaxiMenu] = useState(false);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate("/admin/login");
-  };
+  const handleLogout = () => navigate("/admin/login");
 
   return (
     <>
@@ -47,156 +48,99 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       )}
 
       <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
-        <div className="h-auto flex items-center justify-center shadow-md border-b border-gray-800">
+        {/* Logo */}
+        <div className="h-auto flex items-center justify-center border-b border-gray-800 p-4">
           <img
             src="/images/logo.png"
             alt="Logo"
-            className="w-32 h-auto object-contain"
+            className="w-32 object-contain"
           />
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto">
+        <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
           {/* Dashboard */}
           <NavLink
             to="/admin/dashboard"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+              `flex items-center gap-3 px-4 py-2 rounded-lg ${
                 isActive ? activeClass : defaultClass
               }`
             }
           >
-            <LayoutDashboard size={18} />
-            Dashboard
+            <LayoutDashboard size={18} /> Dashboard
           </NavLink>
 
           {/* Home */}
           <NavLink
             to="/admin/manage-home"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+              `flex items-center gap-3 px-4 py-2 rounded-lg ${
                 isActive ? activeClass : defaultClass
               }`
             }
           >
-            <Home size={18} />
-            Home Content
+            <Home size={18} /> Home Content
           </NavLink>
 
-          {/* Our Story Menu */}
-          <button
-            onClick={() => setOpenStoryMenu(!openStoryMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          {/* Our Story */}
+          <SidebarDropdown
+            title="Our Story"
+            icon={<BookOpen size={18} />}
+            open={openStoryMenu}
+            setOpen={setOpenStoryMenu}
           >
-            <span className="flex items-center gap-3">
-              <BookOpen size={18} />
-              Our Story
-            </span>
-            {openStoryMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
+            <SidebarItem
+              to="/admin/manage-about"
+              icon={<Users size={16} />}
+              label="About Page"
+            />
+            <SidebarItem
+              to="/admin/manage-team"
+              icon={<Users size={16} />}
+              label="Our Team"
+            />
+            <SidebarItem
+              to="/admin/manage-journey"
+              icon={<Compass size={16} />}
+              label="Our Journey"
+            />
+            <SidebarItem
+              to="/admin/manage-community"
+              icon={<Star size={16} />}
+              label="Community Impact"
+            />
+          </SidebarDropdown>
 
-          {openStoryMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/manage-about"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Users size={16} /> About Page
-              </NavLink>
-
-              <NavLink
-                to="/admin/manage-team"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Users size={16} /> Our Team
-              </NavLink>
-
-              <NavLink
-                to="/admin/manage-journey"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Our Journey
-              </NavLink>
-
-              <NavLink
-                to="/admin/manage-community"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Star size={16} /> Community Impact
-              </NavLink>
-            </div>
-          )}
-
-          {/* Tours Menu */}
-          <button
-            onClick={() => setOpenToursMenu(!openToursMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          {/* Tours */}
+          <SidebarDropdown
+            title="Tours"
+            icon={<Plane size={18} />}
+            open={openToursMenu}
+            setOpen={setOpenToursMenu}
           >
-            <span className="flex items-center gap-3">
-              <Plane size={18} />
-              Tours
-            </span>
-            {openToursMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
-
-          {openToursMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/day-tours"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Map size={16} /> Day Tours
-              </NavLink>
-
-              <NavLink
-                to="/admin/round-tours"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Round Tours
-              </NavLink>
-
-              <NavLink
-                to="/admin/tailor-made-tours"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Star size={16} /> Tailor-Made Tours
-              </NavLink>
-            </div>
-          )}
+            <SidebarItem
+              to="/admin/day-tours"
+              icon={<Map size={16} />}
+              label="Day Tours"
+            />
+            <SidebarItem
+              to="/admin/round-tours"
+              icon={<Compass size={16} />}
+              label="Round Tours"
+            />
+            <SidebarItem
+              to="/admin/tailor-made-tours"
+              icon={<Star size={16} />}
+              label="Custom Tours"
+            />
+          </SidebarDropdown>
 
           {/* Destinations */}
           <NavLink
             to="/admin/destinations"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+              `flex items-center gap-3 px-4 py-2 rounded-lg ${
                 isActive ? activeClass : defaultClass
               }`
             }
@@ -204,49 +148,30 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <Map size={18} /> Destinations
           </NavLink>
 
-          {/* Insight Menu */}
-          <button
-            onClick={() => setOpenInsightMenu(!openInsightMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          {/* Insight */}
+          <SidebarDropdown
+            title="Insight"
+            icon={<NotebookPen size={18} />}
+            open={openInsightMenu}
+            setOpen={setOpenInsightMenu}
           >
-            <span className="flex items-center gap-3">
-              <NotebookPen size={18} />
-              Insight
-            </span>
-            {openInsightMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
-
-          {openInsightMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/blogs"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <MessageSquare size={16} /> Blogs
-              </NavLink>
-
-              <NavLink
-                to="/admin/events"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Map size={16} /> Events
-              </NavLink>
-            </div>
-          )}
+            <SidebarItem
+              to="/admin/blogs"
+              icon={<MessageSquare size={16} />}
+              label="Blogs"
+            />
+            <SidebarItem
+              to="/admin/events"
+              icon={<CalendarCheck size={16} />}
+              label="Events"
+            />
+          </SidebarDropdown>
 
           {/* Experiences */}
           <NavLink
             to="/admin/experiences"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+              `flex items-center gap-3 px-4 py-2 rounded-lg ${
                 isActive ? activeClass : defaultClass
               }`
             }
@@ -254,120 +179,83 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <PenTool size={18} /> Experiences
           </NavLink>
 
-          {/* Booking Menu */}
-          <button
-            onClick={() => setOpenBookingMenu(!openBookingMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          {/* QUICK TAXI */}
+          <SidebarDropdown
+            title="Quick Taxi"
+            icon={<Car size={18} />}
+            open={openTaxiMenu}
+            setOpen={setOpenTaxiMenu}
           >
-            <span className="flex items-center gap-3">
-              <CalendarCheck size={18} />
-              Booking
-            </span>
-            {openBookingMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
+            <SidebarItem
+              to="/admin/taxis"
+              icon={<FaCarSide size={16} />}
+              label="Manage Vehicles"
+            />
+            <SidebarItem
+              to="/admin/quick-taxi-booking"
+              icon={<CalendarCheck size={16} />}
+              label="Taxi Bookings"
+            />
+          </SidebarDropdown>
 
-          {openBookingMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/day-tour-booking"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Map size={16} /> Day Tour
-              </NavLink>
-
-              <NavLink
-                to="/admin/round-tour-booking"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Round Tour
-              </NavLink>
-
-              <NavLink
-                to="/admin/customize-tour"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <PenTool size={16} /> Customize Tour
-              </NavLink>
-            </div>
-          )}
-
-          {/* Comments Menu */}
-          <button
-            onClick={() => setOpenCommentsMenu(!openCommentsMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+          {/* Booking */}
+          <SidebarDropdown
+            title="Bookings"
+            icon={<CalendarCheck size={18} />}
+            open={openBookingMenu}
+            setOpen={setOpenBookingMenu}
           >
-            <span className="flex items-center gap-3">
-              <MessageCircle size={18} />
-              Comments
-            </span>
-            {openCommentsMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
+            <SidebarItem
+              to="/admin/day-tour-booking"
+              icon={<Map size={16} />}
+              label="Day Tour"
+            />
+            <SidebarItem
+              to="/admin/round-tour-booking"
+              icon={<Compass size={16} />}
+              label="Round Tour"
+            />
+            <SidebarItem
+              to="/admin/customize-tour"
+              icon={<PenTool size={16} />}
+              label="Customize Tour"
+            />
+          </SidebarDropdown>
 
-          {openCommentsMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/blog-comments"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <NotebookPen size={16} /> Blog Comments
-              </NavLink>
-
-              <NavLink
-                to="/admin/tour-reviews"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <FaStarHalfAlt size={16} /> Tour Reviews
-              </NavLink>
-
-              <NavLink
-                to="/admin/tailor-comments"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Star size={16} /> Tailor Reviews
-              </NavLink>
-
-              <NavLink
-                to="/admin/tripadvisor-reviews"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <FaTripadvisor size={16} /> TripAdvisor
-              </NavLink>
-            </div>
-          )}
+          {/* Comments */}
+          <SidebarDropdown
+            title="Comments"
+            icon={<MessageCircle size={18} />}
+            open={openCommentsMenu}
+            setOpen={setOpenCommentsMenu}
+          >
+            <SidebarItem
+              to="/admin/blog-comments"
+              icon={<NotebookPen size={16} />}
+              label="Blog Comments"
+            />
+            <SidebarItem
+              to="/admin/tour-reviews"
+              icon={<FaStarHalfAlt size={16} />}
+              label="Tour Reviews"
+            />
+            <SidebarItem
+              to="/admin/tailor-comments"
+              icon={<Star size={16} />}
+              label="Tailor Reviews"
+            />
+            <SidebarItem
+              to="/admin/tripadvisor-reviews"
+              icon={<FaTripadvisor size={16} />}
+              label="TripAdvisor"
+            />
+          </SidebarDropdown>
 
           {/* Contact */}
           <NavLink
             to="/admin/contacts"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+              `flex items-center gap-3 px-4 py-2 rounded-lg ${
                 isActive ? activeClass : defaultClass
               }`
             }
@@ -376,16 +264,48 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </NavLink>
         </nav>
 
+        {/* Logout */}
         <button
           onClick={handleLogout}
-          className="mt-auto flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition justify-center"
+          className="m-4 flex items-center justify-center gap-3 px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white"
         >
-          <LogOut size={18} />
-          Logout
+          <LogOut size={18} /> Logout
         </button>
       </aside>
     </>
   );
 };
+
+/* ---------------- REUSABLE COMPONENTS ---------------- */
+
+const SidebarDropdown = ({ title, icon, open, setOpen, children }) => (
+  <>
+    <button
+      onClick={() => setOpen(!open)}
+      className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
+    >
+      <span className="flex items-center gap-3">
+        {icon} {title}
+      </span>
+      {open ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+    </button>
+    {open && <div className="ml-10 mt-1 space-y-1">{children}</div>}
+  </>
+);
+
+const SidebarItem = ({ to, icon, label }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex items-center gap-2 px-2 py-2 rounded ${
+        isActive
+          ? "bg-[#487898] text-white"
+          : "text-gray-300 hover:bg-[#487898]/20"
+      }`
+    }
+  >
+    {icon} {label}
+  </NavLink>
+);
 
 export default AdminSidebar;

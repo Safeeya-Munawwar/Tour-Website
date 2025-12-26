@@ -3,39 +3,47 @@ import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
+import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 
 const CustomizeTourBookingAdmin = () => {
   const [inquiries, setInquiries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
   const rowsPerPage = 5;
 
-  // -------------------- Fetch Inquiries --------------------
   useEffect(() => {
     fetchInquiries();
   }, []);
 
   const fetchInquiries = async () => {
     try {
-      const res = await axiosInstance.get(
-        "/tailor-made-tours/inquiries"
-      );
+      const res = await axiosInstance.get("/tailor-made-tours/inquiries");
       setInquiries(res.data);
     } catch (err) {
       console.error(err);
+      toast.error("Failed to fetch inquiries");
     }
   };
 
-  // ---------------- UPDATE STATUS ----------------
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axiosInstance.put(
-        `/tailor-made-tours/inquiries/${id}`,
-        { status: newStatus },
-        { headers: { "Content-Type": "application/json" } }
+      await axiosInstance.put(`/tailor-made-tours/inquiries/${id}`, {
+        status: newStatus,
+      });
+
+      // Update inquiries array in state
+      setInquiries((prev) =>
+        prev.map((inq) =>
+          inq._id === id ? { ...inq, status: newStatus } : inq
+        )
       );
 
+      // Update modal if it's open for the same inquiry
+      if (selectedInquiry && selectedInquiry._id === id) {
+        setSelectedInquiry({ ...selectedInquiry, status: newStatus });
+      }
+
       toast.success("Status updated successfully");
-      fetchInquiries();
     } catch (err) {
       console.error(err);
       toast.error("Failed to update status");
@@ -43,19 +51,21 @@ const CustomizeTourBookingAdmin = () => {
   };
 
   const deleteInquiry = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this inquiry?"))
+      return;
     try {
-      await axiosInstance.delete(
-        `/tailor-made-tours/inquiries/${id}`
-      );
+      await axiosInstance.delete(`/tailor-made-tours/inquiries/${id}`);
       toast.success("Inquiry deleted!");
       fetchInquiries();
+      setSelectedInquiry(null);
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete inquiry.");
     }
   };
 
-  // ---------------- PAGINATION LOGIC ----------------
+  const getSanitizedPhone = (phone) => (phone ? phone.replace(/\D/g, "") : "");
+
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = inquiries.slice(indexOfFirstRow, indexOfLastRow);
@@ -65,16 +75,28 @@ const CustomizeTourBookingAdmin = () => {
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
+  const getStatusMessage = (status, fullName) => {
+    switch (status) {
+      case "Confirmed":
+        return `Hello ${fullName}, your tour booking has been approved! 🎉`;
+      case "Cancelled":
+        return `Hello ${fullName}, your tour booking has been cancelled 😔`;
+      case "Completed":
+        return `Hello ${fullName}, your tour booking is completed. Thank you! 😊`;
+      case "Pending":
+      default:
+        return `Hello ${fullName}, your tour booking is pending. We'll update you soon.`;
+    }
+  };
+
   return (
     <div className="flex">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* SIDEBAR */}
       <div className="w-64 fixed h-screen">
         <AdminSidebar />
       </div>
 
-      {/* MAIN CONTENT */}
       <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6 px-5 mt-4">
           Manage Customize Tour Bookings
@@ -84,151 +106,125 @@ const CustomizeTourBookingAdmin = () => {
           <table className="w-full table-fixed border border-[#1a354e] rounded mb-6 text-center">
             <thead className="bg-[#0d203a] text-white">
               <tr>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Full Name
+                <th className="p-3 border border-[#1a354e] text-sm">Name</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
+                <th className="p-3 border border-[#1a354e] text-sm">
+                  Location
                 </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Email
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Phone
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Pickup Location
-                  <br />
-                  <span className="text-m text-gray-300">(Start Date)</span>
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Drop Location
-                  <br />
-                  <span className="text-m text-gray-300">(End Date)</span>
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Adults
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Children
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Destinations
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Budget
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Note
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Status
-                </th>
-                <th className="p-3 border border-[#1a354e] text-sm break-words whitespace-normal">
-                  Actions
-                </th>
+                <th className="p-3 border border-[#1a354e] text-sm">Members</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Status</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {currentRows.map((inq) => (
-                <tr
-                  key={inq._id}
-                  className="border-b border-[#2E5B84] hover:bg-blue-50"
-                >
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.fullName}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.email}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.phone}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.pickupLocation || "—"}
-                    <br />
-                    <span className="text-sm text-gray-700">
-                      {inq.startDate
-                        ? new Date(inq.startDate).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "—"}
-                    </span>
-                  </td>
-
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.dropLocation || "—"}
-                    <br />
-                    <span className="text-sm text-gray-700">
-                      {inq.endDate
-                        ? new Date(inq.endDate).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "—"}
-                    </span>
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.adults}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.children}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.selectedDestinations?.join(", ") || "—"}
-                  </td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-  {inq.currency === "No Idea"
-    ? "No Idea"
-    : inq.budget != null && inq.budget !== ""
-    ? `${inq.currency || "USD"} ${Number(inq.budget).toLocaleString()}`
-    : "—"}
-</td>
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    {inq.notes}
-                  </td>
-                  <td className="p-2 border border-[#2E5B84] text-sm">
-                    <div className="flex justify-center">
-                      <select
-                        value={inq.status || "Pending"}
-                        onChange={(e) =>
-                          handleStatusChange(inq._id, e.target.value)
-                        }
-                        className={`px-2 py-1 rounded text-sm w-full max-w-[140px]
-        ${
-          inq.status === "Approved"
-            ? "bg-green-100 text-green-700"
-            : inq.status === "Cancelled"
-            ? "bg-red-100 text-red-700"
-            : inq.status === "Completed"
-            ? "bg-blue-100 text-blue-700"
-            : "bg-yellow-100 text-yellow-700"
-        }
-      `}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Cancelled">Cancelled</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </div>
-                  </td>
-
-                  <td className="p-3 border border-[#2E5B84] text-sm break-words whitespace-normal">
-                    <button
-                      className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                      onClick={() => deleteInquiry(inq._id)}
-                    >
-                      Delete
-                    </button>
+              {currentRows.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-4">
+                    No bookings found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentRows.map((inq) => {
+                  const message = getStatusMessage(inq.status, inq.fullName);
+                  return (
+                    <tr
+                      key={inq._id}
+                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+                    >
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.fullName}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.phone}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.pickupLocation || "—"}{" "}
+                        <span className="text-red-600 font-semibold">🡆</span>{" "}
+                        {inq.dropLocation || "—"}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {Number(inq.adults || 0) + Number(inq.children || 0)}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.currency && inq.budget
+                          ? `${inq.currency} ${Number(
+                              inq.budget
+                            ).toLocaleString()}`
+                          : "—"}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        <select
+                          value={inq.status || "Pending"}
+                          onChange={(e) =>
+                            handleStatusChange(inq._id, e.target.value)
+                          }
+                          className={`px-2 py-1 rounded w-full max-w-[140px] ${
+                            inq.status === "Confirmed"
+                              ? "bg-green-100 text-green-700"
+                              : inq.status === "Cancelled"
+                              ? "bg-red-100 text-red-700"
+                              : inq.status === "Completed"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Cancelled">Cancelled</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+
+                        {/* WhatsApp & Email buttons */}
+                        <div className="flex gap-1 mt-1 justify-center">
+                          <a
+                            href={`https://wa.me/${getSanitizedPhone(
+                              inq.phone
+                            )}?text=${encodeURIComponent(message)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-green-700 text-white px-2 py-2 rounded text-xs"
+                          >
+                            <FaWhatsapp />
+                          </a>
+
+                          {inq.email && (
+                            <a
+                              href={`mailto:${
+                                inq.email
+                              }?subject=Taxi Booking Update&body=${encodeURIComponent(
+                                message
+                              )}`}
+                              className="bg-gray-700 text-white px-2 py-2 rounded text-xs"
+                            >
+                              <FaEnvelope />
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                      <td className="flex justify-center items-center gap-2 mt-3 py-4">
+                        <button
+                          className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] transition text-sm"
+                          onClick={() => setSelectedInquiry(inq)}
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => deleteInquiry(inq._id)}
+                          className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* PAGINATION CONTROLS */}
+        {/* PAGINATION */}
         {totalPages > 1 && (
           <div className="flex justify-center gap-3">
             <button
@@ -248,6 +244,114 @@ const CustomizeTourBookingAdmin = () => {
             >
               Next
             </button>
+          </div>
+        )}
+
+        {/* MODAL */}
+        {selectedInquiry && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
+              <button
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+                onClick={() => setSelectedInquiry(null)}
+              >
+                ✕
+              </button>
+              <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
+              <div className="space-y-2 text-sm">
+                <p>
+                  <strong>Name:</strong> {selectedInquiry.fullName}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedInquiry.email}
+                </p>
+                <p>
+                  <strong>Phone:</strong> {selectedInquiry.phone}
+                </p>
+                <p>
+                  <strong>Pickup:</strong> {selectedInquiry.pickupLocation} on{" "}
+                  {selectedInquiry.startDate
+                    ? new Date(selectedInquiry.startDate).toLocaleDateString()
+                    : "—"}
+                </p>
+                <p>
+                  <strong>Drop:</strong> {selectedInquiry.dropLocation} on{" "}
+                  {selectedInquiry.endDate
+                    ? new Date(selectedInquiry.endDate).toLocaleDateString()
+                    : "—"}
+                </p>
+                <p>
+                  <strong>Adults:</strong> {selectedInquiry.adults}
+                </p>
+                <p>
+                  <strong>Children:</strong> {selectedInquiry.children}
+                </p>
+                <p>
+                  <strong>Budget:</strong>{" "}
+                  {selectedInquiry.currency && selectedInquiry.budget
+                    ? `${selectedInquiry.currency} ${selectedInquiry.budget}`
+                    : "—"}
+                </p>
+                {selectedInquiry.notes && (
+                  <p>
+                    <strong>Note:</strong> {selectedInquiry.notes}
+                  </p>
+                )}
+                <div className="mt-2">
+                  <label className="block font-semibold mb-1">Status:</label>
+                  <select
+                    value={selectedInquiry.status || "Pending"}
+                    onChange={(e) =>
+                      handleStatusChange(selectedInquiry._id, e.target.value)
+                    }
+                    className="px-2 py-1 rounded border w-full"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mt-4 flex gap-3 justify-center">
+                <a
+                  href={`tel:${selectedInquiry.phone}`}
+                  className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-center hover:bg-gray-800"
+                >
+                  Call
+                </a>
+                <a
+                  href={`https://wa.me/${getSanitizedPhone(
+                    selectedInquiry.phone
+                  )}?text=${encodeURIComponent(
+                    getStatusMessage(
+                      selectedInquiry.status,
+                      selectedInquiry.fullName
+                    )
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-green-700 text-white px-3 py-2 rounded text-center hover:bg-green-800"
+                >
+                  WhatsApp
+                </a>
+                {selectedInquiry.email && (
+                  <a
+                    href={`mailto:${
+                      selectedInquiry.email
+                    }?subject=Tour Booking Update&body=${encodeURIComponent(
+                      getStatusMessage(
+                        selectedInquiry.status,
+                        selectedInquiry.fullName
+                      )
+                    )}`}
+                    className="flex-1 bg-gray-500 text-white px-3 py-2 rounded text-center hover:bg-gray-600"
+                  >
+                    Email
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
