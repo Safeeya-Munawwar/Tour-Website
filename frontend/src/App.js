@@ -67,15 +67,12 @@ import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import EventList from "./pages/admin/EventList";
 import AddEvent from "./pages/admin/AddEvent";
 import EditEvent from "./pages/admin/EditEvent";
-<<<<<<< HEAD
 import { FloatingButtonsProvider } from "./context/FloatingButtonsContext";
 import EventTourBookingAdmin from "./pages/admin/EventTourBookingAdmin";
-=======
 import QuickTaxiBookingAdmin from "./pages/admin/QuickTaxiBooking";
 import TaxiList from "./pages/quickTaxi/TaxiList";
 import AddTaxi from "./pages/quickTaxi/AddTaxi";
 import EditTaxi from "./pages/quickTaxi/EditTaxi";
->>>>>>> bda74261d1d283a58a9c993414a7a459bff9b60a
 
 function App() {
   const location = useLocation();
