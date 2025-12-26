@@ -27,7 +27,7 @@ const tourBookingRoute = require("./routes/tourBookings");
 const loginRoute = require("./routes/login"); 
 const tourReviewsRoutes = require("./routes/tourReviews");
 const eventRoutes = require("./routes/event");
-
+const eventTourBookingRoutes = require("./routes/eventTourBooking");
 // Import allowedOrigins
 const allowedOrigins = require("./config/cors.config");
 
@@ -55,7 +55,7 @@ app.use("/api/admin", loginRoute);
 
 // Other routes
 app.use("/api/events", eventRoutes);
-
+app.use("/api/event-tour-booking", eventTourBookingRoutes);
 app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);
 app.use("/api/about", aboutRoute);

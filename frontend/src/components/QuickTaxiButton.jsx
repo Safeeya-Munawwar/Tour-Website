@@ -1,9 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Truck } from "lucide-react";
+import { useFloatingButtons } from "../context/FloatingButtonsContext";
 
 export default function QuickTaxiButton() {
   const navigate = useNavigate();
+  const { isWhatsAppOpen } = useFloatingButtons();
+
+  // 🔥 HIDE when WhatsApp is open
+  if (isWhatsAppOpen) return null;
 
   return (
     <button

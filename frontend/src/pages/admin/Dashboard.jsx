@@ -28,7 +28,6 @@ import {
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [stats, setStats] = useState({
     roundTours: 0,
     dayTours: 0,
@@ -42,6 +41,9 @@ export default function Dashboard() {
 
   const [bookings, setBookings] = useState([]);
   const [monthlyBookings, setMonthlyBookings] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -57,11 +59,27 @@ export default function Dashboard() {
     }
   };
 
+  // Tour type text color
+  const getTypeColor = (type) => {
+    switch (type) {
+      case "Round Tour":
+        return "text-green-600";
+      case "Day Tour":
+        return "text-blue-600";
+      case "Event Tour":
+        return "text-yellow-600";
+      case "Tailor Made":
+        return "text-purple-600";
+      default:
+        return "text-gray-800";
+    }
+  };
+
   const loadStats = async () => {
     try {
       const [
-        ,
-        ,
+        roundToursRes,
+        dayToursRes,
         experiencesRes,
         destinationsRes,
         blogRes,
@@ -71,7 +89,8 @@ export default function Dashboard() {
         dayTourBookingsRes,
         roundTourBookingsRes,
         commonBookingsRes,
-      ]= await Promise.all([
+        eventBookingsRes,
+      ] = await Promise.all([
         axiosInstance.get("/round-tours"),
         axiosInstance.get("/day-tours"),
         axiosInstance.get("/experience"),
@@ -83,64 +102,63 @@ export default function Dashboard() {
         axiosInstance.get("/day-tour-booking"),
         axiosInstance.get("/round-tour-booking"),
         axiosInstance.get("/book-tour"),
+        axiosInstance.get("/event-tour-booking"),
       ]);
 
-      // ---------------- STATS ----------------
-      const allRoundBookings = [
-        ...(roundTourBookingsRes.data.bookings || []).map((b) => ({
-          ...b,
-          type: "Round Tour",
-        })),
-        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "round") ||
-          []).map((b) => ({ ...b, type: "Round Tour" })),
-      ];
-
-      const allDayBookings = [
-        ...(dayTourBookingsRes.data.bookings || []).map((b) => ({
-          ...b,
-          type: "Day Tour",
-        })),
-        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "day") ||
-          []).map((b) => ({ ...b, type: "Day Tour" })),
-      ];
-
       setStats({
-        roundTours: allRoundBookings.length,
-        dayTours: allDayBookings.length,
-        experiences: experiencesRes.data.length || 0,
-        destinations: destinationsRes.data.destinations?.length || 0,
-        blog: blogRes.data.blogs?.length || 0,
+        roundTours: roundToursRes.data.tours?.length || 0,
+        dayTours: dayToursRes.data.tours?.length || 0,
+        experiences: experiencesRes.data?.length || 0,
+        destinations: destinationsRes.data?.destinations?.length || 0,
+        blog: blogRes.data?.blogs?.length || 0,
         tailorMade: tailorMadeRes.data?.length || 0,
         team: teamRes.data?.members?.length || 0,
         inquiries: inquiriesRes.data?.length || 0,
       });
 
-      // ---------------- RECENT BOOKINGS ----------------
-      const recentBookings = [...allRoundBookings, ...allDayBookings]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 6); // latest 6 bookings
-
-      setBookings(recentBookings);
-
-      // ---------------- MONTHLY BOOKINGS ----------------
-      const months = [
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sep","Oct","Nov","Dec"
+      const allRoundBookings = [
+        ...(roundTourBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Round Tour" })),
+        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "round") || []).map((b) => ({ ...b, type: "Round Tour" })),
       ];
+
+      const allDayBookings = [
+        ...(dayTourBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Day Tour" })),
+        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "day") || []).map((b) => ({ ...b, type: "Day Tour" })),
+      ];
+
+      const allEventBookings = (eventBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Event Tour" }));
+
+      const allTailorMade = (tailorMadeRes.data || []).map((b) => ({
+        ...b,
+        type: "Tailor Made",
+        fullName: b.fullName,
+        title: "Tailor Made Tour",
+        startDate: b.startDate,
+        status: b.status,
+      }));
+
+      const allBookings = [...allRoundBookings, ...allDayBookings, ...allEventBookings, ...allTailorMade];
+
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
       const dayCounts = Array(12).fill(0);
       const roundCounts = Array(12).fill(0);
+      const eventCounts = Array(12).fill(0);
+      const tailorCounts = Array(12).fill(0);
 
       allDayBookings.forEach((b) => dayCounts[new Date(b.startDate).getMonth()]++);
       allRoundBookings.forEach((b) => roundCounts[new Date(b.startDate).getMonth()]++);
+      allEventBookings.forEach((b) => eventCounts[new Date(b.startDate).getMonth()]++);
+      allTailorMade.forEach((b) => tailorCounts[new Date(b.startDate).getMonth()]++);
 
-      const chartData = months.map((m, i) => ({
+      setMonthlyBookings(months.map((m, i) => ({
         month: m,
         day: dayCounts[i],
         round: roundCounts[i],
-      }));
+        event: eventCounts[i],
+        tailor: tailorCounts[i],
+      })));
 
-      setMonthlyBookings(chartData);
-
+      setBookings(allBookings.sort((a, b) => new Date(b.createdAt || b.startDate) - new Date(a.createdAt || a.startDate)));
     } catch (err) {
       console.error("Dashboard loading error:", err);
     }
@@ -158,6 +176,17 @@ export default function Dashboard() {
 
   const COLORS = ["#2563eb", "#10b981", "#f59e0b"];
 
+  // Filter bookings by search term
+  const filteredBookings = bookings.filter((b) =>
+    b.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Pagination
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentBookings = filteredBookings.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+
   return (
     <div className="flex h-screen overflow-hidden">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -173,9 +202,7 @@ export default function Dashboard() {
             {Object.entries(stats).map(([name, count]) => (
               <div key={name} className="bg-white shadow rounded-lg p-5 flex justify-between">
                 <div>
-                  <h2 className="text-gray-500 text-sm capitalize">
-                    {name.replace(/([A-Z])/g, " $1")}
-                  </h2>
+                  <h2 className="text-gray-500 text-sm capitalize">{name.replace(/([A-Z])/g, " $1")}</h2>
                   <p className="text-3xl font-bold">{count}</p>
                 </div>
                 {name === "dayTours" && <Plane size={36} className="text-blue-500" />}
@@ -203,6 +230,8 @@ export default function Dashboard() {
                   <Legend />
                   <Line dataKey="day" stroke="#2563eb" strokeWidth={3} name="Day Tours" />
                   <Line dataKey="round" stroke="#16a34a" strokeWidth={3} name="Round Tours" />
+                  <Line dataKey="event" stroke="#f59e0b" strokeWidth={3} name="Event Tours" />
+                  <Line dataKey="tailor" stroke="#a855f7" strokeWidth={3} name="Tailor Made" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -220,9 +249,20 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* ---------------- RECENT BOOKINGS ---------------- */}
+          {/* ---------------- SEARCH & RECENT BOOKINGS ---------------- */}
           <div className="bg-white p-4 rounded shadow">
             <h2 className="text-xl font-semibold mb-4">Recent Bookings</h2>
+
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Search by tour type..."
+                className="border p-1 rounded w-64 text-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
             <table className="min-w-full divide-y">
               <thead className="bg-gray-50">
                 <tr>
@@ -234,21 +274,55 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {bookings.map((b) => (
-                  <tr key={b._id} className="hover:bg-blue-50">
-                    <td className="px-4 py-2">{b.type}</td>
-                    <td className="px-4 py-2">{b.tourId?.title || "—"}</td>
-                    <td className="px-4 py-2">{b.name}</td>
-                    <td className="px-4 py-2">{new Date(b.startDate).toLocaleDateString("en-GB")}</td>
+                {currentBookings.map((b) => (
+                  <tr key={b._id}>
+                    <td className={`px-4 py-2 font-semibold ${getTypeColor(b.type)}`}>{b.type}</td>
+                    <td className="px-4 py-2">{b.type === "Tailor Made" ? b.title : b.tourId?.title || b.eventId?.title || "—"}</td>
+                    <td className="px-4 py-2">{b.type === "Tailor Made" ? b.fullName : b.name || "—"}</td>
+                    <td className="px-4 py-2">{new Date(b.startDate || b.createdAt).toLocaleDateString("en-GB")}</td>
                     <td className="px-4 py-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(b.status)}`}>
-                        {b.status}
+                        {b.status || "Pending"}
                       </span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+
+            {/* ---------------- PAGINATION ---------------- */}
+           {/* ---------------- PAGINATION ---------------- */}
+<div className="flex justify-end mt-4 space-x-2">
+  {/* Previous Button */}
+  <button
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    disabled={currentPage === 1}
+    className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"}`}
+  >
+    Prev
+  </button>
+
+  {/* Page Numbers */}
+  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+    <button
+      key={page}
+      onClick={() => setCurrentPage(page)}
+      className={`px-3 py-1 rounded ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-100 hover:bg-gray-300"}`}
+    >
+      {page}
+    </button>
+  ))}
+
+  {/* Next Button */}
+  <button
+    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+    disabled={currentPage === totalPages}
+    className={`px-3 py-1 rounded ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"}`}
+  >
+    Next
+  </button>
+</div>
+
           </div>
         </main>
       </div>

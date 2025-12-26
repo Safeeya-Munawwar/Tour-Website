@@ -300,6 +300,17 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 <PenTool size={16} /> Customize Tour
               </NavLink>
+              
+              <NavLink
+                to="/admin/event-tour-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded transition ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <Compass size={16} /> Event Tour
+              </NavLink>
             </div>
           )}
 

@@ -67,6 +67,8 @@ import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import EventList from "./pages/admin/EventList";
 import AddEvent from "./pages/admin/AddEvent";
 import EditEvent from "./pages/admin/EditEvent";
+import { FloatingButtonsProvider } from "./context/FloatingButtonsContext";
+import EventTourBookingAdmin from "./pages/admin/EventTourBookingAdmin";
 
 function App() {
   const location = useLocation();
@@ -77,9 +79,10 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
+        <FloatingButtonsProvider>
       <ScrollToTop /> 
-      <WhatsAppButton />
-      <QuickTaxiButton />
+        {!hideLayout && <WhatsAppButton />}
+  {!hideLayout && <QuickTaxiButton />}
       <main className="flex-grow">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}
@@ -425,7 +428,14 @@ function App() {
               </AdminProtectedRoute>
             }
           />
-
+            <Route
+            path="/admin/event-tour-booking"
+            element={
+              <AdminProtectedRoute>
+                <EventTourBookingAdmin/>
+              </AdminProtectedRoute>
+            }
+          />
           {/* Round Tour Bookings */}
           <Route
             path="/admin/round-tour-booking"
@@ -449,6 +459,7 @@ function App() {
       </main>
 
       {!hideLayout && <Footer />}
+        </FloatingButtonsProvider>
     </div>
   );
 }
