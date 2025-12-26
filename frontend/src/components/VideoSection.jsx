@@ -39,19 +39,17 @@ export default function VideoSection() {
 
     video.muted = true;
     video.playsInline = true;
+    video.autoplay = true;
 
     const playPromise = video.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        console.warn("Autoplay blocked");
-      });
+      playPromise.catch(() => console.warn("Autoplay blocked"));
     }
-  }, [homeInfo.video]);
+  }, []);
 
   return (
     <section className="w-full bg-white py-16 md:py-28">
       <div className="max-w-[1350px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center gap-10">
-
         {/* LEFT CONTENT */}
         <div className="lg:col-span-6">
           <div className="max-w-[680px]">
@@ -72,13 +70,13 @@ export default function VideoSection() {
         {/* RIGHT VIDEO */}
         <div className="lg:col-span-6 flex justify-center lg:justify-end">
           <div className="relative w-full max-w-[720px] aspect-video rounded-2xl overflow-hidden shadow-xl border border-black/5">
-
             {homeInfo.video && (
               <>
                 {/* Video */}
                 <video
+                  key={homeInfo.video} // forces reload
                   ref={videoRef}
-                  src={homeInfo.video}
+                  src={homeInfo.video || ""}
                   autoPlay
                   muted
                   loop
@@ -98,7 +96,6 @@ export default function VideoSection() {
             )}
           </div>
         </div>
-
       </div>
     </section>
   );

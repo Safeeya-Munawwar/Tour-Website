@@ -309,7 +309,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   }`
                 }
               >
-                <Compass size={16} /> Event Tour
+                <Compass size={16} /> Event  Tour
               </NavLink>
             </div>
           )}

@@ -1,23 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaCar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { Truck } from "lucide-react";
 import { useFloatingButtons } from "../context/FloatingButtonsContext";
 
 export default function QuickTaxiButton() {
   const navigate = useNavigate();
   const { isWhatsAppOpen } = useFloatingButtons();
+  const [open, setOpen] = useState(false);
 
-  // 🔥 HIDE when WhatsApp is open
+  // Hide button if WhatsApp is open
   if (isWhatsAppOpen) return null;
 
+  const handleOpenBooking = () => {
+    setOpen(false);
+    navigate("/quick-taxi");
+  };
+
   return (
-    <button
-      onClick={() => navigate("/quick-taxi")}
-      className="fixed bottom-28 right-6 h-16 bg-orange-600 text-white rounded-full shadow-xl flex items-center gap-2 px-8 py-5 hover:scale-110 transition-transform z-50"
-      title="Quick Taxi"
-    >
-      <Truck size={24} />
-      <span className="font-semibold">Quick Taxi</span>
-    </button>
+    <div className="fixed bottom-28 right-6 z-[9999] flex flex-col items-end">
+      {/* CARD ABOVE BUTTON */}
+      {open && (
+        <div className="mb-3 w-72 bg-white rounded-xl shadow-xl overflow-hidden animate-slideUp">
+          <div className="bg-blue-600 p-3 text-white flex justify-between items-start">
+            <div>
+              <p className="font-semibold text-lg">Quick Taxi</p>
+              <p className="text-sm opacity-90">Book your ride quickly</p>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white text-lg"
+              aria-label="Close Quick Taxi card"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Contact Info */}
+          <div className="flex items-center gap-4 p-4 border-b">
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+              <FaCar className="text-white text-xl" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800">Net Lanka Travels</p>
+              <p className="text-sm text-gray-500">
+                Typically replies in a few minutes
+              </p>
+            </div>
+          </div>
+
+          {/* Book Now Button */}
+          <div className="p-3">
+            <button
+              onClick={handleOpenBooking}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Book Now
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg hover:scale-105 transition text-sm font-semibold"
+        aria-expanded={open}
+        aria-controls="quick-taxi-card"
+      >
+        Quick Taxi
+      </button>
+    </div>
   );
 }

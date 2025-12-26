@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { axiosInstance } from "../lib/axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function TaxiForm() {
   const [formData, setFormData] = useState({
@@ -15,9 +18,36 @@ export default function TaxiForm() {
     adults: 1,
     children: 0,
     message: "",
+    taxiId: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [setResponseMsg] = useState("");
+  const [setIsError] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("94729171089"); // fallback
+  const [vehicles, setVehicles] = useState([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get("/quick-taxi/taxis") // your backend route
+      .then((res) => {
+        if (res.data.success) setVehicles(res.data.taxis);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  // Fetch WhatsApp number from backend
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => {
+        const p = res.data?.whatsapp || res.data?.phone;
+        if (p) setWhatsappNumber(p.replace(/\D/g, ""));
+      })
+      .catch(() => {
+        // fallback number already set
+      });
+  }, []);
 
   /* ---------------- HANDLE CHANGE ---------------- */
   const handleChange = (e) => {
@@ -26,9 +56,7 @@ export default function TaxiForm() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "serviceType" && value === "pickup"
-        ? { dropDate: "" }
-        : {}),
+      ...(name === "serviceType" && value === "pickup" ? { dropDate: "" } : {}),
     }));
   };
 
@@ -40,41 +68,72 @@ export default function TaxiForm() {
     if (!formData.lastName.trim()) e.lastName = "Last name is required";
     if (!formData.phone.trim()) e.phone = "Phone number is required";
     if (!formData.country.trim()) e.country = "Country is required";
-
+    if (!formData.taxiId) e.taxiId = "Please select a vehicle";
     if (!formData.pickupLocation.trim())
       e.pickupLocation = "Pickup location is required";
-
     if (!formData.dropLocation.trim())
       e.dropLocation = "Drop location is required";
-
     if (!formData.pickupDate) e.pickupDate = "Pickup date is required";
     if (!formData.pickupTime) e.pickupTime = "Pickup time is required";
-
     if (formData.serviceType === "drop" && !formData.dropDate)
       e.dropDate = "Drop date is required";
-
-    if (Number(formData.adults) < 1)
-      e.adults = "At least 1 adult is required";
+    if (Number(formData.adults) < 1) e.adults = "At least 1 adult is required";
 
     return e;
   };
 
   /* ---------------- SUBMIT ---------------- */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const v = validate();
     setErrors(v);
 
     if (Object.keys(v).length === 0) {
-      alert("Taxi booking submitted successfully!");
+      try {
+        const { data } = await axiosInstance.post(
+          "/quick-taxi/bookings",
+          formData
+        );
+        if (data.success) {
+          toast.success("Taxi booking submitted successfully!");
+          setFormData({
+            firstName: "",
+            lastName: "",
+            phone: "",
+            country: "",
+            serviceType: "pickup",
+            pickupLocation: "",
+            dropLocation: "",
+            pickupDate: "",
+            dropDate: "",
+            pickupTime: "",
+            adults: 1,
+            children: 0,
+            message: "",
+            taxiId: "",
+          });
+        } else {
+          toast.error(
+            "Failed to submit booking: " + (data.error || "Unknown error")
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to submit booking. Check console for details.");
+      }
     }
   };
 
   /* ---------------- WHATSAPP ---------------- */
   const sendBookingViaWhatsApp = () => {
-    const v = validate();
-    setErrors(v);
-    if (Object.keys(v).length) return;
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setResponseMsg("Please fix the errors above before sending to WhatsApp");
+      setIsError(true);
+      toast.error("Please fix the errors before sending to WhatsApp");
+      return;
+    }
 
     const message = `
 🚕 *NET LANKA TRAVEL – TAXI BOOKING*
@@ -97,15 +156,15 @@ export default function TaxiForm() {
 📝 Message:
 ${formData.message || "—"}
 `;
-
-    window.open(
-      `https://wa.me/94729171089?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(url, "_blank");
   };
 
   return (
     <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-2xl font-bold text-center text-[#0B2545] mb-2">
         Quick Taxi Booking
         <span className="block text-base font-medium text-gray-600">
@@ -184,6 +243,32 @@ ${formData.message || "—"}
           />
           {errors.country && (
             <p className="text-red-500 text-sm">{errors.country}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="font-medium">
+            Select Vehicle <span className="text-red-500">*</span>
+          </label>
+          <select
+            name="taxiId"
+            value={formData.taxiId}
+            onChange={(e) =>
+              setFormData({ ...formData, taxiId: e.target.value })
+            }
+            className={`w-full px-4 py-3 rounded border ${
+              errors.taxiId ? "border-red-500" : "border-gray-300"
+            } focus:ring-2 focus:ring-[#0B2545] outline-none`}
+          >
+            <option value="">-- Select Vehicle --</option>
+            {vehicles.map((v) => (
+              <option key={v._id} value={v._id}>
+                {v.name} ({v.seats} seats, {v.ac ? "AC" : "Non-AC"})
+              </option>
+            ))}
+          </select>
+          {errors.taxiId && (
+            <p className="text-red-500 text-sm">{errors.taxiId}</p>
           )}
         </div>
 

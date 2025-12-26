@@ -67,8 +67,15 @@ import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import EventList from "./pages/admin/EventList";
 import AddEvent from "./pages/admin/AddEvent";
 import EditEvent from "./pages/admin/EditEvent";
+<<<<<<< HEAD
 import { FloatingButtonsProvider } from "./context/FloatingButtonsContext";
 import EventTourBookingAdmin from "./pages/admin/EventTourBookingAdmin";
+=======
+import QuickTaxiBookingAdmin from "./pages/admin/QuickTaxiBooking";
+import TaxiList from "./pages/quickTaxi/TaxiList";
+import AddTaxi from "./pages/quickTaxi/AddTaxi";
+import EditTaxi from "./pages/quickTaxi/EditTaxi";
+>>>>>>> bda74261d1d283a58a9c993414a7a459bff9b60a
 
 function App() {
   const location = useLocation();
@@ -80,9 +87,9 @@ function App() {
     <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
         <FloatingButtonsProvider>
-      <ScrollToTop /> 
+        <ScrollToTop /> 
         {!hideLayout && <WhatsAppButton />}
-  {!hideLayout && <QuickTaxiButton />}
+        {!hideLayout && <QuickTaxiButton />}
       <main className="flex-grow">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}
@@ -305,32 +312,32 @@ function App() {
             }
           />
           {/* ---------------------------ADMIN EVENT ROUTES--------------------------- */}
-<Route
-  path="/admin/events"
-  element={
-    <AdminProtectedRoute>
-      <EventList />  {/* list page */}
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/events"
+            element={
+              <AdminProtectedRoute>
+                <EventList /> {/* list page */}
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/events/new"
-  element={
-    <AdminProtectedRoute>
-      <AddEvent />  {/* add page */}
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/events/new"
+            element={
+              <AdminProtectedRoute>
+                <AddEvent /> {/* add page */}
+              </AdminProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/events/edit/:id"
-  element={
-    <AdminProtectedRoute>
-      <EditEvent />  {/* edit page */}
-    </AdminProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/events/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditEvent /> {/* edit page */}
+              </AdminProtectedRoute>
+            }
+          />
 
           {/* Admin Round Tours */}
           <Route
@@ -452,6 +459,44 @@ function App() {
             element={
               <AdminProtectedRoute>
                 <CustomizeTourBookingAdmin />
+              </AdminProtectedRoute>
+            }
+          />
+
+          {/* Quick Taxi Bookings */}
+          <Route
+            path="/admin/quick-taxi-booking"
+            element={
+              <AdminProtectedRoute>
+                <QuickTaxiBookingAdmin />
+              </AdminProtectedRoute>
+            }
+          />
+
+          {/* QUICK TAXI */}
+          <Route
+            path="/admin/taxis"
+            element={
+              <AdminProtectedRoute>
+                <TaxiList />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/taxis/new"
+            element={
+              <AdminProtectedRoute>
+                <AddTaxi />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/taxis/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditTaxi />
               </AdminProtectedRoute>
             }
           />
