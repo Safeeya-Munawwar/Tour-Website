@@ -64,7 +64,7 @@ export default function ExperienceDetail() {
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
           backgroundImage: `url('${
-            experience.heroImg || "/images/info5.JPEG"
+            experience.heroImg || ""
           }')`,
           backgroundPosition: "center 25%",
         }}

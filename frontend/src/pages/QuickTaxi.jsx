@@ -54,7 +54,7 @@ const QuickTaxi = () => {
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/transport-header.jpg')" }}
+        style={{ backgroundImage: "url('/images/transport-header_compressed.webp')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
 
@@ -96,7 +96,7 @@ const QuickTaxi = () => {
             >
               <div className="w-full h-48 overflow-hidden bg-gray-200">
                 <img
-                  src={v.image || "/images/default-car.png"}
+                  src={v.image || ""}
                   alt={v.name}
                   className="w-full h-full object-cover"
                 />

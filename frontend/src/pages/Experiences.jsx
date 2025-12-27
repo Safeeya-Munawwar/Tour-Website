@@ -48,7 +48,7 @@ export default function Experiences() {
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/images/experience-header.jpg')",
+          backgroundImage: "url('/images/experience-header_compressed.webp')",
           backgroundPosition: "center 50%",
         }}
       >

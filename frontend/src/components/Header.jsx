@@ -4,10 +4,10 @@ import { Check, Settings } from "lucide-react";
 
 export default function Header() {
   const images = [
-    "/images/d2.jpg",
-    "/images/destination.jpg",
-    "/images/sigiriya.jpg",
-    "/images/blog.jpg",
+    "/images/d2_compressed.webp",
+    "/images/destination_compressed.webp",
+    "/images/sigiriya_compressed.webp",
+    "/images/blog_compressed.webp",
     
   ];
 

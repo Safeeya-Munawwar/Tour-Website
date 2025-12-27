@@ -106,7 +106,7 @@ export default function Footer() {
         {/* 1) LOGO + DESCRIPTION + SOCIAL MEDIA */}
         <div>
           <img
-            src="/images/logo.png"
+            src="/images/logo_compressed.webp"
             alt="Logo"
             className="w-40 mb-5 opacity-95"
           />
