@@ -232,10 +232,10 @@ const [currentPage] = useState(1);
               &times;
             </button>
             <BookEventTour
-              eventId={id}
-              eventTitle={event.title}
-              eventLocation={event.startLocation}
-            />
+  eventId={event._id}   // MUST be MongoDB _id
+  eventTitle={event.title}
+  eventLocation={event.location}
+/>
           </div>
         </div>
       )}

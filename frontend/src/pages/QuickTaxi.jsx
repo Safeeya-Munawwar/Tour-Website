@@ -10,8 +10,8 @@ const QuickTaxi = () => {
   const [showText, setShowText] = useState(false);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-const [currentPage] = useState(1);
-// Scroll to top on page change
+  const [currentPage] = useState(1);
+  // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -92,13 +92,16 @@ const [currentPage] = useState(1);
           {vehicles.map((v) => (
             <div
               key={v._id}
-              className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer transform transition hover:scale-105 hover:shadow-2xl"
+              className="bg-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer transform transition hover:scale-105 hover:shadow-2xl"
             >
-              <img
-                src={v.image || "/images/default-car.png"} // fallback image
-                alt={v.name}
-                className="w-full h-48 object-cover"
-              />
+              <div className="w-full h-48 overflow-hidden bg-gray-200">
+                <img
+                  src={v.image || "/images/default-car.png"}
+                  alt={v.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
               <div className="p-5 text-center">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   {v.name}

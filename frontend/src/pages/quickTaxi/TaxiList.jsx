@@ -62,7 +62,7 @@ export default function TaxiList() {
                 <td className="p-2 border border-[#2E5B84] text-center">
                   <img
                     src={t.image}
-                    alt="img"
+                    alt="vehicle"
                     className="h-12 w-12 rounded object-cover mx-auto"
                   />
                 </td>

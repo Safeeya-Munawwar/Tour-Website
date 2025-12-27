@@ -17,35 +17,32 @@ export default function ExperienceDetail() {
   const [showText, setShowText] = useState(false);
 
   const { slug } = useParams();
-const [currentPage] = useState(1);
-// Scroll to top on page change
-useEffect(() => {
-  if (dataLoaded) {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }
-}, [dataLoaded]);
 
-useEffect(() => {
-  setTimeout(() => setShowText(true), 200);
-  const fetchExperience = async () => {
-    try {
-      const res = await axiosInstance.get(
-        `/experience/slug/${slug}`
-      );
-      setExperience(res.data);
-
-      const allRes = await axiosInstance.get(`/experience`);
-      setOtherExperiences(allRes.data.filter((exp) => exp.slug !== slug));
-
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
+  // Scroll to top on page change
+  useEffect(() => {
+    if (!loading) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
-  };
-  fetchExperience();
-}, [slug]);
+  }, [loading]);
 
+  useEffect(() => {
+    setTimeout(() => setShowText(true), 200);
+    const fetchExperience = async () => {
+      try {
+        const res = await axiosInstance.get(`/experience/slug/${slug}`);
+        setExperience(res.data);
+
+        const allRes = await axiosInstance.get(`/experience`);
+        setOtherExperiences(allRes.data.filter((exp) => exp.slug !== slug));
+
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+      }
+    };
+    fetchExperience();
+  }, [slug]);
 
   if (loading) {
     return <div className="text-center py-20">Loading...</div>;
