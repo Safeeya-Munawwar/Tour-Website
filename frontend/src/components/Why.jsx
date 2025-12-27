@@ -87,24 +87,24 @@ export default function WhyChooseUs() {
         {/* Booking Modal */}
         {showForm && (
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
-            role="dialog"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
+          role="dialog"
             aria-modal="true"
             aria-label="Tour booking form"
           >
             <div className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden">
-              {/* Close */}
+            {/* Close */}
               <button
                 onClick={() => setShowForm(false)}
-                className="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-black"
+                className="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-black z-10"
                 aria-label="Close booking form"
               >
                 &times;
               </button>
 
               {/* Content */}
-              <div className="flex-1 overflow-auto p-6 rounded-2xl">
-                <BookTour />
+              <div className="flex-1 overflow-auto p-6 relative rounded-2xl">
+              <BookTour />
               </div>
             </div>
           </div>

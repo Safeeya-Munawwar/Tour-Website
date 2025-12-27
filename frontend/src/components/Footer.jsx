@@ -26,7 +26,7 @@ export default function Footer() {
         const res = await axiosInstance.get("/contact");
         setContact(res.data);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
     fetchContact();
@@ -64,71 +64,49 @@ export default function Footer() {
   };
 
   const menuItems = [
-    { name: "HOME" },
-    { name: "TAILOR-MADE TOURS" },
-    { name: "DESTINATIONS" },
-    { name: "DAY TOURS" },
-    { name: "ROUND TOURS" },
-    { name: "ABOUT US" },
-    { name: "BLOG" },
-    { name: "EXPERIENCE" },
-    { name: "CONTACT US" },
+    { name: "HOME", path: "/" },
+    { name: "TAILOR-MADE TOURS", path: "/tailor-made-tours" },
+    { name: "DESTINATIONS", path: "/destinations" },
+    { name: "DAY TOURS", path: "/day-tours" },
+    { name: "ROUND TOURS", path: "/round-tours" },
+    { name: "ABOUT US", path: "/about" },
+    { name: "BLOG", path: "/blog" },
+    { name: "EXPERIENCE", path: "/experience" },
+    { name: "CONTACT US", path: "/contact" },
   ];
 
-  const getPath = (text) => {
-    switch (text) {
-      case "HOME":
-        return "/";
-      case "TAILOR-MADE TOURS":
-        return "/tailor-made-tours";
-      case "DESTINATIONS":
-        return "/destinations";
-      case "DAY TOURS":
-        return "/day-tours";
-      case "ROUND TOURS":
-        return "/round-tours";
-      case "ABOUT US":
-        return "/about";
-      case "BLOG":
-        return "/blog";
-      case "EXPERIENCE":
-        return "/experience";
-      case "CONTACT US":
-        return "/contact";
-      default:
-        return "/";
-    }
-  };
-
   return (
-    <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins] relative z-0">
+    <footer
+      className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]"
+      aria-label="Footer"
+    >
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
         {/* 1) LOGO + DESCRIPTION + SOCIAL MEDIA */}
-        <div>
+        <div className="flex flex-col items-center text-center">
           <img
             src="/images/logo.png"
-            alt="Logo"
-            className="w-40 mb-5 opacity-95"
+            alt="NetLanka Travels Logo"
+            className="w-40 mb-1"
           />
-          <p className="text-gray-200 text-[15px] leading-relaxed pr-6 mb-5">
-            NetLanka Travels is your trusted travel partner in Sri Lanka, offering
-            tailor-made tours, day tours, adventures, and premium travel
-            experiences.
+          <p className="text-gray-200 text-[15px] leading-relaxed mb-4 max-w-xs md:max-w-sm">
+            NetLanka Travels is your trusted travel partner in Sri Lanka,
+            offering tailor-made tours, day tours, adventures, and premium
+            travel experiences.
           </p>
-          <div className="flex gap-4 mt-3">
+          <div className="flex gap-4 mt-2" aria-label="Social media links">
             {contact?.socialMedia?.map((sm, i) => {
               const Icon = socialIcons[sm.platform?.toLowerCase()];
               if (!Icon) return null;
-
               return (
                 <a
                   key={i}
                   href={sm.url}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="text-white hover:scale-110 transition-transform"
+                  aria-label={`Visit our ${sm.platform} page`}
                 >
-                  <Icon size={20} />
+                  <Icon size={20} aria-hidden="true" />
                 </a>
               );
             })}
@@ -138,10 +116,10 @@ export default function Footer() {
         {/* 2) CONTACT INFO */}
         <div>
           <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
-          <div className="space-y-5">
+          <address className="not-italic space-y-5">
             {contact?.phone && (
-              <div className="flex gap-3">
-                <FaPhoneAlt className="mt-1" />
+              <div className="flex gap-3 items-center">
+                <FaPhoneAlt className="mt-1" aria-hidden="true" />
                 <a
                   href={`tel:${contact.phone}`}
                   className="hover:text-blue-300"
@@ -151,8 +129,8 @@ export default function Footer() {
               </div>
             )}
             {contact?.whatsapp && (
-              <div className="flex gap-3">
-                <FaWhatsapp className="mt-1" />
+              <div className="flex gap-3 items-center">
+                <FaWhatsapp className="mt-1" aria-hidden="true" />
                 <a
                   href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
                   target="_blank"
@@ -164,8 +142,8 @@ export default function Footer() {
               </div>
             )}
             {contact?.emails?.[0] && (
-              <div className="flex gap-3">
-                <FaEnvelope className="mt-1" />
+              <div className="flex gap-3 items-center">
+                <FaEnvelope className="mt-1" aria-hidden="true" />
                 <a
                   href={`mailto:${contact.emails[0]}`}
                   className="hover:text-blue-400"
@@ -175,8 +153,8 @@ export default function Footer() {
               </div>
             )}
             {contact?.offices?.map((o, i) => (
-              <div key={i} className="flex gap-3">
-                <FaMapMarkerAlt className="mt-1" />
+              <div key={i} className="flex gap-3 items-start">
+                <FaMapMarkerAlt className="mt-1" aria-hidden="true" />
                 <div>
                   <p className="font-medium">{o.name}</p>
                   <p className="text-gray-300">{o.address}</p>
@@ -184,32 +162,29 @@ export default function Footer() {
               </div>
             ))}
             {contact?.workingHours && (
-              <div className="flex gap-3">
-                <FaClock className="mt-1" />
+              <div className="flex gap-3 items-center">
+                <FaClock className="mt-1" aria-hidden="true" />
                 <span>
                   {contact.workingHours.start} - {contact.workingHours.end}
                 </span>
               </div>
             )}
-          </div>
+          </address>
         </div>
 
         {/* 3) QUICK LINKS */}
-        <div>
+        <nav aria-label="Footer navigation">
           <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
           <ul className="space-y-3 text-gray-200">
             {menuItems.map((item, i) => (
               <li key={i}>
-                <a
-                  href={getPath(item.name)}
-                  className="hover:text-white cursor-pointer"
-                >
+                <a href={item.path} className="hover:text-white">
                   {item.name}
                 </a>
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
 
         {/* 4) NEWSLETTER SUBSCRIPTION */}
         <div>
@@ -219,13 +194,22 @@ export default function Footer() {
           <p className="text-gray-300 text-sm mb-4">
             Get updates, offers, and travel tips directly in your inbox.
           </p>
-          <form className="flex flex-col gap-3" onSubmit={subscribeNewsletter}>
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={subscribeNewsletter}
+            aria-label="Subscribe to newsletter"
+          >
+            <label htmlFor="newsletter-email" className="sr-only">
+              Email address
+            </label>
             <input
+              id="newsletter-email"
               type="email"
               placeholder="Enter your email"
               className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <button className="w-full py-3 bg-white text-black rounded-full font-semibold">
               Subscribe

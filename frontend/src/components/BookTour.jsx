@@ -120,7 +120,7 @@ export default function BookTour() {
   return (
     <section
       aria-labelledby="book-tour-heading"
-      className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto"
+      className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto text-left"
     >
       <h2
         id="book-tour-heading"

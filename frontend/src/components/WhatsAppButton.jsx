@@ -67,32 +67,42 @@ export default function WhatsAppFAB() {
     }
 
     if (option === "book") return `${base}\n\nI want to book a tour.`;
-    if (option === "question")
-      return `${base}\n\nI have a question about your tours.`;
-    if (option === "info")
-      return `${base}\n\nI want more information about your tours.`;
+    if (option === "question") return `${base}\n\nI have a question about your tours.`;
+    if (option === "info") return `${base}\n\nI want more information about your tours.`;
 
     return `${base}\n\nHello!`;
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div
+      className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
+      aria-label="WhatsApp chat support floating button"
+    >
       {/* CARD */}
       {isWhatsAppOpen && (
-        <div className="mb-4 w-80 bg-white rounded-xl shadow-2xl overflow-hidden animate-slideUp">
-          <div className="bg-green-500 p-4 text-white flex justify-between">
+        <aside
+          className="mb-4 w-80 bg-white rounded-xl shadow-2xl overflow-hidden animate-slideUp"
+          role="region"
+          aria-label="WhatsApp chat options"
+        >
+          <header className="bg-green-500 p-4 text-white flex justify-between items-center">
             <div>
-              <p className="font-semibold text-lg">Start a Conversation</p>
+              <h3 className="font-semibold text-lg">Start a Conversation</h3>
               <p className="text-sm opacity-90">
                 Click an option to chat on WhatsApp
               </p>
             </div>
-            <button onClick={() => setIsWhatsAppOpen(false)}>✕</button>
-          </div>
+            <button
+              onClick={() => setIsWhatsAppOpen(false)}
+              aria-label="Close WhatsApp chat options"
+            >
+              ✕
+            </button>
+          </header>
 
           <div className="flex items-center gap-4 p-4 border-b">
             <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-              <FaWhatsapp className="text-white text-xl" />
+              <FaWhatsapp className="text-white text-xl" aria-hidden="true" />
             </div>
             <div>
               <p className="font-semibold text-gray-800">Net Lanka Tours</p>
@@ -102,10 +112,11 @@ export default function WhatsAppFAB() {
             </div>
           </div>
 
-          <div className="p-3 space-y-2">
+          <nav className="p-3 space-y-2" aria-label="WhatsApp chat options">
             <button
               onClick={() => openWhatsApp(getMessage("book"))}
               className="w-full bg-green-500 text-white py-2 rounded-lg"
+              aria-label="Book a tour via WhatsApp"
             >
               Book Tour
             </button>
@@ -113,6 +124,7 @@ export default function WhatsAppFAB() {
             <button
               onClick={() => openWhatsApp(getMessage("question"))}
               className="w-full bg-blue-500 text-white py-2 rounded-lg"
+              aria-label="Ask a question via WhatsApp"
             >
               Ask Question
             </button>
@@ -120,19 +132,23 @@ export default function WhatsAppFAB() {
             <button
               onClick={() => openWhatsApp(getMessage("info"))}
               className="w-full bg-yellow-500 text-white py-2 rounded-lg"
+              aria-label="Get more info via WhatsApp"
             >
               More Info
             </button>
-          </div>
-        </div>
+          </nav>
+        </aside>
       )}
 
       {/* FLOATING BUTTON */}
       <button
         onClick={() => setIsWhatsAppOpen(!isWhatsAppOpen)}
         className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition"
+        aria-expanded={isWhatsAppOpen}
+        aria-controls="WhatsApp chat options"
+        aria-label="Open WhatsApp chat options"
       >
-        <FaWhatsapp className="text-white text-3xl" />
+        <FaWhatsapp className="text-white text-3xl" aria-hidden="true" />
       </button>
     </div>
   );
