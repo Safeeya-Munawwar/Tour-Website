@@ -5,19 +5,19 @@ import { Check, Settings } from "lucide-react";
 export default function Header() {
   const images = [
     {
-      src: "/images/d2_compressed.webp",
+      src: "/images/d2.webp",
       alt: "Sri Lanka destination",
     },
     {
-      src: "/images/destination_compressed.webp",
+      src: "/images/destination.webp",
       alt: "Beautiful destination",
     },
     {
-      src: "/images/sigiriya_compressed.webp",
+      src: "/images/sigiriya.webp",
       alt: "Sigiriya Rock Fortress",
     },
     {
-      src: "/images/blog_compressed.webp",
+      src: "/images/blog.webp",
       alt: "Travel blog",
     },
   ];

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaStar, FaChevronLeft, FaChevronRight, FaTripadvisor, } from "react-icons/fa";
 import { axiosInstance } from "../lib/axios";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -145,24 +145,33 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-6 mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
           {/* LEFT STATIC TRIPADVISOR SUMMARY */}
-          <div className="flex flex-col items-center lg:items-start">
-            <h3 className="text-xl font-bold text-black uppercase tracking-wide">
-              Excellent
-            </h3>
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <h2
+              id="customer-reviews-heading"
+              className="text-2xl font-extrabold text-black uppercase tracking-wide"
+            >
+              Excellent Reviews
+            </h2>
 
-            <div className="flex gap-2 mt-2">
+            {/* STAR RATING */}
+            <div
+              className="flex gap-1 mt-3 text-green-600"
+              aria-label="5 star TripAdvisor rating"
+            >
               {[...Array(5)].map((_, i) => (
-                <img key={i} src="/f.svg" alt="f" className="w-8 h-8" />
+                <FaStar key={i} size={28} />
               ))}
             </div>
 
-            <p className="mt-2 text-gray-700">
-              Based on{" "}
-              <span className="font-bold">{messages.length} reviews</span>
+            <p className="mt-2 text-gray-700 text-sm">
+              Based on <span className="font-bold">{messages.length}</span>{" "}
+              verified TripAdvisor reviews
             </p>
 
-            <div className="flex items-center gap-2 mt-3">
-              <img src="/logo4.svg" alt="logo" className="w-32 h-20" />
+            {/* TRIPADVISOR BRAND */}
+            <div className="flex items-center gap-2 mt-4 text-green-600">
+              <FaTripadvisor size={36} aria-hidden="true" />
+              <span className="font-semibold text-lg">TripAdvisor</span>
             </div>
           </div>
 
@@ -181,7 +190,7 @@ export default function Testimonials() {
                 1280: { slidesPerView: 3 },
               }}
             >
-              {messages.map((item, i) => (
+              {messages.map((item, i) => ( 
                 <SwiperSlide key={i}>
                   <div className="bg-white p-6 rounded-3xl shadow-md border border-gray-200 min-h-[260px] h-full flex flex-col">
                     {/* TOP ROW */}
@@ -199,7 +208,12 @@ export default function Testimonials() {
                         </p>
                       </div>
 
-                      <img src="/f.svg" alt="img" className="w-6 h-6 ml-auto" />
+                      {/* TRIPADVISOR ICON */}
+                      <FaTripadvisor
+                        className="ml-auto text-green-600"
+                        size={22}
+                        aria-label="TripAdvisor review"
+                      />
                     </div>
 
                     {/* GREEN RATING */}

@@ -167,7 +167,7 @@ case "Events":
           {/* LOGO (SPACE BELOW ADDED) */}
           <div className="absolute left-1/2 -translate-x-1/2 mb-4">
             <img
-              src="/images/logo_compressed.webp"
+              src="/images/logo.webp"
               alt="Logo"
               className="w-[150px] opacity-95 transition-transform duration-300 hover:scale-105"
             />
@@ -211,7 +211,7 @@ case "Events":
             }`}
           >
             <img
-              src="/images/logo_compressed.webp"
+              src="/images/logo.webp"
               alt="logo"
               className={`transition-all duration-300 ${
                 scrolled ? "w-[100px]" : "w-[0px]"
@@ -272,7 +272,7 @@ case "Events":
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/20">
-          <img src="/images/logo_compressed.webp" alt="logo" className="w-28" />
+          <img src="/images/logo.webp" alt="logo" className="w-28" />
           <button
             onClick={() => setSidebar(false)}
             className="text-white text-3xl"

@@ -57,7 +57,7 @@ useEffect(() => {
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/images/journey-header_compressed.webp')",
+          backgroundImage: "url('/images/journey-header.webp')",
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>

@@ -115,7 +115,7 @@ export default function BlogDetail() {
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: `url(${blog.heroImg || "/images/blog_compressed.webp"})`,
+          backgroundImage: `url(${blog.heroImg || "/images/blog.webp"})`,
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>

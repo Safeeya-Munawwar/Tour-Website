@@ -27,10 +27,11 @@ export default function ExploreSriLankaSection() {
   }, []);
 
   const mapImages = [
-    { title: "Adventure Trails in Sri Lanka", image: "/images/adventure.jpeg" },
-    { title: "Beach Escapes in Sri Lanka", image: "/images/beach.jpeg" },
-    { title: "Cultural Wonders of Sri Lanka", image: "/images/culture.jpeg" },
-    { title: "Wildlife Safaris in Sri Lanka", image: "/images/wildlife.jpeg" },
+    { title: "Adventure Trails in Sri Lanka", image: "/images/adventure.webp" },
+    { title: "Beach Escapes in Sri Lanka", image: "/images/beach.webp" },
+    { title: "Cultural Wonders of Sri Lanka", image: "/images/culture.webp" },
+    { title: "Wildlife Safaris in Sri Lanka", image: "/images/wildlife.webp" },
+    { title: "Hidden Gems in Sri Lanka", image: "/images/hidden-gems.webp" },
   ];
 
   return (

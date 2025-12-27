@@ -48,8 +48,8 @@ export default function Experiences() {
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/images/experience-header_compressed.webp')",
-          backgroundPosition: "center 50%",
+          backgroundImage: "url('/images/experience-header.webp')",
+          backgroundPosition: "center 20%",
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
@@ -95,7 +95,7 @@ export default function Experiences() {
                 className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
               >
                 <img
-                  src={item.mainImg || "/images/placeholder.jpg"}
+                  src={item.mainImg || "/images/experience-header.webp"}
                   alt={item.title || "Experience"}
                   className="w-full h-56 object-cover rounded-t-xl"
                 />

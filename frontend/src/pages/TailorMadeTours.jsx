@@ -76,7 +76,7 @@ const [currentPage] = useState(1);
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/images/tailor-made-tour-header_compressed.webp')",
+          backgroundImage: "url('/images/customtour-header.webp')",
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
@@ -340,7 +340,7 @@ const [currentPage] = useState(1);
           {/* Right Side – Image */}
           <div className="w-full lg:w-1/2 lg:absolute lg:top-0 lg:right-0 lg:h-full">
             <img
-              src="/images/sigiriya-art_compressed.webp"
+              src="/images/sigiriya-art.webp"
               alt="Sigiriya Art"
               className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-full object-cover"
             />

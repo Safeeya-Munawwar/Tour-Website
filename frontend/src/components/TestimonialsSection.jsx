@@ -35,7 +35,7 @@ const TestimonialsSection = () => {
       <div
         className="relative bg-cover bg-center py-14 md:py-20"
         style={{
-          backgroundImage: "url('/images/team-header.jpg')",
+          backgroundImage: "url('/images/stats.webp')",
           backgroundPosition: "center 50%",
           backgroundRepeat: "no-repeat",
         }}
