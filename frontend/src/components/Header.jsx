@@ -1,50 +1,47 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { Check, Settings } from "lucide-react";
 
 export default function Header() {
-<<<<<<< HEAD
   const images = [
-    "/images/d2_compressed.webp",
-    "/images/destination_compressed.webp",
-    "/images/sigiriya_compressed.webp",
-    "/images/blog_compressed.webp",
-    
+    {
+      src: "/images/d2_compressed.webp",
+      alt: "Sri Lanka destination",
+    },
+    {
+      src: "/images/destination_compressed.webp",
+      alt: "Beautiful destination",
+    },
+    {
+      src: "/images/sigiriya_compressed.webp",
+      alt: "Sigiriya Rock Fortress",
+    },
+    {
+      src: "/images/blog_compressed.webp",
+      alt: "Travel blog",
+    },
   ];
-=======
-  // Memoize images so the array is stable across renders
-  const images = useMemo(
-    () => [
-      { src: "/images/d2.jpg", alt: "Beautiful Sri Lanka landscape" },
-      { src: "/images/destination.jpg", alt: "Tropical destination in Sri Lanka" },
-      { src: "/images/sigiriya.jpg", alt: "Sigiriya Rock Fortress" },
-      { src: "/images/blog.jpg", alt: "Travel blog inspiration" },
-    ],
-    []
-  );
->>>>>>> 5056ad0f42288d7b5d57394f405978f4986550e5
 
   const [currentImage, setCurrentImage] = useState(0);
   const [homeData, setHomeData] = useState({
     name: "",
-    info: { title: "", subtitle: "", description: "", video: "" },
+    info: {
+      title: "",
+      subtitle: "",
+      description: "",
+      video: "",
+    },
   });
-  const [, setLoaded] = useState(false);
 
-  // Preload all images
+  // Preload images
   useEffect(() => {
-    let loadedCount = 0;
     images.forEach((img) => {
       const image = new Image();
       image.src = img.src;
-      image.onload = () => {
-        loadedCount++;
-        if (loadedCount === images.length) setLoaded(true);
-      };
     });
-  }, [images]); // now safe
+  }, []);
 
-  // Fetch home content from backend
+  // Fetch home content
   useEffect(() => {
     const fetchHome = async () => {
       try {
@@ -72,8 +69,9 @@ export default function Header() {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 8000);
+
     return () => clearInterval(interval);
-  }, [images.length]); // safe now
+  }, [images.length]);
 
   return (
     <header className="relative w-full h-[650px] sm:h-[700px] md:h-[750px] overflow-hidden flex items-center justify-center">
@@ -96,17 +94,18 @@ export default function Header() {
         ))}
       </div>
 
-      {/* Dark cinematic overlay */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/85" />
 
-      {/* Header content */}
+      {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl text-white">
         <h1 className="mt-20 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light font-serif-custom">
           {homeData.name || "Net Lanka Travels"}
         </h1>
 
         <p className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl font-light">
-          {homeData.info.subtitle || "Unforgettable Journeys Across the Island"}
+          {homeData.info.subtitle ||
+            "Unforgettable Journeys Across the Island"}
         </p>
 
         <div className="mt-10 flex justify-center gap-4 flex-wrap">

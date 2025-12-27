@@ -76,30 +76,22 @@ export default function Footer() {
   ];
 
   return (
-    <footer
-      className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]"
-      aria-label="Footer"
-    >
+    <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
-        {/* 1) LOGO + DESCRIPTION + SOCIAL MEDIA */}
+
+        {/* LOGO & SOCIAL */}
         <div className="flex flex-col items-center text-center">
           <img
-<<<<<<< HEAD
             src="/images/logo_compressed.webp"
             alt="Logo"
             className="w-40 mb-5 opacity-95"
-=======
-            src="/images/logo.png"
-            alt="NetLanka Travels Logo"
-            className="w-40 mb-1"
->>>>>>> 5056ad0f42288d7b5d57394f405978f4986550e5
           />
-          <p className="text-gray-200 text-[15px] leading-relaxed mb-4 max-w-xs md:max-w-sm">
+          <p className="text-gray-200 text-[15px] leading-relaxed mb-4 max-w-sm">
             NetLanka Travels is your trusted travel partner in Sri Lanka,
-            offering tailor-made tours, day tours, adventures, and premium
-            travel experiences.
+            offering tailor-made tours, adventures, and premium travel
+            experiences.
           </p>
-          <div className="flex gap-4 mt-2" aria-label="Social media links">
+          <div className="flex gap-4 mt-2">
             {contact?.socialMedia?.map((sm, i) => {
               const Icon = socialIcons[sm.platform?.toLowerCase()];
               if (!Icon) return null;
@@ -109,34 +101,31 @@ export default function Footer() {
                   href={sm.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:scale-110 transition-transform"
-                  aria-label={`Visit our ${sm.platform} page`}
+                  className="hover:scale-110 transition-transform"
                 >
-                  <Icon size={20} aria-hidden="true" />
+                  <Icon size={20} />
                 </a>
               );
             })}
           </div>
         </div>
 
-        {/* 2) CONTACT INFO */}
+        {/* CONTACT INFO */}
         <div>
           <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
           <address className="not-italic space-y-5">
             {contact?.phone && (
               <div className="flex gap-3 items-center">
-                <FaPhoneAlt className="mt-1" aria-hidden="true" />
-                <a
-                  href={`tel:${contact.phone}`}
-                  className="hover:text-blue-300"
-                >
+                <FaPhoneAlt />
+                <a href={`tel:${contact.phone}`} className="hover:text-blue-300">
                   {contact.phone}
                 </a>
               </div>
             )}
+
             {contact?.whatsapp && (
               <div className="flex gap-3 items-center">
-                <FaWhatsapp className="mt-1" aria-hidden="true" />
+                <FaWhatsapp />
                 <a
                   href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
                   target="_blank"
@@ -147,9 +136,10 @@ export default function Footer() {
                 </a>
               </div>
             )}
+
             {contact?.emails?.[0] && (
               <div className="flex gap-3 items-center">
-                <FaEnvelope className="mt-1" aria-hidden="true" />
+                <FaEnvelope />
                 <a
                   href={`mailto:${contact.emails[0]}`}
                   className="hover:text-blue-400"
@@ -158,28 +148,31 @@ export default function Footer() {
                 </a>
               </div>
             )}
+
             {contact?.offices?.map((o, i) => (
               <div key={i} className="flex gap-3 items-start">
-                <FaMapMarkerAlt className="mt-1" aria-hidden="true" />
+                <FaMapMarkerAlt />
                 <div>
                   <p className="font-medium">{o.name}</p>
                   <p className="text-gray-300">{o.address}</p>
                 </div>
               </div>
             ))}
+
             {contact?.workingHours && (
               <div className="flex gap-3 items-center">
-                <FaClock className="mt-1" aria-hidden="true" />
+                <FaClock />
                 <span>
-                  {contact.workingHours.start} - {contact.workingHours.end}
+                  {contact.workingHours.start} -{" "}
+                  {contact.workingHours.end}
                 </span>
               </div>
             )}
           </address>
         </div>
 
-        {/* 3) QUICK LINKS */}
-        <nav aria-label="Footer navigation">
+        {/* QUICK LINKS */}
+        <nav>
           <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
           <ul className="space-y-3 text-gray-200">
             {menuItems.map((item, i) => (
@@ -192,7 +185,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        {/* 4) NEWSLETTER SUBSCRIPTION */}
+        {/* NEWSLETTER */}
         <div>
           <h3 className="text-xl font-semibold mb-6">
             Subscribe to our Newsletter
@@ -203,13 +196,8 @@ export default function Footer() {
           <form
             className="flex flex-col gap-3"
             onSubmit={subscribeNewsletter}
-            aria-label="Subscribe to newsletter"
           >
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
-            </label>
             <input
-              id="newsletter-email"
               type="email"
               placeholder="Enter your email"
               className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
