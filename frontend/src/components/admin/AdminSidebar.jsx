@@ -18,8 +18,9 @@ import {
   NotebookPen,
   CalendarCheck,
   LogOut,
+  Car,
 } from "lucide-react";
-import { FaTripadvisor, FaStarHalfAlt } from "react-icons/fa";
+import { FaTripadvisor, FaStarHalfAlt, FaCarSide } from "react-icons/fa";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
@@ -27,6 +28,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
   const [openBookingMenu, setOpenBookingMenu] = useState(false);
   const [openInsightMenu, setOpenInsightMenu] = useState(false);
+  const [openTaxiMenu, setOpenTaxiMenu] = useState(false);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
@@ -253,6 +255,45 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           >
             <PenTool size={18} /> Experiences
           </NavLink>
+
+          
+          {/* QUICK TAXI */}
+          <button
+            onClick={() => setOpenTaxiMenu(!openTaxiMenu)}
+            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20"
+          >
+            <span className="flex items-center gap-3">
+              <Car size={18} />
+              Quick Taxi
+            </span>
+            {openTaxiMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+          </button>
+
+          {openTaxiMenu && (
+            <div className="ml-10 mt-1 space-y-1">
+              <NavLink
+                to="/admin/taxis"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <FaCarSide size={16} /> Manage Vehicles
+              </NavLink>
+
+              <NavLink
+                to="/admin/quick-taxi-booking"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-2 py-2 rounded ${
+                    isActive ? activeClass : defaultClass
+                  }`
+                }
+              >
+                <CalendarCheck size={16} /> Taxi Bookings
+              </NavLink>
+            </div>
+          )}
 
           {/* Booking Menu */}
           <button

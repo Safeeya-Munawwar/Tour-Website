@@ -17,10 +17,12 @@ router.post("/", async (req, res) => {
       message,
     } = req.body;
 
+    // Validate required fields
     if (!eventId || !name || !email || !phone || !startDate || !startTime) {
       return res.status(400).json({
         success: false,
-        message: "Required fields are missing",
+        message: "Required fields missing",
+        bodyReceived: req.body, // for debugging
       });
     }
 
@@ -29,8 +31,8 @@ router.post("/", async (req, res) => {
       name,
       email,
       phone,
-      adults,
-      children,
+      adults: adults || 1,
+      children: children || 0,
       startDate,
       startTime,
       message,
@@ -48,11 +50,12 @@ router.post("/", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
+      error: error.message, // detailed error
     });
   }
 });
 
-/* GET ALL EVENT BOOKINGS (Admin) */
+/* GET ALL EVENT BOOKINGS */
 router.get("/", async (req, res) => {
   try {
     const bookings = await EventTourBooking.find()

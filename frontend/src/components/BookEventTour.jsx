@@ -64,7 +64,7 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
     e.preventDefault();
     setResponseMsg("");
     setIsError(false);
-
+  
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -72,16 +72,23 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
       setIsError(true);
       return;
     }
-
+  
     setLoading(true);
     setErrors({});
-
+  
     try {
       const res = await axiosInstance.post("/event-tour-booking", {
-        ...formData,
         eventId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        adults: Number(formData.adults),
+        children: Number(formData.children),
+        startDate: formData.startDate,
+        startTime: formData.startTime,
+        message: formData.message,
       });
-
+  
       if (res.data.success) {
         setResponseMsg("Booking submitted successfully!");
         setIsError(false);
@@ -91,23 +98,23 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
           phone: "",
           adults: 1,
           children: 0,
-          members: 1,
           startDate: "",
           startTime: "00:00",
           message: "",
         });
       } else {
-        setResponseMsg("Failed to submit booking. Try again.");
+        setResponseMsg(res.data.message || "Failed to submit booking.");
         setIsError(true);
       }
     } catch (err) {
-      console.error(err);
-      setResponseMsg("Server error. Please try again later.");
+      console.error("Booking submission error:", err.response || err);
+      setResponseMsg(err.response?.data?.message || "Server error. Please try again later.");
       setIsError(true);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const sendBookingViaWhatsApp = () => {
     const validationErrors = validate();
@@ -276,7 +283,7 @@ ${formData.message || "–"}
             </p>
           )}
         </form>
-      </div>
+      </div> 
     </div>
   );
 }

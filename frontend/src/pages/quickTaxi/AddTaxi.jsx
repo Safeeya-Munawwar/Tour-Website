@@ -10,11 +10,11 @@ export default function AddTaxi() {
 
   const [formData, setFormData] = useState({
     name: "",
+    transmission: "Manual",
     seats: 4,
-    capacity: "",
     luggage: "",
+    capacity: "",
     ac: true,
-    transmission: "Manual", // default value
     imageFile: null,
     imagePreview: "",
   });
@@ -35,7 +35,7 @@ export default function AddTaxi() {
       toast.success("Vehicle added successfully!", {
         onClose: () => navigate("/admin/taxis"),
       });
-    } catch {
+    } catch (err) {
       toast.error("Failed to add vehicle!");
     }
   };

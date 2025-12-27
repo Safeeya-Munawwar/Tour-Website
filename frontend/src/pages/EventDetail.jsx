@@ -227,10 +227,10 @@ export default function EventDetail() {
               &times;
             </button>
             <BookEventTour
-              eventId={id}
-              eventTitle={event.title}
-              eventLocation={event.startLocation}
-            />
+  eventId={event._id}   // MUST be MongoDB _id
+  eventTitle={event.title}
+  eventLocation={event.location}
+/>
           </div>
         </div>
       )}

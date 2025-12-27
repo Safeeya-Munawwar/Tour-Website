@@ -55,8 +55,7 @@ app.use("/uploads", express.static("uploads"));
 // Admin login
 app.use("/api/admin", loginRoute);
 
-// Other routes
-
+// Other routes 
 app.use("/api/event-tour-booking", eventTourBookingRoutes);
 app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);

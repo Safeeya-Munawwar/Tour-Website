@@ -43,11 +43,12 @@ export default function TaxiForm({
           />
         </div>
 
-        {/* Transmission */}
+{/* Transmission */}
 <div>
   <label className="block font-semibold mb-1 text-[#2E5B84]">
     Transmission
   </label>
+
   <select
     value={formData.transmission}
     onChange={(e) =>
@@ -55,8 +56,10 @@ export default function TaxiForm({
     }
     className="border border-[#2E5B84] p-3 w-full rounded-lg"
   >
+    <option value="">Select Transmission</option>
     <option value="Manual">Manual</option>
-    <option value="Auto">Automatic</option>
+    <option value="Automatic">Automatic</option>
+    <option value="Both">Manual & Automatic</option>
   </select>
 </div>
 

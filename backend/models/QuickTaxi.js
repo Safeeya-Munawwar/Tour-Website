@@ -11,9 +11,8 @@ const QuickTaxiSchema = new mongoose.Schema(
     seats: { type: Number, default: 4 },
     luggage: { type: String },
     capacity: { type: String },
-    type: { type: Boolean, default: true },
     ac: { type: Boolean, default: true },
-    image: { type: String },
+    image: { type: String, required: true },
   },
   { timestamps: true }
 );
