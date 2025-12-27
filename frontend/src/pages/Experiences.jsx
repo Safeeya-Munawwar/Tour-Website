@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import Footer from "../components/Footer";
 
 export default function Experiences() {
   const [showText, setShowText] = useState(false);
@@ -41,7 +42,8 @@ export default function Experiences() {
   const currentExperiences = experiences.slice(indexOfFirst, indexOfLast);
 
   return (
-    <div className="font-poppins bg-white text-[#222]">
+    <>
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -167,5 +169,7 @@ export default function Experiences() {
         )}
       </section>
     </div>
+    <Footer/>
+    </>
   );
 }

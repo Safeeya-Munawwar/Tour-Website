@@ -9,6 +9,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { axiosInstance } from ".././lib/axios";
+import Footer from "../components/Footer";
 
 const About = () => {
   const [showFull, setShowFull] = useState(false);
@@ -42,7 +43,8 @@ const About = () => {
   }
 
   return (
-    <div className="font-poppins bg-white text-[#222]">
+    <>
+    <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -119,7 +121,8 @@ const About = () => {
       </div>
 
       {/* ------------------- WHY NETLANKA TOURS ------------------- */}
-      <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
+   <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
+
         <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-12">
           Why NetLanka Tours
         </h1>
@@ -311,6 +314,8 @@ const About = () => {
         </div>
       </section>
     </div>
+    <Footer/></>
+
   );
 };
 

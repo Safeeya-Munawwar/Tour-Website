@@ -10,31 +10,38 @@ const OurJourney = () => {
     milestones: [],
   });
   const [loading, setLoading] = useState(true);
-const [currentPage] = useState(1);
-// Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
+
   useEffect(() => {
     const timer = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const fetchJourneyData = async () => {
-      try {
-        const res = await axiosInstance.get("/journey");
-        if (res.data) {
-          setJourneyData(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch journey data:", err);
-      } finally {
-        setLoading(false);
+useEffect(() => {
+  const fetchJourneyData = async () => {
+    try {
+      const res = await axiosInstance.get("/journey");
+      if (res.data) {
+        // Ensure all fields have safe defaults
+        setJourneyData({
+          commonImage: res.data.commonImage || "",
+          fullDescription: Array.isArray(res.data.fullDescription)
+            ? res.data.fullDescription
+            : [],
+          milestones: Array.isArray(res.data.milestones)
+            ? res.data.milestones
+            : [],
+        });
       }
-    };
-    fetchJourneyData();
-  }, []);
+    } catch (err) {
+      console.error("Failed to fetch journey data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchJourneyData();
+}, []);
+
 
   if (loading) {
     return (
@@ -45,7 +52,7 @@ const [currentPage] = useState(1);
   }
 
   return (
-    <div className="font-poppins bg-white text-[#222]">
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"

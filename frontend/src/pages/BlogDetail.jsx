@@ -10,6 +10,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "../components/Footer";
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -26,11 +27,7 @@ export default function BlogDetail() {
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
-const [currentPage] = useState(1);
-// Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
+
   useEffect(() => {
     setShowText(false);
     const fetchBlog = async () => {
@@ -110,14 +107,15 @@ const [currentPage] = useState(1);
   };
 
   return (
-    <div className="font-poppins bg-white text-[#222]">
+    <>
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* HERO */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: `url(${blog.heroImg || "/images/default.jpg"})`,
+          backgroundImage: `url(${blog.heroImg || "/images/blog.jpg"})`,
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
@@ -385,5 +383,7 @@ const [currentPage] = useState(1);
         </Swiper>
       </section>
     </div>
+    <Footer/>
+    </>
   );
 }

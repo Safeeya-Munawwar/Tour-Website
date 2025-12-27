@@ -4,12 +4,11 @@ import { Check, Settings } from "lucide-react";
 
 export default function Header() {
   const images = [
-    "/images/12.jpg",
-    "/images/40.jpg",
-    "/images/43.jpg",
-    "/images/about-header.jpg",
-    "/images/d1.jpg",
     "/images/d2.jpg",
+    "/images/destination.jpg",
+    "/images/sigiriya.jpg",
+    "/images/blog.jpg",
+    
   ];
 
   const [currentImage, setCurrentImage] = useState(0);

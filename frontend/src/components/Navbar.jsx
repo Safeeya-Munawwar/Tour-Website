@@ -180,7 +180,7 @@ case "Events":
               {contact?.whatsapp || "(+94) 77 730 0852"}
             </div>
             <button
-              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-white hover:text-black transition"
+              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
               onClick={() => navigate("/contact")}
             >
               ENQUIRE NOW

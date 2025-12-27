@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
 import "swiper/css";
 import TourReview from "../components/TourReview";
+import Footer from "../components/Footer";
 
 export default function RoundTourDetail() {
   const { id } = useParams();
@@ -59,7 +60,8 @@ const [currentPage] = useState(1);
         ];
 
   return (
-    <div className="font-poppins">
+   <>
+    <div className=" flex flex-col min-h-screen font-poppins">
       {/* ================= HERO ================= */}
       <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
         <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
@@ -429,5 +431,7 @@ const [currentPage] = useState(1);
         </>
       )}
     </div>
+    <Footer/>
+    </>
   );
 }

@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useNavigate } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
+import Footer from "../components/Footer";
 
 export default function ExperienceDetail() {
   const navigate = useNavigate();
@@ -17,13 +18,7 @@ export default function ExperienceDetail() {
   const [showText, setShowText] = useState(false);
 
   const { slug } = useParams();
-const [currentPage] = useState(1);
-// Scroll to top on page change
-useEffect(() => {
-  if (dataLoaded) {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }
-}, [dataLoaded]);
+
 
 useEffect(() => {
   setTimeout(() => setShowText(true), 200);
@@ -59,7 +54,8 @@ useEffect(() => {
     );
   }
   return (
-    <div className="font-poppins bg-white text-[#222]">
+   <>
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -300,5 +296,6 @@ useEffect(() => {
         </div>
       </section>
     </div>
+    <Footer/></>
   );
 }

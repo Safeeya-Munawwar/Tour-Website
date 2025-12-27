@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import TestimonialForm from "../components/TestimonialForm";
 import TestimonialsSection from "../components/TestimonialsSection";
 import TailorMadeForm from "../components/CustomizeTourForm";
+import Footer from "../components/Footer";
 
 const TailorMadeTours = () => {
   const [tourData, setTourData] = useState(null);
@@ -68,7 +69,8 @@ const [currentPage] = useState(1);
   }
 
   return (
-    <div className="font-poppins bg-white text-[#222]">
+   <>
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
       <ToastContainer position="top-right" autoClose={3000} />
       {/* ---------------------------- HERO HEADER ---------------------------- */}
       <div
@@ -346,6 +348,8 @@ const [currentPage] = useState(1);
         </div>
       </section>
     </div>
+    <Footer/>
+    </>
   );
 };
 

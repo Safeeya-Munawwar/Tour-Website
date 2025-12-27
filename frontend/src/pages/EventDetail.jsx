@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 import BookEventTour from "../components/BookEventTour";
+import Footer from "../components/Footer";
 
 export default function EventDetail() {
   const { id } = useParams(); // fetch by event ID
@@ -9,11 +10,7 @@ export default function EventDetail() {
   const [showText, setShowText] = useState(false);
   const [activeImg, setActiveImg] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
-const [currentPage] = useState(1);
-// Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
+
   // Fetch event + detail from backend
   useEffect(() => {
     async function fetchEvent() {
@@ -57,12 +54,10 @@ const [currentPage] = useState(1);
         <h2 className="text-3xl font-bold">Event Not Found</h2>
       </div>
     );
-  }
+  }const paragraphs = event.description.split(/\n\s*\n/).filter(Boolean);return (
 
-  const paragraphs = event.description.split(/\n\s*\n/).filter(Boolean);
-
-  return (
-    <div className="font-poppins bg-white text-gray-900 relative">
+ <>
+ <div className=" flex flex-col min-h-screen   font-poppins bg-white text-gray-900 relative">
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -240,5 +235,6 @@ const [currentPage] = useState(1);
         </div>
       )}
     </div>
+    <Footer/></>
   );
 }

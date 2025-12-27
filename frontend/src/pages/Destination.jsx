@@ -42,7 +42,7 @@ export default function Destination() {
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/40.jpg')" }}
+        style={{ backgroundImage: "url('/images/light.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
 

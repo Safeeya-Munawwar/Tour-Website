@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 
 // User Pages
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import OurTeam from "./pages/OurTeam";
@@ -73,6 +73,7 @@ import QuickTaxiBookingAdmin from "./pages/admin/QuickTaxiBooking";
 import TaxiList from "./pages/quickTaxi/TaxiList";
 import AddTaxi from "./pages/quickTaxi/AddTaxi";
 import EditTaxi from "./pages/quickTaxi/EditTaxi";
+import Layout from "./components/Layout";
 
 function App() {
   const location = useLocation();
@@ -82,34 +83,35 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!hideLayout && <Navbar />}
+        {!hideLayout && <Navbar />}
+       
         <FloatingButtonsProvider>
         <ScrollToTop /> 
         {!hideLayout && <WhatsAppButton />}
         {!hideLayout && <QuickTaxiButton />}
-      <main className="flex-grow">
+        <main className="flex-grow flex flex-col justify-start">
         <Routes>
           {/* ---------------------------USER ROUTES--------------------------- */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Layout><Home/></Layout>} />
           <Route path="/about" element={<About />} />
-          <Route path="/our-team" element={<OurTeam />} />
+          <Route path="/our-team" element={<Layout><OurTeam /></Layout>} />
           <Route path="/our-journey" element={<OurJourney />} />
-          <Route path="/community-impact" element={<CommunityImpact />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/destinations" element={<Destination />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/community-impact" element={<Layout><CommunityImpact /></Layout>} />
+          <Route path="/contact" element={<Layout><Contact /></Layout>} />
+          <Route path="/destinations" element={<Layout><Destination /></Layout>} />
+          <Route path="/blog" element={<Layout><Blog /></Layout>} />
           <Route path="blog/:slug" element={<BlogDetail />} />
           <Route path="/experience" element={<Experiences />} />
           <Route path="/experience/:slug" element={<ExperienceDetail />} />
-          <Route path="/day-tours" element={<DayTour />} />
-          <Route path="/round-tours" element={<RoundTour />} />
+          <Route path="/day-tours" element={<Layout><DayTour/></Layout>} />
+          <Route path="/round-tours" element={<Layout><RoundTour /></Layout>} />
           <Route path="/day-tour-detail/:id" element={<TourDetail />} />
           <Route path="/round-tours/:id" element={<RoundTourDetail />} />
           <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/events" element={<Layout><Events /></Layout>} />
           <Route path="/events/:id" element={<EventDetail />} />
-          <Route path="/book-event" element={<BookEventTour />} />
-          <Route path="/quick-taxi" element={<QuickTaxi />} />
+          <Route path="/book-event" element={<Layout><BookEventTour /></Layout>} />
+          <Route path="/quick-taxi" element={<Layout><QuickTaxi /></Layout>} />
 
           {/* ---------------------------ADMIN ROUTES--------------------------- */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -499,8 +501,7 @@ function App() {
           />
         </Routes>
       </main>
-
-      {!hideLayout && <Footer />}
+     
         </FloatingButtonsProvider>
     </div>
   );
