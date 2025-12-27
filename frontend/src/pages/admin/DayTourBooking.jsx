@@ -293,46 +293,114 @@ const DayTourBookingAdmin = () => {
 
         {/* ---------------- MODAL ---------------- */}
         {selectedBooking && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
-              <button
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedBooking(null)}
-              >
-                ✕
-              </button>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center bg-[#0d203a] px-6 py-3 flex-shrink-0">
+                <h3 className="text-xl font-bold text-white">
+                  Day Tour Booking Details
+                </h3>
+                <button
+                  className="text-white text-xl font-bold hover:text-gray-300 transition"
+                  onClick={() => setSelectedBooking(null)}
+                >
+                  ✕
+                </button>
+              </div>
 
-              <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
-              <div className="space-y-2 text-sm">
-                <p>
-                  <strong>Tour:</strong> {selectedBooking.tourId?.title || "—"}
-                </p>
-                <p>
-                  <strong>Name:</strong> {selectedBooking.name}
-                </p>
-                <p>
-                  <strong>Email:</strong> {selectedBooking.email || "—"}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {selectedBooking.phone}
-                </p>
-                <p>
-                  <strong>Adults:</strong> {selectedBooking.adults || 0}
-                </p>
-                <p>
-                  <strong>Children:</strong> {selectedBooking.children || 0}
-                </p>
-                <p>
-                  <strong>Pickup:</strong>{" "}
-                  {selectedBooking.pickupLocation || "—"} on{" "}
-                  {selectedBooking.startDate || "—"} at{" "}
-                  {selectedBooking.startTime || "—"}
-                </p>
-                {selectedBooking.message && (
-                  <p>
-                    <strong>Message:</strong> {selectedBooking.message}
+              {/* Body */}
+              <div className="p-6 space-y-4 text-sm text-gray-700 overflow-y-auto flex-1">
+                <div className="grid grid-cols-2 gap-0 border border-blue-950 rounded">
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Tour:
                   </p>
-                )}
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.tourId?.title || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.tourId?.location || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Name:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.name}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Email:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.email || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Phone:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.phone}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Adults:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.adults || 0}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Children:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.children || 0}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.pickupLocation || "—"} on{" "}
+                    {selectedBooking.startDate || "—"} at{" "}
+                    {selectedBooking.startTime || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.pickupLocation || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Date:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.startDate || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Time:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.startTime || "—"}
+                  </p>
+
+                  {selectedBooking.message && (
+                    <>
+                      <p className="p-2 border-r border-blue-950 font-semibold bg-gray-50">
+                        Message:
+                      </p>
+                      <p className="p-2 break-words">
+                        {selectedBooking.message}
+                      </p>
+                    </>
+                  )}
+                </div>
 
                 {/* Status selector */}
                 <div className="mt-2">
@@ -357,10 +425,10 @@ const DayTourBookingAdmin = () => {
               </div>
 
               {/* Call / WhatsApp / Email buttons */}
-              <div className="mt-4 flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 flex-shrink-0">
                 <a
                   href={`tel:${selectedBooking.phone}`}
-                  className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-center hover:bg-gray-800"
+                  className="flex-1 bg-gray-700 text-white rounded px-4 py-2 text-center hover:bg-gray-800 transition"
                 >
                   Call
                 </a>
@@ -375,7 +443,7 @@ const DayTourBookingAdmin = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-green-700 text-white px-3 py-2 rounded text-center hover:bg-green-800"
+                  className="flex-1 bg-green-700 text-white rounded px-4 py-2 text-center hover:bg-green-800 transition"
                 >
                   WhatsApp
                 </a>
@@ -389,7 +457,7 @@ const DayTourBookingAdmin = () => {
                         selectedBooking.name
                       )
                     )}`}
-                    className="flex-1 bg-gray-500 text-white px-3 py-2 rounded text-center hover:bg-gray-600"
+                    className="flex-1 bg-blue-600 text-white rounded px-4 py-2 text-center hover:bg-blue-700 transition"
                   >
                     Email
                   </a>

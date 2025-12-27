@@ -27,34 +27,42 @@ export default function ExploreSriLankaSection() {
   }, []);
 
   const mapImages = [
-    { title: "ADVENTURE TRAILS", image: "/images/adventure.jpeg" },
-    { title: "BEACH ESCAPES", image: "/images/beach.jpeg" },
-    { title: "CULTURAL WONDERS", image: "/images/culture.jpeg" },
-    { title: "WILDLIFE SAFARIS", image: "/images/wildlife.jpeg" },
+    { title: "Adventure Trails in Sri Lanka", image: "/images/adventure.jpeg" },
+    { title: "Beach Escapes in Sri Lanka", image: "/images/beach.jpeg" },
+    { title: "Cultural Wonders of Sri Lanka", image: "/images/culture.jpeg" },
+    { title: "Wildlife Safaris in Sri Lanka", image: "/images/wildlife.jpeg" },
   ];
 
   return (
-    <section className="w-full py-24 bg-white">
+    <section
+      className="w-full py-24 bg-white"
+      aria-labelledby="explore-sri-lanka-title"
+    >
       <div className="relative max-w-[1440px] mx-auto px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
         {/* ---------------- LEFT INTRO ---------------- */}
-        <div className="lg:col-span-3 space-y-6 p-6 lg:p-8 lg:-mr-16 xl:-mr-24 z-20">
-          <p className="text-sm md:text-lg tracking-wide text-gray-500 font-semibold">
-            EXPLORE SRI LANKA
+        <header className="lg:col-span-3 space-y-6 p-6 lg:p-8 lg:-mr-16 xl:-mr-24 z-20">
+          <p className="text-sm md:text-lg tracking-wide text-gray-500 font-semibold uppercase">
+            Explore Sri Lanka
           </p>
-          <h2 className="text-3xl md:text-5xl font-extrabold mt-2 md:mt-3">
+
+          <h2
+            id="explore-sri-lanka-title"
+            className="text-3xl md:text-5xl font-extrabold text-gray-900"
+          >
             Experiences Across the Island
           </h2>
+
           <p className="text-base sm:text-lg text-gray-700 leading-relaxed text-justify">
-            From tranquil temples to thrilling landscapes, each journey is rich
-            with culture, spirit, and adventure, unfolding stories that stay
-            with you long after the journey ends.
+            Discover unforgettable Sri Lanka travel experiences - from serene
+            temples and golden beaches to thrilling wildlife safaris and scenic
+            adventure trails across the island.
           </p>
 
           <div className="w-12 h-[2px] bg-[#D4AF37]" />
-        </div>
+        </header>
 
         {/* ---------------- CENTER MAP ---------------- */}
-        <div className="lg:col-span-5 relative z-10 lg:scale-[0.97]">
+        <div className="lg:col-span-5 relative z-10">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 3500, disableOnInteraction: false }}
@@ -63,23 +71,22 @@ export default function ExploreSriLankaSection() {
           >
             {mapImages.map((item, index) => (
               <SwiperSlide key={index}>
-                <div className="bg-white">
-                  {/* IMAGE */}
+                <article className="bg-white">
                   <div className="relative h-[450px]">
                     <img
                       src={item.image}
                       alt={item.title}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </div>
 
-                  {/* TITLE BELOW IMAGE */}
                   <div className="py-4 text-center">
-                    <h3 className="text-xl font-semibold tracking-wide">
+                    <h3 className="text-xl font-semibold tracking-wide text-gray-900">
                       {item.title}
                     </h3>
                   </div>
-                </div>
+                </article>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -88,15 +95,26 @@ export default function ExploreSriLankaSection() {
         {/* ---------------- RIGHT EXPERIENCE CARD ---------------- */}
         <div className="lg:col-span-4 relative p-4 lg:p-6 lg:-ml-8 xl:-ml-8 z-20">
           {loading ? (
-            <p className="text-center">Loading experiences...</p>
+            <p
+              className="text-center text-gray-500"
+              aria-live="polite"
+            >
+              Loading travel experiences...
+            </p>
           ) : (
             <>
               {/* Navigation */}
-              <button className="exp-prev absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition">
+              <button
+                className="exp-prev absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition"
+                aria-label="Previous experience"
+              >
                 <FaChevronLeft />
               </button>
 
-              <button className="exp-next absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition">
+              <button
+                className="exp-next absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition"
+                aria-label="Next experience"
+              >
                 <FaChevronRight />
               </button>
 
@@ -112,22 +130,20 @@ export default function ExploreSriLankaSection() {
               >
                 {experiences.map((exp, index) => (
                   <SwiperSlide key={index}>
-                    <div className="rounded-3xl overflow-hidden shadow-xl bg-white">
-                      {/* IMAGE WITH CONTENT INSIDE */}
+                    <article className="rounded-3xl overflow-hidden shadow-xl bg-white">
                       <div className="relative h-[420px] group">
                         <img
                           src={exp.mainImg || "/images/placeholder.jpg"}
-                          alt={exp.title}
+                          alt={`${exp.title} experience in Sri Lanka`}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                         />
 
-                        {/* Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/80 to-transparent" />
 
-                        {/* TEXT */}
                         <div className="absolute bottom-0 p-6 text-white">
                           <p className="uppercase text-xs tracking-widest mb-1 opacity-80">
-                            {exp.subtitle || "Signature Experience"}
+                            {exp.subtitle || "Signature Sri Lanka Experience"}
                           </p>
 
                           <h3 className="text-2xl font-semibold mb-2">
@@ -138,14 +154,17 @@ export default function ExploreSriLankaSection() {
                             {exp.description}
                           </p>
 
-                          <Link to={`/experience/${exp.slug}`}>
-                            <button className="mt-4 inline-block px-5 py-2 text-sm font-semibold bg-white text-black rounded-full hover:bg-[#D4AF37] transition">
+                          <Link
+                            to={`/experience/${exp.slug}`}
+                            aria-label={`Read more about ${exp.title}`}
+                          >
+                            <span className="mt-4 inline-block px-5 py-2 text-sm font-semibold bg-white text-black rounded-full hover:bg-[#D4AF37] transition">
                               Read More
-                            </button>
+                            </span>
                           </Link>
                         </div>
                       </div>
-                    </div>
+                    </article>
                   </SwiperSlide>
                 ))}
               </Swiper>

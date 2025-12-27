@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../lib/axios";
 import { Check, Settings } from "lucide-react";
 
 export default function Header() {
+<<<<<<< HEAD
   const images = [
     "/images/d2_compressed.webp",
     "/images/destination_compressed.webp",
@@ -10,6 +11,18 @@ export default function Header() {
     "/images/blog_compressed.webp",
     
   ];
+=======
+  // Memoize images so the array is stable across renders
+  const images = useMemo(
+    () => [
+      { src: "/images/d2.jpg", alt: "Beautiful Sri Lanka landscape" },
+      { src: "/images/destination.jpg", alt: "Tropical destination in Sri Lanka" },
+      { src: "/images/sigiriya.jpg", alt: "Sigiriya Rock Fortress" },
+      { src: "/images/blog.jpg", alt: "Travel blog inspiration" },
+    ],
+    []
+  );
+>>>>>>> 5056ad0f42288d7b5d57394f405978f4986550e5
 
   const [currentImage, setCurrentImage] = useState(0);
   const [homeData, setHomeData] = useState({
@@ -21,16 +34,15 @@ export default function Header() {
   // Preload all images
   useEffect(() => {
     let loadedCount = 0;
-    images.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
+    images.forEach((img) => {
+      const image = new Image();
+      image.src = img.src;
+      image.onload = () => {
         loadedCount++;
         if (loadedCount === images.length) setLoaded(true);
       };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [images]); // now safe
 
   // Fetch home content from backend
   useEffect(() => {
@@ -52,7 +64,6 @@ export default function Header() {
         console.error("Home fetch failed", err);
       }
     };
-
     fetchHome();
   }, []);
 
@@ -61,9 +72,8 @@ export default function Header() {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 8000);
-
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images.length]); // safe now
 
   return (
     <header className="relative w-full h-[650px] sm:h-[700px] md:h-[750px] overflow-hidden flex items-center justify-center">
@@ -71,10 +81,12 @@ export default function Header() {
       <div className="absolute inset-0">
         {images.map((img, index) => (
           <div
-            key={img}
+            key={img.src}
+            role="img"
+            aria-label={img.alt}
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${img})`,
+              backgroundImage: `url(${img.src})`,
               opacity: index === currentImage ? 1 : 0,
               transform: index === currentImage ? "scale(1.18)" : "scale(1.05)",
               transition: "opacity 2.5s ease-in-out, transform 8s ease-in-out",
@@ -98,19 +110,19 @@ export default function Header() {
         </p>
 
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
-          <button
-            onClick={() => (window.location.href = "/destinations")}
+          <a
+            href="/destinations"
             className="bg-[#487898] hover:bg-[#0c3956] text-white uppercase px-6 py-3 rounded-full flex items-center gap-2 transition"
           >
             Curated Itineraries <Check size={18} />
-          </button>
+          </a>
 
-          <button
-            onClick={() => (window.location.href = "/tailor-made-tours")}
+          <a
+            href="/tailor-made-tours"
             className="bg-[#ce2a40] hover:bg-[#ef0530] text-white uppercase px-6 py-3 rounded-full flex items-center gap-2 transition"
           >
             Tailormade Experiences <Settings size={18} />
-          </button>
+          </a>
         </div>
       </div>
     </header>

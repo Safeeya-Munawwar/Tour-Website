@@ -24,21 +24,19 @@ export default function BookTour() {
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
-  // ---------------- FETCH TOURS ----------------
+  /* ---------------- FETCH TOURS ---------------- */
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const dayRes = await axiosInstance.get("/day-tours");
-        setDayTours(Array.isArray(dayRes.data?.tours) ? dayRes.data.tours : []);
+        const [dayRes, roundRes] = await Promise.all([
+          axiosInstance.get("/day-tours"),
+          axiosInstance.get("/round-tours"),
+        ]);
 
-        const roundRes = await axiosInstance.get("/round-tours");
-        setRoundTours(
-          Array.isArray(roundRes.data?.tours) ? roundRes.data.tours : []
-        );
+        setDayTours(dayRes.data?.tours || []);
+        setRoundTours(roundRes.data?.tours || []);
       } catch (err) {
-        console.error("Fetch error:", err);
-        setDayTours([]);
-        setRoundTours([]);
+        console.error("Error fetching tours:", err);
       }
     };
     fetchTours();
@@ -46,8 +44,7 @@ export default function BookTour() {
 
   const handleTourSelect = (id) => {
     const list = tourType === "day" ? dayTours : roundTours;
-    const tour = list.find((t) => t._id === id);
-    setSelectedTour(tour || null);
+    setSelectedTour(list.find((t) => t._id === id) || null);
   };
 
   const handleChange = (e) => {
@@ -55,69 +52,49 @@ export default function BookTour() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ---------------- VALIDATION ----------------
+  /* ---------------- VALIDATION ---------------- */
   const validate = () => {
-    const newErrors = {};
-
-    if (!tourType) newErrors.tourType = "Please select a tour type";
-    if (!selectedTour) newErrors.selectedTour = "Please select a tour";
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) newErrors.email = "Invalid email";
-    }
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    const err = {};
+    if (!tourType) err.tourType = "Please select a tour type";
+    if (!selectedTour) err.selectedTour = "Please select a tour";
+    if (!formData.name.trim()) err.name = "Full name is required";
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+      err.email = "Valid email address required";
+    if (!formData.phone.trim()) err.phone = "Contact number is required";
     if (!formData.pickupLocation.trim())
-      newErrors.pickupLocation = "Pickup location is required";
+      err.pickupLocation = "Pickup location is required";
+    if (!formData.startDate) err.startDate = "Pickup date is required";
+    if (!formData.startTime) err.startTime = "Pickup time is required";
+    if (formData.adults < 1) err.adults = "Minimum 1 adult required";
+    if (formData.children < 0) err.children = "Invalid number";
 
-    if (!formData.startDate) {
-      newErrors.startDate = "Pickup date is required";
-    } else {
-      const today = new Date();
-      const selected = new Date(formData.startDate);
-      if (selected < today.setHours(0, 0, 0, 0)) {
-        newErrors.startDate = "Date cannot be in the past";
-      }
-    }
-
-    if (!formData.startTime) newErrors.startTime = "Pickup time is required";
-
-    if (Number(formData.adults) < 1)
-      newErrors.adults = "At least 1 adult is required";
-    if (Number(formData.children) < 0)
-      newErrors.children = "Children cannot be negative";
-
-    return newErrors;
+    return err;
   };
 
-  // ---------------- SUBMIT ----------------
+  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     setResponseMsg("");
-    setIsError(false);
 
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setResponseMsg("Please fix the errors above");
+    const err = validate();
+    if (Object.keys(err).length) {
+      setErrors(err);
       setIsError(true);
+      setResponseMsg("Please correct the highlighted fields.");
       return;
     }
 
-    setLoading(true);
-    setErrors({});
-
     try {
+      setLoading(true);
       await axiosInstance.post("/book-tour", {
         ...formData,
-        tourId: selectedTour._id,
         tourType,
+        tourId: selectedTour._id,
       });
 
-      setResponseMsg("Booking submitted successfully!");
       setIsError(false);
+      setResponseMsg("Tour booking request sent successfully!");
       setFormData({
         name: "",
         email: "",
@@ -131,215 +108,171 @@ export default function BookTour() {
       });
       setSelectedTour(null);
       setTourType("");
-    } catch (err) {
-      console.error(err);
+    } catch {
       setIsError(true);
-      setResponseMsg("Failed to submit booking. Please try again.");
+      setResponseMsg("Submission failed. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ---------------- UI ----------------
+  /* ---------------- UI ---------------- */
   return (
-    <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
-      <h2 className="text-4xl font-bold text-center text-[#0B2545]">
-        Book a Tour
+    <section
+      aria-labelledby="book-tour-heading"
+      className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto text-left"
+    >
+      <h2
+        id="book-tour-heading"
+        className="text-3xl md:text-4xl font-extrabold text-center text-[#0B2545]"
+      >
+        Book Your Sri Lanka Tour
       </h2>
 
-      {/* TOUR TYPE */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">
-          Tour Type <span className="text-red-500">*</span>
-        </label>
-        <select
-          value={tourType}
-          onChange={(e) => {
-            setTourType(e.target.value);
-            setSelectedTour(null);
-          }}
-          className={`w-full px-4 py-3 rounded border ${
-            errors.tourType ? "border-red-500" : "border-gray-300"
-          } focus:ring-2 focus:ring-blue-500 outline-none`}
-        >
-          <option value="">Select Tour Type </option>
-          <option value="day">Day Tour</option>
-          <option value="round">Round Tour</option>
-        </select>
-        {errors.tourType && (
-          <span className="text-red-500 text-sm">{errors.tourType}</span>
-        )}
-      </div>
+      <p className="text-center text-gray-600 mt-2">
+        Plan your perfect Sri Lankan adventure with us
+      </p>
 
-      {/* TOUR LIST */}
-      {tourType && (
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium">
-            Select Tour <span className="text-red-500">*</span>
-          </label>
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className="flex flex-col gap-5 mt-6"
+      >
+        {/* TOUR TYPE */}
+        <label className="font-medium">
+          Tour Type *
           <select
-            value={selectedTour?._id || ""}
-            onChange={(e) => handleTourSelect(e.target.value)}
-            className={`w-full px-4 py-3 rounded border ${
-              errors.selectedTour ? "border-red-500" : "border-gray-300"
-            } focus:ring-2 focus:ring-blue-500 outline-none`}
+            value={tourType}
+            onChange={(e) => {
+              setTourType(e.target.value);
+              setSelectedTour(null);
+            }}
+            aria-required="true"
+            className="mt-1 w-full px-4 py-3 border rounded focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Select Tour</option>
-            {(tourType === "day" ? dayTours : roundTours).map((tour) => (
-              <option key={tour._id} value={tour._id}>
-                {tour.title} – {tour.location}
-              </option>
-            ))}
+            <option value="">Select Tour Type</option>
+            <option value="day">Day Tour</option>
+            <option value="round">Round Tour</option>
           </select>
-          {errors.selectedTour && (
-            <span className="text-red-500 text-sm">{errors.selectedTour}</span>
-          )}
-        </div>
-      )}
+        </label>
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+        {/* TOUR */}
+        {tourType && (
+          <label className="font-medium">
+            Select Tour *
+            <select
+              value={selectedTour?._id || ""}
+              onChange={(e) => handleTourSelect(e.target.value)}
+              className="mt-1 w-full px-4 py-3 border rounded"
+            >
+              <option value="">Choose a tour</option>
+              {(tourType === "day" ? dayTours : roundTours).map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.title} – {t.location}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+
+        {/* BASIC INFO */}
         {["name", "email", "phone"].map((field) => (
-          <div key={field} className="flex flex-col">
-            <label className="mb-1 font-medium">
-              {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
-              <span className="text-red-500">*</span>
-            </label>
+          <label key={field} className="font-medium">
+            {field.charAt(0).toUpperCase() + field.slice(1)} *
             <input
               type={field === "email" ? "email" : "text"}
               name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
               value={formData[field]}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
-                errors[field] ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
+              className="mt-1 w-full px-4 py-3 border rounded"
+              aria-invalid={!!errors[field]}
             />
-            {errors[field] && (
-              <span className="text-red-500 text-sm">{errors[field]}</span>
-            )}
-          </div>
+          </label>
         ))}
 
-        {/* Number of Travellers */}
+        {/* TRAVELERS */}
         <div className="flex gap-4">
-          <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">
-              Adults <span className="text-red-500">*</span>
-            </label>
+          <label className="flex-1 font-medium">
+            Adults *
             <input
               type="number"
-              name="adults"
               min="1"
+              name="adults"
               value={formData.adults}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
-                errors.adults ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
+              className="mt-1 w-full px-4 py-3 border rounded"
             />
-            {errors.adults && (
-              <span className="text-red-500 text-sm">{errors.adults}</span>
-            )}
-          </div>
-          <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">Children</label>
+          </label>
+
+          <label className="flex-1 font-medium">
+            Children
             <input
               type="number"
-              name="children"
               min="0"
+              name="children"
               value={formData.children}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
-                errors.children ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
+              className="mt-1 w-full px-4 py-3 border rounded"
             />
-            {errors.children && (
-              <span className="text-red-500 text-sm">{errors.children}</span>
-            )}
-          </div>
+          </label>
         </div>
 
-        {/* Pickup Location */}
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium">
-            Pickup Location <span className="text-red-500">*</span>
-          </label>
+        {/* PICKUP */}
+        <label className="font-medium">
+          Pickup Location *
           <input
             type="text"
             name="pickupLocation"
-            placeholder="Enter pickup location"
             value={formData.pickupLocation}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded border ${
-              errors.pickupLocation ? "border-red-500" : "border-gray-300"
-            } focus:ring-2 focus:ring-blue-500 outline-none`}
+            className="mt-1 w-full px-4 py-3 border rounded"
           />
-          {errors.pickupLocation && (
-            <span className="text-red-500 text-sm">
-              {errors.pickupLocation}
-            </span>
-          )}
-        </div>
+        </label>
 
-        {/* Date & Time */}
+        {/* DATE & TIME */}
         <div className="flex gap-4">
-          <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">
-              Pickup Date <span className="text-red-500">*</span>
-            </label>
+          <label className="flex-1 font-medium">
+            Pickup Date *
             <input
               type="date"
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
-                errors.startDate ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
+              className="mt-1 w-full px-4 py-3 border rounded"
             />
-            {errors.startDate && (
-              <span className="text-red-500 text-sm">{errors.startDate}</span>
-            )}
-          </div>
-          <div className="flex-1 flex flex-col">
-            <label className="mb-1 font-medium">
-              Pickup Time <span className="text-red-500">*</span>
-            </label>
+          </label>
+
+          <label className="flex-1 font-medium">
+            Pickup Time *
             <input
-              id="startTime"
               type="time"
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
-              step="60" // minutes
-              className={`w-full px-4 py-3 rounded border ${
-                errors.startTime ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-blue-500 outline-none`}
+              className="mt-1 w-full px-4 py-3 border rounded"
             />
-            {errors.startTime && (
-              <span className="text-red-500 text-sm">{errors.startTime}</span>
-            )}
-          </div>
+          </label>
         </div>
 
-        {/* Additional Message */}
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium">Additional Message</label>
+        {/* MESSAGE */}
+        <label className="font-medium">
+          Additional Message
           <textarea
             name="message"
-            placeholder="Additional Message"
             value={formData.message}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
+            rows="4"
+            className="mt-1 w-full px-4 py-3 border rounded resize-none"
           />
-        </div>
+        </label>
 
-        {/* Submit */}
+        {/* SUBMIT */}
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold px-6 py-3 rounded transition"
+          className="bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold py-3 rounded transition"
         >
-          {loading ? "Submitting..." : "Book Tour"}
+          {loading ? "Submitting..." : "Book Tour Now"}
         </button>
 
         {responseMsg && (
@@ -352,6 +285,6 @@ export default function BookTour() {
           </p>
         )}
       </form>
-    </div>
+    </section>
   );
 }

@@ -10,22 +10,20 @@ export default function PopularTours() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        // Last 2 day tours
+        // Day tours
         const dayRes = await axiosInstance.get("/day-tours");
         const lastTwoDayTours = dayRes.data.tours
-          .sort((a, b) => (b._id > a._id ? 1 : -1))
+          ?.sort((a, b) => (b._id > a._id ? 1 : -1))
           .slice(0, 2);
-        setDayTours(lastTwoDayTours);
+        setDayTours(lastTwoDayTours || []);
 
-        // Last 2 round tours
-        const roundRes = await axiosInstance.get(
-          "/round-tours"
-        );
-        if (roundRes.data.success) {
+        // Round tours
+        const roundRes = await axiosInstance.get("/round-tours");
+        if (roundRes.data?.success) {
           const lastTwoRoundTours = roundRes.data.tours
-            .sort((a, b) => (b._id > a._id ? 1 : -1))
+            ?.sort((a, b) => (b._id > a._id ? 1 : -1))
             .slice(0, 2);
-          setRoundTours(lastTwoRoundTours);
+          setRoundTours(lastTwoRoundTours || []);
         }
       } catch (err) {
         console.error("Failed to fetch tours:", err);
@@ -35,7 +33,7 @@ export default function PopularTours() {
     fetchTours();
   }, []);
 
-  // Interleave tours: round, day, round, day
+  // Interleave tours
   const allTours = [];
   for (let i = 0; i < 2; i++) {
     if (roundTours[i]) allTours.push({ ...roundTours[i], type: "round" });
@@ -43,39 +41,57 @@ export default function PopularTours() {
   }
 
   return (
-    <section className="w-full bg-slate-100 py-16">
+    <section
+      className="w-full bg-slate-100 py-16"
+      aria-label="Popular tour packages and itineraries in Sri Lanka"
+    >
       <div className="max-w-7xl mx-auto px-4">
-        <p className="text-center text-gray-500 text-lg font-semibold tracking-wide">
-          ITINERARIES
-        </p>
-        <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
-          Popular Tours
+        {/* Subtitle */}
+        <h2 className="text-center text-gray-500 text-sm font-semibold tracking-widest uppercase">
+          Itineraries
         </h2>
 
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-2 py-2">
+        {/* Main Heading */}
+        <h3 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
+          Popular Tours in Sri Lanka
+        </h3>
+
+        {/* Tours Grid */}
+        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
           {allTours.length > 0 ? (
             allTours.map((tour) => (
-              <div
+              <article
                 key={tour._id}
-                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-0 overflow-hidden border border-gray-100"
+                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden border border-gray-100"
+                aria-label={tour.title}
               >
+                {/* Image */}
                 <img
                   src={tour.img}
-                  alt={tour.title}
+                  alt={`${tour.title} tour in ${tour.location || "Sri Lanka"}`}
                   className="w-full h-52 object-cover"
+                  loading="lazy"
                 />
+
                 <div className="py-6 text-center flex flex-col items-center">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  {/* Tour title */}
+                  <h4 className="text-xl font-semibold text-gray-900">
                     {tour.title}
-                  </h3>
+                  </h4>
+
+                  {/* Location */}
                   {tour.location && (
                     <p className="text-gray-500 mt-2 flex items-center gap-1">
-                      <FaMapMarkerAlt className="text-red-500" size={16} />
+                      <FaMapMarkerAlt
+                        className="text-red-500"
+                        size={16}
+                        aria-hidden="true"
+                      />
                       {tour.location}
                     </p>
                   )}
 
-                  {/* Show small type tag */}
+                  {/* Tour type */}
                   <span
                     className={`mt-2 px-3 py-1 text-xs font-semibold rounded-full ${
                       tour.type === "round"
@@ -83,9 +99,12 @@ export default function PopularTours() {
                         : "bg-green-100 text-green-800"
                     }`}
                   >
-                    {tour.type === "round" ? "Round Tour" : "Day Tour"}
+                    {tour.type === "round"
+                      ? "Round Tour Package"
+                      : "Day Tour Package"}
                   </span>
 
+                  {/* CTA */}
                   <Link
                     to={
                       tour.type === "round"
@@ -93,17 +112,18 @@ export default function PopularTours() {
                         : `/day-tour-detail/${tour._id}`
                     }
                     className="mt-5 w-full"
+                    aria-label={`View details of ${tour.title}`}
                   >
-                    <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 flex items-center gap-2 mx-auto transition">
-                      READ MORE →
+                    <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 mx-auto transition">
+                      Read More →
                     </button>
                   </Link>
                 </div>
-              </div>
+              </article>
             ))
           ) : (
             <p className="text-center col-span-4 text-gray-500">
-              No tours available
+              No tours available at the moment
             </p>
           )}
         </div>

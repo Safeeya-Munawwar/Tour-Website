@@ -17,31 +17,41 @@ export default function QuickTaxiButton() {
   };
 
   return (
-    <div className="fixed bottom-28 right-6 z-[9999] flex flex-col items-end">
+    <div
+      className="fixed bottom-28 right-6 z-[9999] flex flex-col items-end"
+      aria-label="Quick Taxi floating button"
+    >
       {/* CARD ABOVE BUTTON */}
       {open && (
-        <div className="mb-3 w-72 bg-white rounded-xl shadow-xl overflow-hidden animate-slideUp">
-          <div className="bg-blue-600 p-3 text-white flex justify-between items-start">
+        <aside
+          id="quick-taxi-card"
+          className="mb-3 w-72 bg-white rounded-xl shadow-xl overflow-hidden animate-slideUp"
+          role="region"
+          aria-label="Quick Taxi booking card"
+        >
+          <header className="bg-blue-600 p-3 text-white flex justify-between items-start">
             <div>
-              <p className="font-semibold text-lg">Quick Taxi</p>
+              <h3 className="font-semibold text-lg">Quick Taxi</h3>
               <p className="text-sm opacity-90">Book your ride quickly</p>
             </div>
             <button
               onClick={() => setOpen(false)}
               className="text-white text-lg"
-              aria-label="Close Quick Taxi card"
+              aria-label="Close Quick Taxi booking card"
             >
               ✕
             </button>
-          </div>
+          </header>
 
           {/* Contact Info */}
           <div className="flex items-center gap-4 p-4 border-b">
             <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-              <FaCar className="text-white text-xl" />
+              <FaCar className="text-white text-xl" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-semibold text-gray-800">Net Lanka Travels</p>
+              <p className="font-semibold text-gray-800">
+                Net Lanka Travels
+              </p>
               <p className="text-sm text-gray-500">
                 Typically replies in a few minutes
               </p>
@@ -53,11 +63,12 @@ export default function QuickTaxiButton() {
             <button
               onClick={handleOpenBooking}
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+              aria-label="Book a Quick Taxi ride with Net Lanka Travels"
             >
               Book Now
             </button>
           </div>
-        </div>
+        </aside>
       )}
 
       {/* Floating Button */}
@@ -66,6 +77,7 @@ export default function QuickTaxiButton() {
         className="bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg hover:scale-105 transition text-sm font-semibold"
         aria-expanded={open}
         aria-controls="quick-taxi-card"
+        aria-label="Open Quick Taxi booking card"
       >
         Quick Taxi
       </button>
