@@ -274,57 +274,129 @@ const QuickTaxiBookingAdmin = () => {
 
         {/* ---------------- MODAL ---------------- */}
         {selectedBooking && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
-              <button
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedBooking(null)}
-              >
-                ✕
-              </button>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center bg-[#0d203a] px-6 py-3 flex-shrink-0">
+                <h3 className="text-xl font-bold text-white">
+                  Quick Taxi Booking Details
+                </h3>
+                <button
+                  className="text-white text-xl font-bold hover:text-gray-300 transition"
+                  onClick={() => setSelectedBooking(null)}
+                >
+                  ✕
+                </button>
+              </div>
 
-              <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
+              {/* Body */}
+              <div className="p-6 space-y-4 text-sm text-gray-700 overflow-y-auto flex-1">
+                <div className="grid grid-cols-2 gap-0 border border-blue-950 rounded">
+                  {/* Name */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Name:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.firstName} {selectedBooking.lastName}
+                  </p>
 
-              <div className="space-y-2 text-sm">
-                <p>
-                  <strong>Name:</strong> {selectedBooking.firstName}{" "}
-                  {selectedBooking.lastName}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {selectedBooking.phone}
-                </p>
-                <p>
-                  <strong>Vehicle:</strong>{" "}
-                  {selectedBooking.taxiId ? selectedBooking.taxiId.name : "—"}
-                </p>
-                <p>
-                  <strong>Service Type:</strong> {selectedBooking.serviceType}
-                </p>
-                <p>
-                  <strong>Pickup:</strong> {selectedBooking.pickupLocation} at{" "}
-                  {selectedBooking.pickupTime} on {selectedBooking.pickupDate}
-                </p>
-                {selectedBooking.dropLocation && (
-                  <p>
-                    <strong>Drop:</strong> {selectedBooking.dropLocation}{" "}
-                    {selectedBooking.dropDate &&
-                      `on ${selectedBooking.dropDate}`}
+                  {/* Phone */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Phone:
                   </p>
-                )}
-                <p>
-                  <strong>Adults:</strong> {selectedBooking.adults}
-                </p>
-                <p>
-                  <strong>Children:</strong> {selectedBooking.children}
-                </p>
-                {selectedBooking.message && (
-                  <p>
-                    <strong>Message:</strong> {selectedBooking.message}
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.phone}
                   </p>
-                )}
-                <p>
-                  <strong>Members:</strong> {selectedBooking.members}
-                </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Country:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.country}
+                  </p>
+
+                  {/* Vehicle */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Vehicle:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.taxiId ? selectedBooking.taxiId.name : "—"}
+                  </p>
+
+                  {/* Service Type */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Service Type:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.serviceType}
+                  </p>
+
+                  {/* Pickup */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.pickupLocation}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Date:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.pickupDate}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Time:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.pickupTime}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Adults:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.adults || 0}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Children:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.children || 0}
+                  </p>
+
+                  {/* Drop (optional) */}
+                  {selectedBooking.dropLocation && (
+                    <>
+                      <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                        Drop Location:
+                      </p>
+                      <p className="p-2 border-b border-blue-950">
+                        {selectedBooking.dropLocation}
+                      </p>
+                      <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                        Drop Date:
+                      </p>
+                      <p className="p-2 border-b border-blue-950">
+                        {selectedBooking.dropDate || "Not Specified"}
+                      </p>
+                    </>
+                  )}
+
+                  {/* Message */}
+                  {selectedBooking.message && (
+                    <>
+                      <p className="p-2 border-r border-blue-950 font-semibold bg-gray-50">
+                        Message:
+                      </p>
+                      <p className="p-2 break-words">
+                        {selectedBooking.message}
+                      </p>
+                    </>
+                  )}
+                </div>
 
                 {/* Status selector */}
                 <div className="mt-2">
@@ -344,10 +416,11 @@ const QuickTaxiBookingAdmin = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex gap-3">
+              {/* Call / WhatsApp / Email buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 flex-shrink-0">
                 <a
                   href={`tel:${selectedBooking.phone}`}
-                  className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-center hover:bg-gray-800"
+                  className="flex-1 bg-gray-700 text-white rounded px-4 py-2 text-center hover:bg-gray-800 transition"
                 >
                   Call
                 </a>
@@ -357,12 +430,12 @@ const QuickTaxiBookingAdmin = () => {
                   )}?text=${encodeURIComponent(
                     getStatusMessage(
                       selectedBooking.status,
-                      selectedBooking.fullName
+                      selectedBooking.firstName
                     )
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-green-700 text-white px-3 py-2 rounded text-center hover:bg-green-800"
+                  className="flex-1 bg-green-700 text-white rounded px-4 py-2 text-center hover:bg-green-800 transition"
                 >
                   WhatsApp
                 </a>
@@ -370,13 +443,13 @@ const QuickTaxiBookingAdmin = () => {
                   <a
                     href={`mailto:${
                       selectedBooking.email
-                    }?subject=Taxi Booking Update&body=${encodeURIComponent(
+                    }?subject=Quick Taxi Booking Update&body=${encodeURIComponent(
                       getStatusMessage(
                         selectedBooking.status,
                         selectedBooking.firstName
                       )
                     )}`}
-                    className="flex-1 bg-gray-500 text-white px-3 py-2 rounded text-center hover:bg-gray-600"
+                    className="flex-1 bg-blue-600 text-white rounded px-4 py-2 text-center hover:bg-blue-700 transition"
                   >
                     Email
                   </a>

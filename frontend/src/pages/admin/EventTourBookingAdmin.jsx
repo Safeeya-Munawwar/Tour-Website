@@ -3,10 +3,12 @@ import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSidebar from "../../components/admin/AdminSidebar";
+import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 
 const EventTourBookingAdmin = () => {
   const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const rowsPerPage = 5;
 
   // ---------------- FETCH BOOKINGS ----------------
@@ -16,9 +18,9 @@ const EventTourBookingAdmin = () => {
 
       if (res.data.success) {
         setBookings(
-          res.data.bookings.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-          )
+          res.data.bookings
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((b) => ({ ...b }))
         );
       }
     } catch (err) {
@@ -31,15 +33,14 @@ const EventTourBookingAdmin = () => {
     fetchBookings();
   }, []);
 
-  // ---------------- UPDATE STATUS ----------------
+  // ---------------- STATUS UPDATE ----------------
   const handleStatusChange = async (id, newStatus) => {
     const toastId = toast.info("Updating status...", { autoClose: false });
 
     try {
-      const res = await axiosInstance.put(
-        `/event-tour-booking/${id}/status`,
-        { status: newStatus }
-      );
+      const res = await axiosInstance.put(`/event-tour-booking/${id}/status`, {
+        status: newStatus,
+      });
 
       if (res.data.success) {
         toast.update(toastId, {
@@ -49,6 +50,8 @@ const EventTourBookingAdmin = () => {
           isLoading: false,
         });
         fetchBookings();
+        if (selectedBooking && selectedBooking._id === id)
+          setSelectedBooking({ ...selectedBooking, status: newStatus });
       } else {
         toast.update(toastId, {
           render: "Failed to update status",
@@ -79,12 +82,31 @@ const EventTourBookingAdmin = () => {
       if (res.data.success) {
         toast.success("Booking deleted");
         fetchBookings();
-      }
+        if (selectedBooking && selectedBooking._id === id)
+          setSelectedBooking(null);
+      } else toast.error("Delete failed");
     } catch (err) {
       console.error(err);
       toast.error("Delete failed");
     }
   };
+
+  // ---------------- MESSAGE GENERATOR ----------------
+  const getStatusMessage = (status, name) => {
+    switch (status) {
+      case "Approved":
+        return `Hello ${name}, your event booking has been approved! 🎉`;
+      case "Cancelled":
+        return `Hello ${name}, your event booking has been cancelled. 😔`;
+      case "Completed":
+        return `Hello ${name}, your event booking has been completed. Thank you! 😊`;
+      case "Pending":
+      default:
+        return `Hello ${name}, your event booking is pending. We'll update you soon.`;
+    }
+  };
+
+  const getSanitizedPhone = (phone) => (phone ? phone.replace(/\D/g, "") : "");
 
   // ---------------- PAGINATION ----------------
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -106,112 +128,295 @@ const EventTourBookingAdmin = () => {
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6 px-5 mt-4">
           Manage Event Bookings
         </h2>
-<div className="overflow-x-auto">
-  <table className="w-full table-fixed border border-[#1a354e] text-center">
-    <thead className="bg-[#0d203a] text-white">
-      <tr>
-        {[
-          "Event Title",
-          "Location",
-          "Name",
-          "Email",
-          "Phone",
-          "Adults",
-          "Children",
-          "Date",
-          "Time",
-          "Message",
-          "Status",
-          "Action",
-        ].map((heading) => (
-          <th
-            key={heading}
-            className="p-2 border border-[#1a354e] text-sm break-words"
-          >
-            {heading}
-          </th>
-        ))}
-      </tr>
-    </thead>
 
-    <tbody>
-  {currentRows.length === 0 ? (
-    <tr>
-      <td colSpan={12} className="p-4 text-sm">
-        No bookings found
-      </td>
-    </tr>
-  ) : (
-    currentRows.map((b) => (
-      <tr key={b._id} className="border-b border-[#2E5B84] hover:bg-blue-50">
-        <td className="p-2 border text-sm">{b.eventId?.title || "—"}</td>
-        <td className="p-2 border text-sm">{b.eventId?.location || "—"}</td>
-        <td className="p-2 border text-sm">{b.name}</td>
-        <td className="p-2 border text-sm break-all">{b.email}</td>
-        <td className="p-2 border text-sm">{b.phone}</td>
-        <td className="p-2 border text-sm">{b.adults}</td>
-        <td className="p-2 border text-sm">{b.children}</td>
-        <td className="p-2 border text-sm">{b.startDate}</td>
-        <td className="p-2 border text-sm">{b.startTime}</td>
-        <td className="p-2 border text-sm break-words max-w-[150px]">{b.message || "—"}</td>
-        <td className="p-2 border text-sm">
-          <select
-            value={b.status}
-            onChange={(e) => handleStatusChange(b._id, e.target.value)}
-            className={`px-2 py-1 rounded text-sm w-full
-              ${
-                b.status === "Approved"
-                  ? "bg-green-100 text-green-700"
-                  : b.status === "Cancelled"
-                  ? "bg-red-100 text-red-700"
-                  : b.status === "Completed"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-yellow-100 text-yellow-700"
-              }`}
-          >
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Completed">Completed</option>
-          </select>
-        </td>
-        <td className="p-2 border text-sm">
-          <button
-            onClick={() => handleDelete(b._id)}
-            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ))
-  )}
-</tbody>
+        <div className="overflow-x-auto max-w-full">
+          <table className="w-full table-fixed border border-[#1a354e] rounded mb-6 text-center">
+            <thead className="bg-[#0d203a] text-white">
+              <tr>
+                <th className="p-3 border border-[#1a354e] text-sm"></th>
+                <th className="p-3 border border-[#1a354e] text-sm">Name</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Members</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Date</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Status</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentRows.length === 0 ? (
+                <tr>
+                  <td colSpan={11} className="text-center p-4">
+                    No bookings found
+                  </td>
+                </tr>
+              ) : (
+                currentRows.map((b) => {
+                  const message = getStatusMessage(b.status, b.name);
+                  return (
+                    <tr
+                      key={b._id}
+                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+                    >
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.eventId?.title || "—"}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.name}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.phone}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {" "}
+                        {Number(b.adults || 0) + Number(b.children || 0)}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.startDate || "—"}
+                      </td>
 
-  </table>
-</div>
+                      {/* Status + WhatsApp/Email */}
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        <div className="flex flex-col items-center">
+                          <select
+                            value={b.status || "Pending"}
+                            onChange={(e) =>
+                              handleStatusChange(b._id, e.target.value)
+                            }
+                            className={`px-2 py-1 rounded w-full max-w-[140px] ${
+                              b.status === "Approved"
+                                ? "bg-green-100 text-green-700"
+                                : b.status === "Cancelled"
+                                ? "bg-red-100 text-red-700"
+                                : b.status === "Completed"
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Completed">Completed</option>
+                          </select>
 
+                          <div className="flex gap-1 mt-2">
+                            <a
+                              href={`https://wa.me/${getSanitizedPhone(
+                                b.phone
+                              )}?text=${encodeURIComponent(message)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-green-700 text-white px-2 py-2 rounded text-xs flex items-center justify-center"
+                            >
+                              <FaWhatsapp />
+                            </a>
+                            {b.email && (
+                              <a
+                                href={`mailto:${
+                                  b.email
+                                }?subject=Event Booking Update&body=${encodeURIComponent(
+                                  message
+                                )}`}
+                                className="bg-gray-700 text-white px-2 py-2 rounded text-xs flex items-center justify-center"
+                              >
+                                <FaEnvelope />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="flex justify-center items-center gap-2 mt-3 py-4">
+                        <button
+                          className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] transition text-sm"
+                          onClick={() => setSelectedBooking(b)}
+                        >
+                          View
+                        </button>
+                        <button
+                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm"
+                          onClick={() => handleDelete(b._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* PAGINATION */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 mt-2">
             <button
-              onClick={() => setCurrentPage((p) => p - 1)}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
               className="px-4 py-1 bg-gray-300 rounded disabled:opacity-50"
             >
               Prev
             </button>
-            <span>
+            <span className="px-4 py-1">
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage((p) => p + 1)}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-4 py-1 bg-gray-300 rounded disabled:opacity-50"
             >
               Next
             </button>
+          </div>
+        )}
+
+        {/* ---------------- MODAL ---------------- */}
+        {selectedBooking && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center bg-[#0d203a] px-6 py-3 flex-shrink-0">
+                <h3 className="text-xl font-bold text-white">
+                  Event Tour Booking Details
+                </h3>
+                <button
+                  className="text-white text-xl font-bold hover:text-gray-300 transition"
+                  onClick={() => setSelectedBooking(null)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4 text-sm text-gray-700 overflow-y-auto flex-1">
+                <div className="grid grid-cols-2 gap-0 border border-blue-950 rounded">
+                  {/* Event */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Event:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.eventId?.title || "—"}
+                  </p>
+
+                  {/* Location */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.eventId?.location || "—"}
+                  </p>
+
+                  {/* Name */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Name:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.name}
+                  </p>
+
+                  {/* Email */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Email:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.email || "—"}
+                  </p>
+
+                  {/* Phone */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Phone:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.phone}
+                  </p>
+
+                  {/* Adults */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Adults:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.adults || 0}
+                  </p>
+
+                  {/* Children */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Children:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.children || 0}
+                  </p>
+
+                  {/* Date */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Date:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.startDate || "—"}
+                  </p>
+
+                  {/* Time */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Time:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.startTime || "—"}
+                  </p>
+
+                  {/* Message (if exists) */}
+                  {selectedBooking.message && (
+                    <>
+                      <p className="p-2 border-r border-blue-950 font-semibold bg-gray-50">
+                        Message:
+                      </p>
+                      <p className="p-2 break-words">
+                        {selectedBooking.message}
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer / Actions */}
+              <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 flex-shrink-0">
+                <a
+                  href={`tel:${selectedBooking.phone}`}
+                  className="flex-1 bg-gray-700 text-white rounded px-4 py-2 text-center hover:bg-gray-800 transition"
+                >
+                  Call
+                </a>
+                <a
+                  href={`https://wa.me/${getSanitizedPhone(
+                    selectedBooking.phone
+                  )}?text=${encodeURIComponent(
+                    getStatusMessage(
+                      selectedBooking.status,
+                      selectedBooking.name
+                    )
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-green-700 text-white rounded px-4 py-2 text-center hover:bg-green-800 transition"
+                >
+                  WhatsApp
+                </a>
+                {selectedBooking.email && (
+                  <a
+                    href={`mailto:${
+                      selectedBooking.email
+                    }?subject=Event Booking Update&body=${encodeURIComponent(
+                      getStatusMessage(
+                        selectedBooking.status,
+                        selectedBooking.name
+                      )
+                    )}`}
+                    className="flex-1 bg-blue-600 text-white rounded px-4 py-2 text-center hover:bg-blue-700 transition"
+                  >
+                    Email
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

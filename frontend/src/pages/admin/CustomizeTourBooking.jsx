@@ -249,54 +249,138 @@ const CustomizeTourBookingAdmin = () => {
 
         {/* MODAL */}
         {selectedInquiry && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
-              <button
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedInquiry(null)}
-              >
-                ✕
-              </button>
-              <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
-              <div className="space-y-2 text-sm">
-                <p>
-                  <strong>Name:</strong> {selectedInquiry.fullName}
-                </p>
-                <p>
-                  <strong>Email:</strong> {selectedInquiry.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {selectedInquiry.phone}
-                </p>
-                <p>
-                  <strong>Pickup:</strong> {selectedInquiry.pickupLocation} on{" "}
-                  {selectedInquiry.startDate
-                    ? new Date(selectedInquiry.startDate).toLocaleDateString()
-                    : "—"}
-                </p>
-                <p>
-                  <strong>Drop:</strong> {selectedInquiry.dropLocation} on{" "}
-                  {selectedInquiry.endDate
-                    ? new Date(selectedInquiry.endDate).toLocaleDateString()
-                    : "—"}
-                </p>
-                <p>
-                  <strong>Adults:</strong> {selectedInquiry.adults}
-                </p>
-                <p>
-                  <strong>Children:</strong> {selectedInquiry.children}
-                </p>
-                <p>
-                  <strong>Budget:</strong>{" "}
-                  {selectedInquiry.currency && selectedInquiry.budget
-                    ? `${selectedInquiry.currency} ${selectedInquiry.budget}`
-                    : "—"}
-                </p>
-                {selectedInquiry.notes && (
-                  <p>
-                    <strong>Note:</strong> {selectedInquiry.notes}
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center bg-[#0d203a] px-6 py-3 flex-shrink-0">
+                <h3 className="text-xl font-bold text-white">
+                  Customize Tour Booking Details
+                </h3>
+                <button
+                  className="text-white text-xl font-bold hover:text-gray-300 transition"
+                  onClick={() => setSelectedInquiry(null)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4 text-sm text-gray-700 overflow-y-auto flex-1">
+                <div className="grid grid-cols-2 gap-0 border border-blue-950 rounded">
+                  {/* Name */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Name:
                   </p>
-                )}
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.title} {selectedInquiry.fullName}
+                  </p>
+
+                  {/* Country*/}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Country:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.country || "—"}
+                  </p>
+
+                  {/* Email */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Email:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.email || "—"}
+                  </p>
+
+                  {/* Phone */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Phone:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.phone}
+                  </p>
+
+                  {/* Pickup */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.pickupLocation || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Pickup Date:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.startDate
+                      ? new Date(selectedInquiry.startDate).toLocaleDateString()
+                      : "—"}
+                  </p>
+
+                  {/* Drop */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Drop Location:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.dropLocation || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Drop Date:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.endDate
+                      ? new Date(selectedInquiry.endDate).toLocaleDateString()
+                      : "—"}
+                  </p>
+
+                  {/* Adults */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Adults:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.adults || 0}
+                  </p>
+
+                  {/* Children */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Children:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.children || 0}
+                  </p>
+
+                  {/* Budget */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Budget:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.currency && selectedInquiry.budget
+                      ? `${selectedInquiry.currency} ${selectedInquiry.budget}`
+                      : "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Destinations:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.selectedDestinations &&
+                    selectedInquiry.selectedDestinations.length > 0
+                      ? selectedInquiry.selectedDestinations.join(", ")
+                      : "—"}
+                  </p>
+
+                  {/* Notes */}
+                  {selectedInquiry.notes && (
+                    <>
+                      <p className="p-2 border-r border-blue-950 font-semibold bg-gray-50">
+                        Note:
+                      </p>
+                      <p className="p-2 break-words">{selectedInquiry.notes}</p>
+                    </>
+                  )}
+                </div>
+
+                {/* Status selector */}
                 <div className="mt-2">
                   <label className="block font-semibold mb-1">Status:</label>
                   <select
@@ -313,10 +397,12 @@ const CustomizeTourBookingAdmin = () => {
                   </select>
                 </div>
               </div>
-              <div className="mt-4 flex gap-3 justify-center">
+
+              {/* Call / WhatsApp / Email buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 flex-shrink-0">
                 <a
                   href={`tel:${selectedInquiry.phone}`}
-                  className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-center hover:bg-gray-800"
+                  className="flex-1 bg-gray-700 text-white rounded px-4 py-2 text-center hover:bg-gray-800 transition"
                 >
                   Call
                 </a>
@@ -331,7 +417,7 @@ const CustomizeTourBookingAdmin = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-green-700 text-white px-3 py-2 rounded text-center hover:bg-green-800"
+                  className="flex-1 bg-green-700 text-white rounded px-4 py-2 text-center hover:bg-green-800 transition"
                 >
                   WhatsApp
                 </a>
@@ -339,13 +425,13 @@ const CustomizeTourBookingAdmin = () => {
                   <a
                     href={`mailto:${
                       selectedInquiry.email
-                    }?subject=Tour Booking Update&body=${encodeURIComponent(
+                    }?subject=Customize Tour Booking Update&body=${encodeURIComponent(
                       getStatusMessage(
                         selectedInquiry.status,
                         selectedInquiry.fullName
                       )
                     )}`}
-                    className="flex-1 bg-gray-500 text-white px-3 py-2 rounded text-center hover:bg-gray-600"
+                    className="flex-1 bg-blue-600 text-white rounded px-4 py-2 text-center hover:bg-blue-700 transition"
                   >
                     Email
                   </a>

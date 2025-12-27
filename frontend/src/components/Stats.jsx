@@ -39,7 +39,7 @@ export default function Stats() {
           setCounts(statsData.map(() => 0)); // reset counts when leaving
         }
       },
-      { threshold: 0.5 } // trigger when 50% of section is visible
+      { threshold: 0.5 }
     );
 
     observer.observe(sectionRef.current);
@@ -68,14 +68,15 @@ export default function Stats() {
   }, [hasAnimated, statsData]);
 
   return (
-    <div
+    <section
       ref={sectionRef}
+      aria-label="Net Lanka Travels statistics section"
       className="w-full bg-cover bg-center bg-fixed relative flex items-center py-16 md:py-20"
       style={{
         backgroundImage: "url('/images/12.jpg')",
       }}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div aria-hidden="true" className="absolute inset-0 bg-black/50"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 text-center px-6 gap-8 md:gap-12">
         {statsData.map((stat, i) => (
@@ -93,13 +94,19 @@ export default function Stats() {
                     className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
                   />
                 ) : (
-                  <span className="text-2xl sm:text-3xl md:text-4xl">🎯</span>
+                  <span className="text-2xl sm:text-3xl md:text-4xl" aria-hidden="true">
+                    🎯
+                  </span>
                 )}
               </div>
             </div>
 
             {/* Count */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold flex items-center gap-1">
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold flex items-center gap-1"
+              aria-label={`${stat.title} count: ${counts[i]}`}
+              role="status"
+            >
               {counts[i].toLocaleString()}
               <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold">
                 +
@@ -107,12 +114,12 @@ export default function Stats() {
             </h2>
 
             {/* Label */}
-            <p className="text-base sm:text-lg md:text-lg lg:text-xl font-medium mt-2">
+            <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-medium mt-2">
               {stat.title}
-            </p>
+            </h3>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

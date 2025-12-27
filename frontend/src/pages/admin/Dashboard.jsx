@@ -5,11 +5,13 @@ import {
   Plane,
   Map,
   Users,
-  MessageSquare,
   Star,
   MapPin,
   FileText,
-  User,
+  Calendar,
+  Mail,
+  Compass,
+  CarFront,
 } from "lucide-react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {
@@ -31,15 +33,19 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     roundTours: 0,
     dayTours: 0,
+    events: 0,
     experiences: 0,
     destinations: 0,
     blog: 0,
     tailorMade: 0,
     team: 0,
     inquiries: 0,
+    taxis: 0,
+    taxiBookings: 0,
   });
 
   const [bookings, setBookings] = useState([]);
+  const [taxiBookings, setTaxiBookings] = useState([]);
   const [monthlyBookings, setMonthlyBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,7 +65,6 @@ export default function Dashboard() {
     }
   };
 
-  // Tour type text color
   const getTypeColor = (type) => {
     switch (type) {
       case "Round Tour":
@@ -78,56 +83,71 @@ export default function Dashboard() {
   const loadStats = async () => {
     try {
       const [
-        roundToursRes,
         dayToursRes,
-        experiencesRes,
-        destinationsRes,
-        blogRes,
-        tailorMadeRes,
-        teamRes,
-        inquiriesRes,
+        roundToursRes,
+        eventsRes,
+        eventBookingsRes,
         dayTourBookingsRes,
         roundTourBookingsRes,
-        commonBookingsRes,
-        eventBookingsRes,
+        tailorMadeRes,
+        blogRes,
+        inquiriesRes,
+        teamRes,
+        destinationsRes,
+        experiencesRes,
+        taxiRes,
+        taxiBookingRes,
       ] = await Promise.all([
-        axiosInstance.get("/round-tours"),
         axiosInstance.get("/day-tours"),
-        axiosInstance.get("/experience"),
-        axiosInstance.get("/destination"),
-        axiosInstance.get("/blog"),
-        axiosInstance.get("/tailor-made-tours/inquiries"),
-        axiosInstance.get("/team"),
-        axiosInstance.get("/contact-form"),
+        axiosInstance.get("/round-tours"),
+        axiosInstance.get("/events"),
+        axiosInstance.get("/event-tour-booking"),
         axiosInstance.get("/day-tour-booking"),
         axiosInstance.get("/round-tour-booking"),
-        axiosInstance.get("/book-tour"),
-        axiosInstance.get("/event-tour-booking"),
+        axiosInstance.get("/tailor-made-tours/inquiries"),
+        axiosInstance.get("/blog"),
+        axiosInstance.get("/contact-form"),
+        axiosInstance.get("/team"),
+        axiosInstance.get("/destination"),
+        axiosInstance.get("/experience"),
+        axiosInstance.get("/quick-taxi/taxis"),
+        axiosInstance.get("/quick-taxi/bookings"),
       ]);
 
+      // Stats by count (not bookings)
       setStats({
-        roundTours: roundToursRes.data.tours?.length || 0,
         dayTours: dayToursRes.data.tours?.length || 0,
-        experiences: experiencesRes.data?.length || 0,
-        destinations: destinationsRes.data?.destinations?.length || 0,
-        blog: blogRes.data?.blogs?.length || 0,
+        roundTours: roundToursRes.data.tours?.length || 0,
+        events: eventsRes.data.events?.length || 0,
         tailorMade: tailorMadeRes.data?.length || 0,
-        team: teamRes.data?.members?.length || 0,
+        blog: blogRes.data?.blogs?.length || 0,
         inquiries: inquiriesRes.data?.length || 0,
+        team: teamRes.data?.members?.length || 0,
+        destinations: destinationsRes.data?.destinations?.length || 0,
+        experiences: experiencesRes.data?.length || 0,
+        taxis: taxiRes.data.taxis?.length || 0,
+        taxiBookings: taxiBookingRes.data.bookings?.length || 0,
       });
 
-      const allRoundBookings = [
-        ...(roundTourBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Round Tour" })),
-        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "round") || []).map((b) => ({ ...b, type: "Round Tour" })),
-      ];
-
+      // Combine tour bookings
       const allDayBookings = [
-        ...(dayTourBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Day Tour" })),
-        ...(commonBookingsRes.data.bookings?.filter((b) => b.tourType === "day") || []).map((b) => ({ ...b, type: "Day Tour" })),
+        ...(dayTourBookingsRes.data.bookings || []).map((b) => ({
+          ...b,
+          type: "Day Tour",
+        })),
       ];
-
-      const allEventBookings = (eventBookingsRes.data.bookings || []).map((b) => ({ ...b, type: "Event Tour" }));
-
+      const allRoundBookings = [
+        ...(roundTourBookingsRes.data.bookings || []).map((b) => ({
+          ...b,
+          type: "Round Tour",
+        })),
+      ];
+      const allEventBookings = [
+        ...(eventBookingsRes.data.bookings || []).map((b) => ({
+          ...b,
+          type: "Event Tour",
+        })),
+      ];
       const allTailorMade = (tailorMadeRes.data || []).map((b) => ({
         ...b,
         type: "Tailor Made",
@@ -137,28 +157,63 @@ export default function Dashboard() {
         status: b.status,
       }));
 
-      const allBookings = [...allRoundBookings, ...allDayBookings, ...allEventBookings, ...allTailorMade];
+      const allBookings = [
+        ...allDayBookings,
+        ...allRoundBookings,
+        ...allEventBookings,
+        ...allTailorMade,
+      ];
 
-      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      // Monthly bookings chart
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       const dayCounts = Array(12).fill(0);
       const roundCounts = Array(12).fill(0);
       const eventCounts = Array(12).fill(0);
       const tailorCounts = Array(12).fill(0);
+      const taxiCounts = Array(12).fill(0);
 
-      allDayBookings.forEach((b) => dayCounts[new Date(b.startDate).getMonth()]++);
-      allRoundBookings.forEach((b) => roundCounts[new Date(b.startDate).getMonth()]++);
-      allEventBookings.forEach((b) => eventCounts[new Date(b.startDate).getMonth()]++);
-      allTailorMade.forEach((b) => tailorCounts[new Date(b.startDate).getMonth()]++);
+      allDayBookings.forEach(
+        (b) => dayCounts[new Date(b.startDate || b.createdAt).getMonth()]++
+      );
+      allRoundBookings.forEach(
+        (b) => roundCounts[new Date(b.startDate || b.createdAt).getMonth()]++
+      );
+      allEventBookings.forEach(
+        (b) => eventCounts[new Date(b.startDate || b.createdAt).getMonth()]++
+      );
+      allTailorMade.forEach(
+        (b) => tailorCounts[new Date(b.startDate || b.startDate).getMonth()]++
+      );
+      (taxiBookingRes.data.bookings || []).forEach(
+        (b) => taxiCounts[new Date(b.createdAt).getMonth()]++
+      );
 
-      setMonthlyBookings(months.map((m, i) => ({
-        month: m,
-        day: dayCounts[i],
-        round: roundCounts[i],
-        event: eventCounts[i],
-        tailor: tailorCounts[i],
-      })));
+      setMonthlyBookings(
+        months.map((m, i) => ({
+          month: m,
+          day: dayCounts[i],
+          round: roundCounts[i],
+          event: eventCounts[i],
+          tailor: tailorCounts[i],
+          taxi: taxiCounts[i],
+        }))
+      );
 
-      setBookings(allBookings.sort((a, b) => new Date(b.createdAt || b.startDate) - new Date(a.createdAt || a.startDate)));
+      setBookings(allBookings);
+      setTaxiBookings(taxiBookingRes.data.bookings || []);
     } catch (err) {
       console.error("Dashboard loading error:", err);
     }
@@ -171,56 +226,104 @@ export default function Dashboard() {
   const pieData = [
     { name: "Round Tours", value: stats.roundTours },
     { name: "Day Tours", value: stats.dayTours },
-    { name: "Tailor Made", value: stats.tailorMade },
+    { name: "Event Tours", value: stats.events },
+    { name: "Custom Tours", value: stats.tailorMade },
   ];
+  const pieColors = ["#16a34a", "#2563eb", "#f59e0b", "#a855f7"];
 
-  const COLORS = ["#2563eb", "#10b981", "#f59e0b"];
-
-  // Filter bookings by search term
   const filteredBookings = bookings.filter((b) =>
     b.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentBookings = filteredBookings.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      <div className="flex-1 overflow-auto bg-gray-100">
+      <div className="flex-1 overflow-auto">
         <main className="p-6">
+          {/* Page Header */}
           <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
             <LayoutDashboard size={28} /> Dashboard
           </h1>
 
           {/* ---------------- STATS CARDS ---------------- */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            {Object.entries(stats).map(([name, count]) => (
-              <div key={name} className="bg-white shadow rounded-lg p-5 flex justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
+            {[
+              {
+                title: "Day Tours",
+                value: stats.dayTours,
+                icon: <Plane size={36} className="text-sky-700" />,
+              }, // dark blue
+              {
+                title: "Round Tours",
+                value: stats.roundTours,
+                icon: <Compass size={36} className="text-green-700" />,
+              }, // dark green
+              {
+                title: "Event Tours",
+                value: stats.events,
+                icon: <Calendar size={36} className="text-yellow-600" />,
+              }, // darker yellow
+              {
+                title: "Custom Tours",
+                value: stats.tailorMade,
+                icon: <Star size={36} className="text-purple-700" />,
+              }, // dark purple
+              {
+                title: "Blogs",
+                value: stats.blog,
+                icon: <FileText size={36} className="text-pink-700" />,
+              }, // dark pink
+              {
+                title: "Team Members",
+                value: stats.team,
+                icon: <Users size={36} className="text-indigo-700" />,
+              }, // dark indigo
+              {
+                title: "Destinations",
+                value: stats.destinations,
+                icon: <MapPin size={36} className="text-teal-700" />,
+              }, // dark teal
+              {
+                title: "Experiences",
+                value: stats.experiences,
+                icon: <Star size={36} className="text-amber-700" />,
+              }, // dark amber
+              {
+                title: "Taxis",
+                value: stats.taxis,
+                icon: <CarFront size={36} className="text-orange-700" />,
+              }, // dark orange
+              {
+                title: "Inquiries",
+                value: stats.inquiries,
+                icon: <Mail size={36} className="text-rose-700" />,
+              }, // dark rose/red
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white shadow hover:shadow-lg transition-shadow rounded-lg p-5 flex justify-between items-center"
+              >
                 <div>
-                  <h2 className="text-gray-500 text-sm capitalize">{name.replace(/([A-Z])/g, " $1")}</h2>
-                  <p className="text-3xl font-bold">{count}</p>
+                  <h2 className="text-gray-500 text-sm">{card.title}</h2>
+                  <p className="text-3xl font-bold">{card.value}</p>
                 </div>
-                {name === "dayTours" && <Plane size={36} className="text-blue-500" />}
-                {name === "roundTours" && <Map size={36} className="text-green-500" />}
-                {name === "tailorMade" && <Users size={36} className="text-yellow-500" />}
-                {name === "inquiries" && <MessageSquare size={36} className="text-red-500" />}
-                {name === "experiences" && <Star size={36} className="text-purple-500" />}
-                {name === "destinations" && <MapPin size={36} className="text-pink-500" />}
-                {name === "blog" && <FileText size={36} className="text-indigo-500" />}
-                {name === "team" && <User size={36} className="text-teal-500" />}
+                {card.icon}
               </div>
             ))}
           </div>
 
           {/* ---------------- CHARTS ---------------- */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white p-5 rounded shadow">
-              <h2 className="text-lg font-semibold mb-4">Monthly Bookings</h2>
+            {/* Line Chart */}
+            <div className="bg-white p-5 rounded-lg shadow">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Plane size={20} /> Monthly Bookings
+              </h2>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={monthlyBookings}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -228,101 +331,204 @@ export default function Dashboard() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line dataKey="day" stroke="#2563eb" strokeWidth={3} name="Day Tours" />
-                  <Line dataKey="round" stroke="#16a34a" strokeWidth={3} name="Round Tours" />
-                  <Line dataKey="event" stroke="#f59e0b" strokeWidth={3} name="Event Tours" />
-                  <Line dataKey="tailor" stroke="#a855f7" strokeWidth={3} name="Tailor Made" />
+                  <Line
+                    dataKey="day"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    name="Day Tours"
+                  />
+                  <Line
+                    dataKey="round"
+                    stroke="#16a34a"
+                    strokeWidth={3}
+                    name="Round Tours"
+                  />
+                  <Line
+                    dataKey="event"
+                    stroke="#f59e0b"
+                    strokeWidth={3}
+                    name="Event Tours"
+                  />
+                  <Line
+                    dataKey="tailor"
+                    stroke="#a855f7"
+                    strokeWidth={3}
+                    name="Tailor Made"
+                  />
+                  <Line
+                    dataKey="taxi"
+                    stroke="#f87171"
+                    strokeWidth={3}
+                    name="Taxi Bookings"
+                    dot={{ r: 4 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="bg-white p-5 rounded shadow">
-              <h2 className="text-lg font-semibold mb-4">Tours Breakdown</h2>
+            {/* Pie Chart */}
+            <div className="bg-white p-5 rounded-lg shadow">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Map size={20} /> Tours Breakdown
+              </h2>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie data={pieData} dataKey="value" outerRadius={100} label>
-                    {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
+                    {pieData.map((_, i) => (
+                      <Cell key={i} fill={pieColors[i]} />
+                    ))}
                   </Pie>
                   <Tooltip />
+                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* ---------------- SEARCH & RECENT BOOKINGS ---------------- */}
-          <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Recent Bookings</h2>
-
-            <div className="mb-3">
-              <input
-                type="text"
-                placeholder="Search by tour type..."
-                className="border p-1 rounded w-64 text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          {/* ---------------- RECENT BOOKINGS TABLE ---------------- */}
+          <div className="bg-white p-4 rounded-lg shadow mb-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Users size={20} /> Recent Bookings
+            </h2>
+            <input
+              type="text"
+              placeholder="Search by tour type..."
+              className="border p-2 rounded w-full mb-4 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Type</th>
+                    <th className="px-4 py-2 text-left">Tour</th>
+                    <th className="px-4 py-2 text-left">Customer</th>
+                    <th className="px-4 py-2 text-left">Date</th>
+                    <th className="px-4 py-2 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentBookings.map((b) => (
+                    <tr key={b._id} className="hover:bg-gray-50">
+                      <td
+                        className={`px-4 py-2 font-semibold ${getTypeColor(
+                          b.type
+                        )}`}
+                      >
+                        {b.type}
+                      </td>
+                      <td className="px-4 py-2">
+                        {b.type === "Tailor Made"
+                          ? b.title
+                          : b.tourId?.title || b.eventId?.title || "—"}
+                      </td>
+                      <td className="px-4 py-2">
+                        {b.type === "Tailor Made" ? b.fullName : b.name || "—"}
+                      </td>
+                      <td className="px-4 py-2">
+                        {new Date(
+                          b.startDate || b.createdAt
+                        ).toLocaleDateString("en-GB")}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
+                            b.status
+                          )}`}
+                        >
+                          {b.status || "Pending"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
-            <table className="min-w-full divide-y">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left">Type</th>
-                  <th className="px-4 py-2 text-left">Tour</th>
-                  <th className="px-4 py-2 text-left">Customer</th>
-                  <th className="px-4 py-2 text-left">Date</th>
-                  <th className="px-4 py-2 text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentBookings.map((b) => (
-                  <tr key={b._id}>
-                    <td className={`px-4 py-2 font-semibold ${getTypeColor(b.type)}`}>{b.type}</td>
-                    <td className="px-4 py-2">{b.type === "Tailor Made" ? b.title : b.tourId?.title || b.eventId?.title || "—"}</td>
-                    <td className="px-4 py-2">{b.type === "Tailor Made" ? b.fullName : b.name || "—"}</td>
-                    <td className="px-4 py-2">{new Date(b.startDate || b.createdAt).toLocaleDateString("en-GB")}</td>
-                    <td className="px-4 py-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(b.status)}`}>
-                        {b.status || "Pending"}
-                      </span>
-                    </td>
+            {/* Pagination */}
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-300"
+                }`}
+              >
+                Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === page
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 hover:bg-gray-300"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-300"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+
+          {/* ---------------- RECENT TAXI BOOKINGS ---------------- */}
+          <div className="bg-white p-4 rounded-lg shadow mb-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <CarFront size={20} /> Recent Taxi Bookings
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Customer</th>
+                    <th className="px-4 py-2 text-left">Taxi</th>
+                    <th className="px-4 py-2 text-left">Date</th>
+                    <th className="px-4 py-2 text-left">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* ---------------- PAGINATION ---------------- */}
-           {/* ---------------- PAGINATION ---------------- */}
-<div className="flex justify-end mt-4 space-x-2">
-  {/* Previous Button */}
-  <button
-    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-    disabled={currentPage === 1}
-    className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"}`}
-  >
-    Prev
-  </button>
-
-  {/* Page Numbers */}
-  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-    <button
-      key={page}
-      onClick={() => setCurrentPage(page)}
-      className={`px-3 py-1 rounded ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-100 hover:bg-gray-300"}`}
-    >
-      {page}
-    </button>
-  ))}
-
-  {/* Next Button */}
-  <button
-    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-    disabled={currentPage === totalPages}
-    className={`px-3 py-1 rounded ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"}`}
-  >
-    Next
-  </button>
-</div>
-
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {taxiBookings.slice(0, 10).map((b) => (
+                    <tr key={b._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-2">
+                        {b.firstName} {b.lastName}
+                      </td>
+                      <td className="px-4 py-2">{b.taxiId?.name || "—"}</td>
+                      <td className="px-4 py-2">
+                        {new Date(b.createdAt).toLocaleDateString("en-GB")}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
+                            b.status
+                          )}`}
+                        >
+                          {b.status || "Pending"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </main>
       </div>
