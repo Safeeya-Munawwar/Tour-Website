@@ -11,7 +11,8 @@ export default function Stories() {
     const fetchLatestBlogs = async () => {
       try {
         const res = await axiosInstance.get("/blog");
-        const sortedBlogs = res.data.blogs
+        const blogs = Array.isArray(res.data?.blogs) ? res.data.blogs : [];
+        const sortedBlogs = blogs
           .sort((a, b) => new Date(b.date) - new Date(a.date))
           .slice(0, 3);
         setStories(sortedBlogs);
@@ -26,10 +27,7 @@ export default function Stories() {
 
   if (loading)
     return (
-      <p
-        className="text-center mt-10 text-gray-500"
-        aria-live="polite"
-      >
+      <p className="text-center mt-10 text-gray-500" aria-live="polite">
         Loading travel stories...
       </p>
     );

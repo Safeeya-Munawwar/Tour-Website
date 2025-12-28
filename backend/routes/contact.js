@@ -20,7 +20,7 @@ const storage = new CloudinaryStorage({
     return {
       folder,
       resource_type: "image",
-      allowed_formats: ["jpg", "jpeg", "png", "svg"],
+      allowed_formats: ["jpg", "jpeg", "png", "svg", "webp"],
     };
   },
 });

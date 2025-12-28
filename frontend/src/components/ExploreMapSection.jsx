@@ -16,7 +16,7 @@ export default function ExploreSriLankaSection() {
     const fetchExperiences = async () => {
       try {
         const res = await axiosInstance.get("/experience");
-        setExperiences(res.data || []);
+        setExperiences(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -96,10 +96,7 @@ export default function ExploreSriLankaSection() {
         {/* ---------------- RIGHT EXPERIENCE CARD ---------------- */}
         <div className="lg:col-span-4 relative p-4 lg:p-6 lg:-ml-8 xl:-ml-8 z-20">
           {loading ? (
-            <p
-              className="text-center text-gray-500"
-              aria-live="polite"
-            >
+            <p className="text-center text-gray-500" aria-live="polite">
               Loading travel experiences...
             </p>
           ) : (
@@ -122,12 +119,9 @@ export default function ExploreSriLankaSection() {
               <Swiper
                 modules={[Autoplay, Navigation]}
                 autoplay={{ delay: 4500, disableOnInteraction: false }}
-                loop
+                loop={experiences.length > 1}
                 slidesPerView={1}
-                navigation={{
-                  nextEl: ".exp-next",
-                  prevEl: ".exp-prev",
-                }}
+                navigation={{ nextEl: ".exp-next", prevEl: ".exp-prev" }}
               >
                 {experiences.map((exp, index) => (
                   <SwiperSlide key={index}>

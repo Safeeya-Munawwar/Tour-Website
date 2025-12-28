@@ -7,7 +7,7 @@ import { useFloatingButtons } from "../context/FloatingButtonsContext";
 export default function WhatsAppFAB() {
   const location = useLocation();
   const { isWhatsAppOpen, setIsWhatsAppOpen } = useFloatingButtons();
-
+  const { isScrollVisible } = useFloatingButtons();
   const [phone, setPhone] = useState("94729171089");
   const [tourTitle, setTourTitle] = useState("");
 
@@ -67,16 +67,19 @@ export default function WhatsAppFAB() {
     }
 
     if (option === "book") return `${base}\n\nI want to book a tour.`;
-    if (option === "question") return `${base}\n\nI have a question about your tours.`;
-    if (option === "info") return `${base}\n\nI want more information about your tours.`;
+    if (option === "question")
+      return `${base}\n\nI have a question about your tours.`;
+    if (option === "info")
+      return `${base}\n\nI want more information about your tours.`;
 
     return `${base}\n\nHello!`;
   };
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
-      aria-label="WhatsApp chat support floating button"
+      className={`fixed right-6 z-50 flex flex-col items-end transition-all duration-300
+    ${isScrollVisible ? "bottom-20" : "bottom-6"}
+  `}
     >
       {/* CARD */}
       {isWhatsAppOpen && (

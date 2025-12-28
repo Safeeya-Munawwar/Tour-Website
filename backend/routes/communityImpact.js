@@ -20,7 +20,7 @@ const storage = new CloudinaryStorage({
   params: async () => ({
     folder: "community/impacts",
     resource_type: "image",
-    allowed_formats: ["jpg", "jpeg", "png"],
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   }),
 });
 
