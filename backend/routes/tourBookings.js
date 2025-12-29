@@ -5,7 +5,6 @@ const adminAuth = require("../middleware/adminAuth");
 const sendEmail = require("../utils/mailer");
 
 // ---------------- CREATE BOOKING ----------------
-// ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
   try {
     const {
@@ -114,18 +113,29 @@ router.post("/", async (req, res) => {
     sendEmail({ to: email, subject: userSubject, html: userHtml });
 
     res.json({ success: true, booking });
+const { createDayBeforeReminder } = require("../utils/notification");
+
+// Create booking
+router.post("/", async (req, res) => {
+  try {
+    const booking = new TourBooking({ ...req.body });
+    await booking.save();
+
+    // Create day-before notification immediately
+    await createDayBeforeReminder(booking);
+
+    res.status(201).json({ success: true, booking });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: "Server error" });
   }
 });
-
 // ---------------- GET ALL BOOKINGS (ADMIN) ----------------
 router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await TourBooking.find()
       .sort({ createdAt: -1 })
-      .populate("tourId", "title location days itinerary"); // populate more fields if needed
+      .populate("tourId", "title location days itinerary");
 
     res.json({ success: true, bookings });
   } catch (err) {

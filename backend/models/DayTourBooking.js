@@ -11,7 +11,8 @@ const DayTourBookingSchema = new mongoose.Schema({
   pickupLocation: { type: String },
 
   members: { type: Number, default: 1 },
-  startDate: { type: String },
+  startDate: { type: Date, required: true },
+
   startTime: { type: String },
   message: String,
   status: { type: String, enum: ["Pending", "Approved", "Cancelled", "Completed"], default: "Pending" },

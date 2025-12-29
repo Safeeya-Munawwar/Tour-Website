@@ -2,6 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cron = require("node-cron");
+const { checkBookings } = require("./cron/reminderCron");
+
+// Run every day at 8 AM
+cron.schedule("0 8 * * *", () => {
+  checkBookings();
+});
 
 // Import routes
 const aboutRoute = require("./routes/about");
@@ -29,6 +36,8 @@ const tourReviewsRoutes = require("./routes/tourReviews");
 const eventRoutes = require("./routes/event");
 const eventTourBookingRoutes = require("./routes/eventTourBooking");
 const quickTaxiRoute = require("./routes/quickTaxi");
+const adminNotificationsRoute = require("./routes/adminNotifications");
+
 
 // Import allowedOrigins
 const allowedOrigins = require("./config/cors.config");
@@ -54,6 +63,7 @@ app.use("/uploads", express.static("uploads"));
 
 // Admin login
 app.use("/api/admin", loginRoute);
+app.use("/api/admin-notifications", adminNotificationsRoute); // ✅ Important: mount here
 
 // Other routes 
 app.use("/api/event-tour-booking", eventTourBookingRoutes);

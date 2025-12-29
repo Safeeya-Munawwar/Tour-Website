@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
+
+
 import {
   LayoutDashboard,
   Plane,
@@ -27,6 +29,8 @@ import {
   Cell,
   Legend,
 } from "recharts";
+import AdminNotificationDropdown from "../../components/AdminNotificationDropdown";
+import TomorrowBookingsTable from "../../components/TomorrowBookingsTable";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -43,12 +47,12 @@ export default function Dashboard() {
     taxis: 0,
     taxiBookings: 0,
   });
-
   const [bookings, setBookings] = useState([]);
   const [taxiBookings, setTaxiBookings] = useState([]);
   const [monthlyBookings, setMonthlyBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showNotifications, setShowNotifications] = useState(false); 
   const itemsPerPage = 10;
 
   const getStatusClass = (status) => {
@@ -244,11 +248,26 @@ export default function Dashboard() {
     <div className="flex h-screen overflow-hidden bg-gray-100">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex-1 overflow-auto">
-        <main className="p-6">
-          {/* Page Header */}
-          <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-            <LayoutDashboard size={28} /> Dashboard
-          </h1>
+<main className="p-6">
+  {/* Page Header with Bell */}
+  <div className="flex items-center justify-between mb-6">
+    {/* Title */}
+    <h1 className="text-3xl font-bold flex items-center gap-2">
+      <LayoutDashboard size={28} /> Dashboard
+    </h1>
+
+    {/* Notification Bell */}
+    <AdminNotificationDropdown
+      closeDropdown={() => setShowNotifications(false)}
+      scrollToTomorrowTable={() =>
+        document
+          .getElementById("tomorrow-bookings")
+          ?.scrollIntoView({ behavior: "smooth" })
+      }
+    />
+  </div>
+
+  
 
           {/* ---------------- STATS CARDS ---------------- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
@@ -489,6 +508,7 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+      <TomorrowBookingsTable />
 
           {/* ---------------- RECENT TAXI BOOKINGS ---------------- */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">

@@ -3,6 +3,36 @@ const router = express.Router();
 const RoundTourBooking = require("../models/RoundTourBooking");
 const adminAuth = require("../middleware/adminAuth");
 const sendEmail = require("../utils/mailer");
+const AdminNotification = require("../models/AdminNotification");
+
+// Convert date to YYYY-MM-DD string in local time
+const getDateOnly = (date) => {
+  const d = new Date(date);
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
+};
+
+// Create day-before reminder
+const createDayBeforeReminder = async (booking, type) => {
+  const bookingDateStr = getDateOnly(booking.startDate);
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = getDateOnly(tomorrow);
+
+  if (bookingDateStr === tomorrowStr) {
+    const exists = await AdminNotification.findOne({ bookingId: booking._id });
+    if (!exists) {
+      await AdminNotification.create({
+        title: "Tour Reminder",
+        message: `${type} tour booked by ${booking.name} is scheduled for tomorrow.`,
+        bookingId: booking._id,
+        bookingType: type,
+      });
+    }
+  }
+};
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
@@ -97,6 +127,11 @@ router.post("/", async (req, res) => {
     sendEmail({ to: email, subject: userSubject, html: userHtml });
 
     res.json({ success: true, booking });
+
+    // Create day-before reminder
+    await createDayBeforeReminder(booking, "Round");
+
+    res.status(201).json({ success: true, booking });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: "Server error" });
@@ -109,7 +144,8 @@ router.get("/", adminAuth, async (req, res) => {
     const bookings = await RoundTourBooking.find()
       .populate("tourId", "title location")
       .sort({ createdAt: -1 });
-
+      .sort({ createdAt: -1 })
+      .populate("tourId", "title location");
     res.json({ success: true, bookings });
   } catch (err) {
     console.error(err);
@@ -128,6 +164,9 @@ router.patch("/:id", adminAuth, async (req, res) => {
     );
     if (!booking)
       return res.status(404).json({ success: false, error: "Booking not found" });
+    if (!booking) {
+      return res.status(404).json({ success: false, error: "Booking not found" });
+    }
     res.json({ success: true, booking });
   } catch (err) {
     console.error(err);

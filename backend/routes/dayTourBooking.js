@@ -3,6 +3,7 @@ const router = express.Router();
 const DayTourBooking = require("../models/DayTourBooking");
 const adminAuth = require("../middleware/adminAuth");
 const sendEmail = require("../utils/mailer");
+const { createDayBeforeReminder } = require("../utils/notification");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
@@ -63,7 +64,9 @@ router.post("/", async (req, res) => {
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
@@ -83,7 +86,9 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Additional Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
 
@@ -97,9 +102,14 @@ router.post("/", async (req, res) => {
     sendEmail({ to: email, subject: userSubject, html: userHtml });
 
     res.json({ success: true, booking });
+
+    const booking = await DayTourBooking.create(req.body);
+
+    // Call notification helper
+    await createDayBeforeReminder(booking, "Day"); // change "Day" to "Round" or "Event" for other routes
+    res.status(201).json(booking);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: "Server error" });
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const EventTourBooking = require("../models/EventTourBooking");
-const adminAuth = require("../middleware/adminAuth"); // optional if you want admin auth
+const adminAuth = require("../middleware/adminAuth"); 
 const sendEmail = require("../utils/mailer");
+const { createDayBeforeReminder } = require("../utils/notification");
 
 /* CREATE EVENT BOOKING */
 router.post("/", async (req, res) => {
@@ -117,7 +118,8 @@ const formattedDate = booking.eventId?.date
       </div>
     `;
     sendEmail({ to: email, subject: userSubject, html: userHtml });
-
+    // Create day-before notification
+    await createDayBeforeReminder(booking, "Event");
     res.status(201).json({
       success: true,
       message: "Event booking created successfully",
