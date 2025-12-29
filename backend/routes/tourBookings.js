@@ -8,11 +8,6 @@ const { createDayBeforeReminder } = require("../utils/notification");
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
   try {
-<<<<<<< HEAD
-    const booking = new TourBooking({
-      ...req.body,
-      startDate: new Date(req.body.startDate),
-=======
     const {
       tourType,
       tourId,
@@ -38,17 +33,12 @@ router.post("/", async (req, res) => {
     const booking = new TourBooking({
       ...req.body,
       tourRef: tourType === "day" ? "DayTour" : "RoundTour",
->>>>>>> 1a57cdd27f89d06ebd72c9fd89c32cce661e4a2c
     });
 
     await booking.save();
 
-<<<<<<< HEAD
-    await createDayBeforeReminder(booking);
-=======
     // Populate tour info
     await booking.populate("tourId");
->>>>>>> 1a57cdd27f89d06ebd72c9fd89c32cce661e4a2c
 
     // ---------------- CREATE DAY-BEFORE REMINDER ----------------
     await createDayBeforeReminder(booking, tourType === "day" ? "Day" : "Round");
@@ -57,7 +47,7 @@ router.post("/", async (req, res) => {
     const adminEmail = process.env.EMAIL_USER;
 
     const adminSubject = `New ${tourType} Tour Booking`;
-    const adminHtml = ` 
+    const adminHtml = `
       <h2>New Tour Booking Received</h2>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email || "Not provided"}</p>
@@ -113,17 +103,10 @@ router.post("/", async (req, res) => {
       booking,
     });
   } catch (err) {
-<<<<<<< HEAD
-    console.error("BOOKING ERROR:", err.message);
-    res.status(400).json({
-      success: false,
-      error: err.message,
-=======
     console.error("Booking Error:", err);
     return res.status(500).json({
       success: false,
       error: "Server error",
->>>>>>> 1a57cdd27f89d06ebd72c9fd89c32cce661e4a2c
     });
   }
 });
