@@ -110,7 +110,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <Users size={16} /> About Page
               </NavLink>
 
-              <NavLink
+              {/* <NavLink
                 to="/admin/manage-team"
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-2 py-2 rounded transition ${
@@ -130,7 +130,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 }
               >
                 <Compass size={16} /> Our Journey
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/admin/manage-community"
