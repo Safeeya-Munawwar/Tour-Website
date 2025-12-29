@@ -29,7 +29,8 @@ const TourBookingSchema = new mongoose.Schema(
     members: { type: Number },
 
     pickupLocation: { type: String },
-    startDate: { type: String },
+   startDate: { type: Date, required: true },
+
     startTime: { type: String },
     message: { type: String },
 

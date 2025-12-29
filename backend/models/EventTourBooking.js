@@ -16,7 +16,8 @@ const EventTourBookingSchema = new mongoose.Schema({
 
   members: { type: Number, default: 1 },
 
-  startDate: { type: String, required: true },
+ startDate: { type: Date, required: true },
+
   startTime: { type: String, required: true },
 
   message: { type: String },

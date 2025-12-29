@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const EventTourBooking = require("../models/EventTourBooking");
+const { createDayBeforeReminder } = require("../utils/notification");
 
 /* CREATE EVENT BOOKING */
 router.post("/", async (req, res) => {
@@ -39,6 +40,9 @@ router.post("/", async (req, res) => {
     });
 
     await booking.save();
+
+    // Create day-before notification
+    await createDayBeforeReminder(booking, "Event");
 
     res.status(201).json({
       success: true,

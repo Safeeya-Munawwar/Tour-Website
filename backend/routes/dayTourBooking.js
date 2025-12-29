@@ -2,18 +2,22 @@ const express = require("express");
 const router = express.Router();
 const DayTourBooking = require("../models/DayTourBooking");
 const adminAuth = require("../middleware/adminAuth");
+const { createDayBeforeReminder } = require("../utils/notification");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
   try {
-    const booking = new DayTourBooking(req.body);
-    await booking.save();
-    res.json({ success: true, booking });
+    const booking = await DayTourBooking.create(req.body);
+
+    // Call notification helper
+    await createDayBeforeReminder(booking, "Day"); // change "Day" to "Round" or "Event" for other routes
+
+    res.status(201).json(booking);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: "Server error" });
+    res.status(500).json({ error: err.message });
   }
 });
+
 
 // ---------------- GET ALL BOOKINGS ----------------
 router.get("/", async (req, res) => {

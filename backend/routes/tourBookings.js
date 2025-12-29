@@ -2,39 +2,29 @@ const express = require("express");
 const router = express.Router();
 const TourBooking = require("../models/TourBooking");
 const adminAuth = require("../middleware/adminAuth");
+const { createDayBeforeReminder } = require("../utils/notification");
 
-// ---------------- CREATE BOOKING ----------------
+// Create booking
 router.post("/", async (req, res) => {
   try {
-    const { tourType, tourId } = req.body;
-
-    if (!tourType || !tourId) {
-      return res.status(400).json({
-        success: false,
-        error: "tourType and tourId are required",
-      });
-    }
-
-    const booking = new TourBooking({
-      ...req.body,
-      tourRef: tourType === "day" ? "DayTour" : "RoundTour",
-    });
-
+    const booking = new TourBooking({ ...req.body });
     await booking.save();
 
-    res.json({ success: true, booking });
+    // Create day-before notification immediately
+    await createDayBeforeReminder(booking);
+
+    res.status(201).json({ success: true, booking });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: "Server error" });
   }
 });
-
 // ---------------- GET ALL BOOKINGS (ADMIN) ----------------
 router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await TourBooking.find()
       .sort({ createdAt: -1 })
-      .populate("tourId", "title location days itinerary"); // populate more fields if needed
+      .populate("tourId", "title location days itinerary");
 
     res.json({ success: true, bookings });
   } catch (err) {
