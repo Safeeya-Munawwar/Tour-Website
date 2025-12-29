@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
-
-
 import {
   LayoutDashboard,
   Plane,
@@ -52,7 +50,11 @@ export default function Dashboard() {
   const [monthlyBookings, setMonthlyBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showNotifications, setShowNotifications] = useState(false); 
+  const [, setShowNotifications] = useState(false);
+  const [allDayBookings, setAllDayBookings] = useState([]);
+  const [allRoundBookings, setAllRoundBookings] = useState([]);
+  const [allEventBookings, setAllEventBookings] = useState([]);
+  const [allTailorMade, setAllTailorMade] = useState([]);
   const itemsPerPage = 10;
 
   const getStatusClass = (status) => {
@@ -101,6 +103,7 @@ export default function Dashboard() {
         experiencesRes,
         taxiRes,
         taxiBookingRes,
+        commonBookingRes,
       ] = await Promise.all([
         axiosInstance.get("/day-tours"),
         axiosInstance.get("/round-tours"),
@@ -116,6 +119,7 @@ export default function Dashboard() {
         axiosInstance.get("/experience"),
         axiosInstance.get("/quick-taxi/taxis"),
         axiosInstance.get("/quick-taxi/bookings"),
+        axiosInstance.get("/book-tour"),
       ]);
 
       // Stats by count (not bookings)
@@ -133,26 +137,49 @@ export default function Dashboard() {
         taxiBookings: taxiBookingRes.data.bookings?.length || 0,
       });
 
+      const commonBookings = commonBookingRes.data.success
+        ? commonBookingRes.data.bookings
+        : [];
+
       // Combine tour bookings
-      const allDayBookings = [
+      const dayBookings = [
         ...(dayTourBookingsRes.data.bookings || []).map((b) => ({
           ...b,
           type: "Day Tour",
+          source: "day",
         })),
+        ...commonBookings
+          .filter((b) => b.tourType === "day")
+          .map((b) => ({
+            ...b,
+            type: "Day Tour",
+            source: "common",
+          })),
       ];
-      const allRoundBookings = [
+
+      const roundBookings = [
         ...(roundTourBookingsRes.data.bookings || []).map((b) => ({
           ...b,
           type: "Round Tour",
+          source: "round",
         })),
+        ...commonBookings
+          .filter((b) => b.tourType === "round")
+          .map((b) => ({
+            ...b,
+            type: "Round Tour",
+            source: "common",
+          })),
       ];
-      const allEventBookings = [
+
+      const eventBookings = [
         ...(eventBookingsRes.data.bookings || []).map((b) => ({
           ...b,
           type: "Event Tour",
         })),
       ];
-      const allTailorMade = (tailorMadeRes.data || []).map((b) => ({
+
+      const tailorBookings = (tailorMadeRes.data || []).map((b) => ({
         ...b,
         type: "Tailor Made",
         fullName: b.fullName,
@@ -161,12 +188,20 @@ export default function Dashboard() {
         status: b.status,
       }));
 
-      const allBookings = [
-        ...allDayBookings,
-        ...allRoundBookings,
-        ...allEventBookings,
-        ...allTailorMade,
-      ];
+      const allBookingsCombined = [
+        ...dayBookings,
+        ...roundBookings,
+        ...eventBookings,
+        ...tailorBookings,
+      ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      // Update states
+      setAllDayBookings(dayBookings);
+      setAllRoundBookings(roundBookings);
+      setAllEventBookings(eventBookings);
+      setAllTailorMade(tailorBookings);
+      setBookings(allBookingsCombined);
+      setTaxiBookings(taxiBookingRes.data.bookings || []);
 
       // Monthly bookings chart
       const months = [
@@ -189,16 +224,16 @@ export default function Dashboard() {
       const tailorCounts = Array(12).fill(0);
       const taxiCounts = Array(12).fill(0);
 
-      allDayBookings.forEach(
+      dayBookings.forEach(
         (b) => dayCounts[new Date(b.startDate || b.createdAt).getMonth()]++
       );
-      allRoundBookings.forEach(
+      roundBookings.forEach(
         (b) => roundCounts[new Date(b.startDate || b.createdAt).getMonth()]++
       );
-      allEventBookings.forEach(
+      eventBookings.forEach(
         (b) => eventCounts[new Date(b.startDate || b.createdAt).getMonth()]++
       );
-      allTailorMade.forEach(
+      tailorBookings.forEach(
         (b) => tailorCounts[new Date(b.startDate || b.startDate).getMonth()]++
       );
       (taxiBookingRes.data.bookings || []).forEach(
@@ -215,9 +250,6 @@ export default function Dashboard() {
           taxi: taxiCounts[i],
         }))
       );
-
-      setBookings(allBookings);
-      setTaxiBookings(taxiBookingRes.data.bookings || []);
     } catch (err) {
       console.error("Dashboard loading error:", err);
     }
@@ -227,13 +259,13 @@ export default function Dashboard() {
     loadStats();
   }, []);
 
-  const pieData = [
-    { name: "Round Tours", value: stats.roundTours },
-    { name: "Day Tours", value: stats.dayTours },
-    { name: "Event Tours", value: stats.events },
-    { name: "Custom Tours", value: stats.tailorMade },
-  ];
   const pieColors = ["#16a34a", "#2563eb", "#f59e0b", "#a855f7"];
+  const pieData = [
+    { name: "Day Tours", value: allDayBookings.length },
+    { name: "Round Tours", value: allRoundBookings.length },
+    { name: "Event Tours", value: allEventBookings.length },
+    { name: "Custom Tours", value: allTailorMade.length },
+  ];
 
   const filteredBookings = bookings.filter((b) =>
     b.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -248,26 +280,24 @@ export default function Dashboard() {
     <div className="flex h-screen overflow-hidden bg-gray-100">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex-1 overflow-auto">
-<main className="p-6">
-  {/* Page Header with Bell */}
-  <div className="flex items-center justify-between mb-6">
-    {/* Title */}
-    <h1 className="text-3xl font-bold flex items-center gap-2">
-      <LayoutDashboard size={28} /> Dashboard
-    </h1>
+        <main className="p-6">
+          {/* Page Header with Bell */}
+          <div className="flex items-center justify-between mb-6">
+            {/* Title */}
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <LayoutDashboard size={28} /> Dashboard
+            </h1>
 
-    {/* Notification Bell */}
-    <AdminNotificationDropdown
-      closeDropdown={() => setShowNotifications(false)}
-      scrollToTomorrowTable={() =>
-        document
-          .getElementById("tomorrow-bookings")
-          ?.scrollIntoView({ behavior: "smooth" })
-      }
-    />
-  </div>
-
-  
+            {/* Notification Bell */}
+            <AdminNotificationDropdown
+              closeDropdown={() => setShowNotifications(false)}
+              scrollToTomorrowTable={() =>
+                document
+                  .getElementById("tomorrow-bookings")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            />
+          </div>
 
           {/* ---------------- STATS CARDS ---------------- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
@@ -391,7 +421,7 @@ export default function Dashboard() {
                 <Map size={20} /> Tours Breakdown
               </h2>
               <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
+                <PieChart margin={{ top: 30, right: 0, left: 0, bottom: 0 }}>
                   <Pie data={pieData} dataKey="value" outerRadius={100} label>
                     {pieData.map((_, i) => (
                       <Cell key={i} fill={pieColors[i]} />
@@ -508,7 +538,7 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-      <TomorrowBookingsTable />
+          <TomorrowBookingsTable />
 
           {/* ---------------- RECENT TAXI BOOKINGS ---------------- */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">

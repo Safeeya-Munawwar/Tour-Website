@@ -93,7 +93,9 @@ router.post("/", async (req, res) => {
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
@@ -113,7 +115,9 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Additional Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
 
@@ -125,8 +129,6 @@ router.post("/", async (req, res) => {
       </div>
     `;
     sendEmail({ to: email, subject: userSubject, html: userHtml });
-
-    res.json({ success: true, booking });
 
     // Create day-before reminder
     await createDayBeforeReminder(booking, "Round");
@@ -144,8 +146,7 @@ router.get("/", adminAuth, async (req, res) => {
     const bookings = await RoundTourBooking.find()
       .populate("tourId", "title location")
       .sort({ createdAt: -1 });
-      .sort({ createdAt: -1 })
-      .populate("tourId", "title location");
+
     res.json({ success: true, bookings });
   } catch (err) {
     console.error(err);
@@ -162,10 +163,10 @@ router.patch("/:id", adminAuth, async (req, res) => {
       { status },
       { new: true }
     );
-    if (!booking)
-      return res.status(404).json({ success: false, error: "Booking not found" });
     if (!booking) {
-      return res.status(404).json({ success: false, error: "Booking not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Booking not found" });
     }
     res.json({ success: true, booking });
   } catch (err) {
@@ -179,7 +180,9 @@ router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const booking = await RoundTourBooking.findByIdAndDelete(req.params.id);
     if (!booking)
-      return res.status(404).json({ success: false, error: "Booking not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Booking not found" });
     res.json({ success: true });
   } catch (err) {
     console.error(err);
