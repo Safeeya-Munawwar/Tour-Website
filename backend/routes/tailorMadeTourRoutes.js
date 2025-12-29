@@ -6,6 +6,7 @@ const TailorMadeTour = require("../models/TailorMadeTour");
 const Inquiry = require("../models/TailorMadeTourInquiry");
 const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
+const sendEmail = require("../utils/mailer");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -90,6 +91,7 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
 // --------------------- User inquiries ---------------------
 
 // Save a new inquiry
+// Save a new inquiry and send emails
 router.post("/inquiry", async (req, res) => {
   try {
     const inquiry = new Inquiry({
@@ -106,11 +108,117 @@ router.post("/inquiry", async (req, res) => {
       children: req.body.children,
       selectedDestinations: req.body.selectedDestinations || [],
       budget: req.body.currency === "No Idea" ? null : req.body.budget || null,
-      currency: req.body.currency || "No Idea",      
+      currency: req.body.currency || "No Idea",
       notes: req.body.notes || "",
     });
 
     const saved = await inquiry.save();
+
+    // ---------------- SEND EMAIL TO ADMIN ----------------
+    const adminEmail = process.env.EMAIL_USER;
+    const adminSubject = `New Tailor-Made Tour Inquiry: ${inquiry.fullName}`;
+    const adminHtml = `
+      <h2>New Tailor-Made Tour Inquiry</h2>
+      <p><strong>Name:</strong>${inquiry.title} ${inquiry.fullName}</p>
+      <p><strong>Email:</strong> ${inquiry.email}</p>
+      <p><strong>Phone:</strong> ${inquiry.phone}</p>
+      <p><strong>Country:</strong> ${inquiry.country}</p>
+      <p><strong>Pickup Location:</strong> ${inquiry.pickupLocation}</p>
+      <p><strong>Drop Location:</strong> ${inquiry.dropLocation}</p>
+      <p><strong>Start Date:</strong> ${inquiry.startDate}</p>
+      <p><strong>End Date:</strong> ${inquiry.endDate}</p>
+      <p><strong>Adults:</strong> ${inquiry.adults}</p>
+      <p><strong>Children:</strong> ${inquiry.children}</p>
+      <p><strong>Selected Destinations:</strong> ${
+        inquiry.selectedDestinations.join(", ") || "N/A"
+      }</p>
+      <p><strong>Budget:</strong> ${
+        inquiry.budget ? inquiry.budget + " " + inquiry.currency : "No Idea"
+      }</p>
+      <p><strong>Notes:</strong> ${inquiry.notes || "N/A"}</p>
+    `;
+    sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
+
+    // ---------------- SEND EMAIL TO USER ----------------
+    const userSubject = `Inquiry Received – Net Lanka Travels`;
+    const userHtml = `
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">Inquiry Received – Thank You!</h2>
+        <p>Dear <strong>${inquiry.title} ${inquiry.fullName}</strong>,</p>
+        <p>Thank you for submitting your tailor-made tour inquiry with <strong>Net Lanka Travels</strong>! Our team is reviewing your request and will contact you shortly to plan your trip.</p>
+
+        <h3 style="color: #0d203a;">Your Inquiry Details</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.pickupLocation
+            }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Drop Location</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.dropLocation
+            }</td>
+          </tr>
+          <tr>
+          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Start Date</td>
+          <td style="border: 1px solid #1a354e; padding: 8px;">
+            ${inquiry.startDate ? inquiry.startDate.toISOString().slice(0, 10) : "N/A"}
+          </td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">End Date</td>
+          <td style="border: 1px solid #1a354e; padding: 8px;">
+            ${inquiry.endDate ? inquiry.endDate.toISOString().slice(0, 10) : "N/A"}
+          </td>
+        </tr>
+        
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.adults
+            }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Children</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.children
+            }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Selected Destinations</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.selectedDestinations.join(", ") || "N/A"
+            }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Budget</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.budget
+                ? inquiry.budget + " " + inquiry.currency
+                : "No Idea"
+            }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Notes</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.notes || "N/A"
+            }</td>
+          </tr>
+        </table>
+
+        <p style="margin-top: 15px;">If you have any questions, please reply to this email or call us at <strong>+94 771 234 567</strong>.</p>
+
+        <p>We look forward to assisting you and planning your unforgettable Sri Lankan adventure!</p>
+
+        <p>Best Regards,<br/>
+        <strong>Net Lanka Travels</strong></p>
+      </div>
+    `;
+
+    sendEmail({ to: inquiry.email, subject: userSubject, html: userHtml });
+
     res.status(201).json(saved);
   } catch (err) {
     console.error(err);

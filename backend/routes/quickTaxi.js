@@ -5,6 +5,7 @@ const adminAuth = require("../middleware/adminAuth");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
+const sendEmail = require("../utils/mailer");
 
 const router = express.Router();
 
@@ -26,13 +27,13 @@ router.get("/taxis", async (req, res) => {
 
     res.json({
       success: true,
-      taxis
+      taxis,
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({
       success: false,
-      error: err.message
+      error: err.message,
     });
   }
 });
@@ -121,13 +122,81 @@ router.delete("/taxis/:id", adminAuth, async (req, res) => {
    BOOKINGS
 ====================================================== */
 
-// ---------------- CREATE BOOKING (PUBLIC) ----------------
+/* ---------------- CREATE QUICK TAXI BOOKING (PUBLIC) ---------------- */
 router.post("/bookings", async (req, res) => {
   try {
+    const {
+      taxiId,
+      firstName,
+      lastName,
+      phone,
+      country,
+      serviceType,
+      pickupLocation,
+      dropLocation,
+      pickupDate,
+      dropDate,
+      pickupTime,
+      adults,
+      children,
+      message,
+    } = req.body;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !phone ||
+      !country ||
+      !pickupLocation ||
+      !dropLocation ||
+      !pickupDate ||
+      !pickupTime
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Required fields missing" });
+    }
+
     const booking = new QuickTaxiBooking(req.body);
     await booking.save();
+
+    // Populate taxiId to get vehicle name
+    await booking.populate("taxiId");
+
+    // Format dates (remove GMT)
+    const formattedPickupDate = new Date(pickupDate).toLocaleDateString(
+      "en-GB"
+    ); // dd/mm/yyyy
+    const formattedDropDate = dropDate
+      ? new Date(dropDate).toLocaleDateString("en-GB")
+      : "-";
+
+    // ---------------- SEND EMAIL TO ADMIN ----------------
+    const adminEmail = process.env.EMAIL_USER;
+    const adminSubject = `New Quick Taxi Booking: ${
+      booking.taxiId?.name || "Vehicle"
+    }`;
+    const adminHtml = `
+  <h2>New Quick Taxi Booking Received</h2>
+  <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+  <p><strong>Phone:</strong> ${phone}</p>
+  <p><strong>Country:</strong> ${country}</p>
+  <p><strong>Service Type:</strong> ${serviceType}</p>
+  <p><strong>Vehicle:</strong> ${booking.taxiId?.name || "—"}</p>
+  <p><strong>Pickup Location:</strong> ${pickupLocation}</p>
+  <p><strong>Drop Location:</strong> ${dropLocation}</p>
+  <p><strong>Pickup Date & Time:</strong> ${formattedPickupDate} at ${pickupTime}</p>
+  <p><strong>Drop Date:</strong> ${formattedDropDate}</p>
+  <p><strong>Adults:</strong> ${adults || 1}</p>
+  <p><strong>Children:</strong> ${children || 0}</p>
+  <p><strong>Members:</strong> ${booking.members}</p>
+  <p><strong>Message:</strong> ${message || "N/A"}</p>
+`;
+    sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
+
     res.json({ success: true, booking });
   } catch (err) {
+    console.error("QuickTaxi booking error:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });

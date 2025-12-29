@@ -1,39 +1,36 @@
-// utils/notification.js
 const AdminNotification = require("../models/AdminNotification");
-const TourBooking = require("../models/TourBooking");
-const { getDateOnly } = require("./date");
 
-// Create day-before notification for a single booking
-exports.createDayBeforeReminder = async (booking) => {
-  try {
-    const bookingDate = getDateOnly(booking.startDate);
-
-    const tomorrow = getDateOnly(new Date());
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (bookingDate.getTime() === tomorrow.getTime()) {
-      const exists = await AdminNotification.findOne({ bookingId: booking._id });
-      if (!exists) {
-        await AdminNotification.create({
-          title: "Tour Reminder",
-          message: `Tour booked by ${booking.name} is scheduled for tomorrow.`,
-          bookingId: booking._id,
-          bookingType: "Custom",
-        });
-      }
-    }
-  } catch (err) {
-    console.error("Notification creation error:", err);
-  }
+const getDateOnly = (date) => {
+  const d = new Date(date);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 };
 
-// Check all bookings for tomorrow
-exports.checkBookings = async () => {
+exports.createDayBeforeReminder = async (booking, type = "Custom") => {
   try {
-    const bookings = await TourBooking.find();
-    for (const b of bookings) await exports.createDayBeforeReminder(b);
-    console.log("Cron: Notifications checked");
+    if (!booking?.startDate) return;
+
+    const bookingDate = getDateOnly(booking.startDate);
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowDate = getDateOnly(tomorrow);
+
+    if (bookingDate.getTime() !== tomorrowDate.getTime()) return;
+
+    const exists = await AdminNotification.findOne({
+      bookingId: booking._id,
+      bookingType: type,
+    });
+
+    if (!exists) {
+      await AdminNotification.create({
+        title: "Tour Reminder",
+        message: `${type} tour booked by ${booking.name} is scheduled for tomorrow.`,
+        bookingId: booking._id,
+        bookingType: type,
+      });
+    }
   } catch (err) {
-    console.error("Cron error:", err);
+    console.error("Notification error:", err);
   }
 };
