@@ -118,8 +118,10 @@ const formattedDate = booking.eventId?.date
       </div>
     `;
     sendEmail({ to: email, subject: userSubject, html: userHtml });
+    
     // Create day-before notification
     await createDayBeforeReminder(booking, "Event");
+
     res.status(201).json({
       success: true,
       message: "Event booking created successfully",

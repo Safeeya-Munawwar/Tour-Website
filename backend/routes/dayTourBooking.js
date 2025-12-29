@@ -5,6 +5,7 @@ const adminAuth = require("../middleware/adminAuth");
 const sendEmail = require("../utils/mailer");
 const { createDayBeforeReminder } = require("../utils/notification");
 
+
 // ---------------- CREATE DAY TOUR BOOKING ----------------
 router.post("/", async (req, res) => {
   try {

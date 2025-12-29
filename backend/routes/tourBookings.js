@@ -3,6 +3,7 @@ const router = express.Router();
 const TourBooking = require("../models/TourBooking");
 const adminAuth = require("../middleware/adminAuth");
 const sendEmail = require("../utils/mailer");
+const { createDayBeforeReminder } = require("../utils/notification");
 
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
@@ -39,11 +40,14 @@ router.post("/", async (req, res) => {
     // Populate tour info
     await booking.populate("tourId");
 
+    // ---------------- CREATE DAY-BEFORE REMINDER ----------------
+    await createDayBeforeReminder(booking, tourType === "day" ? "Day" : "Round");
+
     // ---------------- SEND EMAIL TO ADMIN ----------------
     const adminEmail = process.env.EMAIL_USER;
 
     const adminSubject = `New ${tourType} Tour Booking`;
-    const adminHtml = `
+    const adminHtml = ` 
       <h2>New Tour Booking Received</h2>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email || "Not provided"}</p>

@@ -19,7 +19,7 @@ export default function TomorrowBookingsTable() {
 
   useEffect(() => {
     fetchTomorrowBookings();
-    const interval = setInterval(fetchTomorrowBookings, 60000);
+    const interval = setInterval(fetchTomorrowBookings, 60000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -32,11 +32,24 @@ export default function TomorrowBookingsTable() {
     }
   };
 
-  // Pagination calculations
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentBookings = tomorrowBookings.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(tomorrowBookings.length / itemsPerPage);
+
+  // Helper to choose icon by booking type
+  const getIcon = (type) => {
+    switch (type) {
+      case "Day":
+        return <Plane size={16} className="text-blue-600" />;
+      case "Round":
+        return <Compass size={16} className="text-green-600" />;
+      case "Event":
+        return <Star size={16} className="text-yellow-600" />;
+      default:
+        return <Star size={16} className="text-gray-400" />;
+    }
+  };
 
   return (
     <div id="tomorrow-bookings" className="bg-white p-5 rounded-lg shadow mb-6">
@@ -60,10 +73,7 @@ export default function TomorrowBookingsTable() {
                 {currentBookings.map((b) => (
                   <tr key={b._id} className="hover:bg-gray-50">
                     <td className="px-4 py-2 flex items-center gap-1">
-                      {b.bookingType === "Day" && <Plane size={16} className="text-blue-600" />}
-                      {b.bookingType === "Round" && <Compass size={16} className="text-green-600" />}
-                      {b.bookingType === "Event" && <Star size={16} className="text-yellow-600" />}
-                      {b.bookingType} Tour
+                      {getIcon(b.bookingType)} {b.bookingType} Tour
                     </td>
                     <td className="px-4 py-2">{b.message || "—"}</td>
                     <td className="px-4 py-2">
@@ -86,16 +96,17 @@ export default function TomorrowBookingsTable() {
           {/* Pagination */}
           <div className="flex justify-end mt-4 gap-2 items-center">
             <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               className={`px-3 py-1 rounded ${
-                currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"
+                currentPage === 1
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-gray-100 hover:bg-gray-300"
               }`}
             >
               Prev
             </button>
 
-            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
@@ -109,10 +120,12 @@ export default function TomorrowBookingsTable() {
             ))}
 
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className={`px-3 py-1 rounded ${
-                currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-300"
+                currentPage === totalPages
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-gray-100 hover:bg-gray-300"
               }`}
             >
               Next

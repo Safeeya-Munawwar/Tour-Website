@@ -63,7 +63,7 @@ export default function Navbar() {
     { name: "TOURS", dropdown: ["Day Tours", "Round Tours"] },
     {
       name: "OUR STORY",
-      dropdown: ["About", "Our Team", "Our Journey", "Community Impact"],
+      dropdown: ["About", "Community Impact"],
     },
     {
   name: "INSIGHT",
@@ -92,10 +92,10 @@ export default function Navbar() {
         return "/our-story";
       case "About":
         return "/about";
-      case "Our Team":
-        return "/our-team";
-      case "Our Journey":
-        return "/our-journey";
+      // case "Our Team":
+      //   return "/our-team";
+      // case "Our Journey":
+      //   return "/our-journey";
       case "Community Impact":
         return "/community-impact";
     case "Blog":

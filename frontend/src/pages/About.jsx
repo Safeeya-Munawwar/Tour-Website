@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Testimonials from "../components/Testimonials";
-import { ArrowRight, Calendar, Users } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { ArrowRight, Calendar } from "lucide-react";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Autoplay, Navigation } from "swiper/modules";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/pagination";
 import { axiosInstance } from ".././lib/axios";
 import Footer from "../components/Footer";
 
@@ -157,13 +157,12 @@ const About = () => {
       </section>
 
       {/* ------------------- OUR TEAM ------------------- */}
-      <section className="mt-12 mb-20 max-w-7xl mx-auto px-6 relative z-10 text-center">
-        {/* Heading */}
+      {/* <section className="mt-12 mb-20 max-w-7xl mx-auto px-6 relative z-10 text-center">
+
         <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">
           Meet the Team
         </h2>
 
-        {/* Description */}
         <p className="text-gray-600 text-base md:text-lg max-w-5xl mx-auto mb-12 leading-relaxed">
           We’re not just a room of telesales people. Each of our specialists
           lives and breathes travel, and has plenty of knowledge to share. Here
@@ -171,8 +170,6 @@ const About = () => {
           too.
         </p>
 
-        {/* Team Swiper */}
-        {/* Swiper Navigation Buttons */}
         <div className="flex justify-end mb-4 gap-4">
           <button className="team-prev bg-gray-800 text-white px-4 py-2 rounded">
             Prev
@@ -182,7 +179,6 @@ const About = () => {
           </button>
         </div>
 
-        {/* Swiper */}
         <Swiper
           modules={[Navigation, Autoplay]}
           navigation={{ prevEl: ".team-prev", nextEl: ".team-next" }}
@@ -213,7 +209,6 @@ const About = () => {
           ))}
         </Swiper>
 
-        {/* Centered Button */}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => navigate("/our-team")}
@@ -227,7 +222,7 @@ const About = () => {
             <Users className="w-4" />
           </button>
         </div>
-      </section>
+      </section> */}
 
       {/* ---------------------------- GALLERY ---------------------------- */}
       <section className="mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
