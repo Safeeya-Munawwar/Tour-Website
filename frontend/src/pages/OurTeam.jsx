@@ -38,7 +38,7 @@ const [currentPage] = useState(1);
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/images/team-header_compressed.webp')",
+          backgroundImage: "url('/images/team-header.webp')",
           backgroundPosition: "center 50%",
         }}
       >

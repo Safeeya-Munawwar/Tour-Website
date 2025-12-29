@@ -9,7 +9,10 @@ const EventTourBookingAdmin = () => {
   const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("");
 
   // ---------------- FETCH BOOKINGS ----------------
   const fetchBookings = async () => {
@@ -111,8 +114,26 @@ const EventTourBookingAdmin = () => {
   // ---------------- PAGINATION ----------------
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = bookings.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(bookings.length / rowsPerPage);
+
+  const filteredBookings = bookings.filter((b) => {
+    const search = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      b.name?.toLowerCase().includes(search) ||
+      b.phone?.includes(search) ||
+      b.email?.toLowerCase().includes(search) ||
+      b.eventId?.title?.toLowerCase().includes(search);
+
+    const matchesStatus = statusFilter === "All" || b.status === statusFilter;
+
+    const matchesDate =
+      !dateFilter || b.startDate?.split("T")[0] === dateFilter;
+
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+
+  const currentRows = filteredBookings.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(filteredBookings.length / rowsPerPage);
 
   return (
     <div className="flex">
@@ -129,11 +150,74 @@ const EventTourBookingAdmin = () => {
           Manage Event Bookings
         </h2>
 
+        <div className="bg-[#0d203a] border border-[#1a354e] rounded mb-6 p-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            {/* Search */}
+            <input
+              type="text"
+              placeholder="Search by name, phone, email, event..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-64
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            {/* Status Filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="All">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Completed">Completed</option>
+            </select>
+
+            {/* Date Filter */}
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => {
+                setDateFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("All");
+                setDateFilter("");
+                setCurrentPage(1);
+              }}
+              className="px-4 py-2 bg-gray-300 text-sm rounded hover:bg-gray-400 transition"
+            >
+              Clear
+            </button>
+
+            {/* COUNT */}
+            <span className="ml-auto text-sm text-gray-300">
+              Showing <b>{filteredBookings.length}</b> bookings
+            </span>
+          </div>
+        </div>
+
         <div className="overflow-x-auto max-w-full">
           <table className="w-full table-fixed border border-[#1a354e] rounded mb-6 text-center">
             <thead className="bg-[#0d203a] text-white">
               <tr>
-                <th className="p-3 border border-[#1a354e] text-sm"></th>
+                <th className="p-3 border border-[#1a354e] text-sm">Event</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Name</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
@@ -145,7 +229,7 @@ const EventTourBookingAdmin = () => {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="text-center p-4">
+                  <td colSpan={7} className="text-center p-4">
                     No bookings found
                   </td>
                 </tr>

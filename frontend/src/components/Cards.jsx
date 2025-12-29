@@ -27,8 +27,8 @@ export default function ExperienceSection() {
     >
       <div className="max-w-7xl mx-auto px-4">
         {/* Subtitle */}
-        <h2 className="text-center text-gray-500 text-sm font-semibold tracking-widest uppercase">
-          Experiences
+        <h2 className="text-center text-gray-500 text-sm md:text-lg font-semibold tracking-widest uppercase">
+        Experiences
         </h2>
 
         {/* Main Section Heading */}

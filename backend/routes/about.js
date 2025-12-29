@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
     return {
       folder,
       resource_type: file.mimetype.startsWith("video") ? "video" : "image",
-      allowed_formats: ["jpg", "jpeg", "png", "mp4", "mov", "webm"],
+      allowed_formats: ["jpg", "jpeg", "png", "mp4", "mov", "webm", "webp"],
     };
   },
 });

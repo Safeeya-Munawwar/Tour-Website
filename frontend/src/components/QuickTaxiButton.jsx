@@ -5,7 +5,7 @@ import { useFloatingButtons } from "../context/FloatingButtonsContext";
 
 export default function QuickTaxiButton() {
   const navigate = useNavigate();
-  const { isWhatsAppOpen } = useFloatingButtons();
+  const { isScrollVisible, isWhatsAppOpen } = useFloatingButtons();
   const [open, setOpen] = useState(false);
 
   // Hide button if WhatsApp is open
@@ -18,8 +18,9 @@ export default function QuickTaxiButton() {
 
   return (
     <div
-      className="fixed bottom-28 right-6 z-[9999] flex flex-col items-end"
-      aria-label="Quick Taxi floating button"
+      className={`fixed right-6 z-[9999] flex flex-col items-end transition-all duration-300
+    ${isScrollVisible ? "bottom-40" : "bottom-28"}
+  `}
     >
       {/* CARD ABOVE BUTTON */}
       {open && (
@@ -49,9 +50,7 @@ export default function QuickTaxiButton() {
               <FaCar className="text-white text-xl" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-semibold text-gray-800">
-                Net Lanka Travels
-              </p>
+              <p className="font-semibold text-gray-800">Net Lanka Travels</p>
               <p className="text-sm text-gray-500">
                 Typically replies in a few minutes
               </p>

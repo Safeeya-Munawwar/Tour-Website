@@ -51,7 +51,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
         <div className="h-auto flex items-center justify-center shadow-md border-b border-gray-800">
           <img
-            src="/images/logo_compressed.webp"
+            src="/images/logo.webp"
             alt="Logo"
             className="w-32 h-auto object-contain"
           />

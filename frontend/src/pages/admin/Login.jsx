@@ -52,7 +52,7 @@ export default function AdminLogin() {
     <div
       className="w-full h-screen flex items-center justify-center relative bg-gray-900"
       style={{
-        backgroundImage: `url('/images/12.jpg')`,
+        backgroundImage: `url('/images/stats.webp')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

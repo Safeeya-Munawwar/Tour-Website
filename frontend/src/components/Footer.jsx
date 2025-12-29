@@ -82,7 +82,7 @@ export default function Footer() {
         {/* LOGO & SOCIAL */}
         <div className="flex flex-col items-center text-center">
           <img
-            src="/images/logo_compressed.webp"
+            src="/images/logo.webp"
             alt="Logo"
             className="w-40 mb-5 opacity-95"
           />

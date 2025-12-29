@@ -73,10 +73,10 @@ export default function Stats() {
       aria-label="Net Lanka Travels statistics section"
       className="w-full bg-cover bg-center bg-fixed relative flex items-center py-16 md:py-20"
       style={{
-        backgroundImage: "url('/images/12.jpg')",
+        backgroundImage: "url('/images/stats.webp')",
       }}
     >
-      <div aria-hidden="true" className="absolute inset-0 bg-black/50"></div>
+      <div aria-hidden="true" className="absolute inset-0"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 text-center px-6 gap-8 md:gap-12">
         {statsData.map((stat, i) => (

@@ -18,7 +18,7 @@ export default function Testimonials() {
   const fetchMessages = async () => {
     try {
       const res = await axiosInstance.get("/contact-form");
-      setMessages(res.data);
+      setMessages(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching messages:", err);
     }
@@ -71,10 +71,10 @@ export default function Testimonials() {
             <Swiper
               modules={[Navigation, Autoplay]}
               navigation={{ prevEl: ".trip-prev", nextEl: ".trip-next" }}
-              loop
+              loop={messages.length > 1}
+              slidesPerView={1.1}
               autoplay={{ delay: 2500, disableOnInteraction: false }}
               spaceBetween={28}
-              slidesPerView={1.1}
               breakpoints={{
                 640: { slidesPerView: 1.5 },
                 1024: { slidesPerView: 2.5 },

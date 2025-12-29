@@ -5,8 +5,8 @@ import L from "leaflet";
 /* -------------------- Custom Icons -------------------- */
 const createIcon = (color) =>
   new L.Icon({
-    iconUrl: `/images/marker-icon-2x-${color}.png`,
-    shadowUrl: "/images/marker-shadow.png",
+    iconUrl: `/images/marker-icon-2x-${color}.webp`,
+    shadowUrl: "/images/marker-shadow.webp",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   });

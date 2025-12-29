@@ -9,7 +9,10 @@ const CustomizeTourBookingAdmin = () => {
   const [inquiries, setInquiries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("");
 
   useEffect(() => {
     fetchInquiries();
@@ -66,10 +69,30 @@ const CustomizeTourBookingAdmin = () => {
 
   const getSanitizedPhone = (phone) => (phone ? phone.replace(/\D/g, "") : "");
 
+  const filteredInquiries = inquiries.filter((inq) => {
+    const matchesSearch =
+      inq.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.phone?.includes(searchTerm) ||
+      inq.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.pickupLocation?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.dropLocation?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = statusFilter === "All" || inq.status === statusFilter;
+
+    const matchesDate =
+      !dateFilter ||
+      (inq.startDate &&
+        new Date(inq.startDate).toISOString().split("T")[0] === dateFilter);
+
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = inquiries.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(inquiries.length / rowsPerPage);
+
+  const currentRows = filteredInquiries.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(filteredInquiries.length / rowsPerPage);
 
   const handlePrev = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const handleNext = () =>
@@ -102,6 +125,70 @@ const CustomizeTourBookingAdmin = () => {
           Manage Customize Tour Bookings
         </h2>
 
+        <div className="bg-[#0d203a] border border-[#1a354e] rounded mb-6 p-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search name / phone / email / location"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-64
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            {/* STATUS */}
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="All">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Completed">Completed</option>
+            </select>
+
+            {/* DATE */}
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => {
+                setDateFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            {/* CLEAR */}
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("All");
+                setDateFilter("");
+                setCurrentPage(1);
+              }}
+              className="px-4 py-2 bg-gray-300 text-sm rounded hover:bg-gray-400 transition"
+            >
+              Clear
+            </button>
+
+            {/* COUNT */}
+            <span className="ml-auto text-sm text-gray-300">
+              Showing <b>{filteredInquiries.length}</b> bookings
+            </span>
+          </div>
+        </div>
+
         <div className="overflow-x-auto max-w-full">
           <table className="w-full table-fixed border border-[#1a354e] rounded mb-6 text-center">
             <thead className="bg-[#0d203a] text-white">
@@ -112,6 +199,7 @@ const CustomizeTourBookingAdmin = () => {
                   Location
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
@@ -120,7 +208,7 @@ const CustomizeTourBookingAdmin = () => {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-4">
+                  <td colSpan={7} className="p-4 text-gray-500">
                     No bookings found
                   </td>
                 </tr>
@@ -139,19 +227,24 @@ const CustomizeTourBookingAdmin = () => {
                         {inq.phone}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-                        {inq.pickupLocation || "—"}{" "}
+                        {inq.pickupLocation || "Not Specified"}{" "}
                         <span className="text-red-600 font-semibold">🡆</span>{" "}
-                        {inq.dropLocation || "—"}
+                        {inq.dropLocation || "Not Specified"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {Number(inq.adults || 0) + Number(inq.children || 0)}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.startDate
+                          ? new Date(inq.startDate).toLocaleDateString("en-GB")
+                          : "Not Specified"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {inq.currency && inq.budget
                           ? `${inq.currency} ${Number(
                               inq.budget
                             ).toLocaleString()}`
-                          : "—"}
+                          : "Not Specified"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         <select
@@ -280,7 +373,7 @@ const CustomizeTourBookingAdmin = () => {
                     Country:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedInquiry.country || "—"}
+                    {selectedInquiry.country || "Not Specified"}
                   </p>
 
                   {/* Email */}
@@ -288,7 +381,7 @@ const CustomizeTourBookingAdmin = () => {
                     Email:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedInquiry.email || "—"}
+                    {selectedInquiry.email || "Not Specified"}
                   </p>
 
                   {/* Phone */}
@@ -304,7 +397,7 @@ const CustomizeTourBookingAdmin = () => {
                     Pickup Location:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedInquiry.pickupLocation || "—"}
+                    {selectedInquiry.pickupLocation || "Not Specified"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
@@ -313,7 +406,7 @@ const CustomizeTourBookingAdmin = () => {
                   <p className="p-2 border-b border-blue-950">
                     {selectedInquiry.startDate
                       ? new Date(selectedInquiry.startDate).toLocaleDateString()
-                      : "—"}
+                      : "Not Specified"}
                   </p>
 
                   {/* Drop */}
@@ -321,7 +414,7 @@ const CustomizeTourBookingAdmin = () => {
                     Drop Location:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedInquiry.dropLocation || "—"}
+                    {selectedInquiry.dropLocation || "Not Specified"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
@@ -330,7 +423,7 @@ const CustomizeTourBookingAdmin = () => {
                   <p className="p-2 border-b border-blue-950">
                     {selectedInquiry.endDate
                       ? new Date(selectedInquiry.endDate).toLocaleDateString()
-                      : "—"}
+                      : "Not Specified"}
                   </p>
 
                   {/* Adults */}
@@ -356,7 +449,7 @@ const CustomizeTourBookingAdmin = () => {
                   <p className="p-2 border-b border-blue-950">
                     {selectedInquiry.currency && selectedInquiry.budget
                       ? `${selectedInquiry.currency} ${selectedInquiry.budget}`
-                      : "—"}
+                      : "Not Specified"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
@@ -366,7 +459,7 @@ const CustomizeTourBookingAdmin = () => {
                     {selectedInquiry.selectedDestinations &&
                     selectedInquiry.selectedDestinations.length > 0
                       ? selectedInquiry.selectedDestinations.join(", ")
-                      : "—"}
+                      : "Not Specified"}
                   </p>
 
                   {/* Notes */}

@@ -1,36 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../lib/axios";
 import { Check, Settings } from "lucide-react";
 
 export default function Header() {
-  const images = [
-    {
-      src: "/images/d2_compressed.webp",
-      alt: "Sri Lanka destination",
-    },
-    {
-      src: "/images/destination_compressed.webp",
-      alt: "Beautiful destination",
-    },
-    {
-      src: "/images/sigiriya_compressed.webp",
-      alt: "Sigiriya Rock Fortress",
-    },
-    {
-      src: "/images/blog_compressed.webp",
-      alt: "Travel blog",
-    },
-  ];
+  const images = useMemo(
+    () => [
+      { src: "/images/d2.webp", alt: "Sri Lanka destination" },
+      { src: "/images/destination.webp", alt: "Beautiful destination" },
+      { src: "/images/sigiriya.webp", alt: "Sigiriya Rock Fortress" },
+      { src: "/images/blog.webp", alt: "Travel blog" },
+    ],
+    []
+  );
 
   const [currentImage, setCurrentImage] = useState(0);
   const [homeData, setHomeData] = useState({
     name: "",
-    info: {
-      title: "",
-      subtitle: "",
-      description: "",
-      video: "",
-    },
+    info: { title: "", subtitle: "", description: "", video: "" },
   });
 
   // Preload images
@@ -39,7 +25,7 @@ export default function Header() {
       const image = new Image();
       image.src = img.src;
     });
-  }, []);
+  }, [images]);
 
   // Fetch home content
   useEffect(() => {
@@ -69,7 +55,6 @@ export default function Header() {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 8000);
-
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -104,8 +89,7 @@ export default function Header() {
         </h1>
 
         <p className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl font-light">
-          {homeData.info.subtitle ||
-            "Unforgettable Journeys Across the Island"}
+          {homeData.info.subtitle || "Unforgettable Journeys Across the Island"}
         </p>
 
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
