@@ -1,4 +1,3 @@
-// utils/notification.js
 const AdminNotification = require("../models/AdminNotification");
 const DayTourBooking = require("../models/DayTourBooking");
 const RoundTourBooking = require("../models/RoundTourBooking");
