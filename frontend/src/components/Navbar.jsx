@@ -211,7 +211,7 @@ case "Events":
             }`}
           >
             <img
-              src="/images/logo.webp"
+              src="/images/logo-scroll.webp"
               alt="logo"
               className={`transition-all duration-300 ${
                 scrolled ? "w-[100px]" : "w-[0px]"

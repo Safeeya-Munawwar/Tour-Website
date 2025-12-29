@@ -9,7 +9,10 @@ const DayTourBookingAdmin = () => {
   const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("");
 
   // ---------------- FETCH BOOKINGS ----------------
   const fetchBookings = async () => {
@@ -121,8 +124,27 @@ const DayTourBookingAdmin = () => {
   // ---------------- PAGINATION ----------------
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = bookings.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(bookings.length / rowsPerPage);
+
+  const filteredBookings = bookings.filter((b) => {
+    const matchesSearch =
+      b.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.phone?.includes(searchTerm) ||
+      b.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.tourId?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = statusFilter === "All" || b.status === statusFilter;
+
+    const matchesDate =
+      !dateFilter ||
+      b.startDate === dateFilter ||
+      b.createdAt?.split("T")[0] === dateFilter;
+
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+
+  const totalPages = Math.ceil(filteredBookings.length / rowsPerPage);
+
+  const currentRows = filteredBookings.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <div className="flex">
@@ -138,6 +160,70 @@ const DayTourBookingAdmin = () => {
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6 px-5 mt-4">
           Manage Day Tour Bookings
         </h2>
+
+        <div className="bg-[#0d203a] border border-[#1a354e] rounded mb-6 p-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search name / phone / email / tour"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-64
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            {/* STATUS */}
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="All">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+
+            {/* DATE */}
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => {
+                setDateFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 rounded border border-[#1a354e] text-sm w-full sm:w-44
+                 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            {/* CLEAR */}
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("All");
+                setDateFilter("");
+                setCurrentPage(1);
+              }}
+              className="px-4 py-2 bg-gray-300 text-sm rounded hover:bg-gray-400 transition"
+            >
+              Clear
+            </button>
+
+            {/* RESULT COUNT (OPTIONAL – looks professional) */}
+            <span className="ml-auto text-sm text-gray-300">
+              Showing <b>{filteredBookings.length}</b> bookings
+            </span>
+          </div>
+        </div>
 
         <div className="overflow-x-auto max-w-full">
           <table className="w-full table-fixed border border-[#1a354e] rounded mb-6 text-center">
@@ -158,7 +244,10 @@ const DayTourBookingAdmin = () => {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="text-center p-4">
+                  <td
+                    colSpan={8}
+                    className="text-center p-6 text-gray-500 font-medium"
+                  >
                     No bookings found
                   </td>
                 </tr>
