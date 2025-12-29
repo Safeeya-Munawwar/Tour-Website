@@ -24,6 +24,8 @@ export default function BookTour() {
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
+  const [whatsappNumber, setWhatsappNumber] = useState("94729171089");
+
   /* ---------------- FETCH TOURS ---------------- */
   useEffect(() => {
     const fetchTours = async () => {
@@ -32,7 +34,6 @@ export default function BookTour() {
           axiosInstance.get("/day-tours"),
           axiosInstance.get("/round-tours"),
         ]);
-
         setDayTours(dayRes.data?.tours || []);
         setRoundTours(roundRes.data?.tours || []);
       } catch (err) {
@@ -40,6 +41,17 @@ export default function BookTour() {
       }
     };
     fetchTours();
+  }, []);
+
+  /* ---------------- FETCH WHATSAPP NUMBER ---------------- */
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => {
+        const p = res.data?.whatsapp || res.data?.phone;
+        if (p) setWhatsappNumber(p.replace(/\D/g, ""));
+      })
+      .catch(() => {});
   }, []);
 
   const handleTourSelect = (id) => {
@@ -55,224 +67,229 @@ export default function BookTour() {
   /* ---------------- VALIDATION ---------------- */
   const validate = () => {
     const err = {};
-    if (!tourType) err.tourType = "Please select a tour type";
-    if (!selectedTour) err.selectedTour = "Please select a tour";
-    if (!formData.name.trim()) err.name = "Full name is required";
+    if (!tourType) err.tourType = "Select tour type";
+    if (!selectedTour) err.selectedTour = "Select a tour";
+    if (!formData.name.trim()) err.name = "Name required";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
-      err.email = "Valid email address required";
-    if (!formData.phone.trim()) err.phone = "Contact number is required";
+      err.email = "Valid email required";
+    if (!formData.phone.trim()) err.phone = "Phone required";
     if (!formData.pickupLocation.trim())
-      err.pickupLocation = "Pickup location is required";
-    if (!formData.startDate) err.startDate = "Pickup date is required";
-    if (!formData.startTime) err.startTime = "Pickup time is required";
-    if (formData.adults < 1) err.adults = "Minimum 1 adult required";
+      err.pickupLocation = "Pickup location required";
+    if (!formData.startDate) err.startDate = "Date required";
+    if (!formData.startTime) err.startTime = "Time required";
+    if (formData.adults < 1) err.adults = "Min 1 adult";
     if (formData.children < 0) err.children = "Invalid number";
-
     return err;
   };
 
-  /* ---------------- SUBMIT ---------------- */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-    setResponseMsg("");
+  /* ---------------- SUBMIT TO BACKEND ---------------- */
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrors({});
+  setResponseMsg("");
 
+  const err = validate();
+  if (Object.keys(err).length) {
+    setErrors(err);
+    setIsError(true);
+    setResponseMsg("Please correct the errors.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await axiosInstance.post("/book-tour", {
+      ...formData,
+      tourType,
+      tourId: selectedTour._id,
+      tourRef: tourType === "day" ? "DayTour" : "RoundTour",
+      startDate: new Date(formData.startDate), // ✅ FIX
+    });
+
+    setIsError(false);
+    setResponseMsg("Tour booking request sent successfully!");
+
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      adults: 1,
+      children: 0,
+      pickupLocation: "",
+      startDate: "",
+      startTime: "",
+      message: "",
+    });
+
+    setSelectedTour(null);
+    setTourType("");
+  } catch (err) {
+    console.error("BOOK TOUR ERROR:", err.response?.data || err);
+    setIsError(true);
+    setResponseMsg(err.response?.data?.error || "Submission failed.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  /* ---------------- WHATSAPP BOOKING ---------------- */
+  const sendBookingViaWhatsApp = () => {
     const err = validate();
     if (Object.keys(err).length) {
       setErrors(err);
       setIsError(true);
-      setResponseMsg("Please correct the highlighted fields.");
+      setResponseMsg("Fix errors before WhatsApp booking");
       return;
     }
 
-    try {
-      setLoading(true);
-      await axiosInstance.post("/book-tour", {
-        ...formData,
-        tourType,
-        tourId: selectedTour._id,
-      });
+    const message = `
+* Net Lanka Travel - Tour Booking *
 
-      setIsError(false);
-      setResponseMsg("Tour booking request sent successfully!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        adults: 1,
-        children: 0,
-        pickupLocation: "",
-        startDate: "",
-        startTime: "",
-        message: "",
-      });
-      setSelectedTour(null);
-      setTourType("");
-    } catch {
-      setIsError(true);
-      setResponseMsg("Submission failed. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
+*Tour Type:* ${tourType === "day" ? "Day Tour" : "Round Tour"}
+*Tour:* ${selectedTour.title}
+*Location:* ${selectedTour.location}
+
+*Customer Details*
+- Name: ${formData.name}
+- Email: ${formData.email}
+- Phone: ${formData.phone}
+
+*Participants*
+- Adults: ${formData.adults}
+- Children: ${formData.children}
+
+*Pickup Details*
+- Location: ${formData.pickupLocation}
+- Date: ${formData.startDate}
+- Time: ${formData.startTime}
+
+*Message*
+${formData.message || "-"}
+
+Please confirm availability.
+
+Thank you,
+Net Lanka Travel
+    `;
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(url, "_blank");
   };
 
   /* ---------------- UI ---------------- */
   return (
-    <section
-      aria-labelledby="book-tour-heading"
-      className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto text-left"
-    >
-      <h2
-        id="book-tour-heading"
-        className="text-3xl md:text-4xl font-extrabold text-center text-[#0B2545]"
-      >
+    <section className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto">
+      <h2 className="text-3xl font-extrabold text-center text-[#0B2545]">
         Book Your Sri Lanka Tour
       </h2>
 
-      <p className="text-center text-gray-600 mt-2">
-        Plan your perfect Sri Lankan adventure with us
-      </p>
-
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        className="flex flex-col gap-5 mt-6"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
         {/* TOUR TYPE */}
-        <label className="font-medium">
-          Tour Type *
-          <select
-            value={tourType}
-            onChange={(e) => {
-              setTourType(e.target.value);
-              setSelectedTour(null);
-            }}
-            aria-required="true"
-            className="mt-1 w-full px-4 py-3 border rounded focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select Tour Type</option>
-            <option value="day">Day Tour</option>
-            <option value="round">Round Tour</option>
-          </select>
-        </label>
+        <select
+          value={tourType}
+          onChange={(e) => {
+            setTourType(e.target.value);
+            setSelectedTour(null);
+          }}
+          className="px-4 py-3 border rounded"
+        >
+          <option value="">Select Tour Type</option>
+          <option value="day">Day Tour</option>
+          <option value="round">Round Tour</option>
+        </select>
 
-        {/* TOUR */}
+        {/* TOUR LIST */}
         {tourType && (
-          <label className="font-medium">
-            Select Tour *
-            <select
-              value={selectedTour?._id || ""}
-              onChange={(e) => handleTourSelect(e.target.value)}
-              className="mt-1 w-full px-4 py-3 border rounded"
-            >
-              <option value="">Choose a tour</option>
-              {(tourType === "day" ? dayTours : roundTours).map((t) => (
-                <option key={t._id} value={t._id}>
-                  {t.title} – {t.location}
-                </option>
-              ))}
-            </select>
-          </label>
+          <select
+            value={selectedTour?._id || ""}
+            onChange={(e) => handleTourSelect(e.target.value)}
+            className="px-4 py-3 border rounded"
+          >
+            <option value="">Select Tour</option>
+            {(tourType === "day" ? dayTours : roundTours).map((t) => (
+              <option key={t._id} value={t._id}>
+                {t.title} – {t.location}
+              </option>
+            ))}
+          </select>
         )}
 
-        {/* BASIC INFO */}
-        {["name", "email", "phone"].map((field) => (
-          <label key={field} className="font-medium">
-            {field.charAt(0).toUpperCase() + field.slice(1)} *
-            <input
-              type={field === "email" ? "email" : "text"}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-3 border rounded"
-              aria-invalid={!!errors[field]}
-            />
-          </label>
+        {/* INPUTS */}
+        {["name", "email", "phone", "pickupLocation"].map((f) => (
+          <input
+            key={f}
+            name={f}
+            value={formData[f]}
+            onChange={handleChange}
+            placeholder={f.replace(/^\w/, (c) => c.toUpperCase())}
+            className="px-4 py-3 border rounded"
+          />
         ))}
 
-        {/* TRAVELERS */}
         <div className="flex gap-4">
-          <label className="flex-1 font-medium">
-            Adults *
-            <input
-              type="number"
-              min="1"
-              name="adults"
-              value={formData.adults}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-3 border rounded"
-            />
-          </label>
-
-          <label className="flex-1 font-medium">
-            Children
-            <input
-              type="number"
-              min="0"
-              name="children"
-              value={formData.children}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-3 border rounded"
-            />
-          </label>
-        </div>
-
-        {/* PICKUP */}
-        <label className="font-medium">
-          Pickup Location *
           <input
-            type="text"
-            name="pickupLocation"
-            value={formData.pickupLocation}
+            type="number"
+            min="1"
+            name="adults"
+            value={formData.adults}
             onChange={handleChange}
-            className="mt-1 w-full px-4 py-3 border rounded"
+            className="px-4 py-3 border rounded flex-1"
           />
-        </label>
-
-        {/* DATE & TIME */}
-        <div className="flex gap-4">
-          <label className="flex-1 font-medium">
-            Pickup Date *
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-3 border rounded"
-            />
-          </label>
-
-          <label className="flex-1 font-medium">
-            Pickup Time *
-            <input
-              type="time"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-3 border rounded"
-            />
-          </label>
+          <input
+            type="number"
+            min="0"
+            name="children"
+            value={formData.children}
+            onChange={handleChange}
+            className="px-4 py-3 border rounded flex-1"
+          />
         </div>
 
-        {/* MESSAGE */}
-        <label className="font-medium">
-          Additional Message
-          <textarea
-            name="message"
-            value={formData.message}
+        <div className="flex gap-4">
+          <input
+            type="date"
+            name="startDate"
+            value={formData.startDate}
             onChange={handleChange}
-            rows="4"
-            className="mt-1 w-full px-4 py-3 border rounded resize-none"
+            className="px-4 py-3 border rounded flex-1"
           />
-        </label>
+          <input
+            type="time"
+            name="startTime"
+            value={formData.startTime}
+            onChange={handleChange}
+            className="px-4 py-3 border rounded flex-1"
+          />
+        </div>
 
-        {/* SUBMIT */}
+        <textarea
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          placeholder="Additional Message"
+          rows="3"
+          className="px-4 py-3 border rounded"
+        />
+
+        {/* BUTTONS */}
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#0B2545] hover:bg-[#142D57] text-white font-semibold py-3 rounded transition"
+          className="bg-[#0B2545] text-white py-3 rounded font-semibold"
         >
           {loading ? "Submitting..." : "Book Tour Now"}
+        </button>
+
+        <button
+          type="button"
+          onClick={sendBookingViaWhatsApp}
+          className="bg-green-500 hover:bg-green-600 text-white py-3 rounded font-semibold"
+        >
+          Book via WhatsApp
         </button>
 
         {responseMsg && (
