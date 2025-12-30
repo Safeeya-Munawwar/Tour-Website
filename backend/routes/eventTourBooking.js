@@ -92,4 +92,29 @@ router.put("/:id/status", async (req, res) => {
   }
 });
 
+/* DELETE EVENT BOOKING */
+router.delete("/:id", async (req, res) => {
+  try {
+    const booking = await EventTourBooking.findByIdAndDelete(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Booking deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete booking error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
 module.exports = router;
