@@ -87,55 +87,54 @@ export default function EditRoundTour() {
     fetchTour();
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSaving(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSaving(true);
 
-    try {
-      // ---------- Update Tour Card ----------
-      const tourData = new FormData();
-      tourData.append("title", formData.title);
-      tourData.append("days", formData.days);
-      tourData.append("location", formData.location);
-      tourData.append("desc", formData.desc);
-      if (formData.imgFile) tourData.append("img", formData.imgFile);
+  try {
+    // ----------------- Tour Card -----------------
+    const tourData = new FormData();
+    tourData.append("title", formData.title);
+    tourData.append("days", formData.days);
+    tourData.append("location", formData.location);
+    tourData.append("desc", formData.desc);
+    tourData.append("img", formData.imgFile || ""); // always append
 
-      await axiosInstance.put(`/round-tours/${id}`, tourData);
+    await axiosInstance.put(`/round-tours/${id}`, tourData);
 
-      // ---------- Update Tour Detail ----------
-      const detailData = new FormData();
-      detailData.append("heroTitle", formData.heroTitle);
-      detailData.append("heroSubtitle", formData.heroSubtitle);
-      if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
+    // ----------------- Tour Detail -----------------
+    const detailData = new FormData();
+    detailData.append("heroTitle", formData.heroTitle);
+    detailData.append("heroSubtitle", formData.heroSubtitle);
+    detailData.append("heroImage", formData.heroImageFile || ""); // always append
 
+    detailData.append("itinerary", JSON.stringify(formData.itinerary));
+    detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
+    detailData.append("highlights", JSON.stringify(cleanFormData.highlights));
+    detailData.append("inclusions", JSON.stringify(cleanFormData.inclusions));
+    detailData.append("exclusions", JSON.stringify(cleanFormData.exclusions));
+    detailData.append("offers", JSON.stringify(cleanFormData.offers));
 
-      detailData.append("itinerary", JSON.stringify(formData.itinerary));
-      detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
+    // Gallery images
+    formData.gallerySlides.forEach((slide) => {
+      detailData.append("galleryImages", slide.imageFile || ""); // preserve order
+    });
+    detailData.append(
+      "gallerySlides",
+      JSON.stringify(formData.gallerySlides.map((s) => ({ title: s.title, desc: s.desc })))
+    );
 
-      detailData.append("highlights", JSON.stringify(cleanFormData.highlights));
-detailData.append("inclusions", JSON.stringify(cleanFormData.inclusions));
-detailData.append("exclusions", JSON.stringify(cleanFormData.exclusions));
-detailData.append("offers", JSON.stringify(cleanFormData.offers));
+    await axiosInstance.put(`/round-tours/detail/${id}`, detailData);
 
+    toast.success("Round Tour updated", { onClose: () => navigate("/admin/round-tours") });
+  } catch (err) {
+    console.error(err);
+    toast.error("Update failed");
+  } finally {
+    setIsSaving(false);
+  }
+};
 
-      formData.gallerySlides.forEach(slide => {
-        if (slide.imageFile) detailData.append("galleryImages", slide.imageFile);
-      });
-      detailData.append(
-        "gallerySlides",
-        JSON.stringify(formData.gallerySlides.map(s => ({ title: s.title, desc: s.desc })))
-      );
-
-      await axiosInstance.put(`/round-tours/detail/${id}`, detailData);
-
-      toast.success("Round Tour updated", { onClose: () => navigate("/admin/round-tours") });
-    } catch (err) {
-      console.error(err);
-      toast.error("Update failed");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   return (
     <div className="flex min-h-screen">

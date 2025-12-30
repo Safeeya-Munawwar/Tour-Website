@@ -111,41 +111,40 @@ router.put("/:id", adminAuth, upload.single("img"), async (req, res) => {
   }
 });
 
-// ---------------- UPDATE TOUR DETAIL (HERO + GALLERY) ----------------
 router.put("/detail/:id", adminAuth, upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "galleryImages", maxCount: 20 }
 ]), async (req, res) => {
   try {
     const existingDetail = await RoundTourDetail.findOne({ tourId: req.params.id });
+    const gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
+    const existingGallery = existingDetail?.gallerySlides || [];
 
-    let gallerySlides = JSON.parse(req.body.gallerySlides || "[]");
-
-    // Preserve old images if no new image uploaded
-    gallerySlides = gallerySlides.map((slide, idx) => ({
-      ...slide,
-      image:
-        (req.files?.galleryImages && req.files.galleryImages[idx]?.path) ||
-        existingDetail?.gallerySlides?.[idx]?.image ||
-        "",
-    }));
-
+    // Hero Image
     const heroFile = req.files?.heroImage?.[0];
+    const heroImage = heroFile?.path || existingDetail?.heroImage || "";
+
+    // Gallery Images
+    const updatedGallery = gallerySlides.map((slide, idx) => {
+      const file = req.files?.galleryImages?.[idx]?.path;
+      return {
+        ...slide,
+        image: file || existingGallery[idx]?.image || "",
+      };
+    });
 
     const updateData = {
       heroTitle: req.body.heroTitle,
       heroSubtitle: req.body.heroSubtitle,
+      heroImage,
       highlights: JSON.parse(req.body.highlights || "[]"),
       itinerary: JSON.parse(req.body.itinerary || "[]"),
       inclusions: JSON.parse(req.body.inclusions || "[]"),
       exclusions: JSON.parse(req.body.exclusions || "[]"),
       offers: JSON.parse(req.body.offers || "[]"),
       tourFacts: JSON.parse(req.body.tourFacts || "{}"),
-      gallerySlides,
+      gallerySlides: updatedGallery,
     };
-
-    if (heroFile) updateData.heroImage = heroFile.path;
-    else if (existingDetail?.heroImage) updateData.heroImage = existingDetail.heroImage;
 
     const updatedDetail = await RoundTourDetail.findOneAndUpdate(
       { tourId: req.params.id },
