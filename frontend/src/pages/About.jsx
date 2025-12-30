@@ -10,6 +10,8 @@ import { ArrowRight, Calendar } from "lucide-react";
 // import "swiper/css/pagination";
 import { axiosInstance } from ".././lib/axios";
 import Footer from "../components/Footer";
+import GalleryVideo from "../components/GalleryVideo";
+
 
 const About = () => {
   const [showFull, setShowFull] = useState(false);
@@ -223,6 +225,8 @@ const About = () => {
           </button>
         </div>
       </section> */}
+
+      <GalleryVideo />
 
       {/* ---------------------------- GALLERY ---------------------------- */}
       <section className="mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -19,7 +19,7 @@ export default function BookTour() {
     message: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);

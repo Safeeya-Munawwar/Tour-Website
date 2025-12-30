@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
       startDate,
       startTime,
       message,
-    } = req.body;
+    } = req.body; 
 
     // Validate required fields
     if (!eventId || !name || !email || !phone || !startDate || !startTime) {

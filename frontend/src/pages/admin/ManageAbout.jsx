@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaTrash, FaEdit, FaImage, FaVideo } from "react-icons/fa";
 
 const AdminManageAbout = () => {
   const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -96,6 +97,31 @@ const AdminManageAbout = () => {
     setFiles({ ...files, galleryFiles: updatedFiles });
   };
 
+  const handleEditGalleryItem = (index) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*,video/*";
+
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const updatedGallery = [...aboutData.gallery];
+      updatedGallery[index] = file; // store new file temporarily
+
+      setAboutData((prev) => ({
+        ...prev,
+        gallery: updatedGallery,
+      }));
+    };
+
+    input.click();
+  };
+
+  const isVideoUrl = (url) => {
+    return /\.(mp4|webm|ogg|mov)$/i.test(url.split("?")[0]);
+  };
+
   const handleDrop = (acceptedFiles, type, index) => {
     const oversizedFiles = acceptedFiles.filter(
       (file) => file.size > MAX_FILE_SIZE
@@ -170,13 +196,9 @@ const AdminManageAbout = () => {
         if (file) formData.append("galleryFiles", file);
       });
 
-      const res = await axiosInstance.post(
-        "/about",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axiosInstance.post("/about", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (res.status === 200) {
         toast.success("About page updated successfully!");
@@ -225,29 +247,27 @@ const AdminManageAbout = () => {
 
         {/* Tabs */}
         <div className="flex justify-center gap-4 mb-4">
-          {["general", "fullDescription", "features", "team", "gallery"].map(
-            (tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-t ${
-                  activeTab === tab
-                    ? "bg-[#2E5B84] text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {tab === "general"
-                  ? "General Info"
-                  : tab === "fullDescription"
-                  ? "Full Description"
-                  : tab === "features"
-                  ? "Features"
-                  : tab === "team"
-                  ? "Team Members"
-                  : "Gallery"}
-              </button>
-            )
-          )}
+          {["general", "fullDescription", "features", "gallery"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-t ${
+                activeTab === tab
+                  ? "bg-[#2E5B84] text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {tab === "general"
+                ? "General Info"
+                : tab === "fullDescription"
+                ? "Full Description"
+                : tab === "features"
+                ? "Features"
+                : // : tab === "team"
+                  // ? "Team Members"
+                  "Gallery"}
+            </button>
+          ))}
         </div>
 
         {/* Tab Content */}
@@ -434,7 +454,7 @@ const AdminManageAbout = () => {
           </div>
         )}
 
-        {activeTab === "team" && (
+        {/* {activeTab === "team" && (
           <div>
             <div className="flex justify-end mb-8">
               <button
@@ -510,94 +530,129 @@ const AdminManageAbout = () => {
               </tbody>
             </table>
           </div>
-        )}
+        )} */}
 
         {activeTab === "gallery" && (
-          <div>
-            <Dropzone type="galleryFiles" />
-            <table className="w-full border border-[#1a354e] rounded mt-4">
-              <thead className="bg-[#0d203a] text-white">
-                <tr>
-                  <th className="p-3 border border-[#1a354e]">Preview</th>
-                  <th className="p-3 border border-[#1a354e]">File Type</th>
-                  <th className="p-3 border border-[#1a354e]">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {aboutData.gallery.map((url, idx) => (
-                  <tr
-                    key={`existing-${idx}`}
-                    className="border-b border-[#2E5B84] hover:bg-blue-50"
-                  >
-                    <td className="p-3 border border-[#2E5B84] text-center">
-                      {url.endsWith(".mp4") ? (
-                        <video
-                          src={url}
-                          controls
-                          className="w-32 h-20 rounded mx-auto"
-                        />
-                      ) : (
-                        <img
-                          src={url}
-                          alt="gallery"
-                          className="w-32 h-20 object-cover rounded mx-auto"
-                        />
-                      )}
-                    </td>
-                    <td className="p-3 border border-[#2E5B84] text-center">
-                      {url.endsWith(".mp4") ? "Video" : "Image"}
-                    </td>
-                    <td className="p-3 border border-[#2E5B84] text-center">
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteExistingGalleryItem(idx)}
-                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+          <div className="bg-white rounded-xl shadow-lg border border-[#1a354e]/20 p-6">
+            {/* Upload Section */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-[#0d203a] mb-2">
+                Gallery Manager
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Manage images and videos shown on the website.
+              </p>
+              <Dropzone type="galleryFiles" />
+            </div>
 
-                {files.galleryFiles.map((file, i) => {
-                  const url = URL.createObjectURL(file);
-                  return (
-                    <tr
-                      key={`new-${i}`}
-                      className="border-b border-[#2E5B84] hover:bg-blue-50"
+            {/* Gallery Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+              {/* Existing Files */}
+              {aboutData.gallery.map((url, idx) => (
+                <div
+                  key={`existing-${idx}`}
+                  className="group relative rounded-lg overflow-hidden shadow border border-gray-200 bg-gray-50"
+                >
+                  {/* Media */}
+                  {/* Media */}
+                  {isVideoUrl(url) ? (
+                    <>
+                      {/* Video Badge */}
+                      <span className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10">
+                        <FaVideo size={10} /> Video
+                      </span>
+
+                      <video
+                        src={url}
+                        className="w-full h-44 object-cover"
+                        muted
+                      />
+                    </>
+                  ) : (
+                    <>
+                      {/* Image Badge */}
+                      <span className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10">
+                        <FaImage size={10} /> Image
+                      </span>
+
+                      <img
+                        src={url}
+                        alt="gallery"
+                        className="w-full h-44 object-cover"
+                      />
+                    </>
+                  )}
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition" />
+
+                  {/* Delete Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteExistingGalleryItem(idx)}
+                    className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                    title="Delete"
+                  >
+                    <FaTrash size={12} />
+                  </button>
+
+                  {/* Edit Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleEditGalleryItem(idx)}
+                    className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white text-[#0d203a] px-4 py-1.5 rounded-full text-xs font-medium shadow opacity-0 group-hover:opacity-100 transition"
+                  >
+                    <FaEdit className="inline mr-1" /> Edit
+                  </button>
+                </div>
+              ))}
+
+              {/* New Files Preview */}
+              {files.galleryFiles.map((file, i) => {
+                const url = URL.createObjectURL(file);
+                return (
+                  <div
+                    key={`new-${i}`}
+                    className="group relative rounded-lg overflow-hidden shadow border border-blue-200 bg-blue-50"
+                  >
+                    {file.type.startsWith("video") ? (
+                      <video src={url} className="w-full h-44 object-cover" />
+                    ) : (
+                      <img
+                        src={url}
+                        alt="gallery"
+                        className="w-full h-44 object-cover"
+                      />
+                    )}
+
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition" />
+
+                    {/* Delete */}
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteGalleryFile(i)}
+                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      title="Remove"
                     >
-                      <td className="p-3 border border-[#2E5B84] text-center">
-                        {file.type.startsWith("video") ? (
-                          <video
-                            src={url}
-                            controls
-                            className="w-32 h-20 rounded mx-auto"
-                          />
-                        ) : (
-                          <img
-                            src={url}
-                            alt="gallery"
-                            className="w-32 h-20 object-cover rounded mx-auto"
-                          />
-                        )}
-                      </td>
-                      <td className="p-3 border border-[#2E5B84] text-center">
-                        {file.type.startsWith("video") ? "Video" : "Image"}
-                      </td>
-                      <td className="p-3 border border-[#2E5B84] text-center">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteGalleryFile(i)}
-                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      <FaTrash size={12} />
+                    </button>
+
+                    {/* Label */}
+                    <span className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                      New
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* Empty State */}
+              {aboutData.gallery.length === 0 &&
+                files.galleryFiles.length === 0 && (
+                  <div className="col-span-full text-center text-gray-500 py-10">
+                    No gallery items uploaded yet.
+                  </div>
+                )}
+            </div>
           </div>
         )}
       </div>
