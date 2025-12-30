@@ -21,7 +21,7 @@ const AdminManageTailorMadeTour = () => {
   });
 
   const [files, setFiles] = useState({ howItWorks: [], gallery: [] });
-  
+  const MAX_GALLERY_IMAGES = 6;
 
   // -------------------- Fetch Tour Data --------------------
   useEffect(() => {
@@ -30,9 +30,7 @@ const AdminManageTailorMadeTour = () => {
 
   const fetchTour = async () => {
     try {
-      const res = await axiosInstance.get(
-        "/tailor-made-tours"
-      );
+      const res = await axiosInstance.get("/tailor-made-tours");
       if (res.data) {
         setTourData({
           description: res.data.description || "",
@@ -44,7 +42,7 @@ const AdminManageTailorMadeTour = () => {
           fullDescription: res.data.fullDescription?.length
             ? res.data.fullDescription
             : [{ description: "" }],
-          gallery: res.data.gallery?.length ? res.data.gallery.slice(0, 2) : [],
+          gallery: res.data.gallery?.length ? res.data.gallery.slice(0, MAX_GALLERY_IMAGES) : [],
         });
       }
     } catch (err) {
@@ -52,8 +50,6 @@ const AdminManageTailorMadeTour = () => {
       toast.error("Failed to load Tailor Made Tour data");
     }
   };
-
-
 
   // -------------------- Handlers --------------------
   const handleChange = (e, section, idx) => {
@@ -85,6 +81,23 @@ const AdminManageTailorMadeTour = () => {
     }
   };
 
+  const handleGalleryUpload = (newFiles) => {
+    const existingCount = tourData.gallery.length + files.gallery.length;
+    const availableSlots = MAX_GALLERY_IMAGES - existingCount;
+
+    if (availableSlots <= 0) {
+      toast.error(`Maximum ${MAX_GALLERY_IMAGES} gallery images allowed`);
+      return;
+    }
+
+    const filesToAdd = newFiles.slice(0, availableSlots);
+
+    setFiles((prev) => ({
+      ...prev,
+      gallery: [...prev.gallery, ...filesToAdd],
+    }));
+  };
+
   const handleDrop = (acceptedFiles, section, idx) => {
     const validFiles = acceptedFiles.filter((f) => f.size <= MAX_FILE_SIZE);
     if (!validFiles.length) return;
@@ -98,7 +111,7 @@ const AdminManageTailorMadeTour = () => {
       updated[idx].image = URL.createObjectURL(validFiles[0]);
       setTourData({ ...tourData, howItWorks: updated });
     } else if (section === "gallery") {
-      setFiles({ ...files, gallery: [...files.gallery, ...validFiles] });
+      handleGalleryUpload(validFiles);
     }
   };
 
@@ -108,23 +121,26 @@ const AdminManageTailorMadeTour = () => {
       accept: { "image/*": [] },
       multiple: section === "gallery",
     });
+    const isGalleryFull =
+      section === "gallery" &&
+      tourData.gallery.length + files.gallery.length >= MAX_GALLERY_IMAGES;
 
     return (
       <div
-        {...getRootProps()}
-        className="border-2 border-dashed border-[#2E5B84] p-4 text-center rounded cursor-pointer hover:bg-blue-50"
+        {...(!isGalleryFull ? getRootProps() : {})}
+        className={`border-2 border-dashed p-4 text-center rounded cursor-pointer
+    ${isGalleryFull ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-50"}
+  `}
       >
         <input {...getInputProps()} />
         <p className="text-[#2E5B84] font-medium">
-          {section === "gallery"
-            ? "Drag & drop up to 2 images or click"
-            : "Drag & drop image or click"}
+          {isGalleryFull
+            ? "Gallery limit reached"
+            : "Drag & drop 6 images or click"}
         </p>
       </div>
     );
   };
-
-
 
   // -------------------- Save Tour --------------------
   const handleSubmit = async () => {
@@ -140,13 +156,9 @@ const AdminManageTailorMadeTour = () => {
         (file) => file && formData.append("galleryFiles", file)
       );
 
-      const res = await axiosInstance.post(
-        "/tailor-made-tours",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axiosInstance.post("/tailor-made-tours", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast.success("Tailor Made Tour updated successfully!");
       setTourData(res.data);
@@ -382,30 +394,87 @@ const AdminManageTailorMadeTour = () => {
               </tbody>
             </table>
 
-            <label className="font-semibold mt-2">Gallery (2 images):</label>
-            <Dropzone section="gallery" />
-            <div className="flex gap-2 mt-2">
-              {tourData.gallery?.slice(0, 2).map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  alt="img"
-                  className="w-32 h-20 object-cover rounded"
-                />
+            <label className="font-semibold mt-2">
+              Gallery (Max 6 images):
+            </label>
+
+            <Dropzone section="gallery" onFilesAdded={handleGalleryUpload} />
+
+            <div className="flex gap-3 mt-3 flex-wrap">
+              {/* Existing Images */}
+              {tourData.gallery.map((url, idx) => (
+                <div key={idx} className="relative group">
+                  <img
+                    src={url}
+                    alt="gallery"
+                    className="w-32 h-20 object-cover rounded border"
+                  />
+
+                  {/* Delete */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTourData((prev) => ({
+                        ...prev,
+                        gallery: prev.gallery.filter((_, i) => i !== idx),
+                      }))
+                    }
+                    className="absolute top-1 right-1 bg-red-600 text-white text-xs px-1 rounded hidden group-hover:block"
+                  >
+                    ✕
+                  </button>
+
+                  {/* Replace */}
+                  <label className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-1 rounded cursor-pointer hidden group-hover:block">
+                    Edit
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        setFiles((prev) => ({
+                          ...prev,
+                          gallery: [...prev.gallery, file],
+                        }));
+
+                        setTourData((prev) => ({
+                          ...prev,
+                          gallery: prev.gallery.filter((_, i) => i !== idx),
+                        }));
+                      }}
+                    />
+                  </label>
+                </div>
               ))}
+
+              {/* New Images Preview */}
               {files.gallery.map((file, idx) => (
-                <img
-                  key={idx}
-                  src={URL.createObjectURL(file)}
-                  alt="img"
-                  className="w-32 h-20 object-cover rounded"
-                />
+                <div key={idx} className="relative group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="gallery"
+                    className="w-32 h-20 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFiles((prev) => ({
+                        ...prev,
+                        gallery: prev.gallery.filter((_, i) => i !== idx),
+                      }))
+                    }
+                    className="absolute top-1 right-1 bg-red-600 text-white text-xs px-1 rounded hidden group-hover:block"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
           </div>
         )}
-
-        
       </div>
     </div>
   );

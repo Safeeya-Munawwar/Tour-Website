@@ -74,7 +74,18 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
     const galleryFiles = req.files.filter(
       (f) => f.fieldname === "galleryFiles"
     );
-    data.gallery.push(...galleryFiles.map((f) => f.path));
+
+    // existing gallery from frontend
+    data.gallery = Array.isArray(data.gallery) ? data.gallery : [];
+
+    // ADD new images 
+    const newGalleryImages = galleryFiles.map((f) => f.path);
+
+    const MAX_GALLERY_IMAGES = 6; 
+
+    // merge existing + new, limit to max allowed
+    data.gallery = [...data.gallery, ...newGalleryImages].slice(0, MAX_GALLERY_IMAGES);
+    
 
     const updatedTour = await TailorMadeTour.findOneAndUpdate({}, data, {
       new: true,
@@ -90,7 +101,6 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
 
 // --------------------- User inquiries ---------------------
 
-// Save a new inquiry
 // Save a new inquiry and send emails
 router.post("/inquiry", async (req, res) => {
   try {
@@ -164,13 +174,21 @@ router.post("/inquiry", async (req, res) => {
           <tr>
           <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Start Date</td>
           <td style="border: 1px solid #1a354e; padding: 8px;">
-            ${inquiry.startDate ? inquiry.startDate.toISOString().slice(0, 10) : "N/A"}
+            ${
+              inquiry.startDate
+                ? inquiry.startDate.toISOString().slice(0, 10)
+                : "N/A"
+            }
           </td>
         </tr>
         <tr>
           <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">End Date</td>
           <td style="border: 1px solid #1a354e; padding: 8px;">
-            ${inquiry.endDate ? inquiry.endDate.toISOString().slice(0, 10) : "N/A"}
+            ${
+              inquiry.endDate
+                ? inquiry.endDate.toISOString().slice(0, 10)
+                : "N/A"
+            }
           </td>
         </tr>
         

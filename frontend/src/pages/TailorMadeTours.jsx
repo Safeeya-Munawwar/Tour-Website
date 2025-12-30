@@ -255,16 +255,17 @@ const TailorMadeTours = () => {
           )}
         </div>
 
-        {/* ------------------------------ REVIEWS ------------------------------ */}
+        {/* ------------------------------ PARAGRPH & GALLERY ------------------------------ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          {/* Review Icons */}
-          <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-8 flex-wrap">
-            {tourData?.gallery?.slice(0, 2).map((img, idx) => (
+          {/* Gallery */}
+          <div className="flex justify-center mb-6 sm:mb-8 flex-wrap">
+            {tourData?.gallery?.map((img, idx) => (
               <img
                 key={idx}
                 src={img}
                 alt={`Review ${idx + 1}`}
-                className="w-32 sm:w-56 h-auto"
+                className="w-40 h-40 object-cover hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
               />
             ))}
           </div>
