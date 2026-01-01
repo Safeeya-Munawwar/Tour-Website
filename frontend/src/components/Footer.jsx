@@ -13,12 +13,13 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { axiosInstance } from "../lib/axios";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Footer() {
   const [contact, setContact] = useState(null);
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchContact = async () => {
@@ -26,31 +27,39 @@ export default function Footer() {
         const res = await axiosInstance.get("/contact");
         setContact(res.data);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching contact info:", err);
       }
     };
     fetchContact();
   }, []);
 
-  const subscribeNewsletter = async (e) => {
-    e.preventDefault();
-    if (!email) {
-      toast.warning("Please enter your email!", { theme: "colored" });
-      return;
+  // ------------------- Newsletter Subscription -------------------
+ // ------------------- Newsletter Subscription -------------------
+const subscribeNewsletter = async (e) => {
+  e.preventDefault();
+  if (!email.trim()) {
+    toast.warning("Please enter your email!", { theme: "colored" });
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await axiosInstance.post("/newsletter", { email });
+
+    if (res.data.success) {
+      toast.success(res.data.message || "Subscribed successfully!", { theme: "colored" });
+      setEmail(""); // clear input
+    } else {
+      toast.error(res.data.message || "Subscription failed", { theme: "colored" });
     }
-    try {
-      const res = await axiosInstance.post("/newsletter", { email });
-      if (res.data.success) {
-        toast.success("Subscribed successfully!", { theme: "colored" });
-        setEmail("");
-      } else {
-        toast.error("Subscription failed", { theme: "colored" });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Server error", { theme: "colored" });
-    }
-  };
+  } catch (err) {
+    console.error("Newsletter subscription error:", err);
+    toast.error("Server error. Please try again later.", { theme: "colored" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const socialIcons = {
     facebook: FaFacebookF,
@@ -77,13 +86,13 @@ export default function Footer() {
 
   return (
     <footer className="bg-header-gradient text-white pt-20 pb-10 font-[Poppins]">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
-
-        {/* LOGO & SOCIAL */}
+        {/* ---------------- LOGO & SOCIAL ---------------- */}
         <div className="flex flex-col items-center text-center">
           <img
             src="/images/logo.webp"
-            alt="Logo"
+            alt="NetLanka Travels Logo"
             className="w-40 mb-5 opacity-95"
           />
           <p className="text-gray-200 text-[15px] leading-relaxed mb-4 max-w-sm">
@@ -91,7 +100,7 @@ export default function Footer() {
             offering tailor-made tours, adventures, and premium travel
             experiences.
           </p>
-          <div className="flex gap-4 mt-2">
+          <div className="flex gap-4 mt-2" aria-label="Social Media Links">
             {contact?.socialMedia?.map((sm, i) => {
               const Icon = socialIcons[sm.platform?.toLowerCase()];
               if (!Icon) return null;
@@ -101,6 +110,7 @@ export default function Footer() {
                   href={sm.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Visit our ${sm.platform} page`}
                   className="hover:scale-110 transition-transform"
                 >
                   <Icon size={20} />
@@ -110,14 +120,17 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* CONTACT INFO */}
+        {/* ---------------- CONTACT INFO ---------------- */}
         <div>
           <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
           <address className="not-italic space-y-5">
             {contact?.phone && (
               <div className="flex gap-3 items-center">
                 <FaPhoneAlt />
-                <a href={`tel:${contact.phone}`} className="hover:text-blue-300">
+                <a
+                  href={`tel:${contact.phone}`}
+                  className="hover:text-blue-300"
+                >
                   {contact.phone}
                 </a>
               </div>
@@ -163,16 +176,15 @@ export default function Footer() {
               <div className="flex gap-3 items-center">
                 <FaClock />
                 <span>
-                  {contact.workingHours.start} -{" "}
-                  {contact.workingHours.end}
+                  {contact.workingHours.start} - {contact.workingHours.end}
                 </span>
               </div>
             )}
           </address>
         </div>
 
-        {/* QUICK LINKS */}
-        <nav>
+        {/* ---------------- QUICK LINKS ---------------- */}
+        <nav aria-label="Quick Links">
           <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
           <ul className="space-y-3 text-gray-200">
             {menuItems.map((item, i) => (
@@ -185,7 +197,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        {/* NEWSLETTER */}
+        {/* ---------------- NEWSLETTER ---------------- */}
         <div>
           <h3 className="text-xl font-semibold mb-6">
             Subscribe to our Newsletter
@@ -196,17 +208,27 @@ export default function Footer() {
           <form
             className="flex flex-col gap-3"
             onSubmit={subscribeNewsletter}
+            aria-label="Newsletter Subscription Form"
           >
             <input
               type="email"
+              name="email"
               placeholder="Enter your email"
-              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              aria-required="true"
+              aria-label="Email Address"
             />
-            <button className="w-full py-3 bg-white text-black rounded-full font-semibold">
-              Subscribe
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-colors ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? "Subscribing..." : "Subscribe"}
             </button>
           </form>
         </div>

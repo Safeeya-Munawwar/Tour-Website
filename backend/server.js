@@ -37,7 +37,7 @@ const eventRoutes = require("./routes/event");
 const eventTourBookingRoutes = require("./routes/eventTourBooking");
 const quickTaxiRoute = require("./routes/quickTaxi");
 const adminNotificationsRoute = require("./routes/adminNotifications");
-
+const newsletterRoute = require("./routes/newsletter");
 
 // Import allowedOrigins
 const allowedOrigins = require("./config/cors.config");
@@ -90,6 +90,7 @@ app.use("/api/book-tour", tourBookingRoute);
 app.use("/api/tour-reviews", tourReviewsRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/quick-taxi", quickTaxiRoute);
+app.use("/api/newsletter", newsletterRoute);
 
 // -------------------- CONNECT TO MONGODB --------------------
 const PORT = process.env.PORT || 5000;

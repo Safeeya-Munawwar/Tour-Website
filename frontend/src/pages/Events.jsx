@@ -45,16 +45,19 @@ export default function Events() {
         style={{ backgroundImage: "url('/images/event.webp')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-        <div
-          className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[300px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg flex items-center justify-end transition-all duration-700 ease-out ${
-            showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
-        >
-          <h2 className="text-xl md:text-3xl leading-snug text-right">
-            Upcoming <br /> Events
-          </h2>
-          <div className="w-[2px] bg-white h-10 md:h-12"></div>
-        </div>
+        <div className="absolute inset-0 bg-black/20"></div>
+
+          <div
+            className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[340px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
+              showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
+          >
+            <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
+              Upcoming Events<br />
+              Don't Miss...
+            </h2>
+            <div className="w-[2px] bg-white h-10 md:h-12"></div>
+          </div>
       </div>
 
       {/* EVENTS HEADING */}
@@ -82,15 +85,16 @@ export default function Events() {
             currentEvents.map((event) => (
               <Link
                 key={event._id}
-                to={`/events/${event._id}`} // navigate by ID
+                to={`/events/${event._id}`}
                 state={event}
                 className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 flex flex-col h-[400px]"
-                style={{
-                  backgroundImage: `url(${event.img})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
               >
+                <img
+                  src={event.img}
+                  alt={event.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
                 <div className="absolute bottom-0 text-center w-full p-4 bg-black/50 backdrop-blur-sm flex flex-col">
                   <p className="text-xs uppercase tracking-widest text-gray-300 mb-1">
                     {new Date(event.date).toLocaleDateString()}
@@ -105,7 +109,9 @@ export default function Events() {
               </Link>
             ))
           ) : (
-            <p className="text-center text-gray-500 col-span-3">No events available.</p>
+            <p className="text-center text-gray-500 col-span-3">
+              No events available.
+            </p>
           )}
         </div>
 

@@ -1,120 +1,140 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 
-export default function GalleryVideoSplit() {
-  const videoSrc = "/netlanka.mp4";
-  const audioSrc = "/background-audio.mp3";
-
-  const leftImages = [
-    "/images/about-desc.webp",
-    "/images/about-header.webp",
-    "/images/blog.webp",
-    "/images/blogSrilanka.webp",
-    "/images/light.webp",
-    "/images/round.webp",
-    "/images/community-header.webp",
-    "/images/contact-header.webp",
-    "/images/sigiriya.webp",
-    "/images/stats.webp",
-    "/images/team-header.webp",
-    "/images/transport-header.webp",
-    "/images/wildlife.webp",
-    "/images/d2.webp",
-    "/images/daytours.webp",
-    "/images/destination.webp",
-  ];
-
-  const rightImages = [
-    "/images/sigiriya-art.webp",
-    "/images/customtour-header.webp",
-    "/images/d2.webp",
-    "/images/daytours.webp",
-    "/images/destination.webp",
-    "/images/event.webp",
-    "/images/experience-header.webp",
-    "/images/journey-header.webp",
-  ];
-
-  const [leftOrder, setLeftOrder] = useState(leftImages);
-  const [rightOrder, setRightOrder] = useState(rightImages);
-  const [audioPlaying, setAudioPlaying] = useState(false);
-
-  const audioRef = useRef(null);
-  const videoRef = useRef(null);
-
-  // Shuffle images continuously
+/* Film Roll Column */
+const FilmRoll = ({ images, direction = "up", label }) => {
+  // Preload images to prevent black gaps
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLeftOrder((prev) => [...prev].sort(() => Math.random() - 0.5));
-      setRightOrder((prev) => [...prev].sort(() => Math.random() - 0.5));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const toggleAudio = () => {
-    if (!audioRef.current) return;
-    if (audioPlaying) {
-      audioRef.current.pause();
-      videoRef.current.muted = true;
-    } else {
-      audioRef.current.play();
-      videoRef.current.muted = false;
-    }
-    setAudioPlaying(!audioPlaying);
-  };
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [images]);
 
   return (
-    <section className="relative w-full h-[80vh] flex overflow-hidden bg-gray-900">
-      {/* Left Grid */}
-      <div className="hidden lg:grid grid-rows-4 grid-cols-2 w-1/6 h-full gap-0">
-        {leftOrder.map((img, idx) => (
-          <div key={idx} className="w-full h-full overflow-hidden">
-            <img
-              src={img}
-              alt={`left-${idx}`}
-              className="w-full h-full object-cover transition-all duration-1000 hover:scale-105"
-            />
-          </div>
+    <div className="relative h-full w-full overflow-hidden" aria-label={label}>
+      <div
+        className={`absolute w-full transform-gpu ${
+          direction === "up" ? "animate-scroll-up" : "animate-scroll-down"
+        } hover:[animation-play-state:paused] transition-transform duration-500`}
+      >
+        {[...images, ...images].map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            alt="Net Lanka Travels gallery"
+            className="w-full h-[220px] object-cover bg-gray-800 hover:scale-105 hover:shadow-lg transition-transform duration-300"
+          />
         ))}
       </div>
+    </div>
+  );
+};
 
-      {/* Center Video */}
-      <div className="flex-1 flex justify-center items-center relative">
-        <video
-          ref={videoRef}
-          src={videoSrc}
-          autoPlay
-          loop
-          playsInline
-          muted={!audioPlaying}
-          className="max-h-full max-w-full object-contain rounded-xl shadow-xl"
-        />
-        <audio ref={audioRef} src={audioSrc} loop />
+/* Main Component */
+export default function GalleryVideo() {
+  const videoRef = useRef(null);
+  const [muted, setMuted] = useState(true);
 
-        {/* Audio Toggle Icon */}
-        <button
-          onClick={toggleAudio}
-          className="absolute top-4 right-4 z-50 bg-black/70 p-3 rounded-full hover:bg-black/90 transition"
+  const toggleAudio = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setMuted(videoRef.current.muted);
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
+
+  const leftImages = Array.from(
+    { length: 15 },
+    (_, i) => `/images/sl${i + 1}.webp`
+  );
+  const rightImages = Array.from(
+    { length: 15 },
+    (_, i) => `/images/sl${i + 16}.webp`
+  );
+
+  return (
+    <section
+      className="relative h-[85vh] w-full bg-black overflow-hidden group"
+      aria-labelledby="netlanka-gallery-heading"
+    >
+      <h2 id="netlanka-gallery-heading" className="sr-only">
+        Net Lanka Travels Sri Lanka Tour Gallery Video
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 h-full">
+        {/* LEFT FILM ROLL (hidden on mobile) */}
+        <div className="hidden md:block">
+          <FilmRoll
+            images={leftImages}
+            direction="up"
+            label="Sri Lanka travel image film roll left"
+          />
+        </div>
+
+        {/* CENTER VIDEO */}
+        <div
+          className="relative h-full w-full bg-black overflow-hidden cursor-pointer shadow-2xl"
+          onClick={togglePlay}
         >
-          {audioPlaying ? (
-            <FaVolumeUp className="text-white text-xl" />
-          ) : (
-            <FaVolumeMute className="text-white text-xl" />
-          )}
-        </button>
-      </div>
+          {/* Static background image */}
+          <img
+            src="/images/stats.webp"
+            alt="Sri Lanka scenic background"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
 
-      {/* Right Grid */}
-      <div className="hidden lg:grid grid-rows-4 grid-cols-2 w-1/6 h-full gap-0">
-        {rightOrder.map((img, idx) => (
-          <div key={idx} className="w-full h-full overflow-hidden">
-            <img
-              src={img}
-              alt={`right-${idx}`}
-              className="w-full h-full object-cover transition-all duration-1000 hover:scale-105"
-            />
+          {/* Main video */}
+          <video
+            ref={videoRef}
+            src="https://res.cloudinary.com/dz7ucktb1/video/upload/v1767248625/netlanka_w4gjts.mp4"
+            autoPlay
+            loop
+            muted={muted}
+            playsInline
+            preload="metadata"
+            className="relative z-10 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            aria-describedby="video-description"
+          />
+
+          <p id="video-description" className="sr-only">
+            Promotional travel video showcasing Sri Lanka destinations by Net
+            Lanka Travels.
+          </p>
+
+          {/* Watermark */}
+          <div className="pointer-events-none absolute top-6 left-1/2 -translate-x-1/2 z-20 text-yellow-200 text-lg md:text-xl font-serif tracking-wider drop-shadow-lg uppercase whitespace-nowrap">
+            Net Lanka Travels
           </div>
-        ))}
+
+          {/* Audio button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); 
+              toggleAudio();
+            }}
+            className="absolute bottom-5 right-5 z-30 bg-black/40 hover:bg-black/70 text-white p-3 rounded-full backdrop-blur-md transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            aria-label={muted ? "Unmute video audio" : "Mute video audio"}
+          >
+            {muted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
+          </button>
+        </div>
+
+        {/* RIGHT FILM ROLL (hidden on mobile) */}
+        <div className="hidden md:block">
+          <FilmRoll
+            images={rightImages}
+            direction="down"
+            label="Sri Lanka travel image film roll right"
+          />
+        </div>
       </div>
     </section>
   );

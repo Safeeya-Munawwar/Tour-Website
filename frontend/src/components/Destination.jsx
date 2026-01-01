@@ -53,11 +53,11 @@ export default function DestinationHome() {
                   alt={`${item.title} – popular travel destination in Sri Lanka`}
                   className="w-full h-56 object-cover rounded-xl shadow-md"
                   loading="lazy"
+                  width={400}
+                  height={224}
                 />
 
-                <p className="text-gray-500 text-sm mt-4">
-                  {item.subtitle}
-                </p>
+                <p className="text-gray-500 text-sm mt-4">{item.subtitle}</p>
 
                 <h3 className="text-xl font-semibold text-gray-900 mt-1">
                   {item.title}
@@ -72,10 +72,12 @@ export default function DestinationHome() {
 
           {/* CTA Button */}
           <div className="col-span-full justify-self-center mt-12">
-            <Link to="/destinations" aria-label="View all Sri Lanka destinations">
-              <button className="bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition">
-                View All Destinations
-              </button>
+            <Link
+              to="/destinations"
+              className="inline-block bg-[#1A1A1A] hover:bg-black text-white font-semibold px-10 py-4 rounded-full text-lg transition text-center"
+              aria-label="View all Sri Lanka destinations"
+            >
+              View All Destinations
             </Link>
           </div>
         </div>

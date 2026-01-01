@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 
@@ -6,62 +6,74 @@ export default function DayTour() {
   const [tours, setTours] = useState([]);
   const [showText, setShowText] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 8;
 
-  const perPage = 8; // ✅ 8 cards per page
-
-  // Fetch tours from backend
+  // Fetch tours
   useEffect(() => {
-    async function fetchTours() {
+    const fetchTours = async () => {
       try {
         const res = await axiosInstance.get("/day-tours");
         if (res.data.success) setTours(res.data.tours || []);
       } catch (err) {
         console.error("Error fetching tours:", err);
       }
-    }
+    };
     fetchTours();
   }, []);
 
+  // Hero animation
   useEffect(() => {
     const t = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(t);
   }, []);
- // Scroll to top on page change
+
+  // Scroll to top on page change
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
-  // Pagination logic
+
   const totalPages = Math.ceil(tours.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentTours = tours.slice(indexOfFirst, indexOfLast);
+
+  const currentTours = useMemo(() => {
+    const start = (currentPage - 1) * perPage;
+    return tours.slice(start, start + perPage);
+  }, [currentPage, tours]);
 
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
       {/* HERO HEADER */}
-      <div
-        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/daytours.webp')" }}
-      >
+      <div className="w-full h-[360px] md:h-[560px] relative flex items-center justify-center text-white">
+        {/* Hero Image */}
+        <img
+          src="/images/daytours.webp"
+          alt="Travel Day Tour in Sri Lanka"
+          className="absolute inset-0 w-full h-full object-cover"
+          width={1920}
+          height={1080}
+          fetchpriority="high" // ✅ load immediately
+        />
+
+        {/* Overlay */}
         <div className="absolute inset-0 bg-black/20"></div>
 
+        {/* Hero Text */}
         <div
           className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[300px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
+          <h1 className="text-xl md:text-3xl leading-snug text-right mr-4">
             Travel Day Tour <br /> With Us…
-          </h2>
+          </h1>
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
 
       {/* INTRO */}
       <div className="max-w-[1100px] mx-auto text-center px-6 mt-10">
-        <div className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
+        <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
           Day Tours
-        </div>
+        </p>
 
         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
           Enjoy A Day Tour In Sri Lanka
@@ -75,11 +87,11 @@ export default function DayTour() {
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </div>
 
-      {/* CARD GRID */}
+      {/* TOURS GRID */}
       <div className="space-y-10 px-6 sm:px-10 md:px-32 mt-16">
         {currentTours.length > 0 ? (
           currentTours.map((t) => (
-            <div
+            <article
               key={t._id}
               className="flex flex-col lg:flex-row bg-gray-100 shadow-lg rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl"
             >
@@ -96,7 +108,8 @@ export default function DayTour() {
                 <div className="w-full aspect-[19/20]">
                   <img
                     src={t.img}
-                    alt={t.title}
+                    alt={`${t.title} in ${t.location}`}
+                    loading="eager" // ✅ load immediately
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
@@ -108,78 +121,73 @@ export default function DayTour() {
                   {t.title}
                 </h2>
 
-                <div className="text-sm font-semibold tracking-widest text-[#2E5B84] uppercase mb-3">
+                <p className="text-sm font-semibold tracking-widest text-[#2E5B84] uppercase mb-3">
                   {t.location}
-                </div>
-
-                <p className="text-gray-600 leading-relaxed mb-6">
-                  {t.desc}
                 </p>
+
+                <p className="text-gray-600 leading-relaxed mb-6">{t.desc}</p>
 
                 <Link
                   to={`/day-tour-detail/${t._id}`}
                   className="mx-auto lg:mx-0"
                 >
-                  <button className="inline-flex items-center gap-2 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 transition">
+                  <button
+                    aria-label={`View details for ${t.title}`}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 transition"
+                  >
                     View Tour →
                   </button>
                 </Link>
               </div>
-            </div>
+            </article>
           ))
         ) : (
-          <p className="text-center text-gray-500">
-            No tours available.
-          </p>
+          <p className="text-center text-gray-500">No tours available.</p>
         )}
       </div>
 
       {/* PAGINATION */}
-      {totalPages >= 1 && (
-        <div className="flex justify-center items-center gap-2 mt-16 flex-wrap">
-          {/* Prev */}
+      {totalPages > 1 && (
+        <nav
+          aria-label="Pagination"
+          className="flex justify-center items-center gap-2 mt-16 flex-wrap"
+        >
           <button
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-2 rounded-lg border text-sm font-medium
-                       disabled:opacity-40 disabled:cursor-not-allowed
-                       hover:bg-gray-100"
+            aria-label="Previous page"
+            className="px-3 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100"
           >
             Prev
           </button>
 
-          {/* Page Numbers */}
           {[...Array(totalPages)].map((_, i) => {
             const page = i + 1;
             return (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-4 py-2 rounded-lg border text-sm font-semibold
-                  ${
-                    currentPage === page
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
+                aria-label={`Go to page ${page}`}
+                className={`px-4 py-2 rounded-lg border text-sm font-semibold ${
+                  currentPage === page
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
               >
                 {page}
               </button>
             );
           })}
 
-          {/* Next */}
           <button
-            onClick={() =>
-              setCurrentPage((p) => Math.min(p + 1, totalPages))
-            }
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded-lg border text-sm font-medium
-                       disabled:opacity-40 disabled:cursor-not-allowed
-                       hover:bg-gray-100"
+            aria-label="Next page"
+            className="px-3 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100"
           >
             Next
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );

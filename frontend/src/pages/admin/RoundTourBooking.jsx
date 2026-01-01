@@ -124,7 +124,7 @@ const RoundTourBookingAdmin = () => {
   // ---------------- PAGINATION ----------------
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  
+
   const filteredBookings = bookings.filter((b) => {
     const matchesSearch =
       b.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -274,8 +274,11 @@ const RoundTourBookingAdmin = () => {
                         {b.pickupLocation || "—"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-                        {b.startDate || "—"}
+                        {b.startDate
+                          ? new Date(b.startDate).toISOString().split("T")[0]
+                          : "—"}
                       </td>
+
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {/* Status selector */}
                         <div className="flex justify-center">
@@ -464,7 +467,11 @@ const RoundTourBookingAdmin = () => {
                     Pickup Date:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedBooking.startDate || "—"}
+                    {selectedBooking.startDate
+                      ? new Date(selectedBooking.startDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : "—"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">

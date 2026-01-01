@@ -25,20 +25,6 @@ export default function Stories() {
     fetchLatestBlogs();
   }, []);
 
-  if (loading)
-    return (
-      <p className="text-center mt-10 text-gray-500" aria-live="polite">
-        Loading travel stories...
-      </p>
-    );
-
-  if (!stories.length)
-    return (
-      <p className="text-center mt-10 text-gray-500">
-        No travel stories available at the moment.
-      </p>
-    );
-
   return (
     <section
       className="w-full py-16 md:py-20 bg-gray-100"
@@ -60,45 +46,61 @@ export default function Stories() {
 
       {/* Blog Cards */}
       <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 px-4 md:px-6">
-        {stories.map((story) => (
-          <article
-            key={story._id}
-            className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col"
-          >
-            <img
-              src={story.heroImg}
-              alt={`${story.title} - Sri Lanka travel blog`}
-              className="w-full h-64 sm:h-72 md:h-[330px] object-cover rounded-t-xl"
-              loading="lazy"
-            />
-
-            <div className="p-4 sm:p-5 md:p-6 flex flex-col flex-1">
-              <h3 className="mt-2 text-xl sm:text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
-                {story.title}
-              </h3>
-
-              <time
-                dateTime={story.date}
-                className="text-gray-500 text-xs sm:text-sm mt-1"
+        {loading
+          ? // Skeleton Loading Placeholders
+            [1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse bg-gray-200 rounded-xl h-[400px]"
+              ></div>
+            ))
+          : stories.length === 0
+          ? // Empty state
+            <p className="col-span-3 text-center text-gray-500 mt-10">
+              No travel stories available at the moment.
+            </p>
+          : // Render stories
+            stories.map((story) => (
+              <article
+                key={story._id}
+                className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col focus-within:ring-2 focus-within:ring-[#8C1F28]"
               >
-                {new Date(story.date).toLocaleDateString()}
-              </time>
+                <img
+                  src={story.heroImg}
+                  alt={`${story.title} - Sri Lanka travel blog`}
+                  className="w-full h-64 sm:h-72 md:h-[330px] object-cover rounded-t-xl"
+                  loading="lazy"
+                  width={400}
+                  height={330}
+                />
 
-              <p className="text-gray-600 text-sm sm:text-base mt-3 leading-relaxed flex-1">
-                {story.description ||
-                  "Explore this travel story and discover unique experiences across Sri Lanka."}
-              </p>
+                <div className="p-4 sm:p-5 md:p-6 flex flex-col flex-1">
+                  <h3 className="mt-2 text-xl sm:text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+                    {story.title}
+                  </h3>
 
-              <Link
-                to={`/blog/${story.slug}`}
-                aria-label={`Read more about ${story.title}`}
-                className="mt-4 flex items-center gap-2 font-medium text-[#8C1F28] hover:underline text-sm sm:text-base"
-              >
-                Read More <IoIosArrowForward size={18} />
-              </Link>
-            </div>
-          </article>
-        ))}
+                  <time
+                    dateTime={story.date}
+                    className="text-gray-500 text-xs sm:text-sm mt-1"
+                  >
+                    {new Date(story.date).toLocaleDateString()}
+                  </time>
+
+                  <p className="text-gray-600 text-sm sm:text-base mt-3 leading-relaxed flex-1">
+                    {story.description ||
+                      "Explore this travel story and discover unique experiences across Sri Lanka."}
+                  </p>
+
+                  <Link
+                    to={`/blog/${story.slug}`}
+                    aria-label={`Read more about ${story.title}`}
+                    className="mt-4 inline-flex items-center gap-2 font-medium text-[#8C1F28] hover:underline text-sm sm:text-base px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C1F28]"
+                  >
+                    Read More <IoIosArrowForward size={18} />
+                  </Link>
+                </div>
+              </article>
+            ))}
       </div>
     </section>
   );

@@ -36,6 +36,7 @@ export default function Video1() {
             loop
             playsInline
             preload="metadata"
+            poster="/images/stats.webp"
             aria-hidden="true"
           >
             <source src={videoUrl} type="video/mp4" />

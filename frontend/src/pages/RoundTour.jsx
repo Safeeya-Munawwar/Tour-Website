@@ -24,7 +24,7 @@ export default function RoundTour() {
     }
     fetchTours();
   }, []);
- // Scroll to top on page change
+  // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -37,11 +37,15 @@ export default function RoundTour() {
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
       {/* HERO HEADER */}
-      <div
-        className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/round.webp')" }}
-      >
+      <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white">
+        <img
+          src="/images/round.webp"
+          alt="Round Tours Sri Lanka"
+          className="absolute inset-0 w-full h-full object-cover"
+          fetchpriority="high"
+        />
         <div className="absolute inset-0 bg-black/20"></div>
+
         <div
           className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[360px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
@@ -77,44 +81,45 @@ export default function RoundTour() {
       <div className="max-w-[1350px] mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
         {currentTours.length > 0 ? (
           currentTours.map((t) => (
-            <div
+            <article
               key={t._id}
               className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
             >
-              <img
-                src={t.img}
-                alt={t.title}
-                className="w-full h-[260px] object-cover"
-              />
-
+              <div className="relative w-full aspect-[4/3] bg-gray-200 overflow-hidden">
+                <img
+                  src={t.img}
+                  alt={`${t.title} - ${t.location || "Sri Lanka Tour"}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
               <div className="px-8 py-10 flex flex-col flex-grow">
                 <h3 className="text-2xl font-serif font-semibold mb-2">
                   {t.title}
                 </h3>
-
                 {t.location && (
-                  <div className="text-gray-500 italic mb-2">
-                    {t.location}
-                  </div>
+                  <div className="text-gray-500 italic mb-2">{t.location}</div>
                 )}
-
                 {t.days && (
                   <div className="font-semibold text-gray-700 mb-4">
                     {t.days}
                   </div>
                 )}
-
                 <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
                   {t.desc}
                 </p>
-
-                <Link to={`/round-tours/${t._id}`} className="mx-auto">
+                <Link
+                  to={`/round-tours/${t._id}`}
+                  aria-label={`Read more about ${t.title}`}
+                  className="mx-auto"
+                >
                   <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 transition">
                     READ MORE →
                   </button>
                 </Link>
               </div>
-            </div>
+            </article>
           ))
         ) : (
           <div className="col-span-3 text-center text-gray-500 p-8">
@@ -158,9 +163,7 @@ export default function RoundTour() {
 
           {/* Next */}
           <button
-            onClick={() =>
-              setCurrentPage((p) => Math.min(p + 1, totalPages))
-            }
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
             className="px-3 py-2 rounded-lg border text-sm font-medium
                        disabled:opacity-40 disabled:cursor-not-allowed

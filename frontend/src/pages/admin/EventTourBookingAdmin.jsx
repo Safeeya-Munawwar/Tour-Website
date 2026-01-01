@@ -255,7 +255,9 @@ const EventTourBookingAdmin = () => {
                         {Number(b.adults || 0) + Number(b.children || 0)}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-                        {b.startDate || "—"}
+                        {b.startDate
+                          ? new Date(b.startDate).toISOString().split("T")[0]
+                          : "—"}
                       </td>
 
                       {/* Status + WhatsApp/Email */}
@@ -436,7 +438,11 @@ const EventTourBookingAdmin = () => {
                     Date:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedBooking.startDate || "—"}
+                    {selectedBooking.startDate
+                      ? new Date(selectedBooking.startDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : "—"}
                   </p>
 
                   {/* Time */}

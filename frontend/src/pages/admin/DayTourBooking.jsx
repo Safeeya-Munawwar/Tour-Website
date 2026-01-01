@@ -276,7 +276,9 @@ const DayTourBookingAdmin = () => {
                         {b.pickupLocation || "—"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-                        {b.startDate || "—"}
+                        {b.startDate
+                          ? new Date(b.startDate).toISOString().split("T")[0]
+                          : "—"}
                       </td>
 
                       {/* Status selector + WhatsApp/Email */}
@@ -450,15 +452,6 @@ const DayTourBookingAdmin = () => {
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
-                    Pickup:
-                  </p>
-                  <p className="p-2 border-b border-blue-950">
-                    {selectedBooking.pickupLocation || "—"} on{" "}
-                    {selectedBooking.startDate || "—"} at{" "}
-                    {selectedBooking.startTime || "—"}
-                  </p>
-
-                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Pickup Location:
                   </p>
                   <p className="p-2 border-b border-blue-950">
@@ -469,7 +462,11 @@ const DayTourBookingAdmin = () => {
                     Pickup Date:
                   </p>
                   <p className="p-2 border-b border-blue-950">
-                    {selectedBooking.startDate || "—"}
+                    {selectedBooking.startDate
+                      ? new Date(selectedBooking.startDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : "—"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">

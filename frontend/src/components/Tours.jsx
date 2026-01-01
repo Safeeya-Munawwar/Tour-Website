@@ -70,6 +70,8 @@ export default function PopularTours() {
                   src={tour.img}
                   alt={`${tour.title} tour in ${tour.location || "Sri Lanka"}`}
                   className="w-full h-52 object-cover"
+                  width="full"
+                  height={208}
                   loading="lazy"
                 />
 
@@ -111,12 +113,10 @@ export default function PopularTours() {
                         ? `/round-tours/${tour._id}`
                         : `/day-tour-detail/${tour._id}`
                     }
-                    className="mt-5 w-full"
+                    className="mt-5 w-200px bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 mx-auto transition"
                     aria-label={`View details of ${tour.title}`}
                   >
-                    <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 mx-auto transition">
-                      Read More →
-                    </button>
+                    Read More →
                   </Link>
                 </div>
               </article>
