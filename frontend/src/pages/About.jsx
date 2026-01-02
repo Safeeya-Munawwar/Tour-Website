@@ -42,7 +42,7 @@ const About = () => {
         <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white overflow-hidden">
           {/* IMAGE */}
           <img
-            src="/images/s1.webp"
+            src="/images/about-header.webp"
             alt="About NetLanka Tours"
             className="absolute inset-0 w-full h-full object-cover"
             fetchpriority="high"

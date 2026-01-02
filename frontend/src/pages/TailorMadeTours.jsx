@@ -80,14 +80,16 @@ const TailorMadeTours = () => {
         role="banner"
       >
         <img
-          src="/images/s5.webp"
+          src="/images/n4.webp"
           alt="Tailor-made tour in Sri Lanka"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}
           height={1080}
           loading="eager"
           fetchpriority="high"
+          style={{ objectPosition: "45% 33%" }}
         />
+
         <div className="absolute inset-0 bg-black/20" />
         <div
           className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[480px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
