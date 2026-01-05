@@ -1,22 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+import { Outlet } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
-import AdminTopbar from "./AdminTopbar";
-import "../../index.css";
+import SuperAdminSidebar from "./SuperAdminSidebar";
 
-const AdminLayout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const AdminLayout = () => {
+  const role = sessionStorage.getItem("role"); // "admin" or "superadmin"
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        <AdminTopbar setSidebarOpen={setSidebarOpen} />
-
-        <div className="p-6 overflow-y-auto">{children}</div>
-      </div>
+      {role === "superadmin" ? <SuperAdminSidebar /> : <AdminSidebar />}
+      <main className="flex-1 overflow-y-auto">
+        <Outlet /> {/* Render child route here */}
+      </main>
     </div>
   );
 };

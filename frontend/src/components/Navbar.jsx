@@ -15,9 +15,9 @@ import {
 } from "react-icons/fa";
 
 export default function Navbar() {
-  const [openMenu, setOpenMenu] = useState(null); // desktop dropdown
-  const [mobileOpen, setMobileOpen] = useState(null); // mobile dropdown
-  const [sidebar, setSidebar] = useState(false); // mobile sidebar
+  const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(null);
+  const [sidebar, setSidebar] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [contact, setContact] = useState(null);
 
@@ -66,9 +66,9 @@ export default function Navbar() {
       dropdown: ["About", "Community Impact"],
     },
     {
-  name: "INSIGHT",
-  dropdown: ["Blog", "Events"],
-},
+      name: "INSIGHT",
+      dropdown: ["Blog", "Events"],
+    },
 
     { name: "EXPERIENCE" },
     { name: "CONTACT US" },
@@ -98,10 +98,10 @@ export default function Navbar() {
       //   return "/our-journey";
       case "Community Impact":
         return "/community-impact";
-    case "Blog":
-  return "/blog";
-case "Events":
-  return "/events";
+      case "Blog":
+        return "/blog";
+      case "Events":
+        return "/events";
 
       case "EXPERIENCE":
         return "/experience";
@@ -132,7 +132,7 @@ case "Events":
       <div
         className={`w-full px-[6%] transition-all duration-300 ${
           scrolled
-            ? "bg-black/90 py-4 shadow-lg"
+            ? "bg-black/90 py-4 shadow-[0_6px_30px_rgba(0,0,0,0.65)]"
             : "bg-header-gradient pt-6 pb-10"
         }`}
       >
@@ -166,11 +166,13 @@ case "Events":
 
           {/* LOGO (SPACE BELOW ADDED) */}
           <div className="absolute left-1/2 -translate-x-1/2 mb-4">
-            <img
-              src="/images/logo.webp"
-              alt="Logo"
-              className="w-[150px] opacity-95 transition-transform duration-300 hover:scale-105"
-            />
+            <Link to="/" onClick={() => setSidebar(false)}>
+              <img
+                src="/images/logo.webp"
+                alt="Logo"
+                className="w-[150px] opacity-95 transition-transform duration-300 hover:scale-105 cursor-pointer"
+              />
+            </Link>
           </div>
 
           {/* RIGHT SIDE */}
@@ -210,13 +212,15 @@ case "Events":
                 : "opacity-0 pointer-events-none"
             }`}
           >
-            <img
-              src="/images/logo-scroll.webp"
-              alt="logo"
-              className={`transition-all duration-300 ${
-                scrolled ? "w-[100px]" : "w-[0px]"
-              }`}
-            />
+            <Link to="/">
+              <img
+                src="/images/logo-scroll.webp"
+                alt="logo"
+                className={`cursor-pointer transition-all duration-300 ${
+                  scrolled ? "w-[100px]" : "w-[0px]"
+                }`}
+              />
+            </Link>
           </div>
 
           {/* MENU */}
@@ -266,13 +270,23 @@ case "Events":
 
       {/* MOBILE SIDEBAR */}
       <div
-        className={`fixed top-0 right-0 h-full w-[78%] max-w-[300px] backdrop-blur-xl bg-black/70 border-l border-white/30 shadow-[0_8px_30px_rgba(0,0,0,0.25)] z-[2000] transition-transform duration-500 ${
-          sidebar ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-[78%] max-w-[300px] 
+  backdrop-blur-xl bg-black/80 border-l border-white/20 
+  shadow-[0_10px_50px_rgba(0,0,0,0.6)]
+  z-[2000] transition-transform duration-500 ${
+    sidebar ? "translate-x-0" : "translate-x-full"
+  }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/20">
-          <img src="/images/logo.webp" alt="logo" className="w-28" />
+          <Link to="/" onClick={() => setSidebar(false)}>
+            <img
+              src="/images/logo.webp"
+              alt="logo"
+              className="w-28 cursor-pointer"
+            />
+          </Link>
+
           <button
             onClick={() => setSidebar(false)}
             className="text-white text-3xl"

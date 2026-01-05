@@ -13,13 +13,19 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Attach JWT token (Authorization Header)
+// 🔐 Attach ADMIN or SUPER ADMIN token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("adminToken");
+    const adminToken = sessionStorage.getItem("adminToken");
+    const superAdminToken = sessionStorage.getItem("superadminToken");
+
+    // Prefer super admin token if available
+    const token = superAdminToken || adminToken;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)

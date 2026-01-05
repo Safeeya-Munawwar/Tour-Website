@@ -56,12 +56,13 @@ export default function Destination() {
       <div className="w-full h-[360px] md:h-[560px] relative flex items-center justify-center text-white">
         {/* Hero Image */}
         <img
-          src="/images/journey-header.webp"
+          src="/images/ella.webp"
           alt="Explore Sri Lanka Destinations"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}
           height={1080}
           fetchpriority="high"
+          style={{ objectPosition: "45% 33%" }}
         />
 
         {/* Overlay */}

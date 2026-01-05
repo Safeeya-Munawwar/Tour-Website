@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -19,8 +19,10 @@ import {
   CalendarCheck,
   LogOut,
   Car,
+  Bell,
 } from "lucide-react";
 import { FaTripadvisor, FaStarHalfAlt, FaCarSide } from "react-icons/fa";
+import { axiosInstance } from "../../lib/axios";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
@@ -29,6 +31,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openBookingMenu, setOpenBookingMenu] = useState(false);
   const [openInsightMenu, setOpenInsightMenu] = useState(false);
   const [openTaxiMenu, setOpenTaxiMenu] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
@@ -38,6 +41,23 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const handleLogout = () => {
     navigate("/admin/login");
   };
+
+  // Fetch unread notifications
+  const fetchUnreadNotifications = async () => {
+    try {
+      const res = await axiosInstance.get("/admin/notifications");
+      const unread = res.data.filter((n) => !n.read).length;
+      setUnreadCount(unread);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnreadNotifications();
+    const interval = setInterval(fetchUnreadNotifications, 10000); // refresh every 10s
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -49,6 +69,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       )}
 
       <aside className="fixed lg:static top-0 left-0 h-full w-64 bg-gray-900 text-gray-200 flex flex-col">
+        {/* Logo */}
         <div className="h-auto flex items-center justify-center shadow-md border-b border-gray-800">
           <img
             src="/images/logo.webp"
@@ -70,6 +91,26 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           >
             <LayoutDashboard size={18} />
             Dashboard
+          </NavLink>
+
+          {/* Notifications */}
+          <NavLink
+            to="/admin/notifications"
+            className={({ isActive }) =>
+              `flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
+            <span className="flex items-center gap-3">
+              <Bell size={18} />
+              Super Admin Notifications
+            </span>
+            {unreadCount > 0 && (
+              <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                {unreadCount}
+              </span>
+            )}
           </NavLink>
 
           {/* Home */}
@@ -109,28 +150,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 <Users size={16} /> About Page
               </NavLink>
-
-              {/* <NavLink
-                to="/admin/manage-team"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Users size={16} /> Our Team
-              </NavLink>
-
-              <NavLink
-                to="/admin/manage-journey"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Our Journey
-              </NavLink> */}
 
               <NavLink
                 to="/admin/manage-community"
@@ -256,8 +275,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <PenTool size={18} /> Experiences
           </NavLink>
 
-          
-          {/* QUICK TAXI */}
+          {/* Quick Taxi */}
           <button
             onClick={() => setOpenTaxiMenu(!openTaxiMenu)}
             className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20"
@@ -341,7 +359,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 <PenTool size={16} /> Customize Tour
               </NavLink>
-              
+
               <NavLink
                 to="/admin/event-tour-booking"
                 className={({ isActive }) =>
@@ -350,7 +368,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   }`
                 }
               >
-                <Compass size={16} /> Event  Tour
+                <Compass size={16} /> Event Tour
               </NavLink>
             </div>
           )}
@@ -428,6 +446,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </NavLink>
         </nav>
 
+        {/* Logout */}
         <button
           onClick={handleLogout}
           className="mt-auto flex items-center gap-3 px-6 py-3 m-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition justify-center"

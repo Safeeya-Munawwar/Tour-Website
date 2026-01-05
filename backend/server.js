@@ -5,12 +5,39 @@ const cors = require("cors");
 const cron = require("node-cron");
 const { checkBookings } = require("./cron/reminderCron");
 
-// Run every day at 8 AM
+// -------------------- CORS --------------------
+const allowedOrigins = require("./config/cors.config");
+
+// -------------------- APP --------------------
+const app = express();
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
+
+// -------------------- STATIC --------------------
+app.use("/uploads", express.static("uploads"));
+
+// -------------------- CRON --------------------
 cron.schedule("0 8 * * *", () => {
   checkBookings();
 });
 
-// Import routes
+// -------------------- IMPORT ROUTES --------------------
+
+// Super Admin & Admin routes
+const loginRoute = require("./routes/login"); // admin login
+const adminNotificationsRoute = require("./routes/adminNotifications");
+const adminRoute = require("./routes/admin");
+const superAdminRoute = require("./routes/superAdmin");
+const superAdminRoutes = require("./routes/superAdminRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+// Other routes
 const aboutRoute = require("./routes/about");
 const teamRoute = require("./routes/team");
 const journeyRoute = require("./routes/journey");
@@ -31,41 +58,23 @@ const reviewRoute = require("./routes/review");
 const dayTourBookingRoute = require("./routes/dayTourBooking");
 const roundTourBookingRoute = require("./routes/roundTourBooking");
 const tourBookingRoute = require("./routes/tourBookings");
-const loginRoute = require("./routes/login"); 
 const tourReviewsRoutes = require("./routes/tourReviews");
 const eventRoutes = require("./routes/event");
 const eventTourBookingRoutes = require("./routes/eventTourBooking");
 const quickTaxiRoute = require("./routes/quickTaxi");
-const adminNotificationsRoute = require("./routes/adminNotifications");
 const newsletterRoute = require("./routes/newsletter");
-
-// Import allowedOrigins
-const allowedOrigins = require("./config/cors.config");
-
-const app = express();
-
-// -------------------- MIDDLEWARE --------------------
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true, 
-  })
-);
-
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ limit: "100mb", extended: true }));
-
-// Serve uploads folder
-app.use("/uploads", express.static("uploads"));
 
 // -------------------- ROUTES --------------------
 
-// Admin login
+// -------------------- ADMIN LOGIN & AUTH --------------------
 app.use("/api/admin", loginRoute);
-app.use("/api/admin-notifications", adminNotificationsRoute); // ✅ Important: mount here
+app.use("/api/admin-notifications", adminNotificationsRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/admin", adminRoutes);
+app.use("/api/super-admin", superAdminRoute);
+app.use("/api/super-admin", superAdminRoutes);
 
-// Other routes 
+// -------------------- OTHER ROUTES --------------------
 app.use("/api/event-tour-booking", eventTourBookingRoutes);
 app.use("/api/round-tours", roundToursRouter);
 app.use("/api/day-tours", dayTourRoutes);

@@ -57,15 +57,16 @@ export default function Experiences() {
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
         {/* ================= HERO ================= */}
         <header className="relative w-full h-[360px] md:h-[560px] overflow-hidden">
-          <img
-            src="/images/experience-header.webp"
-            alt="Experiences in Sri Lanka"
-            className="absolute inset-0 w-full h-full object-cover"
-            fetchpriority="high"
-            loading="eager"
-            width={1920}
-            height={1080}
-          />
+        <img
+  src="/images/des.webp"
+  alt="Experiences in Sri Lanka"
+  className="absolute inset-0 w-full h-full object-cover"
+  style={{ objectPosition: "20% 10%" }} // horizontal 50%, vertical 40%
+  fetchpriority="high"
+  loading="eager"
+  width={1920}
+  height={1080}
+/>
 
           <div className="absolute inset-0 bg-black/20" />
 

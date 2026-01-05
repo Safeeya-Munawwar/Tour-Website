@@ -33,6 +33,9 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
+import SuperAdminDashboard from "./pages/admin/SuperAdminDashboard";
+import SectionNotifications from "./pages/admin/SectionNotifications";
+import AdminSectionRequest from "./pages/admin/AdminSectionRequest";
 import AdminManageAbout from "./pages/admin/ManageAbout";
 import AdminManageTeam from "./pages/admin/ManageTeam";
 import AdminManageJourney from "./pages/admin/ManageJourney";
@@ -75,12 +78,15 @@ import TaxiList from "./pages/quickTaxi/TaxiList";
 import AddTaxi from "./pages/quickTaxi/AddTaxi";
 import EditTaxi from "./pages/quickTaxi/EditTaxi";
 import Layout from "./components/Layout";
+import AdminNotifications from "./pages/admin/AdminNotifications";
 
 function App() {
   const location = useLocation();
 
-  // Hide Navbar + Footer on admin pages
-  const hideLayout = location.pathname.startsWith("/admin");
+  // Hide Navbar + Footer on admin & super admin pages
+  const hideLayout =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/super-admin");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -200,6 +206,33 @@ function App() {
               element={
                 <AdminProtectedRoute>
                   <AdminDashboard />
+                </AdminProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/super-admin/dashboard"
+              element={
+                <AdminProtectedRoute>
+                  <SuperAdminDashboard />
+                </AdminProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/super-admin/section-request"
+              element={
+                <AdminProtectedRoute>
+                  <AdminSectionRequest />
+                </AdminProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/super-admin/section-notifications"
+              element={
+                <AdminProtectedRoute>
+                  <SectionNotifications />
                 </AdminProtectedRoute>
               }
             />
@@ -575,6 +608,15 @@ function App() {
               element={
                 <AdminProtectedRoute>
                   <EditTaxi />
+                </AdminProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/notifications"
+              element={
+                <AdminProtectedRoute>
+                  <AdminNotifications />
                 </AdminProtectedRoute>
               }
             />

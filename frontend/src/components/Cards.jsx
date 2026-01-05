@@ -35,38 +35,36 @@ export default function ExperienceSection() {
         </h3>
 
         {/* Activity Cards */}
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-          {activities.map((act, index) => (
-            <li
-              key={index}
-              className="flex items-center bg-white shadow-md rounded-lg px-6 py-4 
-           hover:shadow-xl hover:scale-105 
-           transition duration-300"
-              aria-label={act.title}
-            >
-              {/* Icon */}
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mr-4 flex-shrink-0">
-                {act.icon ? (
-                  <img
-                    src={act.icon}
-                    alt={`${act.title} activity icon`}
-                    className="w-14 h-14 object-contain"
-                    loading="lazy"
-                    width={56}
-                    height={56}
-                  />
-                ) : (
-                  <span className="text-2xl" aria-hidden="true">
-                    🎯
-                  </span>
-                )}
-              </div>
+        <ul className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {activities.map((act, index) => (
+    <li
+      key={index}
+      className="flex flex-col items-center text-center
+                 bg-white shadow-md rounded-lg px-4 py-6
+                 w-full h-full
+                 hover:shadow-xl hover:scale-105
+                 transition duration-300"
+    >
+      <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 flex items-center justify-center">
+        {act.icon ? (
+          <img
+            src={act.icon}
+            alt={`${act.title} activity icon`}
+            className="w-10 h-10 sm:w-14 sm:h-14 object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <span className="text-2xl">🎯</span>
+        )}
+      </div>
 
-              {/* Activity Title */}
-              <h4 className="text-lg font-serif text-black">{act.title}</h4>
-            </li>
-          ))}
-        </ul>
+      <h4 className="text-sm sm:text-base font-serif text-black line-clamp-2">
+        {act.title}
+      </h4>
+    </li>
+  ))}
+</ul>
+
       </div>
     </section>
   );

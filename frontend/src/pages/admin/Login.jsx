@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-
+  const [role, setRole] = useState("admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -17,7 +17,6 @@ export default function AdminLogin() {
     setError("");
     setLoading(true);
 
-    // Basic front-end validation
     if (!email || !password) {
       setError("Please enter email and password.");
       setLoading(false);
@@ -25,24 +24,22 @@ export default function AdminLogin() {
     }
 
     try {
-      const response = await axiosInstance.post("/admin/login", {
+      const response = await axiosInstance.post("/admin", {
         email,
         password,
-      });          
+        role,
+      });
 
-      // Assuming response returns a token
       if (response.data.token) {
-        sessionStorage.setItem("adminToken", response.data.token);
-        navigate("/admin/dashboard");
-      } else {
-        setError("Invalid credentials");
+        sessionStorage.setItem(`${role}Token`, response.data.token);
+
+        if (role === "admin") navigate("/admin/dashboard");
+        else if (role === "superadmin") navigate("/super-admin/dashboard");
       }
     } catch (err) {
-      if (err.response && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Network error. Please try again.");
-      }
+      setError(
+        err.response?.data?.message || "Network error. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -57,6 +54,7 @@ export default function AdminLogin() {
         backgroundPosition: "center",
       }}
     >
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60"></div>
 
       <form
@@ -64,7 +62,9 @@ export default function AdminLogin() {
         className="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 
         p-10 rounded-2xl shadow-xl w-[90%] max-w-[400px] text-center text-white"
       >
-        <h2 className="text-3xl font-bold mb-2 font-serif-custom">Admin Login</h2>
+        <h2 className="text-3xl font-bold mb-2 font-serif-custom">
+          Admin Login
+        </h2>
         <p className="text-gray-200 mb-6 text-sm">
           Secure access for authorized administrators
         </p>
@@ -76,6 +76,29 @@ export default function AdminLogin() {
         )}
 
         <div className="flex flex-col space-y-4 text-left">
+          {/* Role Selector */}
+          <div>
+            <label className="text-sm mb-1 block">Login as</label>
+            <div className="relative">
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full p-3 rounded-lg bg-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+              >
+                <option value="admin" className="bg-white/20 text-black">
+                  Admin
+                </option>
+                <option value="superadmin" className="bg-white/20 text-black">
+                  Super Admin
+                </option>
+              </select>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <ChevronDown size={18} className="text-white" />
+              </span>
+            </div>
+          </div>
+
+          {/* Email */}
           <div>
             <label className="text-sm mb-1 block">Email</label>
             <input
@@ -88,6 +111,7 @@ export default function AdminLogin() {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="text-sm mb-1 block">Password</label>
             <div className="relative">
@@ -108,6 +132,7 @@ export default function AdminLogin() {
             </div>
           </div>
 
+          {/* Remember & Forgot */}
           <div className="flex justify-between items-center text-sm text-gray-300">
             <label className="flex items-center gap-2">
               <input type="checkbox" className="accent-blue-500" />
@@ -122,6 +147,7 @@ export default function AdminLogin() {
             </button>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
