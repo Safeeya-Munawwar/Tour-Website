@@ -11,6 +11,11 @@ router.post("/login", async (req, res) => {
     const admin = await Admin.findOne({ email });
     if (!admin) return res.status(401).json({ message: "Invalid credentials" });
 
+    // 🔥 Add this check
+    if (admin.isActive === false) {
+      return res.status(403).json({ message: "Your account is deactivated. Contact SuperAdmin." });
+    }
+
     const isMatch = await admin.matchPassword(password);
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
@@ -30,6 +35,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // Route accessible by both Admin and SuperAdmin
 router.get("/profile", adminAuth, async (req, res) => {

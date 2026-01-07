@@ -81,6 +81,8 @@ import AddTaxi from "./pages/quickTaxi/AddTaxi";
 import EditTaxi from "./pages/quickTaxi/EditTaxi";
 import Layout from "./components/Layout";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import AddAdmin from "./pages/admin/AddAdmin";
+import AdminList from "./pages/admin/AdminList";
 
 function App() {
   const location = useLocation();
@@ -645,6 +647,25 @@ function App() {
                   </AdminProtectedRoute>
                 }
               />
+
+<Route
+  path="/super-admin/add-admin"
+  element={
+    <AdminProtectedRoute>
+    <AddAdmin />
+  </AdminProtectedRoute>
+  }
+/>
+
+<Route
+  path="/super-admin/admins"
+  element={
+    <AdminProtectedRoute>
+    <AdminList />
+  </AdminProtectedRoute>
+  }
+/>
+
             </Routes>
           </main>
         </FloatingButtonsProvider>

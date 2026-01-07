@@ -12,14 +12,58 @@ const superAdminOnly = async (req, res, next) => {
   });
 };
 
+// --- POST: Create a new admin ---
+router.post("/admins", superAdminOnly, async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password)
+      return res.status(400).json({ message: "All fields are required" });
+
+    // Check if email already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin)
+      return res.status(400).json({ message: "Admin with this email already exists" });
+
+    // Create new admin
+    const newAdmin = new Admin({ name, email, password, role: "admin" });
+    await newAdmin.save();
+
+    res.status(201).json({ message: "Admin created successfully", admin: newAdmin });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // --- GET all admins ---
 router.get("/admins", superAdminOnly, async (req, res) => {
   try {
     const admins = await Admin.find().select("-password");
-    res.json(admins);
+    res.json({ admins }); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// --- PATCH: Toggle admin active/inactive ---
+router.patch("/admins/:id/status", superAdminOnly, async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) return res.status(404).json({ message: "Admin not found" });
+
+    // Toggle isActive
+    admin.isActive = !admin.isActive;
+    await admin.save();
+
+    res.json({
+      message: `Admin ${admin.isActive ? "activated" : "deactivated"} successfully`,
+      admin,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to toggle admin status" });
   }
 });
 

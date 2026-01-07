@@ -10,7 +10,7 @@ const SuperAdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    sessionStorage.clear(); 
     window.location.href = "/admin/login";
   };
 
@@ -79,6 +79,19 @@ const fetchDoneCount = async () => {
             <LayoutDashboard size={18} />
             Dashboard
           </NavLink>
+
+          <NavLink
+  to="/super-admin/admins"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+      isActive ? activeClass : defaultClass
+    }`
+  }
+>
+  <LayoutDashboard size={16} /> Manage Admins
+</NavLink>
+
+
 
           <NavLink
             to="/super-admin/section-request"
