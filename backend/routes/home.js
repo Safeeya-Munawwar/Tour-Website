@@ -46,11 +46,13 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data provided");
     const data =
-      typeof req.body.data === "string" ? JSON.parse(req.body.data) : req.body.data;
+      typeof req.body.data === "string"
+        ? JSON.parse(req.body.data)
+        : req.body.data;
 
     // Handle info video
     const videoFile = req.files.find((f) => f.fieldname === "infoVideo");
-    if (videoFile) data.info.video = videoFile.path; // Cloudinary video URL
+    if (videoFile) data.info.video = videoFile.path;
 
     // Handle icons/images
     const imageFiles = req.files.filter((f) => f.fieldname !== "infoVideo");

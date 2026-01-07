@@ -20,5 +20,4 @@ superAdminSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// ✅ Fix: check if model already exists
 module.exports = mongoose.models.SuperAdmin || mongoose.model("SuperAdmin", superAdminSchema);

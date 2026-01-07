@@ -10,7 +10,7 @@ const EventDetailSchema = new mongoose.Schema({
   duration: String,
   includes: [String],
   startLocation: String,
-  galleryImgs: [String], // Only images, no title/desc
+  galleryImgs: [String], 
   whyShouldAttend: String,
   whoShouldAttend: String,
   tipsForAttendees: String,

@@ -8,15 +8,12 @@ const RoundTourDetailSchema = new mongoose.Schema({
     unique: true,
   },
 
-  /* HERO */
   heroImage: String,
   heroTitle: String,
   heroSubtitle: String,
 
-  /* HIGHLIGHTS */
   highlights: [String],
 
-  /* DAILY ITINERARY */
   itinerary: [
     {
       day: Number,
@@ -26,19 +23,16 @@ const RoundTourDetailSchema = new mongoose.Schema({
     },
   ],
 
-  /* INCLUSIONS / EXCLUSIONS / OFFERS */
   inclusions: [String],
   exclusions: [String],
   offers: [String],
 
-  /* TOUR FACTS */
   tourFacts: {
     duration: String,
     difficulty: String,
     groupSize: String,
   },
 
-  /* GALLERY */
   gallerySlides: [
     {
       image: String,

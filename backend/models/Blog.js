@@ -10,7 +10,6 @@ const BlogSchema = new mongoose.Schema(
 
     heroImg: { type: String, required: true },
 
-    // ✅ NEW: Gallery Images (max 5)
     galleryImgs: {
       type: [String],
       default: [],

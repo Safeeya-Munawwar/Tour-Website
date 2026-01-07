@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const AllowedSectionSchema = new mongoose.Schema({
-  section: { type: String, required: true }, // e.g., "Home Content", "Blogs"
-  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Admin" }], // admins allowed
-  active: { type: Boolean, default: true }, // toggle on/off
+  section: { type: String, required: true },
+  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Admin" }],
+  active: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
     }
   });  
 
-// Example SuperAdmin-only route
+// SuperAdmin-only route
 router.get("/all-admins", superAdminOnly, async (req, res) => {
   try {
     const admins = await require("../models/Admin").find().select("-password");

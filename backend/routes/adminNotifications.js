@@ -1,4 +1,3 @@
-// routes/adminNotifications.js
 const router = require("express").Router();
 const AdminNotification = require("../models/AdminNotification");
 
@@ -8,12 +7,12 @@ router.get("/", async (req, res) => {
   res.json({ success: true, notifications });
 });
 
-
-// GET UNREAD NOTIFICATIONS (optional)
+// GET UNREAD NOTIFICATIONS
 router.get("/unread", async (req, res) => {
   try {
-    const notifications = await AdminNotification.find({ isRead: false })
-      .sort({ createdAt: -1 });
+    const notifications = await AdminNotification.find({ isRead: false }).sort({
+      createdAt: -1,
+    });
     res.json({ success: true, notifications });
   } catch (err) {
     console.error(err);
@@ -30,7 +29,9 @@ router.put("/:id/read", async (req, res) => {
       { new: true }
     );
     if (!notification) {
-      return res.status(404).json({ success: false, error: "Notification not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Notification not found" });
     }
     res.json({ success: true, notification });
   } catch (err) {

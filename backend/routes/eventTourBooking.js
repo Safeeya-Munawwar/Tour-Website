@@ -56,18 +56,64 @@ router.post("/", async (req, res) => {
     const adminEmail = process.env.EMAIL_USER;
     const adminSubject = `New Event Booking`;
     const adminHtml = `
-      <h2>New Event Booking Received</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Event:</strong> ${booking.eventId?.title || "—"}</p>
-      <p><strong>Location:</strong> ${booking.eventId?.location || "—"}</p>
-      <p><strong>Date:</strong> ${getDateOnly(startDate)}</p>
-      <p><strong>Time:</strong> ${startTime}</p>
-      <p><strong>Adults:</strong> ${adults}</p>
-      <p><strong>Children:</strong> ${children}</p>
-      <p><strong>Message:</strong> ${message || "N/A"}</p>
-    `;
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">New Event Booking Received</h2>
+        <p>Dear Admin,</p>
+        <p>A new event booking has been submitted. Details are below:</p>
+    
+        <table style="width: 100%; border-collapse: collapse; max-width: 600px; margin-top: 10px;">
+          <tr style="background-color: #f2f2f2;">
+            <th style="border: 1px solid #1a354e; padding: 8px; text-align: left;">Field</th>
+            <th style="border: 1px solid #1a354e; padding: 8px; text-align: left;">Details</th>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Name</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${name}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Email</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${email}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Phone</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${phone}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Event</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.title || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.location || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Time</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${startTime}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Children</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${children}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+          </tr>
+        </table>
+    
+        <p style="margin-top: 15px;">Please contact the customer if needed. All bookings are recorded in the system.</p>
+    
+        <p>Best Regards,<br/>
+        <strong>Net Lanka Travels</strong></p>
+      </div>
+    `;    
     await sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
     // ---------------- SEND EMAIL TO USER ----------------
@@ -82,15 +128,21 @@ router.post("/", async (req, res) => {
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Event</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.eventId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.location || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.eventId?.location || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date & Time</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)} at ${startTime}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(
+              startDate
+            )} at ${startTime}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
@@ -102,11 +154,13 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Additional Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
 
-        <p style="margin-top: 15px;">If you have any questions, please reply to this email or call us at <strong>+94 771 234 567</strong>.</p>
+        <p style="margin-top: 15px;">If you have any questions, please reply to this email or call us at <strong>+94 705 325 512</strong>.</p>
         <p>We look forward to making your event unforgettable!</p>
 
         <p>Best Regards,<br/>
@@ -158,7 +212,9 @@ router.patch("/:id", adminAuth, async (req, res) => {
     );
 
     if (!booking) {
-      return res.status(404).json({ success: false, message: "Booking not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
     }
 
     res.json({ success: true, booking });

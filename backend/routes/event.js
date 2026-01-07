@@ -29,7 +29,8 @@ router.get("/:id", async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     const detail = await EventDetail.findOne({ eventId: req.params.id });
-    if (!event) return res.status(404).json({ success: false, error: "Event not found" });
+    if (!event)
+      return res.status(404).json({ success: false, error: "Event not found" });
     res.json({ success: true, event, detail });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -62,15 +63,19 @@ router.post("/detail", adminAuth, upload.any(), async (req, res) => {
 
   try {
     const files = req.files || [];
-    const galleryImgs = files.filter(f => f.fieldname.startsWith("galleryImg")).map(f => f.path);
-    const heroFile = files.find(f => f.fieldname === "heroImage");
+    const galleryImgs = files
+      .filter((f) => f.fieldname.startsWith("galleryImg"))
+      .map((f) => f.path);
+    const heroFile = files.find((f) => f.fieldname === "heroImage");
 
     const newDetail = new EventDetail({
       eventId: req.body.eventId || "",
       heroTitle: req.body.heroTitle || "",
       heroSubtitle: req.body.heroSubtitle || "",
       heroImage: heroFile ? heroFile.path : "",
-      aboutParagraphs: req.body.aboutParagraphs ? JSON.parse(req.body.aboutParagraphs) : [],
+      aboutParagraphs: req.body.aboutParagraphs
+        ? JSON.parse(req.body.aboutParagraphs)
+        : [],
       highlights: req.body.highlights ? JSON.parse(req.body.highlights) : [],
       duration: req.body.duration || "",
       includes: req.body.includes ? JSON.parse(req.body.includes) : [],
@@ -102,7 +107,11 @@ router.put("/:id", adminAuth, upload.single("img"), async (req, res) => {
     };
     if (req.file) updateData.img = req.file.path;
 
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
     res.json({ success: true, event: updatedEvent });
   } catch (err) {
     console.error("Update Event Error:", err);
@@ -117,13 +126,17 @@ router.put("/detail/:id", adminAuth, upload.any(), async (req, res) => {
 
   try {
     const files = req.files || [];
-    const galleryImgs = files.filter(f => f.fieldname.startsWith("galleryImg")).map(f => f.path);
-    const heroFile = files.find(f => f.fieldname === "heroImage");
+    const galleryImgs = files
+      .filter((f) => f.fieldname.startsWith("galleryImg"))
+      .map((f) => f.path);
+    const heroFile = files.find((f) => f.fieldname === "heroImage");
 
     const updateData = {
       heroTitle: req.body.heroTitle || "",
       heroSubtitle: req.body.heroSubtitle || "",
-      aboutParagraphs: req.body.aboutParagraphs ? JSON.parse(req.body.aboutParagraphs) : [],
+      aboutParagraphs: req.body.aboutParagraphs
+        ? JSON.parse(req.body.aboutParagraphs)
+        : [],
       highlights: req.body.highlights ? JSON.parse(req.body.highlights) : [],
       duration: req.body.duration || "",
       includes: req.body.includes ? JSON.parse(req.body.includes) : [],

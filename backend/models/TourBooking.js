@@ -43,7 +43,6 @@ const TourBookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Middleware to calculate members automatically
 TourBookingSchema.pre("save", function (next) {
   this.members = Number(this.adults || 0) + Number(this.children || 0);
   next();
