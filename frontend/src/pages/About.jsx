@@ -115,6 +115,46 @@ const About = () => {
             className="w-full h-auto object-cover"
           />
         </div>
+{/* ------------------- MISSION & VISION ------------------- */}
+<section className="relative mt-24 mb-28 max-w-7xl mx-auto px-6">
+  <div className="text-center mb-14">
+    <p className="text-sm font-semibold tracking-widest text-gray-500 uppercase">
+      Who We Are
+    </p>
+    <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
+      Our Mission & Vision
+    </h2>
+    <div className="w-16 h-[3px] bg-[#D4AF37] mx-auto mt-6"></div>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+    {/* Mission Card */}
+    <div className="group bg-white rounded-3xl p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#ce2a40]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+      <h3 className="text-2xl font-bold text-gray-900 mb-4 relative z-10">
+         Mission
+      </h3>
+
+      <p className="text-gray-600 text-base leading-relaxed relative z-10">
+        To provide personalized, reliable, and authentic Sri Lanka travel experiences through expert local knowledge, trusted service, and seamless journey planning.
+      </p>
+    </div>
+
+    {/* Vision Card */}
+    <div className="group bg-white rounded-3xl p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+      <h3 className="text-2xl font-bold text-gray-900 mb-4 relative z-10">
+         Vision
+      </h3>
+
+      <p className="text-gray-600 text-base leading-relaxed relative z-10">
+       To become a trusted global travel brand showcasing the best of Sri Lanka through authentic, responsible, and unforgettable travel experience.
+      </p>
+    </div>
+  </div>
+</section>
 
         {/* ------------------- WHY NETLANKA TOURS ------------------- */}
         <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
