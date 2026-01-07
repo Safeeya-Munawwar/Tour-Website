@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TaxiForm from "../components/TaxiForm";
 import { FaUsers, FaSuitcase, FaSnowflake } from "react-icons/fa";
-import { GiGearStick } from "react-icons/gi";
 import { FaCheckCircle, FaShieldAlt, FaClock, FaIdCard } from "react-icons/fa";
 import { axiosInstance } from "../lib/axios";
 import { MdEventSeat } from "react-icons/md";
@@ -80,8 +79,9 @@ const QuickTaxi = () => {
           Get Your Ride Instantly Across Sri Lanka
         </h2>
         <p className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-          Choose your preferred vehicle, fill in the details, and confirm your
-          taxi ride quickly and safely with professional drivers.
+          Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy reliable
+          drop & pickup services, airport transfers, and private drivers for a
+          safe, comfortable, and hassle-free journey anywhere in Sri Lanka.
         </p>
         <div className="w-20 h-[3px] bg-yellow-500 mx-auto mt-6 rounded-full"></div>
       </section>
@@ -94,11 +94,11 @@ const QuickTaxi = () => {
               key={v._id}
               className="bg-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer transform transition hover:scale-105 hover:shadow-2xl"
             >
-              <div className="w-full h-48 overflow-hidden bg-gray-200">
+              <div className="flex items-center justify-center h-40 bg-gray-200">
                 <img
                   src={v.image || ""}
                   alt={v.name}
-                  className="w-full h-full object-cover"
+                  className="w-36 h-36 object-contain"
                 />
               </div>
 
@@ -110,10 +110,6 @@ const QuickTaxi = () => {
                   <div className="flex flex-col items-center">
                     <MdEventSeat className="text-lg mb-1" />
                     <span>{v.seats}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <GiGearStick className="text-lg mb-1" />
-                    <span>{v.transmission}</span>
                   </div>
                   <div className="flex flex-col items-center">
                     <FaSuitcase className="text-lg mb-1" />

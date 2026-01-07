@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_URL =
   process.env.REACT_APP_NODE_ENV === "development"
@@ -13,14 +14,20 @@ export const axiosInstance = axios.create({
   },
 });
 
-// 🔐 Attach ADMIN or SUPER ADMIN token
+// ================= REQUEST =================
 axiosInstance.interceptors.request.use(
   (config) => {
-    const adminToken = sessionStorage.getItem("adminToken");
-    const superAdminToken = sessionStorage.getItem("superadminToken");
+    const role = sessionStorage.getItem("role");
 
-    // Prefer super admin token if available
-    const token = superAdminToken || adminToken;
+    let token = null;
+
+    if (role === "admin") {
+      token = sessionStorage.getItem("adminToken");
+    }
+
+    if (role === "superadmin") {
+      token = sessionStorage.getItem("superadminToken");
+    }
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -29,6 +36,19 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+// ================= RESPONSE =================
+axiosInstance.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      sessionStorage.clear();
+      toast.error("Session expired. Please login again.");
+      window.location.href = "/admin/login";
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;

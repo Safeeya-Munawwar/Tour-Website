@@ -16,34 +16,37 @@ export default function AdminLogin() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
-    if (!email || !password) {
-      setError("Please enter email and password.");
-      setLoading(false);
-      return;
-    }
-
+  
     try {
-      const response = await axiosInstance.post("/admin", {
+      const endpoint =
+        role === "superadmin" ? "/super-admin/login" : "/admin/login";
+  
+      const res = await axiosInstance.post(endpoint, {
         email,
         password,
-        role,
       });
-
-      if (response.data.token) {
-        sessionStorage.setItem(`${role}Token`, response.data.token);
-
-        if (role === "admin") navigate("/admin/dashboard");
-        else if (role === "superadmin") navigate("/super-admin/dashboard");
+  
+      // 🔥 VERY IMPORTANT
+      sessionStorage.clear();
+  
+      if (role === "admin") {
+        sessionStorage.setItem("adminToken", res.data.token);
+        sessionStorage.setItem("role", "admin");
+        navigate("/admin/dashboard");
+      }
+  
+      if (role === "superadmin") {
+        sessionStorage.setItem("superadminToken", res.data.token);
+        sessionStorage.setItem("role", "superadmin");
+        navigate("/super-admin/dashboard");
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Network error. Please try again."
-      );
+      setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div

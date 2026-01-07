@@ -24,7 +24,7 @@ export default function BookTour() {
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const [whatsappNumber, setWhatsappNumber] = useState("94729171089");
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
 
   /* ---------------- FETCH TOURS ---------------- */
   useEffect(() => {
@@ -83,56 +83,55 @@ export default function BookTour() {
   };
 
   /* ---------------- SUBMIT TO BACKEND ---------------- */
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setErrors({});
-  setResponseMsg("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    setResponseMsg("");
 
-  const err = validate();
-  if (Object.keys(err).length) {
-    setErrors(err);
-    setIsError(true);
-    setResponseMsg("Please correct the errors.");
-    return;
-  }
+    const err = validate();
+    if (Object.keys(err).length) {
+      setErrors(err);
+      setIsError(true);
+      setResponseMsg("Please correct the errors.");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await axiosInstance.post("/book-tour", {
-      ...formData,
-      tourType,
-      tourId: selectedTour._id,
-      tourRef: tourType === "day" ? "DayTour" : "RoundTour",
-      startDate: new Date(formData.startDate), // ✅ FIX
-    });
+      await axiosInstance.post("/book-tour", {
+        ...formData,
+        tourType,
+        tourId: selectedTour._id,
+        tourRef: tourType === "day" ? "DayTour" : "RoundTour",
+        startDate: new Date(formData.startDate), // ✅ FIX
+      });
 
-    setIsError(false);
-    setResponseMsg("Tour booking request sent successfully!");
+      setIsError(false);
+      setResponseMsg("Tour booking request sent successfully!");
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      adults: 1,
-      children: 0,
-      pickupLocation: "",
-      startDate: "",
-      startTime: "",
-      message: "",
-    });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        adults: 1,
+        children: 0,
+        pickupLocation: "",
+        startDate: "",
+        startTime: "",
+        message: "",
+      });
 
-    setSelectedTour(null);
-    setTourType("");
-  } catch (err) {
-    console.error("BOOK TOUR ERROR:", err.response?.data || err);
-    setIsError(true);
-    setResponseMsg(err.response?.data?.error || "Submission failed.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      setSelectedTour(null);
+      setTourType("");
+    } catch (err) {
+      console.error("BOOK TOUR ERROR:", err.response?.data || err);
+      setIsError(true);
+      setResponseMsg(err.response?.data?.error || "Submission failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* ---------------- WHATSAPP BOOKING ---------------- */
   const sendBookingViaWhatsApp = () => {
@@ -189,91 +188,138 @@ Net Lanka Travel
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
         {/* TOUR TYPE */}
-        <select
-          value={tourType}
-          onChange={(e) => {
-            setTourType(e.target.value);
-            setSelectedTour(null);
-          }}
-          className="px-4 py-3 border rounded"
-        >
-          <option value="">Select Tour Type</option>
-          <option value="day">Day Tour</option>
-          <option value="round">Round Tour</option>
-        </select>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-[#0B2545] text-left">
+            Tour Type <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={tourType}
+            onChange={(e) => {
+              setTourType(e.target.value);
+              setSelectedTour(null);
+            }}
+            className="px-4 py-3 border rounded"
+          >
+            <option value="">Select Tour Type</option>
+            <option value="day">Day Tour</option>
+            <option value="round">Round Tour</option>
+          </select>
+        </div>
 
         {/* TOUR LIST */}
         {tourType && (
-          <select
-            value={selectedTour?._id || ""}
-            onChange={(e) => handleTourSelect(e.target.value)}
-            className="px-4 py-3 border rounded"
-          >
-            <option value="">Select Tour</option>
-            {(tourType === "day" ? dayTours : roundTours).map((t) => (
-              <option key={t._id} value={t._id}>
-                {t.title} – {t.location}
-              </option>
-            ))}
-          </select>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Select Tour <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedTour?._id || ""}
+              onChange={(e) => handleTourSelect(e.target.value)}
+              className="px-4 py-3 border rounded"
+            >
+              <option value="">Select Tour</option>
+              {(tourType === "day" ? dayTours : roundTours).map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.title} – {t.location}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
-        {/* INPUTS */}
-        {["name", "email", "phone", "pickupLocation"].map((f) => (
-          <input
-            key={f}
-            name={f}
-            value={formData[f]}
-            onChange={handleChange}
-            placeholder={f.replace(/^\w/, (c) => c.toUpperCase())}
-            className="px-4 py-3 border rounded"
-          />
+        {/* TEXT INPUTS */}
+        {[
+          { key: "name", label: "Full Name", required: true },
+          { key: "email", label: "Email Address", required: true },
+          { key: "phone", label: "Phone Number", required: true },
+          { key: "pickupLocation", label: "Pickup Location", required: true },
+        ].map(({ key, label, required }) => (
+          <div key={key} className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <input
+              name={key}
+              value={formData[key]}
+              onChange={handleChange}
+              className="px-4 py-3 border rounded"
+            />
+          </div>
         ))}
 
+        {/* PARTICIPANTS */}
         <div className="flex gap-4">
-          <input
-            type="number"
-            min="1"
-            name="adults"
-            value={formData.adults}
-            onChange={handleChange}
-            className="px-4 py-3 border rounded flex-1"
-          />
-          <input
-            type="number"
-            min="0"
-            name="children"
-            value={formData.children}
-            onChange={handleChange}
-            className="px-4 py-3 border rounded flex-1"
-          />
+          <div className="flex flex-col gap-1 flex-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Adults <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              min="1"
+              name="adults"
+              value={formData.adults}
+              onChange={handleChange}
+              className="px-4 py-3 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 flex-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Children
+            </label>
+            <input
+              type="number"
+              min="0"
+              name="children"
+              value={formData.children}
+              onChange={handleChange}
+              className="px-4 py-3 border rounded"
+            />
+          </div>
         </div>
 
+        {/* DATE & TIME */}
         <div className="flex gap-4">
-          <input
-            type="date"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            className="px-4 py-3 border rounded flex-1"
-          />
-          <input
-            type="time"
-            name="startTime"
-            value={formData.startTime}
-            onChange={handleChange}
-            className="px-4 py-3 border rounded flex-1"
-          />
+          <div className="flex flex-col gap-1 flex-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Start Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="px-4 py-3 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 flex-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Start Time <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="time"
+              name="startTime"
+              value={formData.startTime}
+              onChange={handleChange}
+              className="px-4 py-3 border rounded"
+            />
+          </div>
         </div>
 
-        <textarea
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="Additional Message"
-          rows="3"
-          className="px-4 py-3 border rounded"
-        />
+        {/* MESSAGE */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-[#0B2545] text-left">
+            Additional Message
+          </label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="3"
+            className="px-4 py-3 border rounded"
+          />
+        </div>
 
         {/* BUTTONS */}
         <button

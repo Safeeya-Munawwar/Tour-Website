@@ -7,8 +7,8 @@ export default function Blog() {
   const [showText, setShowText] = useState(false);
   const [stories, setStories] = useState([]); // fetched blogs
   const [loading, setLoading] = useState(true);
-const [currentPage] = useState(1);
-// Scroll to top on page change
+  const [currentPage] = useState(1);
+  // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -65,8 +65,9 @@ const [currentPage] = useState(1);
           </h2>
 
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          Explore stories, tips, and behind-the-scenes experiences from our travel team. 
-          Stay inspired and discover how we craft unforgettable journeys across Sri Lanka.
+            Read the NetLanka Travels Blog & News for expert Sri Lanka travel
+            guides, itineraries, best places to visit, and tourism updates for
+            international travelers
           </p>
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>

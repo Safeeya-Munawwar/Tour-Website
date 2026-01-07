@@ -93,9 +93,10 @@ export default function Destination() {
           </h2>
 
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-            Discover the most breathtaking places across Sri Lanka. From
-            sun-kissed beaches to misty highlands, our curated destinations
-            promise unforgettable experiences for every traveler.
+            Find the best destinations in Sri Lanka for your perfect holiday,
+            including cultural attractions, hill country escapes, beach
+            destinations, and popular Sri Lanka tourist places for sightseeing
+            and adventure.
           </p>
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>

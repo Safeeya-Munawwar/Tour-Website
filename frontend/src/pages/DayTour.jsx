@@ -80,8 +80,9 @@ export default function DayTour() {
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          Welcome to the beautiful emerald isle known as Sri Lanka! Let us greet
-          you with “Ayubowan” and offer you an exciting array of tours to enjoy!
+          NetLanka Travels offers Sri Lanka day tours with private drivers and
+          local guides, covering popular tourist attractions, cultural
+          highlights, and nature experiences across the island.
         </p>
 
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>

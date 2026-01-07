@@ -56,7 +56,6 @@ export default function TaxiForm() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "serviceType" && value === "pickup" ? { dropDate: "" } : {}),
     }));
   };
 
@@ -74,6 +73,7 @@ export default function TaxiForm() {
     if (!formData.dropLocation.trim())
       e.dropLocation = "Drop location is required";
     if (!formData.pickupDate) e.pickupDate = "Pickup date is required";
+    if (!formData.dropDate) e.dropDate = "Drop date is required";
     if (!formData.pickupTime) e.pickupTime = "Pickup time is required";
     if (formData.serviceType === "drop" && !formData.dropDate)
       e.dropDate = "Drop date is required";
@@ -136,7 +136,7 @@ export default function TaxiForm() {
     }
 
     const message = `
-🚕 *NET LANKA TRAVEL – TAXI BOOKING*
+🚕 *NET LANKA TRAVELS – TAXI BOOKING*
 
 👤 Name: ${formData.firstName} ${formData.lastName}
 📞 Phone: ${formData.phone}
@@ -272,26 +272,6 @@ ${formData.message || "—"}
           )}
         </div>
 
-        {/* Service Type */}
-        <div>
-          <label className="font-medium">Service Type</label>
-          <div className="flex gap-6 mt-2">
-            {["pickup", "drop"].map((t) => (
-              <label key={t} className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="serviceType"
-                  value={t}
-                  checked={formData.serviceType === t}
-                  onChange={handleChange}
-                  className="accent-[#0B2545]"
-                />
-                {t.toUpperCase()}
-              </label>
-            ))}
-          </div>
-        </div>
-
         {/* Locations */}
         <div>
           <label className="font-medium">
@@ -339,17 +319,16 @@ ${formData.message || "—"}
           </div>
 
           <div>
-            <label className="font-medium">Drop Date</label>
+            <label className="font-medium">
+              Drop Date <span className="text-red-500">*</span>
+            </label>
             <input
               type="date"
               name="dropDate"
-              disabled={formData.serviceType === "pickup"}
               value={formData.dropDate}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded border ${
-                formData.serviceType === "pickup"
-                  ? "opacity-50"
-                  : "border-gray-300"
+                errors.dropDate ? "border-red-500" : "border-gray-300"
               }`}
             />
           </div>

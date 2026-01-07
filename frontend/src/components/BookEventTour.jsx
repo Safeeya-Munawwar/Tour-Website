@@ -18,7 +18,7 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("94729171089");
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
 
   // Fetch WhatsApp number
   useEffect(() => {

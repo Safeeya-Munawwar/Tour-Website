@@ -23,9 +23,7 @@ export default function Experiences() {
       .then((res) => {
         setExperiences(res.data || []);
       })
-      .catch((err) =>
-        console.error("Failed to fetch experiences:", err)
-      );
+      .catch((err) => console.error("Failed to fetch experiences:", err));
   }, []);
 
   /* Preload experience images */
@@ -47,26 +45,23 @@ export default function Experiences() {
   const totalPages = Math.ceil(experiences.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
-  const currentExperiences = experiences.slice(
-    indexOfFirst,
-    indexOfLast
-  );
+  const currentExperiences = experiences.slice(indexOfFirst, indexOfLast);
 
   return (
     <>
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
         {/* ================= HERO ================= */}
         <header className="relative w-full h-[360px] md:h-[560px] overflow-hidden">
-        <img
-  src="/images/45.webp"
-  alt="Experiences in Sri Lanka"
-  className="absolute inset-0 w-full h-full object-cover"
-  style={{ objectPosition: "20% 10%" }} // horizontal 50%, vertical 40%
-  fetchpriority="high"
-  loading="eager"
-  width={1920}
-  height={1080}
-/>
+          <img
+            src="/images/des.webp"
+            alt="Experiences in Sri Lanka"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: "20% 10%" }} // horizontal 50%, vertical 40%
+            fetchpriority="high"
+            loading="eager"
+            width={1920}
+            height={1080}
+          />
 
           <div className="absolute inset-0 bg-black/20" />
 
@@ -75,7 +70,9 @@ export default function Experiences() {
             max-w-[90%] md:w-[460px] bg-black/80 text-white p-4 md:p-6 
             backdrop-blur-sm shadow-lg flex items-center justify-end
             transition-all duration-700 ease-out
-            ${showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
+            ${
+              showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
           >
             <h1 className="text-xl md:text-3xl leading-snug text-right mr-4">
               Discover Unique Experiences <br />
@@ -97,9 +94,9 @@ export default function Experiences() {
             </h2>
 
             <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-              Sri Lanka offers one of the most exotic getaways in the world.
-              Explore yoga retreats, luxurious wellness escapes, cultural wonders,
-              culinary delights, and thrilling adventures.
+              NetLanka Travels offers authentic Sri Lanka travel experiences,
+              including cultural tours, hill country journeys, beach
+              experiences, and wildlife safaris for international travelers.
             </p>
 
             <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6" />
@@ -126,8 +123,10 @@ export default function Experiences() {
                       {item.subtitle || ""}
                     </p>
 
-                    <h3 className="text-2xl font-light text-gray-900 
-                      group-hover:text-[#8C1F28] transition-colors">
+                    <h3
+                      className="text-2xl font-light text-gray-900 
+                      group-hover:text-[#8C1F28] transition-colors"
+                    >
                       {item.title}
                     </h3>
 
@@ -136,8 +135,10 @@ export default function Experiences() {
                     </p>
 
                     <Link to={`/experience/${item.slug}`}>
-                      <span className="inline-block mt-4 text-[#8C1F28] 
-                        font-semibold text-sm hover:underline">
+                      <span
+                        className="inline-block mt-4 text-[#8C1F28] 
+                        font-semibold text-sm hover:underline"
+                      >
                         Read more
                       </span>
                     </Link>
@@ -155,9 +156,7 @@ export default function Experiences() {
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-16 flex-wrap">
               <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.max(p - 1, 1))
-                }
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-2 rounded-lg border text-sm font-medium
                 disabled:opacity-40 hover:bg-gray-100"
@@ -185,9 +184,7 @@ export default function Experiences() {
 
               <button
                 onClick={() =>
-                  setCurrentPage((p) =>
-                    Math.min(p + 1, totalPages)
-                  )
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
                 className="px-3 py-2 rounded-lg border text-sm font-medium

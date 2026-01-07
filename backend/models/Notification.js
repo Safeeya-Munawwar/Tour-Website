@@ -1,28 +1,31 @@
 const mongoose = require("mongoose");
 
-const NotificationSchema = new mongoose.Schema({
-  section: { type: String, required: true },
+const NotificationSchema = new mongoose.Schema(
+  {
+    sections: [String],
+    action: String,
+    message: String,
+    priority: { type: String, default: "medium" },
 
-  action: {
-    type: String,
-    enum: ["add", "edit", "delete"],
-    required: true,
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
+
+    superAdmin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "done"],
+      default: "pending",
+    },
   },
+  { timestamps: true }
+);
 
-  admin: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
-  superAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "SuperAdmin" },
-
-  message: { type: String },
-
-  status: {
-    type: String,
-    enum: ["pending", "done"],
-    default: "pending",
-  },
-
-  createdAt: { type: Date, default: Date.now },
-});
-
-module.exports =
-  mongoose.models.Notification ||
-  mongoose.model("Notification", NotificationSchema);
+module.exports = mongoose.model("Notification", NotificationSchema);

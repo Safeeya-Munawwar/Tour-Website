@@ -87,7 +87,7 @@ export default function Header() {
         </h1>
 
         <p className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl font-light">
-          {homeData.info.subtitle || "Unforgettable Journeys Across the Island"}
+        Discover Sri Lanka, The NetLanka Way
         </p>
 
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
