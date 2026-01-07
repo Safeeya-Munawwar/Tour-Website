@@ -124,7 +124,7 @@ const About = () => {
     <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
       Our Mission & Vision
     </h2>
-    <div className="w-16 h-[3px] bg-[#D4AF37] mx-auto mt-6"></div>
+
   </div>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
