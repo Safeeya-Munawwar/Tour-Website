@@ -98,7 +98,8 @@ export default function SectionNotifications() {
         </p>
 
         {/* Status Filter */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex gap-4 items-center">
           {["done", "read"].map((status) => (
             <button
               key={status}
@@ -115,7 +116,6 @@ export default function SectionNotifications() {
         </div>
 
         {/* Search */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex gap-2 items-center">
             <input
               type="text"

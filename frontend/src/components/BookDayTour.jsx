@@ -19,7 +19,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("94729171089"); // fallback number
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567"); 
 
   // Fetch WhatsApp number from backend
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     }
 
     const message = `
-* Net Lanka Travel - Day Tour Booking *
+* Net Lanka Travels - Day Tour Booking *
 
 *Tour:* ${tourTitle}
 *Location:* ${tourLocation}

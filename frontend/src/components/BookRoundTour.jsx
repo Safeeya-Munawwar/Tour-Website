@@ -19,7 +19,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("94729171089"); // fallback
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567"); // fallback
 
   // Fetch WhatsApp number from backend
   useEffect(() => {
@@ -134,7 +134,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     }
 
     const message = `
-* Net Lanka Travel - Tour Booking *
+* Net Lanka Travels - Tour Booking *
 
 *Tour:* ${tourTitle}
 *Location:* ${tourLocation}

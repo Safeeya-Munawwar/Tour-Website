@@ -8,7 +8,7 @@ export default function WhatsAppFAB() {
   const location = useLocation();
   const { isWhatsAppOpen, setIsWhatsAppOpen } = useFloatingButtons();
   const { isScrollVisible } = useFloatingButtons();
-  const [phone, setPhone] = useState("94729171089");
+  const [phone, setPhone] = useState("94771234567");
   const [tourTitle, setTourTitle] = useState("");
 
   // ---------------- Get WhatsApp number ----------------
@@ -19,7 +19,7 @@ export default function WhatsAppFAB() {
         const p = res.data?.whatsapp || res.data?.phone;
         if (p) setPhone(p.replace(/\D/g, ""));
       })
-      .catch(() => setPhone("94729171089"));
+      .catch(() => setPhone("94771234567"));
   }, []);
 
   // ---------------- Get tour title ----------------

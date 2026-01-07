@@ -79,8 +79,9 @@ const QuickTaxi = () => {
           Get Your Ride Instantly Across Sri Lanka
         </h2>
         <p className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-        Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy reliable drop & pickup services, airport
-transfers, and private drivers for a safe, comfortable, and hassle-free journey anywhere in Sri Lanka.
+          Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy reliable
+          drop & pickup services, airport transfers, and private drivers for a
+          safe, comfortable, and hassle-free journey anywhere in Sri Lanka.
         </p>
         <div className="w-20 h-[3px] bg-yellow-500 mx-auto mt-6 rounded-full"></div>
       </section>
@@ -93,14 +94,13 @@ transfers, and private drivers for a safe, comfortable, and hassle-free journey 
               key={v._id}
               className="bg-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer transform transition hover:scale-105 hover:shadow-2xl"
             >
-<div className="flex items-center justify-center h-36 bg-gray-200">
-  <img
-    src={v.image || ""}
-    alt={v.name}
-    className="w-36 h-36 object-contain"
-  />
-</div>
-
+              <div className="flex items-center justify-center h-40 bg-gray-200">
+                <img
+                  src={v.image || ""}
+                  alt={v.name}
+                  className="w-36 h-36 object-contain"
+                />
+              </div>
 
               <div className="p-5 text-center">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">

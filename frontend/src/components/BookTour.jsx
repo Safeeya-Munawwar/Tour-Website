@@ -24,7 +24,7 @@ export default function BookTour() {
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const [whatsappNumber, setWhatsappNumber] = useState("94729171089");
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
 
   /* ---------------- FETCH TOURS ---------------- */
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function BookTour() {
     }
 
     const message = `
-* Net Lanka Travel - Tour Booking *
+* Net Lanka Travels - Tour Booking *
 
 *Tour Type:* ${tourType === "day" ? "Day Tour" : "Round Tour"}
 *Tour:* ${selectedTour.title}
