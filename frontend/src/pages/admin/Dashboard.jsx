@@ -285,7 +285,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-6">
             {/* Title */}
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <LayoutDashboard size={28} /> Dashboard
+              <LayoutDashboard size={28} /> Admin Dashboard
             </h1>
 
             {/* Notification Bell */}

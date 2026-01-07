@@ -285,7 +285,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-6">
             {/* Title */}
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <LayoutDashboard size={28} /> Dashboard
+              <LayoutDashboard size={28} /> Super Admin Dashboard
             </h1>
 
             {/* Notification Bell */}
@@ -367,72 +367,40 @@ export default function Dashboard() {
           </div>
 
           {/* ---------------- CHARTS ---------------- */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Line Chart */}
-            <div className="bg-white p-5 rounded-lg shadow">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Plane size={20} /> Monthly Bookings
-              </h2>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={monthlyBookings}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    dataKey="day"
-                    stroke="#2563eb"
-                    strokeWidth={3}
-                    name="Day Tours"
-                  />
-                  <Line
-                    dataKey="round"
-                    stroke="#16a34a"
-                    strokeWidth={3}
-                    name="Round Tours"
-                  />
-                  <Line
-                    dataKey="event"
-                    stroke="#f59e0b"
-                    strokeWidth={3}
-                    name="Event Tours"
-                  />
-                  <Line
-                    dataKey="tailor"
-                    stroke="#a855f7"
-                    strokeWidth={3}
-                    name="Tailor Made"
-                  />
-                  <Line
-                    dataKey="taxi"
-                    stroke="#f87171"
-                    strokeWidth={3}
-                    name="Taxi Bookings"
-                    dot={{ r: 4 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Pie Chart */}
-            <div className="bg-white p-5 rounded-lg shadow">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Map size={20} /> Tours Breakdown
-              </h2>
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart margin={{ top: 30, right: 0, left: 0, bottom: 0 }}>
-                  <Pie data={pieData} dataKey="value" outerRadius={100} label>
-                    {pieData.map((_, i) => (
-                      <Cell key={i} fill={pieColors[i]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Line Chart */}
+          <div className="bg-white p-5 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><Plane size={20} /> Monthly Bookings</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyBookings}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line dataKey="day" stroke="#2563eb" name="Day Tours" />
+                <Line dataKey="round" stroke="#16a34a" name="Round Tours" />
+                <Line dataKey="event" stroke="#f59e0b" name="Event Tours" />
+                <Line dataKey="tailor" stroke="#a855f7" name="Tailor Made" />
+                <Line dataKey="taxi" stroke="#f87171" name="Taxi Bookings" dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
+
+          {/* Pie Chart */}
+          <div className="bg-white p-5 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><Map size={20} /> Tours Breakdown</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie data={pieData} dataKey="value" outerRadius={100} label>
+                  {pieData.map((_, i) => <Cell key={i} fill={pieColors[i]} />)}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
           {/* ---------------- RECENT BOOKINGS TABLE ---------------- */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">

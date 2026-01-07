@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
@@ -37,21 +37,37 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    navigate("/admin/login");
+    sessionStorage.clear();
+    window.location.href = "/admin/login";
   };
-
+  
   // Fetch unread notifications
-  const fetchUnreadNotifications = async () => {
-    try {
-      const res = await axiosInstance.get("/admin/notifications");
-      const unread = res.data.filter((n) => !n.read).length;
-      setUnreadCount(unread);
-    } catch (err) {
-      console.error("Failed to fetch notifications", err);
-    }
-  };
+const fetchUnreadNotifications = async () => {
+  try {
+    const res = await axiosInstance.get("/admin/notifications", {
+      params: { status: "pending", page: 1, limit: 1000 }, // fetch all pending
+    });
+
+    const notifications = res.data.notifications;
+
+    // Group by message + action + priority to count unique notifications
+    const uniqueMessages = new Set(
+      notifications.map((note) => `${note.message}_${note.action}_${note.priority}`)
+    );
+
+    setUnreadCount(uniqueMessages.size);
+  } catch (err) {
+    console.error("Failed to fetch notifications", err);
+  }
+};
+
+  
+  useEffect(() => {
+    fetchUnreadNotifications();
+  }, [location.pathname]);  
 
   useEffect(() => {
     fetchUnreadNotifications();
@@ -94,24 +110,28 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </NavLink>
 
           {/* Notifications */}
-          <NavLink
-            to="/admin/notifications"
-            className={({ isActive }) =>
-              `flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition ${
-                isActive ? activeClass : defaultClass
-              }`
-            }
-          >
-            <span className="flex items-center gap-3">
-              <Bell size={18} />
-              Super Admin Notifications
-            </span>
-            {unreadCount > 0 && (
-              <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                {unreadCount}
-              </span>
-            )}
-          </NavLink>
+{/* Notifications */}
+<NavLink
+  to="/admin/notifications"
+  className={({ isActive }) =>
+    `flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition ${
+      isActive ? activeClass : defaultClass
+    }`
+  }
+>
+  <span className="flex items-center gap-3">
+    <Bell size={18} />
+    Tasks
+  </span>
+
+  {/* 🔴 Notification Badge */}
+  {unreadCount > 0 && (
+    <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+      {unreadCount} {/* number of unique messages */}
+    </span>
+  )}
+</NavLink>
+
 
           {/* Home */}
           <NavLink

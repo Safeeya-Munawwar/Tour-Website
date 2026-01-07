@@ -94,13 +94,14 @@ const QuickTaxi = () => {
               key={v._id}
               className="bg-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer transform transition hover:scale-105 hover:shadow-2xl"
             >
-              <div className="w-full h-48 overflow-hidden bg-gray-200">
-                <img
-                  src={v.image || ""}
-                  alt={v.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+<div className="flex items-center justify-center h-36 bg-gray-200">
+  <img
+    src={v.image || ""}
+    alt={v.name}
+    className="w-36 h-36 object-contain"
+  />
+</div>
+
 
               <div className="p-5 text-center">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -110,10 +111,6 @@ const QuickTaxi = () => {
                   <div className="flex flex-col items-center">
                     <MdEventSeat className="text-lg mb-1" />
                     <span>{v.seats}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <GiGearStick className="text-lg mb-1" />
-                    <span>{v.transmission}</span>
                   </div>
                   <div className="flex flex-col items-center">
                     <FaSuitcase className="text-lg mb-1" />
