@@ -126,7 +126,7 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
     }
 
     const message = `
-*Event Tour Booking - Net Lanka Travel*
+*Event Tour Booking - Net Lanka Travels*
 
 *Event:* ${eventTitle}
 *Location:* ${eventLocation}

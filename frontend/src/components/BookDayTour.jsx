@@ -131,7 +131,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     }
 
     const message = `
-* Net Lanka Travel - Day Tour Booking *
+* Net Lanka Travels - Day Tour Booking *
 
 *Tour:* ${tourTitle}
 *Location:* ${tourLocation}

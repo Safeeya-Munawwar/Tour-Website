@@ -145,7 +145,7 @@ const handleSubmit = async (e) => {
     }
 
     const message = `
-* Net Lanka Travel - Tour Booking *
+* Net Lanka Travels - Tour Booking *
 
 *Tour Type:* ${tourType === "day" ? "Day Tour" : "Round Tour"}
 *Tour:* ${selectedTour.title}

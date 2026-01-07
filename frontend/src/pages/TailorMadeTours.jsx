@@ -80,7 +80,7 @@ const TailorMadeTours = () => {
         role="banner"
       >
         <img
-          src="/images/n4.webp"
+          src="/images/31.webp"
           alt="Tailor-made tour in Sri Lanka"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}

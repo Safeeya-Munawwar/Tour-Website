@@ -39,7 +39,7 @@ export default function RoundTour() {
       {/* HERO HEADER */}
       <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white">
         <img
-          src="/images/round.webp"
+          src="/images/rt4.webp"
           alt="Round Tours Sri Lanka"
           className="absolute inset-0 w-full h-full object-cover"
           fetchpriority="high"

@@ -55,7 +55,7 @@ export default function WhatsAppFAB() {
 
   // ---------------- Messages ----------------
   const getMessage = (option) => {
-    const base = "*Net Lanka Travel*";
+    const base = "*Net Lanka Travels*";
 
     if (tourTitle) {
       if (option === "book")
@@ -108,7 +108,7 @@ export default function WhatsAppFAB() {
               <FaWhatsapp className="text-white text-xl" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-semibold text-gray-800">Net Lanka Tours</p>
+              <p className="font-semibold text-gray-800">Net Lanka Travels</p>
               <p className="text-sm text-gray-500">
                 Typically replies in a few minutes
               </p>

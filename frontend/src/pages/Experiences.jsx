@@ -58,7 +58,7 @@ export default function Experiences() {
         {/* ================= HERO ================= */}
         <header className="relative w-full h-[360px] md:h-[560px] overflow-hidden">
         <img
-  src="/images/des.webp"
+  src="/images/45.webp"
   alt="Experiences in Sri Lanka"
   className="absolute inset-0 w-full h-full object-cover"
   style={{ objectPosition: "20% 10%" }} // horizontal 50%, vertical 40%

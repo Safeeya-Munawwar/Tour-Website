@@ -134,7 +134,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     }
 
     const message = `
-* Net Lanka Travel - Tour Booking *
+* Net Lanka Travels - Tour Booking *
 
 *Tour:* ${tourTitle}
 *Location:* ${tourLocation}
