@@ -17,18 +17,22 @@ const SuperAdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [doneCount, setDoneCount] = useState(0);
 
   // Fetch count of "done" notifications (not read yet)
-  const fetchDoneCount = async () => {
-    try {
-      const res = await axiosInstance.get("/super-admin/notifications");
-      const doneNotifications = res.data.notifications?.filter(
-        (n) => n.status === "done"
-      );
-      setDoneCount(doneNotifications?.length || 0);
-    } catch (err) {
-      console.error("Failed to fetch done notification count:", err);
-      setDoneCount(0);
-    }
-  };
+// Fetch count of "done" notifications (not read yet)
+const fetchDoneCount = async () => {
+  try {
+    const res = await axiosInstance.get("/super-admin/notifications");
+
+    // Only count notifications that are "done" and NOT read by Super Admin
+    const doneUnread = res.data.notifications?.filter(
+      (n) => n.status === "done" && !n.readBySuperAdmin
+    );
+
+    setDoneCount(doneUnread?.length || 0);
+  } catch (err) {
+    console.error("Failed to fetch done notification count:", err);
+    setDoneCount(0);
+  }
+};
 
   useEffect(() => {
     fetchDoneCount();

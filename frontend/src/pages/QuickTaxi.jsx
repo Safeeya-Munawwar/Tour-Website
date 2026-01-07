@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TaxiForm from "../components/TaxiForm";
 import { FaUsers, FaSuitcase, FaSnowflake } from "react-icons/fa";
-import { GiGearStick } from "react-icons/gi";
 import { FaCheckCircle, FaShieldAlt, FaClock, FaIdCard } from "react-icons/fa";
 import { axiosInstance } from "../lib/axios";
 import { MdEventSeat } from "react-icons/md";
@@ -80,8 +79,8 @@ const QuickTaxi = () => {
           Get Your Ride Instantly Across Sri Lanka
         </h2>
         <p className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-          Choose your preferred vehicle, fill in the details, and confirm your
-          taxi ride quickly and safely with professional drivers.
+        Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy reliable drop & pickup services, airport
+transfers, and private drivers for a safe, comfortable, and hassle-free journey anywhere in Sri Lanka.
         </p>
         <div className="w-20 h-[3px] bg-yellow-500 mx-auto mt-6 rounded-full"></div>
       </section>

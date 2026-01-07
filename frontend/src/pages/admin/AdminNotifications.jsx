@@ -3,7 +3,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Check, Trash } from "lucide-react";
+import { Check } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -45,18 +45,6 @@ export default function AdminNotifications() {
     } catch (err) {
       console.error(err);
       toast.error("Failed to mark as done");
-    }
-  };
-
-  // ================= DELETE =================
-  const deleteNotification = async (id) => {
-    try {
-      await axiosInstance.delete(`/admin/notifications/${id}`);
-      toast.success("Notification deleted");
-      fetchNotifications();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete notification");
     }
   };
 
@@ -151,16 +139,6 @@ export default function AdminNotifications() {
                   >
                     <Check size={16} />
                     Mark as Done
-                  </button>
-                )}
-
-                {note.status === "done" && (
-                  <button
-                    onClick={() => deleteNotification(note._id)}
-                    className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
-                  >
-                    <Trash size={16} />
-                    Delete
                   </button>
                 )}
               </div>

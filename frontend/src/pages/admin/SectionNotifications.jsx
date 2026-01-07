@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Trash } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { CheckCircle } from "lucide-react";
 
 dayjs.extend(relativeTime);
 
@@ -21,9 +22,17 @@ export default function SectionNotifications() {
       const res = await axiosInstance.get("/super-admin/notifications");
       let filtered = res.data.notifications;
 
-      // Filter by status
-      if (statusFilter)
-        filtered = filtered.filter((n) => n.status === statusFilter);
+      // Filter based on Super Admin filter
+      if (statusFilter) {
+        if (statusFilter === "done") {
+          // only show notifications not yet read
+          filtered = filtered.filter(
+            (n) => n.status === "done" && !n.readBySuperAdmin
+          );
+        } else if (statusFilter === "read") {
+          filtered = filtered.filter((n) => n.readBySuperAdmin);
+        }
+      }
 
       // Filter by search term
       if (searchTerm)
@@ -45,11 +54,9 @@ export default function SectionNotifications() {
   // ================= MARK READ =================
   const markAsRead = async (id) => {
     try {
-      await axiosInstance.patch(`/super-admin/notifications/${id}`, {
-        status: "read",
-      });
+      await axiosInstance.patch(`/super-admin/notifications/${id}`);
       toast.success("Marked as read");
-      fetchNotifications();
+      fetchNotifications(); // Refresh list immediately
     } catch (err) {
       console.error(err);
       toast.error("Failed to update notification");
@@ -57,16 +64,18 @@ export default function SectionNotifications() {
   };
 
   // ================= DELETE =================
-  const deleteNotification = async (id) => {
+  const deleteNotification = async (id, superAdminOnly = false) => {
     try {
-      await axiosInstance.delete(`/super-admin/notifications/${id}`);
+      await axiosInstance.delete(`/super-admin/notifications/${id}`, {
+        params: { superAdminOnly }, // send flag to backend
+      });
       toast.success("Notification deleted");
       fetchNotifications();
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete notification");
     }
-  };
+  };  
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -133,62 +142,70 @@ export default function SectionNotifications() {
           )}
 
           {notifications.map((note) => (
-            <div
-              key={note._id}
-              className={`p-4 rounded-xl shadow-sm border transition ${
-                note.status === "pending"
-                  ? "border-yellow-400 bg-yellow-50"
-                  : note.status === "done"
-                  ? "border-blue-400 bg-blue-50"
-                  : "border-green-400 bg-green-50"
-              }`}
-            >
-              <p className="font-semibold text-[#0d203a] mb-2">
-                Sections: {note.sections?.join(", ")}
-              </p>
+            <div className="relative p-4 rounded-xl shadow-sm border transition bg-white"
+     style={{
+       borderColor: note.status === "pending"
+         ? "#FBBF24" // yellow
+         : note.status === "done"
+         ? "#60A5FA" // blue
+         : "#34D399", // green
+     }}
+>
+  {/* Delete button top-right */}
+  {statusFilter === "read" && note.readBySuperAdmin && (
+    <button
+      onClick={() => deleteNotification(note._id, true)}
+      className="absolute top-2 right-2 flex items-center justify-center w-7 h-7 bg-red-600 hover:bg-red-700 text-white rounded-full transition"
+      title="Delete Notification"
+    >
+      <Trash size={14} />
+    </button>
+  )}
 
-              <p className="text-gray-700 mb-2">{note.message}</p>
+  {/* Card content */}
+  <p className="font-semibold text-[#0d203a] mb-2">
+    Sections: {note.sections?.join(", ")}
+  </p>
 
-              {note.admin && (
-                <p className="text-sm text-gray-600 mb-1">
-                  Admin:{" "}
-                  <span className="font-medium">({note.admin.email})</span>
-                </p>
-              )}
+  <p className="text-gray-700 mb-2">{note.message}</p>
 
-              <p className="text-sm text-gray-500 mb-2">
-                {dayjs(note.createdAt).fromNow()}
-              </p>
+  {note.admin && (
+    <p className="text-sm text-gray-600 mb-1">
+      Admin: <span className="font-medium">({note.admin.email})</span>
+    </p>
+  )}
 
-              <p className="text-sm text-gray-500 mb-4">
-                Action: <span className="font-medium">{note.action}</span> |{" "}
-                Priority: <span className="font-medium">{note.priority}</span>
-              </p>
+  <p className="text-sm text-gray-500 mb-2">{dayjs(note.createdAt).fromNow()}</p>
 
-              {/* Buttons / Checkboxes */}
-              <div className="flex gap-2 items-center">
-                {note.status === "done" && (
-                  <label className="flex items-center gap-2 cursor-pointer text-sm">
-                    <input
-                      type="checkbox"
-                      onChange={() => markAsRead(note._id)}
-                      className="w-4 h-4"
-                    />
-                    Mark as Read
-                  </label>
-                )}
+  <p className="text-sm text-gray-500 mb-4">
+    Action: <span className="font-medium">{note.action}</span> | Priority:{" "}
+    <span className="font-medium">{note.priority}</span>
+  </p>
 
-                {note.status === "read" && (
-                  <button
-                    onClick={() => deleteNotification(note._id)}
-                    className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition text-sm"
-                  >
-                    <Trash size={16} />
-                    Delete
-                  </button>
-                )}
-              </div>
-            </div>
+  {/* Mark as Read (professional) */}
+  {note.status === "done" && !note.readBySuperAdmin && (
+    <div className="flex items-center gap-2 mt-2">
+      <input
+        type="checkbox"
+        onChange={() => markAsRead(note._id)}
+        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        id={`mark-read-${note._id}`}
+      />
+      <label htmlFor={`mark-read-${note._id}`} className="text-sm font-medium text-[#0d203a]">
+        Mark as Read
+      </label>
+    </div>
+  )}
+
+  {/* Read status indicator */}
+  {note.readBySuperAdmin && (
+    <div className="flex items-center gap-1 mt-2">
+      <CheckCircle size={16} className="text-green-600" />
+      <span className="text-sm text-green-700 font-medium">Read</span>
+    </div>
+  )}
+</div>
+
           ))}
         </div>
       </div>

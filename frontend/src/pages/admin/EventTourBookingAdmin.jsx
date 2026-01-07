@@ -41,7 +41,7 @@ const EventTourBookingAdmin = () => {
     const toastId = toast.info("Updating status...", { autoClose: false });
 
     try {
-      const res = await axiosInstance.put(`/event-tour-booking/${id}/status`, {
+      const res = await axiosInstance.patch(`/event-tour-booking/${id}`, {
         status: newStatus,
       });
 

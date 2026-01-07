@@ -69,9 +69,9 @@ export default function RoundTour() {
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          Our expertly crafted round tours take you through the island’s most
-          breathtaking landscapes — from ancient kingdoms to misty mountains,
-          wildlife parks, and sun-kissed beaches.
+          NetLanka Travels provides Sri Lanka round tours and multi-day tour
+          packages, featuring private transport, guided sightseeing, and
+          tailor-made itineraries for foreign travelers.
         </p>
 
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>

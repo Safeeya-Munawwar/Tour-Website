@@ -58,7 +58,7 @@ export default function Navbar() {
 
   const menuItems = [
     { name: "HOME" },
-    { name: "CUSTOM TOURS" },
+    { name: "TAILOR-MADE TOURS" },
     { name: "DESTINATIONS" },
     { name: "TOURS", dropdown: ["Day Tours", "Round Tours"] },
     {
@@ -78,7 +78,7 @@ export default function Navbar() {
     switch (text) {
       case "HOME":
         return "/";
-      case "CUSTOM TOURS":
+      case "TAILOR-MADE TOURS":
         return "/tailor-made-tours";
       case "DESTINATIONS":
         return "/destinations";

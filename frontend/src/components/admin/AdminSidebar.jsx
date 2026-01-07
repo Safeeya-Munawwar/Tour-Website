@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
@@ -36,7 +36,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const activeClass = "bg-[#487898] text-white";
   const defaultClass = "text-gray-200 hover:bg-[#487898]/20 hover:text-white";
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {

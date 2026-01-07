@@ -71,14 +71,17 @@ router.get("/notifications", superAdminOnly, async (req, res) => {
   }
 });
 
+
 // --- PATCH: mark a super admin notification as done ---
+// routes/superAdminRoutes.js
+// PATCH: mark a super admin notification as read
 router.patch("/notifications/:id", superAdminOnly, async (req, res) => {
   try {
-    const { status } = req.body; // can be "done" or "read"
     const notification = await SuperAdminNotification.findById(req.params.id);
     if (!notification) return res.status(404).json({ message: "Not found" });
 
-    notification.status = status;
+    // Mark as read for Super Admin without changing admin status
+    notification.readBySuperAdmin = true;
     await notification.save();
 
     res.json({ success: true, notification });
@@ -88,15 +91,30 @@ router.patch("/notifications/:id", superAdminOnly, async (req, res) => {
   }
 });
 
+
 // --- DELETE a super admin notification ---
+// DELETE a super admin notification
 router.delete("/notifications/:id", superAdminOnly, async (req, res) => {
   try {
-    await SuperAdminNotification.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
+    const { superAdminOnly } = req.query; // true if only delete SuperAdminNotification
+
+    if (superAdminOnly === "true") {
+      // Delete only from SuperAdminNotification
+      const deleted = await SuperAdminNotification.findByIdAndDelete(req.params.id);
+      if (!deleted) return res.status(404).json({ message: "Notification not found" });
+      return res.json({ success: true, deletedFrom: "SuperAdminNotification" });
+    }
+
+    // Otherwise, delete normally (if needed, including linked Admin notifications)
+    const deleted = await SuperAdminNotification.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Notification not found" });
+
+    res.json({ success: true, deletedFrom: "SuperAdminNotification" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Failed to delete notification" });
   }
 });
+
 
 module.exports = router;
