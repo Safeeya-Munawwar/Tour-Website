@@ -23,7 +23,7 @@ export default function AdminLogin() {
   
       const res = await axiosInstance.post(endpoint, {
         email,
-        password,
+        password, 
       });
   
       // 🔥 VERY IMPORTANT
@@ -142,12 +142,17 @@ export default function AdminLogin() {
               Remember me
             </label>
             <button
-              type="button"
-              className="text-blue-400 hover:underline"
-              onClick={() => alert("Redirect to forgot password page")}
-            >
-              Forgot Password?
-            </button>
+  type="button"
+  className="text-blue-400 hover:underline"
+  onClick={() => {
+    // Store role so backend knows which API to use
+    sessionStorage.setItem("resetRole", role);
+    navigate("/admin/forgot-password");
+  }}
+>
+  Forgot Password?
+</button>
+
           </div>
 
           {/* Submit */}

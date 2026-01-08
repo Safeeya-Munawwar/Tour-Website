@@ -1,14 +1,12 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create transporter
+// Create transporter for Gmail
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST, 
-  port: parseInt(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_PORT == 465, 
+  service: "gmail", // Use Gmail service
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL_USER, // Your Gmail
+    pass: process.env.EMAIL_PASS, // Your 16-character App Password
   },
 });
 
@@ -17,7 +15,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.error("Email transporter verification failed:", error);
   } else {
-    console.log("Email transporter is ready!");
+    console.log("✅ Email transporter is ready!");
   }
 });
 
