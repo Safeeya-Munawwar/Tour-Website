@@ -90,6 +90,7 @@ import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import EventTourBookingAdmin from "./pages/admin/EventTourBookingAdmin";
 import AddAdmin from "./pages/admin/AddAdmin";
 import AdminList from "./pages/admin/AdminList";
+import TermsConditions from "./pages/TermsConditions";
 
 function App() {
   const location = useLocation();
@@ -135,6 +136,8 @@ function App() {
           <main className="flex-grow flex flex-col justify-start">
             <Routes>
               <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
+              <Route path="/terms-and-conditions" element={<TermsConditions/>} />
+
               {/* ---------------------------USER ROUTES--------------------------- */}
               <Route
                 path="/"
