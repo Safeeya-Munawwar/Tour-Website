@@ -20,6 +20,7 @@ export default function Footer() {
   const [contact, setContact] = useState(null);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+ 
 
   useEffect(() => {
     const fetchContact = async () => {
@@ -119,73 +120,99 @@ const subscribeNewsletter = async (e) => {
             })}
           </div>
         </div>
-
-        {/* ---------------- CONTACT INFO ---------------- */}
-        <div>
-          <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
-          <address className="not-italic space-y-5">
-            {contact?.phone && (
-              <div className="flex gap-3 items-center">
-                <FaPhoneAlt />
-                <a
-                  href={`tel:${contact.phone}`}
-                  className="hover:text-blue-300"
-                >
-                  {contact.phone}
-                </a>
-              </div>
-            )}
-
-            {contact?.whatsapp && (
-              <div className="flex gap-3 items-center">
-                <FaWhatsapp />
-                <a
-                  href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-green-400"
-                >
-                  {contact.whatsapp}
-                </a>
-              </div>
-            )}
-
-            {contact?.emails?.[0] && (
-              <div className="flex gap-3 items-center">
-                <FaEnvelope />
-                <a
-                  href={`mailto:${contact.emails[0]}`}
-                  className="hover:text-blue-400"
-                >
-                  {contact.emails[0]}
-                </a>
-              </div>
-            )}
-
-            {contact?.offices?.map((o, i) => (
-              <div key={i} className="flex gap-3 items-start">
-                <FaMapMarkerAlt />
-                <div>
-                  <p className="font-medium">{o.name}</p>
-                  <p className="text-gray-300">{o.address}</p>
-                </div>
-              </div>
-            ))}
-
-            {contact?.workingHours && (
-              <div className="flex gap-3 items-center">
-                <FaClock />
-                <span>
-                  {contact.workingHours.start} - {contact.workingHours.end}
-                </span>
-              </div>
-            )}
-          </address>
+{/* ---------------- CONTACT INFO ---------------- */}
+<div className="space-y-12">
+  <div>
+    <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
+    <address className="not-italic space-y-5">
+      {contact?.phone && (
+        <div className="flex gap-3 items-center">
+          <FaPhoneAlt />
+          <a
+            href={`tel:${contact.phone}`}
+            className="hover:text-blue-300"
+          >
+            {contact.phone}
+          </a>
         </div>
+      )}
 
-        {/* ---------------- QUICK LINKS ---------------- */}
-        <nav aria-label="Quick Links">
-          <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
+      {contact?.whatsapp && (
+        <div className="flex gap-3 items-center">
+          <FaWhatsapp />
+          <a
+            href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-green-400"
+          >
+            {contact.whatsapp}
+          </a>
+        </div>
+      )}
+
+      {contact?.emails?.[0] && (
+        <div className="flex gap-3 items-center">
+          <FaEnvelope />
+          <a
+            href={`mailto:${contact.emails[0]}`}
+            className="hover:text-blue-400"
+          >
+            {contact.emails[0]}
+          </a>
+        </div>
+      )}
+
+      {contact?.offices?.map((o, i) => (
+        <div key={i} className="flex gap-3 items-start">
+          <FaMapMarkerAlt />
+          <div>
+            <p className="font-medium">{o.name}</p>
+            <p className="text-gray-300">{o.address}</p>
+          </div>
+        </div>
+      ))}
+
+      {contact?.workingHours && (
+        <div className="flex gap-3 items-center">
+          <FaClock />
+          <span>
+            {contact.workingHours.start} - {contact.workingHours.end}
+          </span>
+        </div>
+      )}
+    </address>
+  </div>
+
+  {/* ---------------- QUICK LINKS (LEGAL) ---------------- */}
+  <nav aria-label="Quick Legal Links">
+    <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
+    <ul className="space-y-4 text-gray-200">
+      <li>
+        <a
+          href="/privacy-policy"
+          className="hover:text-white transition-colors"
+        >
+          Privacy Policy
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="/terms-and-conditions"
+          className="hover:text-white transition-colors"
+        >
+          Terms & Conditions
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+        {/* ---------------- navigation ---------------- */}
+        <nav aria-label="Navigation">
+          <h3 className="text-xl font-semibold mb-6">Navigation's</h3>
           <ul className="space-y-3 text-gray-200">
             {menuItems.map((item, i) => (
               <li key={i}>
@@ -197,41 +224,57 @@ const subscribeNewsletter = async (e) => {
           </ul>
         </nav>
 
-        {/* ---------------- NEWSLETTER ---------------- */}
-        <div>
-          <h3 className="text-xl font-semibold mb-6">
-            Subscribe to our Newsletter
-          </h3>
-          <p className="text-gray-300 text-sm mb-4">
-            Get updates, offers, and travel tips directly in your inbox.
-          </p>
-          <form
-            className="flex flex-col gap-3"
-            onSubmit={subscribeNewsletter}
-            aria-label="Newsletter Subscription Form"
-          >
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              aria-required="true"
-              aria-label="Email Address"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-colors ${
-                loading ? "opacity-70 cursor-not-allowed" : ""
-              }`}
-            >
-              {loading ? "Subscribing..." : "Subscribe"}
-            </button>
-          </form>
-        </div>
+
+
+       {/* ---------------- NEWSLETTER ---------------- */}
+<div>
+  <h3 className="text-xl font-semibold mb-6">
+    Subscribe to our Newsletter
+  </h3>
+
+  <p className="text-gray-300 text-sm mb-4">
+    Get updates, offers, and travel tips directly in your inbox.
+  </p>
+
+  <form
+    className="flex flex-col gap-3"
+    onSubmit={subscribeNewsletter}
+    aria-label="Newsletter Subscription Form"
+  >
+    <input
+      type="email"
+      name="email"
+      placeholder="Enter your email"
+      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+    />
+
+    <button
+      type="submit"
+      disabled={loading}
+      className={`w-full py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-colors ${
+        loading ? "opacity-70 cursor-not-allowed" : ""
+      }`}
+    >
+      {loading ? "Subscribing..." : "Subscribe"}
+    </button>
+  </form>
+
+  {/* 🔒 Privacy Consent */}
+  <p className="mt-4 text-xs text-gray-300 leading-relaxed">
+    By subscribing, you agree to our{" "}
+    <a
+      href="/privacy-policy"
+      className="underline hover:text-white transition"
+    >
+      Privacy Policy
+    </a>{" "}
+    and consent to receive emails from Net Lanka Travels.
+  </p>
+</div>
+
       </div>
 
       <hr className="border-gray-900 my-8" />

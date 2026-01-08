@@ -48,7 +48,7 @@ const OurCommunity = () => {
       {/* ================= HERO ================= */}
       <header className="relative w-full h-[360px] md:h-[560px] overflow-hidden">
         <img
-          src="/images/community-header.webp"
+          src="/images/co.webp"
           alt="Community Impact Sri Lanka"
           className="absolute inset-0 w-full h-full object-cover"
           fetchpriority="high"

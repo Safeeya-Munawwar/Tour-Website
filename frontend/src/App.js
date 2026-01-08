@@ -81,6 +81,7 @@ import AddTaxi from "./pages/quickTaxi/AddTaxi";
 import EditTaxi from "./pages/quickTaxi/EditTaxi";
 import Layout from "./components/Layout";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function App() {
   const location = useLocation();
@@ -90,6 +91,7 @@ function App() {
   const hideLayout =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/super-admin");
+    
 
   // Listen for 401 event from axios interceptor
   useEffect(() => {
@@ -124,6 +126,7 @@ function App() {
           <ScrollToTopButton />
           <main className="flex-grow flex flex-col justify-start">
             <Routes>
+              <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
               {/* ---------------------------USER ROUTES--------------------------- */}
               <Route
                 path="/"
@@ -222,6 +225,7 @@ function App() {
                   </Layout>
                 }
               />
+
 
               {/* ---------------------------ADMIN ROUTES--------------------------- */}
               <Route path="/admin/login" element={<AdminLogin />} />
