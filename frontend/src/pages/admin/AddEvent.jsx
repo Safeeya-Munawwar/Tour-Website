@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import EventForm from "../../components/admin/EventForm";
 
 export default function AddEvent() {
@@ -91,19 +90,16 @@ export default function AddEvent() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-full">
-        <AdminSidebar />
-      </div>
-      <div className="flex-1 ml-64 p-6 bg-gray-50">
+      <main>
         <EventForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
           submitLabel={isSaving ? "Saving..." : "Add Event"}
         />
-      </div>
+      </main>
     </div>
   );
 }

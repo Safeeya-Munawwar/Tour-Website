@@ -36,8 +36,7 @@ router.get("/notifications", adminAuth, async (req, res) => {
   }
 });
 
-// PATCH: mark notification as done
-// PATCH: mark notification as done
+// mark notification as done
 router.patch("/notifications/:id", adminAuth, async (req, res) => {
   try {
     // Try to find notification in Notification model
@@ -83,14 +82,13 @@ router.patch("/notifications/:id", adminAuth, async (req, res) => {
 });
 
 // DELETE notification
-// DELETE notification
 router.delete("/notifications/:id", adminAuth, async (req, res) => {
   try {
     // Try to delete from Notification model first
     let deleted = await Notification.findOneAndDelete({
       _id: req.params.id,
       admin: req.admin._id,
-      status: "done", // Only allow deleting done notifications
+      status: "done",
     });
 
     let isSuperAdminNotification = false;
@@ -111,7 +109,12 @@ router.delete("/notifications/:id", adminAuth, async (req, res) => {
         .json({ message: "Notification not found or not done" });
     }
 
-    res.json({ success: true, deletedFrom: isSuperAdminNotification ? "SuperAdminNotification" : "Notification" });
+    res.json({
+      success: true,
+      deletedFrom: isSuperAdminNotification
+        ? "SuperAdminNotification"
+        : "Notification",
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete notification" });

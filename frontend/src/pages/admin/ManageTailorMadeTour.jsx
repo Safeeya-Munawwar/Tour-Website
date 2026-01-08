@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -42,7 +41,9 @@ const AdminManageTailorMadeTour = () => {
           fullDescription: res.data.fullDescription?.length
             ? res.data.fullDescription
             : [{ description: "" }],
-          gallery: res.data.gallery?.length ? res.data.gallery.slice(0, MAX_GALLERY_IMAGES) : [],
+          gallery: res.data.gallery?.length
+            ? res.data.gallery.slice(0, MAX_GALLERY_IMAGES)
+            : [],
         });
       }
     } catch (err) {
@@ -173,12 +174,10 @@ const AdminManageTailorMadeTour = () => {
 
   // -------------------- Render --------------------
   return (
-    <div className="flex">
+    <div>
       <ToastContainer />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4">
           Manage Tailor Made Tour
         </h2>
@@ -475,7 +474,7 @@ const AdminManageTailorMadeTour = () => {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

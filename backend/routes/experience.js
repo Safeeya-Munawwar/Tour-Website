@@ -33,7 +33,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// =======================================================GET ALL EXPERIENCES=======================================================
+// =============GET ALL EXPERIENCES============
 router.get("/", async (req, res) => {
   try {
     const all = await Experience.find();
@@ -55,7 +55,7 @@ router.get("/slug/:slug", async (req, res) => {
   }
 });
 
-// ===================================GET SINGLE EXPERIENCE===============================
+// ==============GET SINGLE EXPERIENCE==============
 router.get("/:id", async (req, res) => {
   try {
     const exp = await Experience.findById(req.params.id);
@@ -67,7 +67,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// =================================CREATE EXPERIENCE================================
+// ================CREATE EXPERIENCE================
 router.post("/", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
@@ -77,15 +77,12 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
         ? JSON.parse(req.body.data)
         : req.body.data;
 
-    // ------------ heroImg --------------
     const hero = req.files.find((f) => f.fieldname === "heroImg");
     if (hero) data.heroImg = hero.path;
 
-    // ------------ mainImg ---------------
     const main = req.files.find((f) => f.fieldname === "mainImg");
     if (main) data.mainImg = main.path;
 
-    // ------------ Sub Experiences -------------
     if (data.subExperiences && Array.isArray(data.subExperiences)) {
       const subFiles = req.files.filter((f) =>
         f.fieldname.startsWith("subExperienceImages")
@@ -115,7 +112,7 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
   }
 });
 
-// ============================UPDATE EXPERIENCE===============================
+// ==========UPDATE EXPERIENCE=====================
 router.put("/:id", adminAuth, upload.any(), async (req, res) => {
   try {
     if (!req.body.data) throw new Error("No data received");
@@ -126,17 +123,15 @@ router.put("/:id", adminAuth, upload.any(), async (req, res) => {
         : req.body.data;
 
     const experience = await Experience.findById(req.params.id);
-    if (!experience) return res.status(404).json({ error: "Experience not found" });
+    if (!experience)
+      return res.status(404).json({ error: "Experience not found" });
 
-    // heroImg update
     const hero = req.files.find((f) => f.fieldname === "heroImg");
     if (hero) data.heroImg = hero.path;
 
-    // mainImg update
     const main = req.files.find((f) => f.fieldname === "mainImg");
     if (main) data.mainImg = main.path;
 
-    // sub-experience images update
     if (data.subExperiences && Array.isArray(data.subExperiences)) {
       const subFiles = req.files.filter((f) =>
         f.fieldname.startsWith("subExperienceImages")
@@ -150,15 +145,14 @@ router.put("/:id", adminAuth, upload.any(), async (req, res) => {
       });
     }
 
-    // ===== Gallery =====
-    let updatedGallery = experience.gallery || []; // start with existing gallery
-    // Remove images marked for deletion
+    let updatedGallery = experience.gallery || [];
+
     if (data.removeGallery && Array.isArray(data.removeGallery)) {
       updatedGallery = updatedGallery.filter(
         (url) => !data.removeGallery.includes(url)
       );
     }
-    // Add new uploads
+
     const galleryFiles = req.files.filter(
       (f) => f.fieldname === "galleryFiles"
     );
@@ -175,7 +169,6 @@ router.put("/:id", adminAuth, upload.any(), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // ===============================DELETE EXPERIENCE=============================
 router.delete("/:id", adminAuth, async (req, res) => {

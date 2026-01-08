@@ -28,7 +28,6 @@ const QuickTaxiBookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// Auto-calculate members
 QuickTaxiBookingSchema.pre("save", function (next) {
   this.members = (this.adults || 0) + (this.children || 0);
   next();

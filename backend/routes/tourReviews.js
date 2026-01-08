@@ -22,7 +22,9 @@ router.post("/", async (req, res) => {
     });
 
     await newReview.save();
-    res.status(201).json({ success: true, message: "Review submitted successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "Review submitted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
@@ -31,26 +33,29 @@ router.post("/", async (req, res) => {
 
 // GET all reviews (for admin)
 router.get("/", async (req, res) => {
-    try {
-      const reviews = await TourReview.find()
-        .populate("tourId", "title type") // optional: get tour title and type (day/round)
-        .sort({ createdAt: -1 });
-      res.status(200).json(reviews);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
+  try {
+    const reviews = await TourReview.find()
+      .populate("tourId", "title type")
+      .sort({ createdAt: -1 });
+    res.status(200).json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
-// DELETE a review by ID (optional, admin only)
-const adminAuth = require("../middleware/adminAuth"); // if needed
+// DELETE a review by ID (admin only)
+const adminAuth = require("../middleware/adminAuth");
 router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const deleted = await TourReview.findByIdAndDelete(req.params.id);
     if (!deleted)
-      return res.status(404).json({ success: false, message: "Review not found" });
-    res.status(200).json({ success: true, message: "Review deleted successfully" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Review not found" });
+    res
+      .status(200)
+      .json({ success: true, message: "Review deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });

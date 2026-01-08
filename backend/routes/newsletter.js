@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Newsletter = require("../models/Newsletter");
 const sendEmail = require("../utils/mailer");
-
-// Existing models (do not modify)
 const DayTour = require("../models/DayTour");
 const RoundTour = require("../models/RoundTour");
 const Event = require("../models/Event");
@@ -13,7 +11,10 @@ const QuickTaxi = require("../models/QuickTaxi");
 router.post("/", async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ success: false, message: "Email is required" });
+    if (!email)
+      return res
+        .status(400)
+        .json({ success: false, message: "Email is required" });
 
     // Always save email (allow duplicates)
     const subscriber = await Newsletter.create({ email });
@@ -43,17 +44,31 @@ router.post("/", async (req, res) => {
     // ---------------- HELPER TO RENDER ITEMS ----------------
     const renderItems = (items, type) => {
       if (!items.length) return `<p>No ${type} available at the moment.</p>`;
-      return items.map(item => `
+      return items
+        .map(
+          (item) => `
         <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:8px;">
-          <img src="${item.img}" alt="${item.title}" style="width:100%; max-width:300px; border-radius:5px;" />
+          <img src="${item.img}" alt="${
+            item.title
+          }" style="width:100%; max-width:300px; border-radius:5px;" />
           <h4 style="margin:5px 0; color:#0d203a;">${item.title}</h4>
-          ${item.location ? `<p>Location: ${item.location}</p>` : ''}
-          ${item.days ? `<p>Duration: ${item.days}</p>` : ''}
-          ${item.seats ? `<p>Seats: ${item.seats}, AC: ${item.ac ? 'Yes' : 'No'}</p>` : ''}
-          ${item.date ? `<p>Date: ${new Date(item.date).toLocaleDateString()}</p>` : ''}
-          ${item.desc ? `<p>${item.desc}</p>` : ''}
+          ${item.location ? `<p>Location: ${item.location}</p>` : ""}
+          ${item.days ? `<p>Duration: ${item.days}</p>` : ""}
+          ${
+            item.seats
+              ? `<p>Seats: ${item.seats}, AC: ${item.ac ? "Yes" : "No"}</p>`
+              : ""
+          }
+          ${
+            item.date
+              ? `<p>Date: ${new Date(item.date).toLocaleDateString()}</p>`
+              : ""
+          }
+          ${item.desc ? `<p>${item.desc}</p>` : ""}
         </div>
-      `).join("");
+      `
+        )
+        .join("");
     };
 
     // ---------------- USER EMAIL WITH IMAGES ----------------
@@ -96,7 +111,9 @@ router.post("/", async (req, res) => {
               <tr>
                 <td style="padding:0 25px;">
                   <h3 style="color:#0d203a;">🌴 Day Tours</h3>
-                  ${dayTours.map(t => `
+                  ${dayTours
+                    .map(
+                      (t) => `
                     <div style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:15px; overflow:hidden;">
                       <img src="${t.img}" alt="${t.title}" style="width:100%; height:200px; object-fit:cover;">
                       <div style="padding:15px;">
@@ -105,7 +122,9 @@ router.post("/", async (req, res) => {
                         <p style="margin:0; color:#555;">${t.desc}</p>
                       </div>
                     </div>
-                  `).join("")}
+                  `
+                    )
+                    .join("")}
                 </td>
               </tr>
     
@@ -113,7 +132,9 @@ router.post("/", async (req, res) => {
               <tr>
                 <td style="padding:0 25px;">
                   <h3 style="color:#0d203a;">🧭 Round Tours</h3>
-                  ${roundTours.map(t => `
+                  ${roundTours
+                    .map(
+                      (t) => `
                     <div style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:15px; overflow:hidden;">
                       <img src="${t.img}" alt="${t.title}" style="width:100%; height:200px; object-fit:cover;">
                       <div style="padding:15px;">
@@ -123,7 +144,9 @@ router.post("/", async (req, res) => {
                         <p style="margin:0; color:#555;">${t.desc}</p>
                       </div>
                     </div>
-                  `).join("")}
+                  `
+                    )
+                    .join("")}
                 </td>
               </tr>
     
@@ -131,17 +154,27 @@ router.post("/", async (req, res) => {
               <tr>
                 <td style="padding:0 25px;">
                   <h3 style="color:#0d203a;">🎉 Events</h3>
-                  ${events.map(e => `
+                  ${events
+                    .map(
+                      (e) => `
                     <div style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:15px; overflow:hidden;">
-                      <img src="${e.img}" alt="${e.title}" style="width:100%; height:200px; object-fit:cover;">
+                      <img src="${e.img}" alt="${
+                        e.title
+                      }" style="width:100%; height:200px; object-fit:cover;">
                       <div style="padding:15px;">
                         <h4 style="margin:0; color:#0d203a;">${e.title}</h4>
-                        <p style="margin:5px 0; color:#666;">📍 ${e.location}</p>
-                        <p style="margin:5px 0; color:#666;">📅 ${new Date(e.date).toLocaleDateString()}</p>
+                        <p style="margin:5px 0; color:#666;">📍 ${
+                          e.location
+                        }</p>
+                        <p style="margin:5px 0; color:#666;">📅 ${new Date(
+                          e.date
+                        ).toLocaleDateString()}</p>
                         <p style="margin:0; color:#555;">${e.desc || ""}</p>
                       </div>
                     </div>
-                  `).join("")}
+                  `
+                    )
+                    .join("")}
                 </td>
               </tr>
     
@@ -149,7 +182,9 @@ router.post("/", async (req, res) => {
               <tr>
                 <td style="padding:0 25px;">
                   <h3 style="color:#0d203a;">🚖 Quick Taxi Services</h3>
-                  ${taxis.map(t => `
+                  ${taxis
+                    .map(
+                      (t) => `
                     <div style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:15px; overflow:hidden;">
                       <div style="padding:15px;">
                         <h4 style="margin:0; color:#0d203a;">${t.name}</h4>
@@ -164,7 +199,9 @@ router.post("/", async (req, res) => {
                         </p>
                       </div>
                     </div>
-                  `).join("")}
+                  `
+                    )
+                    .join("")}
                 </td>
               </tr>
     
@@ -194,16 +231,19 @@ router.post("/", async (req, res) => {
     
     </body>
     </html>
-    `;    
+    `;
 
-    await sendEmail({ to: email, subject: "Your Subscription to Net Lanka Travels", html: userHtml });
+    await sendEmail({
+      to: email,
+      subject: "Your Subscription to Net Lanka Travels",
+      html: userHtml,
+    });
 
     res.status(201).json({
       success: true,
       message: "Subscribed successfully. Check your email for latest updates!",
       subscriber,
     });
-
   } catch (error) {
     console.error("Newsletter subscription error:", error);
     res.status(500).json({

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 
 const CustomizeTourBookingAdmin = () => {
@@ -113,14 +112,10 @@ const CustomizeTourBookingAdmin = () => {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6 px-5 mt-4">
           Manage Customize Tour Bookings
         </h2>
@@ -533,7 +528,7 @@ const CustomizeTourBookingAdmin = () => {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

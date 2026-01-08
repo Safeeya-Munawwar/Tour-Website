@@ -21,14 +21,16 @@ exports.createDayBeforeReminder = async (booking) => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (bookingDate.toDateString() === tomorrow.toDateString()) {
-      const exists = await AdminNotification.findOne({ bookingId: booking._id });
+      const exists = await AdminNotification.findOne({
+        bookingId: booking._id,
+      });
       if (!exists) {
         const type = getBookingType(booking);
         await AdminNotification.create({
           title: "Tour Reminder",
           message: `${type} tour booked by ${booking.name} is scheduled for tomorrow.`,
           bookingId: booking._id,
-          bookingType: type, // dynamically set
+          bookingType: type,
         });
       }
     }
@@ -37,16 +39,20 @@ exports.createDayBeforeReminder = async (booking) => {
   }
 };
 
-// Check all bookings for tomorrow (can be used in a cron job)
+// Check all bookings for tomorrow
 exports.checkBookings = async () => {
   try {
-    // Fetch all bookings from all collections
     const dayBookings = await DayTourBooking.find();
     const roundBookings = await RoundTourBooking.find();
     const eventBookings = await EventTourBooking.find();
     const customBookings = await TourBooking.find();
 
-    const allBookings = [...dayBookings, ...roundBookings, ...eventBookings, ...customBookings];
+    const allBookings = [
+      ...dayBookings,
+      ...roundBookings,
+      ...eventBookings,
+      ...customBookings,
+    ];
 
     for (const b of allBookings) {
       await exports.createDayBeforeReminder(b);

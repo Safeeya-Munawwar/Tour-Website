@@ -50,18 +50,15 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
         ? JSON.parse(req.body.data)
         : req.body.data;
 
-    // default arrays
     data.howItWorks = Array.isArray(data.howItWorks) ? data.howItWorks : [];
     data.gallery = Array.isArray(data.gallery) ? data.gallery : [];
     data.fullDescription = Array.isArray(data.fullDescription)
       ? data.fullDescription
       : [];
 
-    // phone and whatsapp
     data.phone = data.phone || "";
     data.whatsapp = data.whatsapp || "";
 
-    // howItWorks images
     const howFiles = req.files.filter((f) =>
       f.fieldname.startsWith("howItWorks")
     );
@@ -70,22 +67,20 @@ router.post("/", adminAuth, upload.any(), async (req, res) => {
       return { ...item, image: file ? file.path : item.image || "" };
     });
 
-    // gallery files
     const galleryFiles = req.files.filter(
       (f) => f.fieldname === "galleryFiles"
     );
 
-    // existing gallery from frontend
     data.gallery = Array.isArray(data.gallery) ? data.gallery : [];
 
-    // ADD new images 
     const newGalleryImages = galleryFiles.map((f) => f.path);
 
-    const MAX_GALLERY_IMAGES = 6; 
+    const MAX_GALLERY_IMAGES = 6;
 
-    // merge existing + new, limit to max allowed
-    data.gallery = [...data.gallery, ...newGalleryImages].slice(0, MAX_GALLERY_IMAGES);
-    
+    data.gallery = [...data.gallery, ...newGalleryImages].slice(
+      0,
+      MAX_GALLERY_IMAGES
+    );
 
     const updatedTour = await TailorMadeTour.findOneAndUpdate({}, data, {
       new: true,

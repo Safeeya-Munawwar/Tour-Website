@@ -7,7 +7,6 @@ import SocialMediaItem from "../../components/admin/SocialMediaItem";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -172,13 +171,11 @@ export default function EditContact() {
   if (!formData) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
+ 
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+      <main>
         <form
           onSubmit={handleSubmit}
           className="bg-white border border-[#2E5B84] p-10 rounded-2xl shadow-xl w-full max-w-4xl mx-auto mt-10"
@@ -367,7 +364,7 @@ export default function EditContact() {
             Update Contact
           </button>
         </form>
-      </div>
+      </main>
     </div>
   );
 }

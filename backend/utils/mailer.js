@@ -1,13 +1,18 @@
+require("dotenv").config();
 const nodemailer = require("nodemailer");
 
+// Create transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.EMAIL_HOST, 
+  port: parseInt(process.env.EMAIL_PORT),
+  secure: process.env.EMAIL_PORT == 465, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
+// Verify connection
 transporter.verify((error, success) => {
   if (error) {
     console.error("Email transporter verification failed:", error);
@@ -16,6 +21,7 @@ transporter.verify((error, success) => {
   }
 });
 
+// Function to send email
 const sendEmail = async ({ to, subject, text, html }) => {
   try {
     const info = await transporter.sendMail({
@@ -25,9 +31,9 @@ const sendEmail = async ({ to, subject, text, html }) => {
       text,
       html,
     });
-    console.log("Email sent to", to, "MessageId:", info.messageId);
+    console.log("✅ Email sent to", to, "MessageId:", info.messageId);
   } catch (err) {
-    console.error("Email sending failed:", err);
+    console.error("❌ Email sending failed:", err);
   }
 };
 

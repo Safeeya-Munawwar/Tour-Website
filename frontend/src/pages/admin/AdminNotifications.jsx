@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +9,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 export default function AdminNotifications() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [statusFilter, setStatusFilter] = useState("pending");
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,16 +48,8 @@ export default function AdminNotifications() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
-      </div>
-
       {/* Main */}
-      <div className="flex-1 ml-64 p-8">
+      <main>
         <h1 className="text-4xl font-bold text-[#0d203a] mb-2">
           Section Change Requests from Super Admin
         </h1>
@@ -145,7 +135,7 @@ export default function AdminNotifications() {
             </div>
           ))}
         </div>
-      </div>
+      </main>
 
       <ToastContainer position="top-right" autoClose={2000} />
     </div>

@@ -18,7 +18,6 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// heroImg = 1 image | galleryImgs = max 5 images
 const uploadFields = upload.fields([
   { name: "heroImg", maxCount: 1 },
   { name: "galleryImgs", maxCount: 5 },

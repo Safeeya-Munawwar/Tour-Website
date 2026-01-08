@@ -5,7 +5,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import "leaflet/dist/leaflet.css";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -79,13 +78,11 @@ export default function AdminContactList() {
   ];
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
          Manage Contact Information
         </h2>
@@ -313,7 +310,7 @@ export default function AdminContactList() {
             </tbody>
           </table>
         )}
-      </div>
+      </main>
     </div>
   );
 }

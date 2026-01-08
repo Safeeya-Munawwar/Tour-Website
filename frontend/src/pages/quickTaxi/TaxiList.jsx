@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function TaxiList() {
   const [taxis, setTaxis] = useState([]);
@@ -22,12 +21,9 @@ export default function TaxiList() {
   };
 
   return (
-    <div className="flex">
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+    <div>
+ 
+      <main>
         <h2 className="text-4xl px-5 mt-4 font-bold text-[#0d203a] mb-4">
           Manage Taxi Vehicles
         </h2>
@@ -89,7 +85,7 @@ export default function TaxiList() {
             ))}
           </tbody>
         </table>
-      </div>
+      </main>
     </div>
   );
 }

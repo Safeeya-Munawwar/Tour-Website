@@ -160,38 +160,90 @@ router.post("/bookings", async (req, res) => {
     const booking = new QuickTaxiBooking(req.body);
     await booking.save();
 
-    // Populate taxiId to get vehicle name
     await booking.populate("taxiId");
 
-    // Format dates (remove GMT)
     const formattedPickupDate = new Date(pickupDate).toLocaleDateString(
       "en-GB"
-    ); // dd/mm/yyyy
+    );
     const formattedDropDate = dropDate
       ? new Date(dropDate).toLocaleDateString("en-GB")
       : "-";
 
     // ---------------- SEND EMAIL TO ADMIN ----------------
     const adminEmail = process.env.EMAIL_USER;
-    const adminSubject = `New Quick Taxi Booking: ${
-      booking.taxiId?.name || "Vehicle"
-    }`;
+    const adminSubject = `New Quick Taxi Booking: ${booking.taxiId?.name || "Vehicle"}`;
     const adminHtml = `
-  <h2>New Quick Taxi Booking Received</h2>
-  <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-  <p><strong>Phone:</strong> ${phone}</p>
-  <p><strong>Country:</strong> ${country}</p>
-  <p><strong>Service Type:</strong> ${serviceType}</p>
-  <p><strong>Vehicle:</strong> ${booking.taxiId?.name || "—"}</p>
-  <p><strong>Pickup Location:</strong> ${pickupLocation}</p>
-  <p><strong>Drop Location:</strong> ${dropLocation}</p>
-  <p><strong>Pickup Date & Time:</strong> ${formattedPickupDate} at ${pickupTime}</p>
-  <p><strong>Drop Date:</strong> ${formattedDropDate}</p>
-  <p><strong>Adults:</strong> ${adults || 1}</p>
-  <p><strong>Children:</strong> ${children || 0}</p>
-  <p><strong>Members:</strong> ${booking.members}</p>
-  <p><strong>Message:</strong> ${message || "N/A"}</p>
-`;
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">New Quick Taxi Booking Received</h2>
+        <p>Dear Admin,</p>
+        <p>A new quick taxi booking has been submitted. Details are below:</p>
+    
+        <table style="width: 100%; border-collapse: collapse; max-width: 600px; margin-top: 10px;">
+          <tr style="background-color: #f2f2f2;">
+            <th style="border: 1px solid #1a354e; padding: 8px; text-align: left;">Field</th>
+            <th style="border: 1px solid #1a354e; padding: 8px; text-align: left;">Details</th>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Name</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${firstName} ${lastName}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Phone</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${phone}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Country</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${country}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Service Type</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${serviceType}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.taxiId?.name || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${pickupLocation}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Drop Location</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${dropLocation}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Date & Time</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${formattedPickupDate} at ${pickupTime}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Drop Date</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${formattedDropDate}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${adults || 1}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Children</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${children || 0}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Members</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.members || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+          </tr>
+        </table>
+    
+        <p style="margin-top: 15px;">Please contact the customer if needed. All bookings are recorded in the system.</p>
+    
+        <p>Best Regards,<br/>
+        <strong>Net Lanka Travels</strong></p>
+      </div>
+    `;
+    
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
     res.json({ success: true, booking });

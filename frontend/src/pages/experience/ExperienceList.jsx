@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function ExperienceList() {
   const [experiences, setExperiences] = useState([]);
@@ -22,12 +21,10 @@ export default function ExperienceList() {
   };
 
   return (
-    <div className="flex">
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
+    <div>
+     
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] px-5 mt-4  mb-4">
          Manage Experiences
         </h2>
@@ -101,7 +98,7 @@ export default function ExperienceList() {
 </tbody>
 
         </table>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// models/AdminNotification.js
 const mongoose = require("mongoose");
 
 const AdminNotificationSchema = new mongoose.Schema(
@@ -6,7 +5,7 @@ const AdminNotificationSchema = new mongoose.Schema(
     title: { type: String, required: true },
     message: { type: String, required: true },
     bookingId: { type: mongoose.Schema.Types.ObjectId, required: true },
-    bookingType: { type: String, default: "Custom" }, // unified type
+    bookingType: { type: String, default: "Custom" },
     isRead: { type: Boolean, default: false },
   },
   { timestamps: true }

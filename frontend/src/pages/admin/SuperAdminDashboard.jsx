@@ -13,7 +13,6 @@ import {
   Compass,
   CarFront,
 } from "lucide-react";
-import SuperAdminSidebar from "../../components/admin/SuperAdminSidebar";
 import {
   LineChart,
   Line,
@@ -31,7 +30,6 @@ import AdminNotificationDropdown from "../../components/AdminNotificationDropdow
 import TomorrowBookingsTable from "../../components/TomorrowBookingsTable";
 
 export default function Dashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
     roundTours: 0,
     dayTours: 0,
@@ -277,9 +275,8 @@ export default function Dashboard() {
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100">
-      <SuperAdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="flex-1 overflow-auto">
+    <div>
+      <main>
         <main className="p-6">
           {/* Page Header with Bell */}
           <div className="flex items-center justify-between mb-6">
@@ -549,7 +546,7 @@ export default function Dashboard() {
             </div>
           </div>
         </main>
-      </div>
+      </main>
     </div>
   );
 }
