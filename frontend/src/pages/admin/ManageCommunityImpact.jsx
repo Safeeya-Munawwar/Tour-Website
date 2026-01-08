@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -157,13 +156,10 @@ const AdminCommunityImpact = () => {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] mb-6">
           Manage Community Impact
         </h2>
@@ -323,7 +319,7 @@ const AdminCommunityImpact = () => {
             </div>
           )}
         </form>
-      </div>
+      </main>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import SuperAdminSidebar from "../../components/admin/SuperAdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -72,14 +71,9 @@ export default function AdminSectionRequest() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <SuperAdminSidebar />
-      </div>
-
+    <div>
       {/* Main Content */}
-      <div className="flex-1 ml-64 p-8">
+      <main>
         <h1 className="text-4xl font-bold text-[#0d203a] mb-2">
           Super Admin - Admin Section Change Requests
         </h1>
@@ -179,7 +173,7 @@ export default function AdminSectionRequest() {
             Send Notification
           </button>
         </div>
-      </div>
+      </main>
 
       <ToastContainer />
     </div>

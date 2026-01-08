@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -109,16 +108,12 @@ export default function ManageDestination() {
 
   // ---------------- UI ----------------
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 p-6 bg-blue-50">
+      <main>
         <h2 className="text-3xl font-bold mb-6 text-blue-800">
           Manage Destinations
         </h2>
@@ -185,7 +180,7 @@ export default function ManageDestination() {
             Save Changes
           </button>
         </form>
-      </div>
+      </main>
     </div>
   );
 }

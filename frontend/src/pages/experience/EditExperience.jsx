@@ -3,8 +3,6 @@ import { axiosInstance } from "../../lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import ExperienceForm from "../../components/admin/ExperienceForm";
 
 export default function EditExperience() {
@@ -121,12 +119,10 @@ export default function EditExperience() {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+    
+      <main>
         <ExperienceForm
           formData={formData}
           setFormData={setFormData}
@@ -134,7 +130,7 @@ export default function EditExperience() {
           submitLabel={isSaving ? "Saving..." : "Edit Experience"}
           isSaving={isSaving}
         />
-      </div>
+      </main>
     </div>
   );
 }

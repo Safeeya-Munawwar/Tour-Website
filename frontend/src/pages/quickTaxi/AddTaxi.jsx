@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import TaxiForm from "../../components/admin/TaxiForm";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -41,19 +40,17 @@ export default function AddTaxi() {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-      <div className="flex-1 ml-64 p-6 bg-blue-50 min-h-screen">
+  
+      <main>
         <TaxiForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
           submitLabel="Add Vehicle"
         />
-      </div>
+      </main>
     </div>
   );
 }

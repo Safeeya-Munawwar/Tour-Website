@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaTrash, FaEdit, FaImage, FaVideo } from "react-icons/fa";
@@ -223,13 +222,10 @@ const AdminManageAbout = () => {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+      <main>
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
           Manage About
         </h2>
@@ -655,7 +651,7 @@ const AdminManageAbout = () => {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

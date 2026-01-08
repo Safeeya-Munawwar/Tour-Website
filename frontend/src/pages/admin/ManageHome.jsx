@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -212,27 +211,24 @@ const AdminManageHome = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex-1">
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
 
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
-        <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
-          Manage Home Contents
-        </h2>
-        <div className="flex justify-end mb-8">
-          <button
-            onClick={handleSubmit}
-            disabled={isSaving}
-            className={`bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60] ${
-              isSaving ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {isSaving ? "Saving..." : "Save Home Page"}
-          </button>
-        </div>
+      <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
+        Manage Home Contents
+      </h2>
+
+      <div className="flex justify-end mb-8">
+        <button
+          onClick={handleSubmit}
+          disabled={isSaving}
+          className={`bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60] ${
+            isSaving ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+        >
+          {isSaving ? "Saving..." : "Save Home Page"}
+        </button>
+      </div>
 
         {/* Tabs */}
         <div className="flex justify-center gap-4 mb-4">
@@ -511,7 +507,7 @@ const AdminManageHome = () => {
             </table>
           </div>
         )}
-      </div>
+    
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function EventList() {
   const [events, setEvents] = useState([]);
@@ -32,9 +31,8 @@ export default function EventList() {
   };
 
   return (
-    <div className="flex">
-      <div className="w-64 fixed h-screen"><AdminSidebar /></div>
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+    <div>
+      <main>
         <h2 className="text-4xl font-bold mb-4">Manage Events</h2>
         <div className="flex justify-end mb-8">
           <Link to="/admin/events/new" className="bg-[#2E5B84] text-white px-4 py-2 rounded">+ Add Event</Link>
@@ -64,7 +62,7 @@ export default function EventList() {
             {events.length === 0 && <tr><td colSpan="4" className="text-center p-4 text-gray-500">No events found</td></tr>}
           </tbody>
         </table>
-      </div>
+      </main>
     </div>
   );
 }

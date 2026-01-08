@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useParams, Link } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 
 export default function ExperienceView() {
   const { id } = useParams();
@@ -32,14 +31,10 @@ export default function ExperienceView() {
     );
 
   return (
-    <div className="flex font-poppins bg-gray-50 min-h-screen">
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
+    <div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 p-8">
+      <main>
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -154,7 +149,7 @@ export default function ExperienceView() {
             </ul>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

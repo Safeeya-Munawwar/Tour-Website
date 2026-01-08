@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import SuperAdminSidebar from "../../components/admin/SuperAdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +10,6 @@ import { CheckCircle } from "lucide-react";
 dayjs.extend(relativeTime);
 
 export default function SectionNotifications() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [statusFilter, setStatusFilter] = useState("done"); //done, read
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,17 +76,10 @@ export default function SectionNotifications() {
   };  
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <SuperAdminSidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
-      </div>
+    <div>
 
       {/* Main */}
-      <div className="flex-1 ml-64 p-8">
+      <main>
         <h1 className="text-4xl font-bold text-[#0d203a] mb-2">
           Admin Task Completion Notifications
         </h1>
@@ -170,10 +161,12 @@ export default function SectionNotifications() {
   <p className="text-gray-700 mb-2">{note.message}</p>
 
   {note.admin && (
-    <p className="text-sm text-gray-600 mb-1">
-      Admin: <span className="font-medium">({note.admin.email})</span>
-    </p>
-  )}
+  <p className="text-sm text-gray-600 mb-1">
+    Admin: <span className="font-medium">
+      {note.admin.name ? `${note.admin.name} (${note.admin.email})` : note.admin.email}
+    </span>
+  </p>
+)}
 
   <p className="text-sm text-gray-500 mb-2">{dayjs(note.createdAt).fromNow()}</p>
 
@@ -208,7 +201,7 @@ export default function SectionNotifications() {
 
           ))}
         </div>
-      </div>
+      </main>
 
       <ToastContainer position="top-right" autoClose={2000} />
     </div>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import SuperAdminSidebar from "../../components/admin/SuperAdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +12,7 @@ export default function AddAdmin() {
     password: "",
   });
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false); // <-- Loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,6 +27,8 @@ export default function AddAdmin() {
       return;
     }
 
+    setLoading(true); // Start loading
+
     try {
       await axiosInstance.post("/super-admin/admins", form);
       toast.success("Admin created successfully!");
@@ -39,24 +41,19 @@ export default function AddAdmin() {
       setForm({ name: "", email: "", password: "" });
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to create admin");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <div className="w-64 fixed h-screen">
-        <SuperAdminSidebar />
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 ml-64 p-6 bg-white min-h-screen">
+    <div>
+      <main>
         <form
           onSubmit={handleSubmit}
           className="bg-white border border-[#2E5B84] p-10 rounded-2xl shadow-xl 
                      w-full max-w-2xl mx-auto mt-10"
         >
-          {/* Title */}
           <h2 className="text-3xl font-bold text-[#0d203a] mb-2 text-center">
             Add New Admin
           </h2>
@@ -120,13 +117,17 @@ export default function AddAdmin() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-[#0d203a] hover:bg-[#143a5e] 
-                       text-white py-3 rounded-xl font-semibold transition"
+            disabled={loading} // disable while loading
+            className={`w-full py-3 rounded-xl font-semibold text-white transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#0d203a] hover:bg-[#143a5e]"
+            }`}
           >
-            Create Admin
+            {loading ? "Creating..." : "Create Admin"} {/* Show loading text */}
           </button>
         </form>
-      </div>
+      </main>
 
       <ToastContainer />
     </div>

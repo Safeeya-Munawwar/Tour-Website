@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 
@@ -42,9 +41,8 @@ export default function AddDayTourDetail() {
   };
 
   return (
-    <div className="flex">
-      <div className="w-64 fixed h-screen"><AdminSidebar /></div>
-      <div className="ml-64 flex-1 p-6">
+    <div>
+      <main>
         <form onSubmit={handleSubmit} className="bg-white p-8 shadow rounded max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-6">Add Day Tour Detail</h2>
 
@@ -75,7 +73,7 @@ export default function AddDayTourDetail() {
 
           <button className="bg-blue-600 text-white px-6 py-3 rounded">Add Detail</button>
         </form>
-      </div>
+      </main>
     </div>
   );
 }

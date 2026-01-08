@@ -28,7 +28,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [openStoryMenu, setOpenStoryMenu] = useState(false);
   const [openToursMenu, setOpenToursMenu] = useState(false);
   const [openCommentsMenu, setOpenCommentsMenu] = useState(false);
-  const [openBookingMenu, setOpenBookingMenu] = useState(false);
   const [openInsightMenu, setOpenInsightMenu] = useState(false);
   const [openTaxiMenu, setOpenTaxiMenu] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -42,31 +41,32 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     sessionStorage.clear();
     window.location.href = "/admin/login";
   };
-  
+
   // Fetch unread notifications
-const fetchUnreadNotifications = async () => {
-  try {
-    const res = await axiosInstance.get("/admin/notifications", {
-      params: { status: "pending", page: 1, limit: 1000 }, // fetch all pending
-    });
+  const fetchUnreadNotifications = async () => {
+    try {
+      const res = await axiosInstance.get("/admin/notifications", {
+        params: { status: "pending", page: 1, limit: 1000 }, // fetch all pending
+      });
 
-    const notifications = res.data.notifications;
+      const notifications = res.data.notifications;
 
-    // Group by message + action + priority to count unique notifications
-    const uniqueMessages = new Set(
-      notifications.map((note) => `${note.message}_${note.action}_${note.priority}`)
-    );
+      // Group by message + action + priority to count unique notifications
+      const uniqueMessages = new Set(
+        notifications.map(
+          (note) => `${note.message}_${note.action}_${note.priority}`
+        )
+      );
 
-    setUnreadCount(uniqueMessages.size);
-  } catch (err) {
-    console.error("Failed to fetch notifications", err);
-  }
-};
+      setUnreadCount(uniqueMessages.size);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
 
-  
   useEffect(() => {
     fetchUnreadNotifications();
-  }, [location.pathname]);  
+  }, [location.pathname]);
 
   useEffect(() => {
     fetchUnreadNotifications();
@@ -109,28 +109,27 @@ const fetchUnreadNotifications = async () => {
           </NavLink>
 
           {/* Notifications */}
-{/* Notifications */}
-<NavLink
-  to="/admin/notifications"
-  className={({ isActive }) =>
-    `flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition ${
-      isActive ? activeClass : defaultClass
-    }`
-  }
->
-  <span className="flex items-center gap-3">
-    <Bell size={18} />
-    Tasks
-  </span>
+          {/* Notifications */}
+          <NavLink
+            to="/admin/notifications"
+            className={({ isActive }) =>
+              `flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? activeClass : defaultClass
+              }`
+            }
+          >
+            <span className="flex items-center gap-3">
+              <Bell size={18} />
+              Tasks
+            </span>
 
-  {/* 🔴 Notification Badge */}
-  {unreadCount > 0 && (
-    <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-      {unreadCount} {/* number of unique messages */}
-    </span>
-  )}
-</NavLink>
-
+            {/* 🔴 Notification Badge */}
+            {unreadCount > 0 && (
+              <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                {unreadCount} {/* number of unique messages */}
+              </span>
+            )}
+          </NavLink>
 
           {/* Home */}
           <NavLink
@@ -154,7 +153,11 @@ const fetchUnreadNotifications = async () => {
               <BookOpen size={18} />
               Our Story
             </span>
-            {openStoryMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openStoryMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
 
           {openStoryMenu && (
@@ -192,7 +195,11 @@ const fetchUnreadNotifications = async () => {
               <Plane size={18} />
               Tours
             </span>
-            {openToursMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openToursMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
 
           {openToursMenu && (
@@ -253,7 +260,11 @@ const fetchUnreadNotifications = async () => {
               <NotebookPen size={18} />
               Insight
             </span>
-            {openInsightMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openInsightMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
 
           {openInsightMenu && (
@@ -303,7 +314,11 @@ const fetchUnreadNotifications = async () => {
               <Car size={18} />
               Quick Taxi
             </span>
-            {openTaxiMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openTaxiMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
 
           {openTaxiMenu && (
@@ -332,66 +347,6 @@ const fetchUnreadNotifications = async () => {
             </div>
           )}
 
-          {/* Booking Menu */}
-          <button
-            onClick={() => setOpenBookingMenu(!openBookingMenu)}
-            className="flex items-center justify-between w-full px-4 py-2 rounded-lg hover:bg-[#487898]/20 transition"
-          >
-            <span className="flex items-center gap-3">
-              <CalendarCheck size={18} />
-              Booking
-            </span>
-            {openBookingMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-          </button>
-
-          {openBookingMenu && (
-            <div className="ml-10 mt-1 flex flex-col space-y-1">
-              <NavLink
-                to="/admin/day-tour-booking"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Map size={16} /> Day Tour
-              </NavLink>
-
-              <NavLink
-                to="/admin/round-tour-booking"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Round Tour
-              </NavLink>
-
-              <NavLink
-                to="/admin/customize-tour"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <PenTool size={16} /> Customize Tour
-              </NavLink>
-
-              <NavLink
-                to="/admin/event-tour-booking"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <Compass size={16} /> Event Tour
-              </NavLink>
-            </div>
-          )}
-
           {/* Comments Menu */}
           <button
             onClick={() => setOpenCommentsMenu(!openCommentsMenu)}
@@ -401,7 +356,11 @@ const fetchUnreadNotifications = async () => {
               <MessageCircle size={18} />
               Comments
             </span>
-            {openCommentsMenu ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+            {openCommentsMenu ? (
+              <ChevronDown size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
 
           {openCommentsMenu && (

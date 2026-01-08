@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import DestinationForm from "../../components/admin/DestinationForm";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,19 +44,17 @@ export default function AddDestination() {
   };
 
   return (
-    <div className="flex">
+    <div>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-64 fixed h-screen">
-        <AdminSidebar />
-      </div>
-      <div className="flex-1 ml-64 p-6 bg-blue-50 min-h-screen">
+   
+      <main>
         <DestinationForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
           submitLabel={isSaving ? "Saving..." : "Create Destination"}
         />
-      </div>
+      </main>
     </div>
   );
 }

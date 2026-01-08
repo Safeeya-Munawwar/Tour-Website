@@ -3,6 +3,9 @@ const router = express.Router();
 const adminAuth = require("../middleware/adminAuth");
 const SuperAdminNotification = require("../models/SuperAdminNotification");
 const Admin = require("../models/Admin");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const sendEmail = require("../utils/mailer");
 
 // --- Middleware: SuperAdmin only ---
 const superAdminOnly = async (req, res, next) => {
@@ -23,15 +26,58 @@ router.post("/admins", superAdminOnly, async (req, res) => {
     // Check if email already exists
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin)
-      return res.status(400).json({ message: "Admin with this email already exists" });
+      return res
+        .status(400)
+        .json({ message: "Admin with this email already exists" });
 
     // Create new admin
     const newAdmin = new Admin({ name, email, password, role: "admin" });
     await newAdmin.save();
 
-    res.status(201).json({ message: "Admin created successfully", admin: newAdmin });
+    // ---------------- SEND EMAIL TO NEW ADMIN ----------------
+    const adminSubject = "Welcome to Your Admin Account - Use Carefully!";
+    const adminHtml = `
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">Welcome, ${name}!</h2>
+        <p>You have been assigned as an <strong>Admin</strong> for NetLanka Travels company by the Super Admin.</p>
+        <p><strong>Please use this account carefully.</strong></p>
+        <h3>Login Details:</h3>
+        <ul>
+          <li><strong>Email:</strong> ${email}</li>
+          <li><strong>Password:</strong> ${password}</li>
+        </ul>
+        <p>You can login at <a href="${process.env.FRONTEND_URL}/admin/login">${process.env.FRONTEND_URL}/admin/login</a></p>
+        <p>Best Regards,<br/><strong>Super Admin - NetLanka Travels</strong></p>
+      </div>
+    `;
+    await sendEmail({ to: email, subject: adminSubject, html: adminHtml });
+
+    // ---------------- OPTIONAL: COPY TO SUPERADMIN ----------------
+    const superAdminEmail = req.admin.email;
+    const copySubject = `NetLanka Travels - Admin Account Created: ${name}`;
+    const copyHtml = `
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">Admin Created Successfully</h2>
+        <p>You have successfully created a new admin account:</p>
+        <ul>
+          <li><strong>Name:</strong> ${name}</li>
+          <li><strong>Email:</strong> ${email}</li>
+          <li><strong>Password:</strong> ${password}</li>
+        </ul>
+        <p>This is for your reference.</p>
+      </div>
+    `;
+    await sendEmail({
+      to: superAdminEmail,
+      subject: copySubject,
+      html: copyHtml,
+    });
+
+    res
+      .status(201)
+      .json({ message: "Admin created successfully", admin: newAdmin });
   } catch (err) {
-    console.error(err);
+    console.error("CREATE ADMIN ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -40,7 +86,7 @@ router.post("/admins", superAdminOnly, async (req, res) => {
 router.get("/admins", superAdminOnly, async (req, res) => {
   try {
     const admins = await Admin.find().select("-password");
-    res.json({ admins }); 
+    res.json({ admins });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -58,12 +104,48 @@ router.patch("/admins/:id/status", superAdminOnly, async (req, res) => {
     await admin.save();
 
     res.json({
-      message: `Admin ${admin.isActive ? "activated" : "deactivated"} successfully`,
+      message: `Admin ${
+        admin.isActive ? "activated" : "deactivated"
+      } successfully`,
       admin,
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to toggle admin status" });
+  }
+});
+
+// DELETE: Remove an admin completely
+// DELETE: Remove an admin completely and notify them
+router.delete("/admins/:id", superAdminOnly, async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) return res.status(404).json({ message: "Admin not found" });
+
+    const adminEmail = admin.email;
+    const adminName = admin.name;
+
+    // Delete admin
+    await Admin.findByIdAndDelete(req.params.id);
+
+    // ---------------- SEND EMAIL TO DELETED ADMIN ----------------
+    const subject = "Your NetLanka Travels Admin Account Has Been Deleted";
+    const html = `
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
+        <h2 style="color: #0d203a;">Hello ${adminName},</h2>
+        <p>This is to inform you that your admin account has been <strong>permanently deleted</strong> by the Super Admin.</p>
+        <p>If you believe this was a mistake or have any questions, please contact the Super Admin immediately.</p>
+        <p>Best Regards,<br/><strong>Super Admin</strong></p>
+      </div>
+    `;
+    await sendEmail({ to: adminEmail, subject, html });
+
+    res.json({
+      message: `Admin "${adminName}" deleted successfully and notified via email`,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete admin" });
   }
 });
 
