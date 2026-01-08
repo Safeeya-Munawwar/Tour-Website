@@ -23,6 +23,10 @@ export default function AddBlog() {
     e.preventDefault();
     setIsSaving(true);
 
+            // Determine role & base path
+            const role = sessionStorage.getItem("role") || "admin";
+            const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     const data = new FormData();
     data.append("slug", formData.slug);
 data.append("title", formData.title);
@@ -45,7 +49,7 @@ if (formData.galleryImgFiles) {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Blog added successfully!", {
-        onClose: () => navigate("/admin/blogs"),
+        onClose: () => navigate(`${basePath}/blogs`),
         autoClose: 3000,
       });
     } catch (err) {

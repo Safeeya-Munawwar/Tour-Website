@@ -29,6 +29,10 @@ export default function EditTaxi() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+       // Determine role & base path
+       const role = sessionStorage.getItem("role") || "admin";
+       const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     const fd = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null) fd.append(key, value);
@@ -39,7 +43,7 @@ export default function EditTaxi() {
     });
 
     toast.success("Vehicle updated!", {
-      onClose: () => navigate("/admin/taxis"),
+      onClose: () => navigate(`${basePath}/taxis`),
     });
   };
 

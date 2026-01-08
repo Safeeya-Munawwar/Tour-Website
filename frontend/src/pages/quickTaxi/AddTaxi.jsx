@@ -21,6 +21,10 @@ export default function AddTaxi() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+            // Determine role & base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       const fd = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
@@ -32,7 +36,7 @@ export default function AddTaxi() {
       });
 
       toast.success("Vehicle added successfully!", {
-        onClose: () => navigate("/admin/taxis"),
+        onClose: () => navigate(`${basePath}/taxis`),
       });
     } catch (err) {
       toast.error("Failed to add vehicle!");

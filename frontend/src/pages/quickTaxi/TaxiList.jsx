@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 export default function TaxiList() {
   const [taxis, setTaxis] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const fetchTaxis = async () => {
     const res = await axiosInstance.get("/quick-taxi/taxis");
     setTaxis(res.data.taxis || []);
@@ -30,7 +33,7 @@ export default function TaxiList() {
 
         <div className="flex justify-end mb-8">
           <Link
-            to="/admin/taxis/new"
+          to={`${basePath}/taxis/new`}
             className="bg-[#2E5B84] text-white  px-4 py-2 rounded hover:bg-[#1E3A60] transition"
           >
             + Add Vehicle
@@ -69,7 +72,7 @@ export default function TaxiList() {
                 </td>
                 <td className=" py-4 flex justify-center items-center gap-2">
                   <Link
-                    to={`/admin/taxis/edit/${t._id}`}
+                  to={`${basePath}/taxis/edit/${t._id}`}
                     className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] transition text-sm"
                   >
                     Edit

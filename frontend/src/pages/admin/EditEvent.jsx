@@ -78,6 +78,10 @@ export default function EditEvent() {
     e.preventDefault();
     setIsSaving(true);
 
+        // Determine role and base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       // ---------- Update Event ----------
       const eventData = new FormData();
@@ -110,7 +114,9 @@ export default function EditEvent() {
 
       await axiosInstance.put(`/events/detail/${id}`, detailData, { headers: { "Content-Type": "multipart/form-data" } });
 
-      toast.success("Event updated successfully!", { onClose: () => navigate("/admin/events"), autoClose: 3000 });
+      toast.success("Event updated successfully!", {
+        onClose: () => navigate(`${basePath}/events`),
+        autoClose: 3000 });
     } catch (err) {
       console.error(err);
       toast.error("Error updating event!");

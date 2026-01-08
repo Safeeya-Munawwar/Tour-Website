@@ -75,7 +75,11 @@ export default function EditDayTour() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-
+  
+    // Determine role and base path
+    const role = sessionStorage.getItem("role") || "admin";
+    const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+  
     try {
       // Update DayTour
       const tourData = new FormData();
@@ -83,11 +87,11 @@ export default function EditDayTour() {
       tourData.append("location", formData.location);
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
-
+  
       await axiosInstance.put(`/day-tours/${id}`, tourData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       // Update DayTourDetail
       const detailData = new FormData();
       detailData.append("heroTitle", formData.heroTitle);
@@ -101,27 +105,26 @@ export default function EditDayTour() {
       detailData.append("duration", formData.duration);
       detailData.append("includes", JSON.stringify(formData.includes));
       detailData.append("startLocation", formData.startLocation);
-      
+  
       const gallerySlidesPayload = formData.gallerySlides.map((slide) => ({
         title: slide.title,
         desc: slide.desc,
         image: slide.imagePreview,
       }));
-      
       detailData.append("gallerySlides", JSON.stringify(gallerySlidesPayload));
-
+  
       formData.gallerySlides.forEach((slide, idx) => {
         if (slide.imageFile) {
           detailData.append(`galleryImage_${idx}`, slide.imageFile);
         }
       });
-
+  
       await axiosInstance.put(`/day-tours/detail/${id}`, detailData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       toast.success("Day Tour updated successfully!", {
-        onClose: () => navigate("/admin/day-tours"),
+        onClose: () => navigate(`${basePath}/day-tours`),
         autoClose: 3000,
       });
     } catch (err) {
@@ -131,6 +134,7 @@ export default function EditDayTour() {
       setIsSaving(false);
     }
   };
+  
 
   return (
     <div>

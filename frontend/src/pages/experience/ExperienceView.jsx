@@ -7,6 +7,9 @@ export default function ExperienceView() {
   const [exp, setExp] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   useEffect(() => {
     const fetchExperience = async () => {
       try {
@@ -42,13 +45,13 @@ export default function ExperienceView() {
           </h1>
           <div className="flex gap-2">
             <Link
-              to={`/admin/experiences/edit/${exp._id}`}
+             to={`${basePath}/experiences/edit/${exp._id}`}
               className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60] transition"
             >
               Edit
             </Link>
             <Link
-              to="/admin/experiences"
+             to={`${basePath}/experiences`}
               className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition"
             >
               Back

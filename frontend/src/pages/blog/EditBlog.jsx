@@ -57,6 +57,10 @@ export default function EditBlog() {
     e.preventDefault();
     setIsSaving(true);
 
+        // Determine role and base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     const data = new FormData();
     data.append("slug", formData.slug);
     data.append("title", formData.title);
@@ -83,7 +87,7 @@ export default function EditBlog() {
       });
 
       toast.success("Blog updated successfully!", {
-        onClose: () => navigate("/admin/blogs"),
+        onClose: () => navigate(`${basePath}/blogs`),
         autoClose: 3000,
       });
     } catch (err) {

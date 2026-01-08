@@ -5,6 +5,9 @@ import { axiosInstance } from "../../lib/axios";
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const fetchBlogs = async () => {
     const res = await axiosInstance.get("/blog");
     setBlogs(res.data.blogs || []);
@@ -29,7 +32,7 @@ export default function BlogList() {
         </h2>
         <div className="flex justify-end mb-8">
           <Link
-            to="/admin/blogs/new"
+           to={`${basePath}/blogs/new`}
             className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
           >
             + Add Blog
@@ -69,7 +72,7 @@ export default function BlogList() {
                 <td className="p-3 py-4 text-center flex justify-center items-center gap-2">
                   {/* View Button */}
                   <Link
-                    to={`/admin/blogs/view/${b._id}`}
+                    to={`${basePath}/blogs/view/${b._id}`}
                     className="bg-[#6B8FB6] text-white px-4 py-1 rounded hover:bg-[#4b6f8f] text-sm transition"
                   >
                     View
@@ -77,7 +80,7 @@ export default function BlogList() {
 
                   {/* Edit Button */}
                   <Link
-                    to={`/admin/blogs/edit/${b._id}`}
+                  to={`${basePath}/blogs/edit/${b._id}`}
                     className="bg-[#2E5B84] text-white px-4 py-1 rounded hover:bg-[#1E3A60] text-sm transition"
                   >
                     Edit

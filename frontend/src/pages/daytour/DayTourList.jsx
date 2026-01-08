@@ -5,11 +5,13 @@ import { axiosInstance } from "../../lib/axios";
 export default function DayTourList() {
   const [tours, setTours] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   // Fetch all tours
   const fetchTours = async () => {
     try {
       const res = await axiosInstance.get("/day-tours");
-      // Fix: tours array is inside res.data.tours
       setTours(res.data.tours || []);
     } catch (err) {
       console.error(err);
@@ -36,13 +38,14 @@ export default function DayTourList() {
 
   return (
     <div>
-
       <main>
-        <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">Manage Day Tours</h2>
+        <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">
+          Manage Day Tours
+        </h2>
 
         <div className="flex justify-end mb-8">
           <Link
-            to="/admin/day-tours/new"
+            to={`${basePath}/day-tours/new`}
             className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
           >
             + Add Day Tour
@@ -72,7 +75,7 @@ export default function DayTourList() {
                 <td className="p-3 border border-[#2E5B84]">{tour.location}</td>
                 <td className="py-4 flex justify-center items-center gap-2">
                   <Link
-                    to={`/admin/day-tours/edit/${tour._id}`}
+                    to={`${basePath}/day-tours/edit/${tour._id}`}
                     className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm"
                   >
                     Edit

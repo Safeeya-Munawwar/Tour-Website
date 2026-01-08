@@ -5,6 +5,9 @@ import { axiosInstance } from "../../lib/axios";
 export default function EventList() {
   const [events, setEvents] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const fetchEvents = async () => {
     try {
       const res = await axiosInstance.get("/events");
@@ -35,7 +38,11 @@ export default function EventList() {
       <main>
         <h2 className="text-4xl font-bold mb-4">Manage Events</h2>
         <div className="flex justify-end mb-8">
-          <Link to="/admin/events/new" className="bg-[#2E5B84] text-white px-4 py-2 rounded">+ Add Event</Link>
+          <Link 
+          to={`${basePath}/events/new`}
+          className="bg-[#2E5B84] text-white px-4 py-2 rounded">
+            + Add Event
+            </Link>
         </div>
 
         <table className="w-full border border-[#1a354e] rounded">
@@ -54,7 +61,10 @@ export default function EventList() {
                 <td className="p-3 border">{ev.title}</td>
                 <td className="p-3 border">{ev.location}</td>
                 <td className="py-4 flex justify-center gap-2">
-                  <Link to={`/admin/events/edit/${ev._id}`} className="bg-[#2E5B84] text-white px-3 py-1 rounded text-sm">Edit</Link>
+                  <Link 
+                    to={`${basePath}/events/edit/${ev._id}`}
+                  className="bg-[#2E5B84] text-white px-3 py-1 rounded text-sm">
+                    Edit</Link>
                   <button onClick={() => handleDelete(ev._id)} className="bg-red-600 text-white px-3 py-1 rounded text-sm">Delete</button>
                 </td>
               </tr>
