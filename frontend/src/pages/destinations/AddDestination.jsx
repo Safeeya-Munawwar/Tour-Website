@@ -21,6 +21,10 @@ export default function AddDestination() {
     e.preventDefault();
     setIsSaving(true);
 
+    // Determine role & base path
+    const role = sessionStorage.getItem("role") || "admin";
+    const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       const fd = new FormData();
       fd.append("subtitle", formData.subtitle);
@@ -32,7 +36,7 @@ export default function AddDestination() {
       });
 
       toast.success("Destination created successfully!", {
-        onClose: () => navigate("/admin/destinations"),
+        onClose: () => navigate(`${basePath}/destinations`),
         autoClose: 3000,
       });
     } catch (err) {

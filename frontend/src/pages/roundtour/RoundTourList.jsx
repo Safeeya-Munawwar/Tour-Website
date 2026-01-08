@@ -4,6 +4,9 @@ import { axiosInstance } from "../../lib/axios";
 export default function RoundTourList() {
   const [tours, setTours] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin";
+const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const fetchTours = async () => {
     try {
       const res = await axiosInstance.get("/round-tours");
@@ -36,7 +39,11 @@ export default function RoundTourList() {
         <h2 className="text-4xl font-bold text-[#0d203a] mb-4 px-5 mt-4">Round Tours</h2>
 
         <div className="flex justify-end mb-8">
-          <Link to="/admin/round-tours/new" className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]">+ Add Round Tour</Link>
+          <Link 
+          to={`${basePath}/round-tours/new`}
+          className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]">
+            + Add Round Tour
+            </Link>
         </div>
 
         <table className="w-full bg-white border border-[#1a354e] rounded shadow">
@@ -57,7 +64,11 @@ export default function RoundTourList() {
                 <td className="p-3 border border-[#2E5B84]">{tour.title}</td>
                 <td className="p-3 border border-[#2E5B84]">{tour.days}</td>
                 <td className="py-4 flex justify-center items-center gap-2">
-                  <Link to={`/admin/round-tours/edit/${tour._id}`} className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm">Edit</Link>
+                  <Link 
+                   to={`${basePath}/round-tours/edit/${tour._id}`}
+                   className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm">
+                    Edit
+                    </Link>
                   <button onClick={() => handleDelete(tour._id)} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">Delete</button>
                 </td>
               </tr>

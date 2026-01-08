@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 export default function ExperienceList() {
   const [experiences, setExperiences] = useState([]);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const fetchExperiences = async () => {
     const res = await axiosInstance.get("/experience");
     setExperiences(res.data || []);
@@ -31,7 +34,7 @@ export default function ExperienceList() {
 
         <div className="flex justify-end mb-8">
           <Link
-            to="/admin/experiences/new"
+          to={`${basePath}/experiences/new`}
             className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60]"
           >
             + Add Experience
@@ -65,13 +68,13 @@ export default function ExperienceList() {
         <td className="p-3 border border-[#2E5B84]">{exp.subtitle || "-"}</td>
         <td className="py-4 flex justify-center items-center gap-2">
           <Link
-            to={`/admin/experiences/view/${exp._id}`}
+          to={`${basePath}/experiences/view/${exp._id}`}
             className="bg-[#6B8FB6] text-white px-3 py-1 rounded hover:bg-[#4b6f8f] text-sm"
           >
             View
           </Link>
           <Link
-            to={`/admin/experiences/edit/${exp._id}`}
+           to={`${basePath}/experiences/edit/${exp._id}`}
             className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] text-sm"
           >
             Edit

@@ -38,6 +38,10 @@ export default function AddEvent() {
     e.preventDefault();
     setIsSaving(true);
 
+        // Determine role & base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       // ---------- Event Main ----------
       const eventData = new FormData();
@@ -78,7 +82,7 @@ export default function AddEvent() {
       });
 
       toast.success("Event added successfully!", {
-        onClose: () => navigate("/admin/events"),
+        onClose: () => navigate(`${basePath}/events`),
         autoClose: 3000,
       });
     } catch (err) {

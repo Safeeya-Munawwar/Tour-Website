@@ -129,6 +129,10 @@ export default function EditContact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+        // Determine role and base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       const dataToSend = new FormData();
       formData.socialMedia.forEach((sm, idx) => {
@@ -161,7 +165,7 @@ export default function EditContact() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Contact updated successfully!");
-      setTimeout(() => navigate("/admin/contacts"), 800);
+      setTimeout(() => navigate(`${basePath}/contacts`), 800);
     } catch (err) {
       console.error(err);
       toast.error("Failed to update contact");

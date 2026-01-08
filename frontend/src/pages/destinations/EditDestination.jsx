@@ -44,6 +44,11 @@ export default function EditDestination() {
     if (!formData) return;
     setIsSaving(true);
 
+        // Determine role and base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+      
+
     try {
       const fd = new FormData();
       fd.append("subtitle", formData.subtitle);
@@ -55,7 +60,7 @@ export default function EditDestination() {
       });
 
       toast.success("Destination updated successfully!", {
-        onClose: () => navigate("/admin/destinations"),
+        onClose: () => navigate(`${basePath}/destinations`),
         autoClose: 3000,
       });
     } catch (err) {

@@ -7,6 +7,9 @@ export default function BlogView() {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -49,13 +52,13 @@ export default function BlogView() {
           </h1>
           <div className="flex gap-2">
             <Link
-              to={`/admin/blogs/edit/${blog._id}`}
+            to={`${basePath}/blogs/edit/${blog._id}`}
               className="bg-[#2E5B84] text-white px-4 py-2 rounded hover:bg-[#1E3A60] transition"
             >
               Edit
             </Link>
             <Link
-              to="/admin/blogs"
+              to={`${basePath}/blogs`}
               className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition"
             >
               Back

@@ -382,13 +382,6 @@ function App() {
   <Route path="round-tours/new" element={<AddRoundTour />} />
   <Route path="round-tours/edit/:id" element={<EditRoundTour />} />
 
-  {/* Contacts */}
-  <Route path="contacts" element={<ContactList />} />
-  <Route path="contacts/edit" element={<EditContact />} />
-
-  {/* Home */}
-  <Route path="manage-home" element={<AdminManageHome />} />
-
   {/* Comments & Reviews */}
   <Route path="blog-comments" element={<BlogComments />} />
   <Route path="tour-reviews" element={<TourReviews />} />

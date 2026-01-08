@@ -69,6 +69,10 @@ export default function EditExperience() {
     e.preventDefault();
     setIsSaving(true);
 
+             // Determine role & base path
+             const role = sessionStorage.getItem("role") || "admin";
+             const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       const data = new FormData();
       const jsonData = {
@@ -105,7 +109,7 @@ export default function EditExperience() {
 
       if (res.status === 200) {
         toast.success("Experience updated successfully!", {
-          onClose: () => navigate("/admin/experiences"),
+          onClose: () => navigate(`${basePath}/experiences`),
         });
       } else {
         toast.error("Failed to update experience!");

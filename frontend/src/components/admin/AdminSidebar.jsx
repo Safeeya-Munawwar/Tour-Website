@@ -12,8 +12,6 @@ import {
   Map,
   PenTool,
   MessageSquare,
-  Home,
-  Mail,
   MessageCircle,
   NotebookPen,
   CalendarCheck,
@@ -129,19 +127,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 {unreadCount} {/* number of unique messages */}
               </span>
             )}
-          </NavLink>
-
-          {/* Home */}
-          <NavLink
-            to="/admin/manage-home"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-                isActive ? activeClass : defaultClass
-              }`
-            }
-          >
-            <Home size={18} />
-            Home Content
           </NavLink>
 
           {/* Our Story Menu */}
@@ -410,18 +395,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               </NavLink>
             </div>
           )}
-
-          {/* Contact */}
-          <NavLink
-            to="/admin/contacts"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-                isActive ? activeClass : defaultClass
-              }`
-            }
-          >
-            <Mail size={18} /> Contact
-          </NavLink>
         </nav>
 
         {/* Logout */}

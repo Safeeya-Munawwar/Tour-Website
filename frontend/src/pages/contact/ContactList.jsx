@@ -21,8 +21,11 @@ export default function AdminContactList() {
   const defaultCenter = [7.0, 80.0];
   const navigate = useNavigate();
 
+  const role = sessionStorage.getItem("role") || "admin"; // admin or superadmin
+  const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
   const handleEdit = () => {
-    navigate(`/admin/contacts/edit`);
+    navigate(`${basePath}/contacts/edit`);
   };
 
   // Fetch contact info

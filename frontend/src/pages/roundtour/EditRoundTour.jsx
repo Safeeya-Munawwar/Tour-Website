@@ -114,6 +114,10 @@ export default function EditRoundTour() {
     e.preventDefault();
     setIsSaving(true);
 
+      // Determine role and base path
+      const role = sessionStorage.getItem("role") || "admin";
+      const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       /* ---------- UPDATE MAIN TOUR ---------- */
       const tourData = new FormData();
@@ -162,7 +166,7 @@ export default function EditRoundTour() {
 
       toast.success("Round Tour updated successfully!", {
         autoClose: 2000,
-        onClose: () => navigate("/admin/round-tours"),
+        onClose: () => navigate(`${basePath}/round-tours`),
       });
     } catch (err) {
       console.error(err);

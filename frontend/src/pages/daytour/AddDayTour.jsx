@@ -31,6 +31,10 @@ export default function AddDayTour() {
     e.preventDefault();
     setIsSaving(true);
 
+        // Determine role & base path
+        const role = sessionStorage.getItem("role") || "admin";
+        const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+
     try {
       // Upload DayTour
       const tourData = new FormData();
@@ -81,7 +85,7 @@ export default function AddDayTour() {
       );
 
       toast.success("Day Tour added successfully!", {
-        onClose: () => navigate("/admin/day-tours"),
+        onClose: () => navigate(`${basePath}/day-tours`),
         autoClose: 3000,
       });
     } catch (err) {

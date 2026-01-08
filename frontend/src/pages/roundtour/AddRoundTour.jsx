@@ -31,7 +31,11 @@ export default function AddRoundTour() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-
+  
+    // Determine role & base path
+    const role = sessionStorage.getItem("role") || "admin";
+    const basePath = role === "superadmin" ? "/super-admin" : "/admin";
+  
     try {
       // ---------- Upload Tour Card ----------
       const tourData = new FormData();
@@ -40,30 +44,27 @@ export default function AddRoundTour() {
       tourData.append("location", formData.location);
       tourData.append("desc", formData.desc);
       if (formData.imgFile) tourData.append("img", formData.imgFile);
-
-      const tourRes = await axiosInstance.post(
-        "/round-tours",
-        tourData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
+  
+      const tourRes = await axiosInstance.post("/round-tours", tourData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       const tourId = tourRes.data.tour._id;
-
+  
       // ---------- Upload Tour Detail ----------
       const detailData = new FormData();
       detailData.append("tourId", tourId);
       detailData.append("heroTitle", formData.heroTitle);
       detailData.append("heroSubtitle", formData.heroSubtitle);
       if (formData.heroImageFile) detailData.append("heroImage", formData.heroImageFile);
-
+  
       detailData.append("highlights", JSON.stringify(formData.highlights));
       detailData.append("itinerary", JSON.stringify(formData.itinerary));
       detailData.append("inclusions", JSON.stringify(formData.inclusions));
       detailData.append("exclusions", JSON.stringify(formData.exclusions));
       detailData.append("offers", JSON.stringify(formData.offers));
       detailData.append("tourFacts", JSON.stringify(formData.tourFacts));
-
-      // Attach gallery images
+  
       formData.gallerySlides.forEach(slide => {
         if (slide.imageFile) detailData.append("galleryImages", slide.imageFile);
       });
@@ -71,15 +72,13 @@ export default function AddRoundTour() {
         "gallerySlides",
         JSON.stringify(formData.gallerySlides.map(s => ({ title: s.title, desc: s.desc })))
       );
-
-      await axiosInstance.post(
-        "/round-tours/detail",
-        detailData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
+  
+      await axiosInstance.post("/round-tours/detail", detailData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       toast.success("Round Tour added successfully!", {
-        onClose: () => navigate("/admin/round-tours"),
+        onClose: () => navigate(`${basePath}/round-tours`),
         autoClose: 3000,
       });
     } catch (err) {
@@ -89,6 +88,7 @@ export default function AddRoundTour() {
       setIsSaving(false);
     }
   };
+  
 
   return (
     <div>
