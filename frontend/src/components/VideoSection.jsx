@@ -60,11 +60,12 @@ export default function VideoSection() {
               </h2>
             )}
 
-            {homeInfo.title && (
-              <h3 className="font-extrabold mb-6 text-4xl sm:text-5xl md:text-6xl leading-tight text-gray-900">
-                {homeInfo.title}
-              </h3>
-            )}
+{homeInfo.title && (
+  <h3 className="font-extrabold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-900">
+    {homeInfo.title}
+  </h3>
+)}
+
 
             {homeInfo.description && (
               <p className="text-base sm:text-lg text-gray-500 leading-relaxed text-justify">

@@ -87,7 +87,7 @@ export default function Header() {
         </h1>
 
         <p className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl font-light">
-        Discover Sri Lanka, The NetLanka Way
+        Discover Sri Lanka, The Net Lanka Way
         </p>
 
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
