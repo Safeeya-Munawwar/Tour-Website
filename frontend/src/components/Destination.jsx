@@ -38,7 +38,7 @@ export default function DestinationHome() {
         {/* Main SEO Heading */}
         <h2
           id="destinations-title"
-          className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
+          className="text-center text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
           Best Travel Destinations in Sri Lanka
         </h2>
 
