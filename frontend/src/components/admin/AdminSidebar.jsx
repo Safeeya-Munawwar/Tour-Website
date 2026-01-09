@@ -8,7 +8,7 @@ import {
   Users,
   Compass,
   Star,
-  Plane,
+  Plane, 
   Map,
   PenTool,
   MessageSquare,

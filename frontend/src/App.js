@@ -36,6 +36,8 @@ import { FloatingButtonsProvider } from "./context/FloatingButtonsContext";
 
 // Common Pages (Admin & Super Admin)
 import AdminLogin from "./pages/admin/Login";
+import ForgotPassword from "./pages/admin/ForgotPassword";
+import ChangePassword from "./pages/admin/ChangePassword";
 import AdminManageAbout from "./pages/admin/ManageAbout";
 import AdminManageTeam from "./pages/admin/ManageTeam";
 import AdminManageJourney from "./pages/admin/ManageJourney";
@@ -239,6 +241,9 @@ function App() {
 
               {/* ---------------------------ADMIN, SUPER ADMIN LOGIN--------------------------- */}
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+              <Route path="/admin/change-password" element={<ChangePassword />} />
+              <Route path="/super-admin/change-password" element={<ChangePassword />} />
 
         {/* ---------------------------SUPER ADMIN ROUTES--------------------------- */}
 <Route

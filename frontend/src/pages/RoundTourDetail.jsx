@@ -87,9 +87,13 @@ export default function RoundTourDetail() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <button className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold">
+              <a
+                href="/destinations"
+                aria-label="View curated travel itineraries in Sri Lanka"
+                className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold"
+              >
                 EXPLORE DESTINATIONS
-              </button>
+              </a>
 
               <button
                 onClick={() => setShowForm(true)}

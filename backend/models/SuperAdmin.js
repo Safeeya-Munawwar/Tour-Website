@@ -5,7 +5,12 @@ const superAdminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["superadmin"], default: "superadmin" },
+  role: { type: String, default: "superadmin" },
+
+  // ✅ REQUIRED FOR PASSWORD RESET
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -17,7 +22,7 @@ superAdminSchema.pre("save", async function (next) {
 });
 
 superAdminSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.models.SuperAdmin || mongoose.model("SuperAdmin", superAdminSchema);
+module.exports = mongoose.model("SuperAdmin", superAdminSchema);

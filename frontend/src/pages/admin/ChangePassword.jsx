@@ -1,31 +1,37 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
-import { Lock } from "lucide-react";
 
 export default function ChangePassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const adminId = sessionStorage.getItem("resetAdminId");
+  const userId = searchParams.get("id");
+  const token = searchParams.get("token");
+  const role = searchParams.get("role");
+
+  if (!role) {
+    setError("Invalid reset link");
+    return;
+  }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!adminId) {
-      setError("Session expired. Please login again.");
+    if (!userId || !token) {
+      setError("Invalid or expired link");
       return;
     }
-
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -33,15 +39,14 @@ export default function ChangePassword() {
 
     try {
       setLoading(true);
-
-      await axiosInstance.post("/admin/reset-password", {
-        adminId,
+      await axiosInstance.post("/reset-password/reset-password", {
+        userId,
+        token,
         newPassword: password,
+        role,
       });
-
-      sessionStorage.removeItem("resetAdminId");
       alert("Password updated successfully. Please login again.");
-      navigate("/admin/login");
+      navigate(`/admin/login`);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update password");
     } finally {
@@ -53,46 +58,33 @@ export default function ChangePassword() {
     <div className="w-full h-screen flex items-center justify-center bg-gray-900">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/10 backdrop-blur-md p-8 rounded-2xl w-[90%] max-w-[400px] text-white"
+        className="bg-white/10 p-8 rounded-2xl w-[90%] max-w-[400px] text-white"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          Change Password
-        </h2>
-
-        {error && (
-          <p className="text-red-400 bg-red-900/30 px-3 py-2 rounded mb-4 text-sm">
-            {error}
-          </p>
-        )}
-
-        <div className="space-y-4">
-          <input
-            type="password"
-            placeholder="New Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded bg-white/20 outline-none"
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-3 rounded bg-white/20 outline-none"
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-blue-600 rounded-lg flex items-center justify-center gap-2"
-          >
-            <Lock size={16} />
-            {loading ? "Updating..." : "Update Password"}
-          </button>
-        </div>
+        <h2 className="text-2xl font-bold mb-4 text-center">Change Password</h2>
+        {error && <p className="text-red-400 mb-4">{error}</p>}
+        <input
+          type="password"
+          placeholder="New Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full p-3 rounded bg-white/20 outline-none mb-4"
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          className="w-full p-3 rounded bg-white/20 outline-none mb-4"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-blue-600 rounded-lg"
+        >
+          {loading ? "Updating..." : "Update Password"}
+        </button>
       </form>
     </div>
   );
