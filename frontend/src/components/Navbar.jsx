@@ -125,6 +125,14 @@ export default function Navbar() {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+const whatsappNumber = contact?.whatsapp?.replace(/\D/g, "");
+const whatsappLink = whatsappNumber
+  ? `https://wa.me/${whatsappNumber}`
+  : "#";
+
+const emailLink = contact?.emails?.[0]
+  ? `mailto:${contact.emails[0]}`
+  : "#";
 
   return (
     <div className="w-full fixed top-0 left-0 z-[9999] font-[Poppins]">
@@ -178,15 +186,24 @@ export default function Navbar() {
           {/* RIGHT SIDE */}
           <div className="hidden md:flex items-center gap-8 text-white ml-auto">
             <div className="flex items-center gap-2 text-[15px]">
-              <FaWhatsapp className="text-xl" />
-              {contact?.whatsapp || "(+94) 77 730 0852"}
+              <a
+  href={whatsappLink}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center gap-2 text-[15px] hover:text-green-400 transition"
+>
+  <FaWhatsapp className="text-xl" />
+  {contact?.whatsapp || "(+94) 77 730 0852"}
+</a>
+
             </div>
-            <button
-              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
-              onClick={() => navigate("/contact")}
-            >
-              ENQUIRE NOW
-            </button>
+           <button
+  className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
+  onClick={() => window.location.href = emailLink}
+>
+  ENQUIRE NOW
+</button>
+
           </div>
 
           {/* MOBILE HAMBURGER (FORCED RIGHT) */}
@@ -345,18 +362,27 @@ export default function Navbar() {
         {/* Footer */}
         <div className="px-6 mt-10 text-white">
           <div className="flex items-center gap-2 mb-4 text-white">
-            <FaWhatsapp className="text-2xl text-green-400" />
-            {contact?.whatsapp || "(+94) 77 730 0852"}
+           <a
+  href={whatsappLink}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center gap-2 mb-4 text-white hover:text-green-400 transition"
+>
+  <FaWhatsapp className="text-2xl text-green-400" />
+  {contact?.whatsapp || "(+94) 77 730 0852"}
+</a>
+
           </div>
-          <button
-            className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
-            onClick={() => {
-              setSidebar(false);
-              navigate("/contact");
-            }}
-          >
-            ENQUIRE NOW
-          </button>
+         <button
+  className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
+  onClick={() => {
+    setSidebar(false);
+    window.location.href = emailLink;
+  }}
+>
+  ENQUIRE NOW
+</button>
+
           <div className="flex items-center gap-4 mb-6 mt-6 text-white">
             {contact?.socialMedia?.map((sm, i) => {
               const Icon = socialIcons[sm.platform?.toLowerCase()];
