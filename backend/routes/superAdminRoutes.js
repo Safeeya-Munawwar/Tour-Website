@@ -34,6 +34,11 @@ router.post("/admins", superAdminOnly, async (req, res) => {
     const newAdmin = new Admin({ name, email, password, role: "admin" });
     await newAdmin.save();
 
+    const frontendUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.PRODUCTION_WEB_URL
+    : process.env.DEVELOPMENT_WEB_URL;
+
     // ---------------- SEND EMAIL TO NEW ADMIN ----------------
     const adminSubject = "NetLanka Travels – Your Admin Account Details";
     const adminHtml = `
@@ -41,16 +46,16 @@ router.post("/admins", superAdminOnly, async (req, res) => {
       <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px;">
         
         <h2 style="color: #0d203a;">Welcome to NetLanka Travels</h2>
-  
+    
         <p>Hello <strong>${name}</strong>,</p>
-  
+    
         <p>
           You have been granted <strong>Admin access</strong> to the NetLanka Travels management system
           by the Super Admin.
         </p>
-  
+    
         <p><strong>Your login credentials are below:</strong></p>
-  
+    
         <table style="margin: 15px 0; font-size: 14px;">
           <tr>
             <td><strong>Email</strong></td>
@@ -61,33 +66,33 @@ router.post("/admins", superAdminOnly, async (req, res) => {
             <td style="padding-left: 10px;">${password}</td>
           </tr>
         </table>
-  
+    
         <p style="color: #444;">
-          🔐 <strong>You can change your password after logging in</strong> from your profile or security settings.
-          For security reasons, we strongly recommend updating your password immediately.
+          🔐 <strong>You can change your password after logging in.</strong>
         </p>
-  
+    
         <p>
           Login here:
-          <a href="${process.env.PRODUCTION_WEB_URL}/admin/login">
-            ${process.env.PRODUCTION_WEB_URL}/admin/login
+          <a href="${frontendUrl}/admin/login">
+            ${frontendUrl}/admin/login
           </a>
         </p>
-  
+    
         <hr style="margin: 25px 0; border: none; border-top: 1px solid #eaeaea;">
-  
+    
         <p style="font-size: 13px; color: #666;">
           If you believe this access was granted by mistake, please contact the Super Admin immediately.
         </p>
-  
+    
         <p>
           Best regards,<br/>
           <strong>NetLanka Travels – Super Admin Team</strong>
         </p>
-  
+    
       </div>
     </div>
-  `;  
+    `;
+    
     await sendEmail({ to: email, subject: adminSubject, html: adminHtml });
 
     res

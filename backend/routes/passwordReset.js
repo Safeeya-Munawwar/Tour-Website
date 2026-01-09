@@ -25,10 +25,15 @@ router.post("/request-reset", async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600 * 1000; 
     await user.save();
 
-    const urlRole = role === "superadmin" ? "super-admin" : "admin";
-
-    const resetUrl = `${process.env.PRODUCTION_WEB_URL}/${urlRole}/change-password?token=${resetToken}&id=${user._id}&role=${role}`;
-    
+    const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.PRODUCTION_WEB_URL
+      : process.env.DEVELOPMENT_WEB_URL;
+  
+  const urlRole = role === "superadmin" ? "super-admin" : "admin";
+  
+  const resetUrl = `${baseUrl}/${urlRole}/change-password?token=${resetToken}&id=${user._id}&role=${role}`;
+  
     const html = `
     <div style="font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f8; padding: 30px;">
       <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
