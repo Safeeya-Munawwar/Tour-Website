@@ -83,9 +83,9 @@ export default function Events() {
           {currentEvents.length > 0 ? (
             currentEvents.map((event) => (
               <Link
-                key={event._id}
-                to={`/events/${event._id}`}
-                state={event}
+              key={event._id}
+              to={`/events/${event.slug}`} // use slug instead of _id
+              state={event}
                 className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 flex flex-col h-[400px]"
               >
                 <img

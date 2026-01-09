@@ -5,7 +5,7 @@ import BookEventTour from "../components/BookEventTour";
 import Footer from "../components/Footer";
 
 export default function EventDetail() {
-  const { id } = useParams(); // fetch by event ID
+  const { slug } = useParams(); // changed from id
   const [event, setEvent] = useState(null);
   const [showText, setShowText] = useState(false);
   const [activeImg, setActiveImg] = useState(null);
@@ -15,7 +15,7 @@ export default function EventDetail() {
   useEffect(() => {
     async function fetchEvent() {
       try {
-        const res = await axiosInstance.get(`/events/${id}`);
+        const res = await axiosInstance.get(`/events/slug/${slug}`);
         if (res.data.success) {
           const { event: e, detail } = res.data;
 
@@ -46,7 +46,7 @@ export default function EventDetail() {
     }
     fetchEvent();
     setTimeout(() => setShowText(true), 400);
-  }, [id]);
+  }, [slug]);
 
   if (!event) {
     return (

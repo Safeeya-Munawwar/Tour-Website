@@ -6,6 +6,7 @@ const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const adminAuth = require("../middleware/adminAuth");
+const slugify = require("slugify");
 
 // ------------------------ Cloudinary Upload Setup ------------------------
 const storage = new CloudinaryStorage({
@@ -25,28 +26,52 @@ router.get("/", async (req, res) => {
 });
 
 // ------------------------ GET SINGLE TOUR + DETAILS ------------------------
-router.get("/:id", async (req, res) => {
+// Get by ID (for admin)
+router.get("/id/:id", async (req, res) => {
   try {
-    const tour = await DayTour.findById(req.params.id);
-    const details = await DayTourDetail.findOne({ tourId: req.params.id });
-    if (!tour) {
-      return res.status(404).json({ success: false, error: "Tour not found" });
+    const { id } = req.params;
+
+    // Validate ObjectId
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ success: false, error: "Invalid tour ID" });
     }
+
+    const tour = await DayTour.findById(id);
+    if (!tour) return res.status(404).json({ success: false, error: "Tour not found" });
+
+    const details = await DayTourDetail.findOne({ tourId: id }) || {};
+
     res.json({ success: true, tour, details });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.error("GET /id/:id error:", err);
+    res.status(500).json({ success: false, error: "Server error fetching tour" });
   }
+});
+
+// Get by slug (for user)
+router.get("/slug/:slug", async (req, res) => {
+  const tour = await DayTour.findOne({ slug: req.params.slug });
+  if (!tour) return res.status(404).json({ success: false, error: "Tour not found" });
+  const details = await DayTourDetail.findOne({ tourId: tour._id });
+  res.json({ success: true, tour, details });
 });
 
 // ------------------------ ADMIN — CREATE LIST ITEM ------------------------
 router.post("/", adminAuth, upload.single("img"), async (req, res) => {
   try {
+    const slug = slugify(req.body.title, {
+      lower: true,
+      strict: true,
+    });
+
     const newTour = new DayTour({
       title: req.body.title,
+      slug,
       location: req.body.location,
       desc: req.body.desc,
       img: req.file.path,
     });
+
     await newTour.save();
     res.json({ success: true, tour: newTour });
   } catch (err) {
@@ -182,6 +207,32 @@ router.delete("/:id", adminAuth, async (req, res) => {
     res.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 🔧 TEMP FIX: Generate slugs for old tours
+router.post("/fix-slugs", async (req, res) => {
+  const slugify = require("slugify");
+  const DayTour = require("../models/DayTour");
+
+  try {
+    const tours = await DayTour.find({ slug: { $exists: false } });
+
+    for (const tour of tours) {
+      tour.slug = slugify(tour.title, {
+        lower: true,
+        strict: true,
+      });
+      await tour.save();
+    }
+
+    res.json({
+      success: true,
+      fixed: tours.length,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Slug fix failed" });
   }
 });
 

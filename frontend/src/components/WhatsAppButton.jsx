@@ -29,17 +29,17 @@ export default function WhatsAppFAB() {
     const id = parts[parts.length - 1];
 
     if (path.startsWith("/day-tour-detail/") && id) {
-      axiosInstance.get(`/day-tours/${id}`).then((res) => {
+      axiosInstance.get(`/day-tours/slug/${id}`).then((res) => {
         setTourTitle(
           res.data?.details?.heroTitle || res.data?.tour?.title || ""
         );
       });
     } else if (path.startsWith("/round-tours/") && id) {
-      axiosInstance.get(`/round-tours/${id}`).then((res) => {
+      axiosInstance.get(`/round-tours/slug/${id}`).then((res) => {
         setTourTitle(
           res.data?.details?.heroTitle || res.data?.tour?.title || ""
         );
-      });
+      }); 
     } else {
       setTourTitle("");
     }

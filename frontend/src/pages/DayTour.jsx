@@ -128,8 +128,7 @@ export default function DayTour() {
 
                 <p className="text-gray-600 leading-relaxed mb-6">{t.desc}</p>
 
-                <Link
-                  to={`/day-tour-detail/${t._id}`}
+                <Link to={`/day-tour-detail/${t.slug}`}
                   className="mx-auto lg:mx-0"
                 >
                   <button

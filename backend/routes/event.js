@@ -25,10 +25,11 @@ router.get("/", async (req, res) => {
 });
 
 // ---------- GET SINGLE EVENT + DETAIL ----------
-router.get("/:id", async (req, res) => {
+// ---------- GET SINGLE EVENT BY SLUG ----------
+router.get("/slug/:slug", async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
-    const detail = await EventDetail.findOne({ eventId: req.params.id });
+    const event = await Event.findOne({ slug: req.params.slug });
+    const detail = await EventDetail.findOne({ eventId: event?._id });
     if (!event)
       return res.status(404).json({ success: false, error: "Event not found" });
     res.json({ success: true, event, detail });
@@ -36,6 +37,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 // ---------- CREATE EVENT ----------
 router.post("/", adminAuth, upload.single("img"), async (req, res) => {

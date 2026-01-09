@@ -31,7 +31,8 @@ export default function EditDayTour() {
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axiosInstance.get(`/day-tours/${id}`);
+        const res = await axiosInstance.get(`/day-tours/id/${id}`);
+
         if (res.data.success) {
           const { tour, details } = res.data;
   
