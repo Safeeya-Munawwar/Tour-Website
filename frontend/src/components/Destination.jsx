@@ -39,7 +39,7 @@ export default function DestinationHome() {
         <h2
           id="destinations-title"
           className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
-          Best Travel Destinations <br/> in Sri Lanka
+          Best Travel Destinations in Sri Lanka
         </h2>
 
         {/* Destination Grid */}

@@ -22,6 +22,16 @@ app.use(express.urlencoded({ limit: "100mb", extended: true }));
 // -------------------- STATIC --------------------
 app.use("/uploads", express.static("uploads"));
 
+// -------------------- ROOT API --------------------
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Tour Website Backend API is running",
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date(),
+  });
+});
+
 // -------------------- CRON --------------------
 cron.schedule("0 8 * * *", () => {
   checkBookings();

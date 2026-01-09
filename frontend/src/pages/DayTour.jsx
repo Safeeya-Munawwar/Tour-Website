@@ -76,7 +76,7 @@ export default function DayTour() {
         </p>
 
         <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
-          Enjoy A Day Tour <br /> In Sri Lanka
+          Enjoy A Day Tour In Sri Lanka
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">

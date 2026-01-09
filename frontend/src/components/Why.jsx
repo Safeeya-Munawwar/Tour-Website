@@ -36,7 +36,7 @@ export default function WhyChooseUs() {
         <h2
           id="why-choose-us-title"
           className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
-          Why Travelers Choose <br /> Our Tour Packages
+          Why Travelers Choose Our Tour Packages
         </h2>
 
         {/* Feature Cards */}
