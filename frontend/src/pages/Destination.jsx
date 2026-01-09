@@ -88,8 +88,8 @@ export default function Destination() {
             HIDDEN MAGICAL PLACES
           </p>
 
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
-            Best Destinations in Sri Lanka
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
+            Best Destinations in <br /> Sri Lanka
           </h2>
 
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">

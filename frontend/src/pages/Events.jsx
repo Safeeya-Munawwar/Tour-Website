@@ -65,12 +65,12 @@ export default function Events() {
           EVENTS & EXPERIENCES
         </p>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
           Don’t Miss Our Events
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          Discover upcoming events, cultural experiences, and unforgettable
+          Discover upcoming events, cultural experiences, <br /> and unforgettable
           journeys across Sri Lanka.
         </p>
 
@@ -78,7 +78,7 @@ export default function Events() {
       </section>
 
       {/* EVENTS GRID */}
-      <section className="max-w-[1300px] mx-auto px-6 md:px-5 mt-12 mb-6">
+      <section className="max-w-[1300px] mx-auto px-6 md:px-5 mt-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {currentEvents.length > 0 ? (
             currentEvents.map((event) => (

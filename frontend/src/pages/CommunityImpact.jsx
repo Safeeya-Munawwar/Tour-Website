@@ -79,7 +79,7 @@ const OurCommunity = () => {
           OUR JOURNEY
         </p>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900">
           From Passion to Excellence
         </h2>
 

@@ -35,9 +35,8 @@ export default function WhyChooseUs() {
         {/* Main SEO Heading */}
         <h2
           id="why-choose-us-title"
-          className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-16"
-        >
-          Why Travelers Choose Our Tour Packages
+          className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
+          Why Travelers Choose <br /> Our Tour Packages
         </h2>
 
         {/* Feature Cards */}

@@ -81,7 +81,7 @@ const [currentPage] = useState(1);
         <p className="text-xs sm:text-sm font-semibold text-gray-600 tracking-widest mb-1 sm:mb-2">
           CONTACT
         </p>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4">
           Get In Touch With Us
         </h2>
         <p className="text-gray-700 text-base sm:text-lg">

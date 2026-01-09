@@ -72,7 +72,7 @@ const About = () => {
             {about.subtitle || "Your Adventure Awaits"}
           </p>
 
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6">
             {about.heading || "About NetLanka Tours"}
           </h2>
 
@@ -123,7 +123,7 @@ const About = () => {
             <p className="text-sm font-semibold tracking-widest text-gray-500 uppercase">
               Who We Are
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3">
               Our Mission & Vision
             </h2>
           </div>
@@ -174,7 +174,7 @@ const About = () => {
 
         {/* ------------------- WHY NETLANKA TOURS ------------------- */}
         <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#1a1a1a] mb-12">
             Why NetLanka Tours
           </h1>
 

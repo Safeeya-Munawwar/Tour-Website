@@ -60,7 +60,7 @@ export default function Blog() {
             BLOG & NEWS
           </p>
 
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
             A Little Story From Us
           </h2>
 

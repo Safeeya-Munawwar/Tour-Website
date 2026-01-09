@@ -108,7 +108,7 @@ export default function BlogDetail() {
 
   return (
     <>
-    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
+    <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222] overflow-x-hidden">
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* HERO */}
@@ -212,12 +212,14 @@ export default function BlogDetail() {
       )}
 
       {/* COMMENTS SECTION */}
-      <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-32 mt-10 lg:mt-16 flex flex-col md:flex-row gap-10 lg:gap-16 pb-20">
-        {/* COMMENT FORM */}
-        <div className="md:w-1/2 bg-gray-50 rounded-xl shadow-md p-6 sm:p-8">
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
-            Leave a Comment
-          </h3>
+      <section className="max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-10 lg:px-32 mt-8 sm:mt-10 lg:mt-16 flex flex-col md:flex-row gap-8 lg:gap-16 pb-16 sm:pb-20 overflow-hidden">
+
+{/* COMMENT FORM */}
+<div className="md:w-1/2 bg-gray-50 rounded-xl shadow-md p-5 sm:p-8">
+  <h3 className="text-xl sm:text-3xl font-bold text-gray-900 mb-5 text-center">
+    Leave a Comment
+  </h3>
+
           <form onSubmit={handleCommentSubmit} className="flex flex-col gap-4">
             <label className="font-medium text-gray-700">Full Name</label>
             <input
@@ -227,8 +229,8 @@ export default function BlogDetail() {
               onChange={handleCommentChange}
               placeholder="Your Name"
               required
-              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-            />
+              className="border px-4 py-2.5 rounded text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+/>
             <label className="font-medium text-gray-700">Email</label>
             <input
               type="email"
@@ -237,8 +239,8 @@ export default function BlogDetail() {
               onChange={handleCommentChange}
               placeholder="Your Email"
               required
-              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-            />
+              className="border px-4 py-2.5 rounded text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+/>
             <div className="flex flex-col space-y-1">
               <label className="font-medium text-gray-700">Rate</label>
               <div className="flex items-center gap-2">
@@ -267,13 +269,13 @@ export default function BlogDetail() {
               placeholder="Your Comment"
               rows={4}
               required
-              className="border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
-            />
+              className="border px-4 py-2.5 rounded text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#2E5B84]"
+/>
             <button
               type="submit"
               disabled={submitting}
-              className="bg-[#2E5B84] text-white px-6 py-3 rounded hover:bg-[#1E3A60] transition"
-            >
+              className="w-full sm:w-auto bg-[#2E5B84] text-white px-6 py-3 rounded hover:bg-[#1E3A60] transition"
+              >
               {submitting ? "Submitting..." : "Submit Comment"}
             </button>
           </form>
@@ -286,7 +288,7 @@ export default function BlogDetail() {
               No comments yet. Be the first to comment!
             </p>
           ) : (
-            <div className="relative">
+            <div className="relative w-full overflow-hidden">
               <Swiper
                 modules={[Autoplay, Navigation]}
                 navigation={{ prevEl: ".c-prev", nextEl: ".c-next" }}
@@ -297,12 +299,15 @@ export default function BlogDetail() {
               >
                 {comments.map((c, idx) => (
                   <SwiperSlide key={idx}>
-                    <div className="bg-[#f7f7f7] p-8 rounded-2xl shadow-lg flex flex-col items-center text-center gap-4">
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold relative">
-                          {c.name[0].toUpperCase()}
+                    <div className="bg-[#f7f7f7] w-full max-w-full p-5 sm:p-8 rounded-2xl shadow-lg flex flex-col items-center text-center gap-3 sm:gap-4">
+<div className="flex flex-col items-center gap-2">
+<div className="w-16 h-16 sm:w-20 sm:h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl sm:text-3xl font-bold">
+ {c.name[0].toUpperCase()}
                         </div>
-                        <h4 className="font-semibold">{c.name}</h4>
+                        <h4 className="font-semibold break-words text-center">
+  {c.name}
+</h4>
+
                         <p className="text-gray-500 text-sm">
                           {new Date(c.createdAt).toLocaleDateString()}
                         </p>
@@ -319,45 +324,54 @@ export default function BlogDetail() {
                           />
                         ))}
                       </div>
-                      <p className="text-gray-700 leading-relaxed">
-                        {c.message}
-                      </p>
+                      <p className="text-gray-700 leading-relaxed break-words">
+  {c.message}
+</p>
+
                     </div>
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <button className="c-prev absolute left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
-                <FaChevronLeft />
-              </button>
-              <button className="c-next absolute right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center">
-                <FaChevronRight />
-              </button>
+              <button className="c-prev absolute left-1 sm:left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center z-10">
+  <FaChevronLeft />
+</button>
+
+<button className="c-next absolute right-1 sm:right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center z-10">
+  <FaChevronRight />
+</button>
+
+
             </div>
           )}
         </div>
       </section>
 
       {/* RELATED BLOGS */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-14 overflow-hidden">
+
+
         <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-10 text-center">
           Related Blogs
         </h3>
         <Swiper
-          modules={[Pagination, Autoplay]}
-          spaceBetween={24}
-          slidesPerView={1}
-          loop
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          breakpoints={{
-            640: { slidesPerView: 1, spaceBetween: 16 },
-            768: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 24 },
-          }}
-          pagination={{ clickable: true }}
-        >
+  modules={[Pagination, Autoplay]}
+  slidesPerView={1}
+  spaceBetween={16}
+  loop
+  autoplay={{ delay: 3000, disableOnInteraction: false }}
+  breakpoints={{
+    640: { slidesPerView: 1 },
+    768: { slidesPerView: 2 },
+    1024: { slidesPerView: 3 },
+  }}
+  pagination={{ clickable: true }}
+  className="w-full"
+>
+
           {otherBlogs.map((b, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer flex flex-col h-full">
+<div className="bg-white w-full max-w-full rounded-xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer flex flex-col h-full">
+
                 <img
                   src={b.heroImg}
                   alt={b.title}

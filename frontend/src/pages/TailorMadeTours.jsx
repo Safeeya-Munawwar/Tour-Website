@@ -110,7 +110,7 @@ const TailorMadeTours = () => {
         <p className="text-sm md:text-lg font-semibold tracking-widest text-gray-500 mb-3">
           CUSTOMIZED HOLIDAYS CRAFTED JUST FOR YOU
         </p>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6">
           Tailor-Made Sri Lanka Tours & Holidays
         </h2>
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
@@ -121,7 +121,7 @@ const TailorMadeTours = () => {
 
       {/* CUSTOMIZATION OPTIONS */}
       <section className="max-w-7xl mx-auto px-6 pt-2 pb-20">
-        <h3 className="text-3xl md:text-4xl font-bold text-center mb-12">
+        <h3 className="text-2xl md:text-4xl font-bold text-center mb-12">
           What You Can Customize
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -148,8 +148,8 @@ const TailorMadeTours = () => {
       <section className="max-w-7xl mx-auto px-5 md:px-20 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
         <TailorMadeForm />
         <div className="lg:col-span-2 px-4 md:px-12 py-10 md:py-20">
-          <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center">
-            The Best Call You’ll Make Today
+          <h3 className="text-2xl md:text-4xl font-bold mb-6 text-center">
+            The Best Call You’ll <br /> Make Today
           </h3>
 
           <div className="flex flex-col sm:flex-row justify-center items-center text-center sm:text-left space-y-6 sm:space-y-0 sm:space-x-10 mb-6">
@@ -173,7 +173,7 @@ const TailorMadeTours = () => {
           </p>
 
           <div className="mt-16">
-            <h3 className="text-3xl md:text-4xl font-bold mb-10 text-center">
+            <h3 className="text-2xl md:text-4xl font-bold mb-10 text-center">
               How Our Service Works?
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 place-items-center">

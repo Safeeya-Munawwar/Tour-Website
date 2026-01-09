@@ -55,8 +55,7 @@ export default function Video1() {
           {/* MAIN PAGE H1 */}
           <h1
             id="hero-title"
-            className="text-white text-4xl md:text-6xl font-extrabold leading-tight mb-6"
-          >
+            className="text-center text-2xl sm:text-4xl md:text-6xl font-extrabold text-white mt-3 mb-14">
             Discover Sri Lanka with Net Lanka Travels
           </h1>
 

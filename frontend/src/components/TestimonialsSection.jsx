@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
         SEE WHAT OUR GUESTS ARE SAYING ABOUT US
       </p>
 
-      <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mb-6">
+      <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 text-center mb-6">
         Don’t Take Our Word for It
       </h2>
 

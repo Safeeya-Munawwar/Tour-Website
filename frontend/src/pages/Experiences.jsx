@@ -89,7 +89,7 @@ export default function Experiences() {
               SIGNATURE EXPERIENCES
             </p>
 
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
               Curated Experiences in Sri Lanka
             </h2>
 

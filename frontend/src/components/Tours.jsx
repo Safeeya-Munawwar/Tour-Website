@@ -52,9 +52,9 @@ export default function PopularTours() {
         </h2>
 
         {/* Main Heading */}
-        <h2 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mt-3">
+        <h3 className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
           Popular Tours in Sri Lanka
-        </h2>
+        </h3>
 
         {/* Tours Grid */}
         <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-2">

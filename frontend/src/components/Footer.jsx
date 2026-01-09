@@ -90,21 +90,16 @@ export default function Footer() {
   ];
 
   return (
-<footer
-  className="
-    bg-gradient-to-b
-    from-black
-    via-black/80
-    to-black/40
+    <footer
+      className="
+    bg-[linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.85)_40%,rgba(0,0,0,0.65)_70%,rgba(0,0,0,0.5)_100%)]
     text-white
     pt-20
     pb-10
     font-[Poppins]
   "
->
-
-
- <ToastContainer position="top-right" autoClose={3000} />
+    >
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-14">
         {/* ---------------- LOGO & SOCIAL ---------------- */}
         <div className="flex flex-col items-center text-center">
@@ -171,16 +166,20 @@ export default function Footer() {
                 </div>
               )}
 
-              {contact?.emails?.[0] && (
+              {contact?.emails?.[0] ? (
                 <div className="flex gap-3 items-center">
                   <FaEnvelope />
                   <a
                     href={`mailto:${contact.emails[0]}`}
                     className="hover:text-blue-400"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {contact.emails[0]}
                   </a>
                 </div>
+              ) : (
+                <p>No email found</p>
               )}
 
               {contact?.offices?.map((o, i) => (

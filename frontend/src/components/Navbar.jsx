@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
 import { FiMenu, FiX } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 import {
   FaFacebookF,
@@ -20,8 +20,6 @@ export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [contact, setContact] = useState(null);
-
-  const navigate = useNavigate();
 
   // Scroll effect
   useEffect(() => {
@@ -128,11 +126,12 @@ export default function Navbar() {
 const whatsappNumber = contact?.whatsapp?.replace(/\D/g, "");
 const whatsappLink = whatsappNumber
   ? `https://wa.me/${whatsappNumber}`
-  : "#";
+  : "https://wa.me/94705325512";
 
-const emailLink = contact?.emails?.[0]
+  const emailLink = contact?.emails?.[0]
   ? `mailto:${contact.emails[0]}`
-  : "#";
+  : "mailto:inquiries@netlankatravels.com"; // fallback
+
 
   return (
     <div className="w-full fixed top-0 left-0 z-[9999] font-[Poppins]">
@@ -154,22 +153,41 @@ const emailLink = contact?.emails?.[0]
         >
           {/* SOCIAL ICONS – LEFT OF LOGO */}
           <div className="hidden md:flex items-center gap-4">
-            {contact?.socialMedia?.map((sm, i) => {
-              const Icon = socialIcons[sm.platform?.toLowerCase()];
-              if (!Icon) return null;
+          {contact?.socialMedia?.map((sm, i) => {
+  const Icon = socialIcons[sm.platform?.toLowerCase()];
+  if (!Icon) return null;
 
-              return (
-                <a
-                  key={i}
-                  href={sm.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white hover:scale-110 transition-transform"
-                >
-                  <Icon size={20} />
-                </a>
-              );
-            })}
+  let url = sm.url;
+
+  // Fix email links
+  if (sm.platform?.toLowerCase() === "email") {
+    url = `mailto:${sm.url}`;
+  }
+
+  // Fix WhatsApp links
+  if (sm.platform?.toLowerCase() === "whatsapp") {
+    const whatsapp = sm.url.replace(/\D/g, "");
+    url = `https://wa.me/${whatsapp}`;
+  }
+
+  // Ensure URL starts with http for browser
+  if (!url.startsWith("http") && !url.startsWith("mailto")) {
+    url = "https://" + url;
+  }
+
+  return (
+    <a
+      key={i}
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-white hover:scale-110 transition-transform"
+    >
+      <Icon size={20} />
+    </a>
+  );
+})}
+
           </div>
 
           {/* LOGO (SPACE BELOW ADDED) */}

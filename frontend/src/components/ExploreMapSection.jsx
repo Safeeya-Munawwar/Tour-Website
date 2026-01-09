@@ -48,7 +48,7 @@ export default function ExploreSriLankaSection() {
 
           <h2
             id="explore-sri-lanka-title"
-            className="text-3xl md:text-5xl font-extrabold text-gray-900"
+            className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900"
           >
             Experiences Across the Island
           </h2>

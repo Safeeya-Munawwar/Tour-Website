@@ -38,8 +38,7 @@ export default function Stories() {
 
         <h2
           id="blog-section-title"
-          className="text-3xl md:text-5xl font-extrabold mt-2 md:mt-3 text-gray-900"
-        >
+          className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">         
           Stories & Travel Experiences
         </h2>
       </header>
