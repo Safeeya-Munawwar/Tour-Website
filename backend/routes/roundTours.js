@@ -12,22 +12,51 @@ const adminAuth = require("../middleware/adminAuth");
 const storage = new CloudinaryStorage({ cloudinary, params: { folder: "round-tours" } });
 const upload = multer({ storage });
 
-// GET all tours
+// ------------------------ GET ALL TOURS (cards) ------------------------
 router.get("/", async (req, res) => {
-  const tours = await RoundTour.find().sort({ createdAt: -1 });
-  res.json({ success: true, tours });
+  try {
+    const tours = await RoundTour.find().sort({ createdAt: -1 });
+    res.json({ success: true, tours });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
-// GET single tour + details by slug
+// ------------------------ GET SINGLE TOUR + DETAILS ------------------------
+
+// Get by ID (for admin)
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ObjectId
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ success: false, error: "Invalid tour ID" });
+    }
+
+    const tour = await RoundTour.findById(id);
+    if (!tour) return res.status(404).json({ success: false, error: "Tour not found" });
+
+    const details = await RoundTourDetail.findOne({ tourId: id }) || {};
+
+    res.json({ success: true, tour, details });
+  } catch (err) {
+    console.error("GET /id/:id error:", err);
+    res.status(500).json({ success: false, error: "Server error fetching tour" });
+  }
+});
+
+// Get by slug (for user/public)
 router.get("/slug/:slug", async (req, res) => {
-  console.log("Requested slug:", req.params.slug);
   try {
     const tour = await RoundTour.findOne({ slug: req.params.slug });
     if (!tour) return res.status(404).json({ success: false, error: "Tour not found" });
 
-    const details = await RoundTourDetail.findOne({ tourId: tour._id });
+    const details = await RoundTourDetail.findOne({ tourId: tour._id }) || {};
+
     res.json({ success: true, tour, details });
   } catch (err) {
+    console.error("GET /slug/:slug error:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });

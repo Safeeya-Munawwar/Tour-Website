@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 
 // ------------------------ GET SINGLE TOUR + DETAILS ------------------------
 // Get by ID (for admin)
-router.get("/id/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
