@@ -34,44 +34,66 @@ router.post("/admins", superAdminOnly, async (req, res) => {
     const newAdmin = new Admin({ name, email, password, role: "admin" });
     await newAdmin.save();
 
-    // ---------------- SEND EMAIL TO NEW ADMIN ----------------
-    const adminSubject = "Welcome to Your Admin Account - Use Carefully!";
-    const adminHtml = `
-      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
-        <h2 style="color: #0d203a;">Welcome, ${name}!</h2>
-        <p>You have been assigned as an <strong>Admin</strong> for NetLanka Travels company by the Super Admin.</p>
-        <p><strong>Please use this account carefully.</strong></p>
-        <h3>Login Details:</h3>
-        <ul>
-          <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Password:</strong> ${password}</li>
-        </ul>
-        <p>You can login at <a href="${process.env.FRONTEND_URL}/admin/login">${process.env.FRONTEND_URL}/admin/login</a></p>
-        <p>Best Regards,<br/><strong>Super Admin - NetLanka Travels</strong></p>
-      </div>
-    `;
-    await sendEmail({ to: email, subject: adminSubject, html: adminHtml });
+    const frontendUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.PRODUCTION_WEB_URL
+    : process.env.DEVELOPMENT_WEB_URL;
 
-    // ---------------- OPTIONAL: COPY TO SUPERADMIN ----------------
-    const superAdminEmail = req.admin.email;
-    const copySubject = `NetLanka Travels - Admin Account Created: ${name}`;
-    const copyHtml = `
-      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
-        <h2 style="color: #0d203a;">Admin Created Successfully</h2>
-        <p>You have successfully created a new admin account:</p>
-        <ul>
-          <li><strong>Name:</strong> ${name}</li>
-          <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Password:</strong> ${password}</li>
-        </ul>
-        <p>This is for your reference.</p>
+    // ---------------- SEND EMAIL TO NEW ADMIN ----------------
+    const adminSubject = "NetLanka Travels – Your Admin Account Details";
+    const adminHtml = `
+    <div style="font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f8; padding: 30px;">
+      <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px;">
+        
+        <h2 style="color: #0d203a;">Welcome to NetLanka Travels</h2>
+    
+        <p>Hello <strong>${name}</strong>,</p>
+    
+        <p>
+          You have been granted <strong>Admin access</strong> to the NetLanka Travels management system
+          by the Super Admin.
+        </p>
+    
+        <p><strong>Your login credentials are below:</strong></p>
+    
+        <table style="margin: 15px 0; font-size: 14px;">
+          <tr>
+            <td><strong>Email</strong></td>
+            <td style="padding-left: 10px;">${email}</td>
+          </tr>
+          <tr>
+            <td><strong>Temporary Password</strong></td>
+            <td style="padding-left: 10px;">${password}</td>
+          </tr>
+        </table>
+    
+        <p style="color: #444;">
+          🔐 <strong>You can change your password after logging in.</strong>
+        </p>
+    
+        <p>
+          Login here:
+          <a href="${frontendUrl}/admin/login">
+            ${frontendUrl}/admin/login
+          </a>
+        </p>
+    
+        <hr style="margin: 25px 0; border: none; border-top: 1px solid #eaeaea;">
+    
+        <p style="font-size: 13px; color: #666;">
+          If you believe this access was granted by mistake, please contact the Super Admin immediately.
+        </p>
+    
+        <p>
+          Best regards,<br/>
+          <strong>NetLanka Travels – Super Admin Team</strong>
+        </p>
+    
       </div>
+    </div>
     `;
-    await sendEmail({
-      to: superAdminEmail,
-      subject: copySubject,
-      html: copyHtml,
-    });
+    
+    await sendEmail({ to: email, subject: adminSubject, html: adminHtml });
 
     res
       .status(201)

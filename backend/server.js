@@ -31,6 +31,7 @@ cron.schedule("0 8 * * *", () => {
 
 // Super Admin & Admin routes
 const loginRoute = require("./routes/login"); // admin login
+const passwordResetRoute = require("./routes/passwordReset");
 const adminNotificationsRoute = require("./routes/adminNotifications");
 const adminRoute = require("./routes/admin");
 const superAdminRoute = require("./routes/superAdmin");
@@ -68,6 +69,7 @@ const newsletterRoute = require("./routes/newsletter");
 
 // -------------------- ADMIN LOGIN & AUTH --------------------
 app.use("/api/admin", loginRoute);
+app.use("/api/reset-password", passwordResetRoute);
 app.use("/api/admin-notifications", adminNotificationsRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/admin", adminRoutes);

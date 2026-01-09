@@ -5,10 +5,12 @@ const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["admin", "superadmin"], default: "admin" },
-
-  // 🔴 SOFT DELETE FLAG
+  role: { type: String, default: "admin" },
   isActive: { type: Boolean, default: true },
+
+  // ✅ REQUIRED FOR PASSWORD RESET
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 
   createdAt: { type: Date, default: Date.now },
 });
@@ -21,7 +23,7 @@ adminSchema.pre("save", async function (next) {
 });
 
 adminSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.models.Admin || mongoose.model("Admin", adminSchema);
+module.exports = mongoose.model("Admin", adminSchema);

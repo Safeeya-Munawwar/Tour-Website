@@ -4,12 +4,10 @@ import { axiosInstance } from "../../lib/axios";
 import {
   LayoutDashboard,
   Plane,
-  Users,
   Star,
   MapPin,
   FileText,
   Calendar,
-  Mail,
   Compass,
   CarFront,
   Bell
@@ -75,14 +73,11 @@ export default function Dashboard() {
   // Load all dashboard stats (your existing loadStats function)
   const loadStats = async () => {
     try {
-      const [
+      const [ 
         dayToursRes,
         roundToursRes,
         eventsRes,
-        tailorMadeRes,
         blogRes,
-        inquiriesRes,
-        teamRes,
         destinationsRes,
         experiencesRes,
         taxiRes,
@@ -91,28 +86,18 @@ export default function Dashboard() {
         axiosInstance.get("/day-tours"),
         axiosInstance.get("/round-tours"),
         axiosInstance.get("/events"),
-        axiosInstance.get("/event-tour-booking"),
-        axiosInstance.get("/day-tour-booking"),
-        axiosInstance.get("/round-tour-booking"),
-        axiosInstance.get("/tailor-made-tours/inquiries"),
         axiosInstance.get("/blog"),
-        axiosInstance.get("/contact-form"),
-        axiosInstance.get("/team"),
         axiosInstance.get("/destination"),
         axiosInstance.get("/experience"),
         axiosInstance.get("/quick-taxi/taxis"),
         axiosInstance.get("/quick-taxi/bookings"),
-        axiosInstance.get("/book-tour"),
       ]);
 
       setStats({
         dayTours: dayToursRes.data.tours?.length || 0,
         roundTours: roundToursRes.data.tours?.length || 0,
         events: eventsRes.data.events?.length || 0,
-        tailorMade: tailorMadeRes.data?.length || 0,
         blog: blogRes.data?.blogs?.length || 0,
-        inquiries: inquiriesRes.data?.length || 0,
-        team: teamRes.data?.members?.length || 0,
         destinations: destinationsRes.data?.destinations?.length || 0,
         experiences: experiencesRes.data?.length || 0,
         taxis: taxiRes.data.taxis?.length || 0,
@@ -193,20 +178,10 @@ export default function Dashboard() {
                 icon: <Calendar size={36} className="text-yellow-600" />,
               }, // darker yellow
               {
-                title: "Custom Tours",
-                value: stats.tailorMade,
-                icon: <Star size={36} className="text-purple-700" />,
-              }, // dark purple
-              {
                 title: "Blogs",
                 value: stats.blog,
                 icon: <FileText size={36} className="text-pink-700" />,
               }, // dark pink
-              {
-                title: "Team Members",
-                value: stats.team,
-                icon: <Users size={36} className="text-indigo-700" />,
-              }, // dark indigo
               {
                 title: "Destinations",
                 value: stats.destinations,
@@ -222,11 +197,6 @@ export default function Dashboard() {
                 value: stats.taxis,
                 icon: <CarFront size={36} className="text-orange-700" />,
               }, // dark orange
-              {
-                title: "Inquiries",
-                value: stats.inquiries,
-                icon: <Mail size={36} className="text-rose-700" />,
-              }, // dark rose/red
             ].map((card, idx) => (
               <div
                 key={idx}

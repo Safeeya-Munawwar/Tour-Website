@@ -42,6 +42,7 @@ export default function Dashboard() {
     inquiries: 0,
     taxis: 0,
     taxiBookings: 0,
+    totalAdmins: 0,
   });
   const [bookings, setBookings] = useState([]);
   const [taxiBookings, setTaxiBookings] = useState([]);
@@ -96,12 +97,12 @@ export default function Dashboard() {
         tailorMadeRes,
         blogRes,
         inquiriesRes,
-        teamRes,
+        adminStatsRes,
         destinationsRes,
-        experiencesRes,
+        experiencesRes, 
         taxiRes,
         taxiBookingRes,
-        commonBookingRes,
+        commonBookingRes,       
       ] = await Promise.all([
         axiosInstance.get("/day-tours"),
         axiosInstance.get("/round-tours"),
@@ -112,7 +113,7 @@ export default function Dashboard() {
         axiosInstance.get("/tailor-made-tours/inquiries"),
         axiosInstance.get("/blog"),
         axiosInstance.get("/contact-form"),
-        axiosInstance.get("/team"),
+        axiosInstance.get("/super-admin/admin-stats"),
         axiosInstance.get("/destination"),
         axiosInstance.get("/experience"),
         axiosInstance.get("/quick-taxi/taxis"),
@@ -128,7 +129,7 @@ export default function Dashboard() {
         tailorMade: tailorMadeRes.data?.length || 0,
         blog: blogRes.data?.blogs?.length || 0,
         inquiries: inquiriesRes.data?.length || 0,
-        team: teamRes.data?.members?.length || 0,
+        totalAdmins: adminStatsRes.data.totalAdmins,
         destinations: destinationsRes.data?.destinations?.length || 0,
         experiences: experiencesRes.data?.length || 0,
         taxis: taxiRes.data.taxis?.length || 0,
@@ -325,10 +326,10 @@ export default function Dashboard() {
                 icon: <FileText size={36} className="text-pink-700" />,
               }, // dark pink
               {
-                title: "Team Members",
-                value: stats.team,
-                icon: <Users size={36} className="text-indigo-700" />,
-              }, // dark indigo
+                title: "Admins",
+                value: stats.totalAdmins,
+                icon: <Users size={36} className="text-blue-700" />,
+              },             
               {
                 title: "Destinations",
                 value: stats.destinations,

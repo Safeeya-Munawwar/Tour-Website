@@ -3,6 +3,7 @@ const SuperAdmin = require("../models/SuperAdmin");
 const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const Admin = require("../models/Admin");
 
 // Middleware to allow only SuperAdmin
 const superAdminOnly = async (req, res, next) => {
@@ -37,6 +38,30 @@ router.post("/login", async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   });  
+
+  // --- GET: Admin counts ---
+router.get("/admin-stats", superAdminOnly, async (req, res) => {
+  try {
+    const totalAdmins = await Admin.countDocuments({ role: "admin" });
+    const activeAdmins = await Admin.countDocuments({
+      role: "admin",
+      isActive: true,
+    });
+    const inactiveAdmins = await Admin.countDocuments({
+      role: "admin",
+      isActive: false,
+    });
+
+    res.json({
+      totalAdmins,
+      activeAdmins,
+      inactiveAdmins,
+    });
+  } catch (err) {
+    console.error("ADMIN STATS ERROR:", err);
+    res.status(500).json({ message: "Failed to fetch admin stats" });
+  }
+});
 
 // SuperAdmin-only route
 router.get("/all-admins", superAdminOnly, async (req, res) => {
