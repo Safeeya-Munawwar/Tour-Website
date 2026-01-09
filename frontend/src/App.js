@@ -210,8 +210,9 @@ function App() {
                   </Layout>
                 }
               />
-              <Route path="/day-tour-detail/:id" element={<TourDetail />} />
-              <Route path="/round-tours/:id" element={<RoundTourDetail />} />
+              <Route path="/day-tour-detail/:slug" element={<TourDetail />} />
+              <Route path="/round-tours/:slug" element={<RoundTourDetail />} />
+
               <Route path="/tailor-made-tours" element={<TailorMadeTours />} />
               <Route
                 path="/events"
@@ -221,7 +222,7 @@ function App() {
                   </Layout>
                 }
               />
-              <Route path="/events/:id" element={<EventDetail />} />
+              <Route path="/events/:slug" element={<EventDetail />} />
               <Route
                 path="/book-event"
                 element={

@@ -11,7 +11,7 @@ import TourReview from "../components/TourReview";
 import Footer from "../components/Footer";
 
 export default function DayTourDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [tour, setTour] = useState({});
   const [details, setDetails] = useState({});
   const [contact, setContact] = useState({});
@@ -24,7 +24,7 @@ export default function DayTourDetail() {
   // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [id]);
+  }, [slug]);
 
   // Fetch contact info
   useEffect(() => {
@@ -38,11 +38,10 @@ export default function DayTourDetail() {
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await axiosInstance.get(`/day-tours/${id}`);
+        const res = await axiosInstance.get(`/day-tours/slug/${slug}`); // ✅ add slug prefix
         if (res.data?.success) {
           setTour(res.data.tour || {});
           setDetails(res.data.details || {});
-          // Preload gallery images
           res.data.details?.gallerySlides?.forEach((slide) => new Image().src = slide.image);
         }
       } catch (err) {
@@ -50,7 +49,8 @@ export default function DayTourDetail() {
       }
     }
     fetchTour();
-  }, [id]);
+  }, [slug]);
+  
 
   const slides =
     details.gallerySlides?.length > 0

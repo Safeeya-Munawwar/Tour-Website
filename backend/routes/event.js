@@ -14,25 +14,51 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
-// ---------- GET ALL EVENTS ----------
+// ------------------------ GET ALL EVENTS ------------------------
 router.get("/", async (req, res) => {
   try {
-    const events = await Event.find();
+    const events = await Event.find().sort({ createdAt: -1 });
     res.json({ success: true, events });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// ---------- GET SINGLE EVENT + DETAIL ----------
+// ------------------------ GET SINGLE EVENT + DETAIL ------------------------
+
+// Get by ID (for admin)
 router.get("/:id", async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
-    const detail = await EventDetail.findOne({ eventId: req.params.id });
-    if (!event)
-      return res.status(404).json({ success: false, error: "Event not found" });
+    const { id } = req.params;
+
+    // Validate ObjectId
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ success: false, error: "Invalid event ID" });
+    }
+
+    const event = await Event.findById(id);
+    if (!event) return res.status(404).json({ success: false, error: "Event not found" });
+
+    const detail = await EventDetail.findOne({ eventId: id }) || {};
+
     res.json({ success: true, event, detail });
   } catch (err) {
+    console.error("GET /id/:id error:", err);
+    res.status(500).json({ success: false, error: "Server error fetching event" });
+  }
+});
+
+// Get by slug (for public users)
+router.get("/slug/:slug", async (req, res) => {
+  try {
+    const event = await Event.findOne({ slug: req.params.slug });
+    if (!event) return res.status(404).json({ success: false, error: "Event not found" });
+
+    const detail = await EventDetail.findOne({ eventId: event._id }) || {};
+
+    res.json({ success: true, event, detail });
+  } catch (err) {
+    console.error("GET /slug/:slug error:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });

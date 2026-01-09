@@ -11,40 +11,37 @@ import TourReview from "../components/TourReview";
 import Footer from "../components/Footer";
 
 export default function RoundTourDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [tour, setTour] = useState(null);
   const [details, setDetails] = useState({});
+  const [contact, setContact] = useState({});
   const [showForm, setShowForm] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
   const mainSwiperRef = useRef(null);
   const thumbSwiperRef = useRef(null);
-  const [contact, setContact] = useState(null);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [currentPage] = useState(1);
-  // Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
-  useEffect(() => {
-    axiosInstance
-      .get("/contact")
-      .then((res) => setContact(res.data || {}))
-      .catch((err) => console.error(err));
-  }, []);
 
+  // Scroll to top when slug changes
+  useEffect(() => window.scrollTo({ top: 0, behavior: "smooth" }), [slug]);
+
+  // Fetch round tour details by slug
   useEffect(() => {
-    async function fetchTour() {
-      try {
-        const res = await axiosInstance.get(`/round-tours/${id}`);
+    if (!slug) return;
+    axiosInstance.get(`/round-tours/slug/${slug}`) // keep as-is
+      .then(res => {
         if (res.data.success) {
           setTour(res.data.tour);
           setDetails(res.data.details || {});
+          // Preload gallery
+          res.data.details?.gallerySlides?.forEach(slide => new Image().src = slide.image);
         }
-      } catch (err) {
-        console.error("Error fetching round tour detail:", err);
-      }
-    }
-    fetchTour();
-  }, [id]);
+      })
+      .catch(err => console.error("Error fetching round tour:", err));
+  }, [slug]);
+
+  useEffect(() => {
+    axiosInstance.get("/contact").then(res => setContact(res.data || {})).catch(() => setContact({}));
+  }, []);
 
   if (!tour) return <div className="p-8 text-center">Loading...</div>;
 

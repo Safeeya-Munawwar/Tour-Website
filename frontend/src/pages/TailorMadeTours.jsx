@@ -157,13 +157,13 @@ const TailorMadeTours = () => {
               <div className="bg-green-600 text-white rounded-full p-3">
                 <FaWhatsapp className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span>{tourData?.whatsapp || "+94 777 000 000"}</span>
+              <span>{tourData?.whatsapp || "(+94) 705 325 512"}</span>
             </div>
             <div className="flex items-center space-x-2 text-blue-600 text-xl font-semibold">
               <div className="bg-blue-600 text-white rounded-full p-3">
                 <FaPhoneAlt className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span>{tourData?.phone || "+94 777 000 000"}</span>
+              <span>{tourData?.phone || "(+94) 705 325 512"}</span>
             </div>
           </div>
 

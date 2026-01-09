@@ -109,15 +109,14 @@ export default function RoundTour() {
                 <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
                   {t.desc}
                 </p>
-                <Link
-                  to={`/round-tours/${t._id}`}
-                  aria-label={`Read more about ${t.title}`}
-                  className="mx-auto"
-                >
-                  <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 transition">
-                    READ MORE →
-                  </button>
-                </Link>
+                <Link to={`/round-tours/${t.slug}`} className="mx-auto">
+  <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white rounded-full px-6 py-2">
+    READ MORE →
+  </button>
+</Link>
+
+
+
               </div>
             </article>
           ))
