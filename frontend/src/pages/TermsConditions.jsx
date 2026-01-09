@@ -128,7 +128,7 @@ export default function TermsConditions() {
           </ul>
           <p>
             No payments should be made to any personal accounts, third-party accounts, or unidentified accounts.
-            Net Lanka Travels and Net Lanka Groups Private Limited will not be responsible for funds transferred to any unofficial accounts.
+            Net Lanka Travels and Net Lanka Groups Private Limited will not be responsible for funds transferred to any unofficial accounts. <strong>Our Official Bank Account ( Net Lanka Group (pvt) Ltd</strong>
           </p>
         </PolicySection>
 
