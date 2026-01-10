@@ -53,18 +53,19 @@ export default function AdminLogin() {
     e.preventDefault();
     setForgotError("");
     setForgotMsg("");
-
+  
     if (!forgotEmail) {
       setForgotError("Please enter your email");
       return;
     }
-
+  
     try {
       setForgotLoading(true);
       const res = await axiosInstance.post("/reset-password/request-reset", {
-        email: forgotEmail,
-        role
-      });      
+        email: forgotEmail, // <-- this must match useState
+        role,
+        useLiveUrl: true    // <-- force live URL
+      });
       setForgotMsg(res.data.message);
     } catch (err) {
       setForgotError(err.response?.data?.message || "Failed to send reset link");
@@ -72,6 +73,7 @@ export default function AdminLogin() {
       setForgotLoading(false);
     }
   };
+  
 
   return (
     <div

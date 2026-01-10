@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 
 export default function ForgotPassword({ role = "admin" }) {
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,9 +14,11 @@ export default function ForgotPassword({ role = "admin" }) {
     try {
       setLoading(true);
       const res = await axiosInstance.post("/reset-password/request-reset", {
-        email,
+        email: forgotEmail,
         role,
+        useLiveUrl: true // <-- this will force the reset link to use live URL
       });
+      
       setMessage(res.data.message);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send reset link");
@@ -34,13 +36,13 @@ export default function ForgotPassword({ role = "admin" }) {
         {error && <p className="text-red-400 mb-4">{error}</p>}
 
         <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          className="w-full p-3 rounded bg-white/20 outline-none mb-4"
-        />
+            type="email"
+            value={forgotEmail}
+            onChange={(e) => setForgotEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+            className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          />
 
         <button
           type="submit"
