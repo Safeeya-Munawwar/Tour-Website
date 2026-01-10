@@ -33,9 +33,15 @@ app.get("/", (req, res) => {
 });
 
 // -------------------- CRON --------------------
-cron.schedule("0 8 * * *", () => {
-  checkBookings();
-});
+cron.schedule(
+  "0 8 * * *",
+  () => {
+    checkBookings();
+  },
+  {
+    timezone: "Asia/Colombo",
+  }
+);
 
 // -------------------- IMPORT ROUTES --------------------
 
@@ -126,3 +132,4 @@ mongoose
 
 // -------------------- START SERVER --------------------
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
