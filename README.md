@@ -1,9 +1,12 @@
-# Tour Website - Full Stack Project
+# NetLankaTravels – Full Stack Tour Booking Platform
 
 ## Project Overview
 
-This project is a **Tour Booking Website** built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
-It includes functionalities for managing **Day Tours, Round Tours, Bookings, Blogs, Reviews, Destinations**, and an **Admin Panel** to manage content.
+**NetLankaTravels** is a full-stack **Tour Booking Website** developed using the **MERN stack (MongoDB, Express.js, React.js, Node.js)**.
+The platform allows users to explore Sri Lankan **Day Tours and Round Tours**, submit **bookings and inquiries**, 
+and enables administrators to manage all website content through a secure **Admin Dashboard**.
+
+The system is designed with scalability, modularity, and real-world business requirements in mind.
 
 ---
 
@@ -11,17 +14,22 @@ It includes functionalities for managing **Day Tours, Round Tours, Bookings, Blo
 
 ```
 tour-website-project/
-├── frontend/               # React Frontend
-│   ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── package.json
-├── backend/                # Node + Express Backend
+├── backend/
+│   ├── middleware/
+│   ├── config/
+│   ├── cron/            
 │   ├── routes/
-│   ├── controllers/
 │   ├── models/
+│   ├── utils/
 │   ├── server.js
 │   └── package.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   └── package.json
+
 └── README.md
 ```
 
@@ -29,10 +37,10 @@ tour-website-project/
 
 ## Technologies Used
 
-* **Frontend:** React.js
-* **Backend:** Node.js + Express.js
-* **Database:** MongoDB (Atlas Cloud)
-* **Email Service:** For booking and inquiry notifications
+* **Frontend:** React.js + React Router + Axios
+* **Backend:** Node.js + Express.js + JWT Authentication + RESTful APIs
+* **Database & Storage:** MongoDB (Atlas Cloud) + GridFS (Image Storage) + Cloudinary (Media Handling)
+* **Email Service:** Nodemailer
 * **Version Control:** Git & GitHub
 
 ---
