@@ -8,6 +8,8 @@ export default function Blog() {
   const [stories, setStories] = useState([]); // fetched blogs
   const [loading, setLoading] = useState(true);
   const [currentPage] = useState(1);
+  const [expandedId] = useState(null);
+
   // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -92,18 +94,34 @@ export default function Blog() {
 
                     {/* Blog Content */}
                     <div className="p-6 flex flex-col flex-1">
-                      <h3 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
-                        {story.title || "Blog Title"}
-                      </h3>
+ <h3 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+  {story.title ? (
+    <>
+      {story.title.split(" ").slice(0, Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {story.title.split(" ").slice(Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    "Blog Title"
+  )}
+</h3>
+
+
                       <p className="text-gray-500 text-sm mt-1">
                         {story.date
                           ? new Date(story.date).toLocaleDateString()
                           : "Date"}
                       </p>
-                      <p className="text-gray-600 text-sm mt-3 leading-relaxed flex-1">
-                        {story.description ||
-                          "Short description of the blog goes here."}
-                      </p>
+                     <p
+  className={`text-gray-600 text-sm mt-3 leading-relaxed text-justify transition-all duration-300 ${
+    expandedId === story._id ? "" : "line-clamp-3"
+  }`}
+>
+  
+  {story.description ||
+    "Short description of the blog goes here."}
+</p>
+
                       <Link
                         to={`/blog/${story.slug || "#"}`}
                         className="mt-4 flex items-center gap-2 font-medium text-[#8C1F28] hover:underline"

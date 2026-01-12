@@ -76,10 +76,29 @@ export default function PopularTours() {
                 />
 
                 <div className="py-6 text-center flex flex-col items-center">
-                  {/* Tour title */}
-                  <h4 className="text-xl font-semibold text-gray-900">
-                    {tour.title}
-                  </h4>
+<h4
+  className="
+    text-lg sm:text-xl
+    font-semibold text-gray-900 text-center
+    leading-snug
+    h-[3.2rem] sm:h-[3.6rem]
+    flex items-center justify-center
+    overflow-hidden
+    [text-wrap:balance]
+  "
+>
+  {tour.title ? (
+    <>
+      {tour.title.split(" ").slice(0, Math.ceil(tour.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {tour.title.split(" ").slice(Math.ceil(tour.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    "Tour Title"
+  )}
+</h4>
+
+
 
                   {/* Location */}
                   {tour.location && (

@@ -126,7 +126,9 @@ export default function DayTour() {
                   {t.location}
                 </p>
 
-                <p className="text-gray-600 leading-relaxed mb-6">{t.desc}</p>
+                <p className="text-gray-600 leading-relaxed mb-6 text-justify hyphens-auto line-clamp-3">
+  {t.desc}
+</p>
 
                 <Link to={`/day-tour-detail/${t.slug}`}
                   className="mx-auto lg:mx-0"

@@ -193,7 +193,7 @@ export default function PrivacyPolicy() {
           <ul className="mt-3 space-y-1">
             <li><strong>Email:</strong> <a href="mailto:inquiries@netlankatravels.com" className="text-blue-600 underline">inquiries@netlankatravels.com</a></li>
             <li><strong>Website:</strong> <a href="https://www.netlankatravels.com" className="text-blue-600 underline">www.netlankatravels.com</a></li>
-            <li><strong>Address:</strong> No 20, Kandy Road, Ampitiya</li>
+            <li><strong>Address:</strong> Kandy, Sri Lanka</li>
           </ul>
         </PolicySection>
 

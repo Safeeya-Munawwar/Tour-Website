@@ -129,12 +129,12 @@ export default function Experiences() {
                     >
                       {item.title}
                     </h3>
-
-                    <p className="text-gray-600 text-sm mt-3 leading-relaxed">
+<br></br>
+ <br></br>   
+                    <p className="text-gray-600 text-sm mt-3 leading-relaxed line-clamp-3">
                       {item.description}
                     </p>
-
-                    <Link to={`/experience/${item.slug}`}>
+                <Link to={`/experience/${item.slug}`}>
                       <span
                         className="inline-block mt-4 text-[#8C1F28] 
                         font-semibold text-sm hover:underline"

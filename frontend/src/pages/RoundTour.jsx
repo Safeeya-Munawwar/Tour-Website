@@ -95,18 +95,29 @@ export default function RoundTour() {
                 />
               </div>
               <div className="px-8 py-10 flex flex-col flex-grow">
-                <h3 className="text-2xl font-serif font-semibold mb-2">
-                  {t.title}
-                </h3>
+ <h3 className="text-2xl font-serif font-semibold mb-2 text-center">
+  {t.title ? (
+    <>
+      {t.title.split(" ").slice(0, Math.ceil(t.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {t.title.split(" ").slice(Math.ceil(t.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    " Title"
+  )}
+</h3>
+
+
+
                 {t.location && (
-                  <div className="text-gray-500 italic mb-2">{t.location}</div>
+                  <div className="text-gray-500 italic mb-2 text-center">{t.location}</div>
                 )}
                 {t.days && (
-                  <div className="font-semibold text-gray-700 mb-4">
+                  <div className="font-semibold text-gray-700 mb-4 text-center ">
                     {t.days}
                   </div>
                 )}
-                <p className="text-gray-600 leading-relaxed mb-8 flex-grow">
+                <p className="text-gray-600 leading-relaxed mb-8 text-justify hyphens-auto line-clamp-3">
                   {t.desc}
                 </p>
                 <Link to={`/round-tours/${t.slug}`} className="mx-auto">
