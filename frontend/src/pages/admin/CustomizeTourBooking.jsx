@@ -193,7 +193,9 @@ const CustomizeTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">
                   Location
                 </th>
-                <th className="p-3 border border-[#1a354e] text-sm">Tour Type</th>
+                <th className="p-3 border border-[#1a354e] text-sm">
+                  Tour Type
+                </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
@@ -391,8 +393,8 @@ const CustomizeTourBookingAdmin = () => {
                     {selectedInquiry.phone}
                   </p>
 
-                   {/* Tour Type */}
-                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                  {/* Tour Type */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Tour Type:
                   </p>
                   <p className="p-2 border-b border-blue-950">
@@ -469,6 +471,22 @@ const CustomizeTourBookingAdmin = () => {
                       : "Not Specified"}
                   </p>
 
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Travel Style:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.travelStyle || "Not Selected"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Experiences:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.selectedExperiences?.length
+                      ? selectedInquiry.selectedExperiences.join(", ")
+                      : "Not Selected"}
+                  </p>
+
                   {/* Notes */}
                   {selectedInquiry.notes && (
                     <>
@@ -478,6 +496,14 @@ const CustomizeTourBookingAdmin = () => {
                       <p className="p-2 break-words">{selectedInquiry.notes}</p>
                     </>
                   )}
+
+                  {/* How Did You Hear About Us */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    How Did You Hear About Us:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.hearAboutUs || "Not Selected"}
+                  </p>
                 </div>
 
                 {/* Status selector */}

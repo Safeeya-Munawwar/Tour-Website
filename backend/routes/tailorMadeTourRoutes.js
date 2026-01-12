@@ -113,9 +113,12 @@ router.post("/inquiry", async (req, res) => {
       adults: req.body.adults,
       children: req.body.children,
       selectedDestinations: req.body.selectedDestinations || [],
+      selectedExperiences: req.body.selectedExperiences || [],   
+      travelStyle: req.body.travelStyle || null,     
       budget: req.body.currency === "No Idea" ? null : req.body.budget || null,
       currency: req.body.currency || "No Idea",
       notes: req.body.notes || "",
+      hearAboutUs: req.body.hearAboutUs,
     });
 
     const saved = await inquiry.save();
@@ -139,9 +142,19 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Selected Destinations:</strong> ${
         inquiry.selectedDestinations.join(", ") || "N/A"
       }</p>
+      <p><strong>Travel Style:</strong> ${
+        inquiry.travelStyle || "Not Selected"
+      }</p>
+      
+      <p><strong>Selected Experiences:</strong> ${
+        inquiry.selectedExperiences.length
+          ? inquiry.selectedExperiences.join(", ")
+          : "Not Selected"
+      }</p>      
       <p><strong>Budget:</strong> ${
         inquiry.budget ? inquiry.budget + " " + inquiry.currency : "No Idea"
       }</p>
+      <p><strong>How Did You Hear About Us:</strong> ${inquiry.hearAboutUs || "Not Provided"}</p>
       <p><strong>Notes:</strong> ${inquiry.notes || "N/A"}</p>
     `;
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
@@ -213,6 +226,27 @@ router.post("/inquiry", async (req, res) => {
               inquiry.selectedDestinations.join(", ") || "N/A"
             }</td>
           </tr>
+          <tr>
+  <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">
+    Travel Style
+  </td>
+  <td style="border: 1px solid #1a354e; padding: 8px;">
+    ${inquiry.travelStyle || "Not Selected"}
+  </td>
+</tr>
+
+<tr>
+  <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">
+    Experiences
+  </td>
+  <td style="border: 1px solid #1a354e; padding: 8px;">
+    ${
+      inquiry.selectedExperiences.length
+        ? inquiry.selectedExperiences.join(", ")
+        : "Not Selected"
+    }
+  </td>
+</tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Budget</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${
