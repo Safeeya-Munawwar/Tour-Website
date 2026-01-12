@@ -45,17 +45,6 @@ export default function ExperienceDetail() {
     fetchExperience();
   }, [slug]);
 
-  if (loading) {
-    return <div className="text-center py-20">Loading...</div>;
-  }
-
-  if (!experience) {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold">Experience Not Found</h2>
-      </div>
-    );
-  }
   return (
    <>
     <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222]">
