@@ -129,8 +129,7 @@ export default function Experiences() {
                     >
                       {item.title}
                     </h3>
-<br></br>
- <br></br>   
+ 
                     <p className="text-gray-600 text-sm mt-3 leading-relaxed line-clamp-3">
                       {item.description}
                     </p>
