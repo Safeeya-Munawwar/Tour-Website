@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 export default function Stories() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [expandedId] = useState(null);
+  
   useEffect(() => {
     const fetchLatestBlogs = async () => {
       try {
@@ -73,22 +74,33 @@ export default function Stories() {
                   height={330}
                 />
 
-                <div className="p-4 sm:p-5 md:p-6 flex flex-col flex-1">
-                  <h3 className="mt-2 text-xl sm:text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
-                    {story.title}
-                  </h3>
+<div className="p-6 flex flex-col flex-1">
+ <h3 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+  {story.title ? (
+    <>
+      {story.title.split(" ").slice(0, Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {story.title.split(" ").slice(Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    "Blog Title"
+  )}
+</h3>
 
-                  <time
-                    dateTime={story.date}
-                    className="text-gray-500 text-xs sm:text-sm mt-1"
-                  >
-                    {new Date(story.date).toLocaleDateString()}
-                  </time>
-
-                  <p className="text-gray-600 text-sm sm:text-base mt-3 leading-relaxed flex-1">
-                    {story.description ||
-                      "Explore this travel story and discover unique experiences across Sri Lanka."}
-                  </p>
+<p className="text-gray-500 text-sm mt-1">
+                        {story.date
+                          ? new Date(story.date).toLocaleDateString()
+                          : "Date"}
+                      </p>
+                     <p
+  className={`text-gray-600 text-sm mt-3 leading-relaxed text-justify transition-all duration-300 ${
+    expandedId === story._id ? "" : "line-clamp-3"
+  }`}
+>
+  
+  {story.description ||
+    "Short description of the blog goes here."}
+</p>
 
                   <Link
                     to={`/blog/${story.slug}`}

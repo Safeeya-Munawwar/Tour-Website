@@ -51,7 +51,6 @@ export default function EventDetail() {
   if (!event) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-3xl font-bold">Event Not Found</h2>
       </div>
     );
   }const paragraphs = event.description.split(/\n\s*\n/).filter(Boolean);return (

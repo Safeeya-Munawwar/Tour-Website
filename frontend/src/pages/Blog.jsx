@@ -54,7 +54,7 @@ export default function Blog() {
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
-
+ 
       {/* BLOG PAGE */}
       <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
