@@ -303,7 +303,7 @@ ${formData.message || "—"}
 
         {/* Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="w-full">
             <label className="font-medium">
               Pickup Date <span className="text-red-500">*</span>
             </label>
@@ -314,11 +314,11 @@ ${formData.message || "—"}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded border ${
                 errors.pickupDate ? "border-red-500" : "border-gray-300"
-              }`}
+              } focus:ring-2 focus:ring-[#0B2545] outline-none`}
             />
           </div>
 
-          <div>
+          <div className="w-full">
             <label className="font-medium">
               Drop Date <span className="text-red-500">*</span>
             </label>
@@ -329,13 +329,13 @@ ${formData.message || "—"}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded border ${
                 errors.dropDate ? "border-red-500" : "border-gray-300"
-              }`}
+              } focus:ring-2 focus:ring-[#0B2545] outline-none`}
             />
           </div>
         </div>
 
         {/* Time */}
-        <div>
+        <div className="w-full mt-4">
           <label className="font-medium">
             Pickup Time <span className="text-red-500">*</span>
           </label>
@@ -346,7 +346,7 @@ ${formData.message || "—"}
             onChange={handleChange}
             className={`w-full px-4 py-3 rounded border ${
               errors.pickupTime ? "border-red-500" : "border-gray-300"
-            }`}
+            } focus:ring-2 focus:ring-[#0B2545] outline-none`}
           />
         </div>
 

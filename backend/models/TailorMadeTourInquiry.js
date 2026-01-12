@@ -28,6 +28,16 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
     default: [],
   },
 
+  selectedExperiences: {
+    type: [String],
+    default: []
+  },
+  
+  travelStyle: {
+    type: String,
+    default: null
+  },
+  
   budget: {
     type: Number,
     default: null,
@@ -39,6 +49,11 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   },
 
   notes: {
+    type: String,
+    default: "",
+  },
+
+  hearAboutUs: {
     type: String,
     default: "",
   },
