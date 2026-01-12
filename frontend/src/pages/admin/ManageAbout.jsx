@@ -3,7 +3,7 @@ import { axiosInstance } from "../../lib/axios";
 import { useDropzone } from "react-dropzone";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaTrash, FaEdit, FaImage, FaVideo } from "react-icons/fa";
+import { FaTrash, FaImage, FaVideo } from "react-icons/fa";
 
 const AdminManageAbout = () => {
   const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -94,27 +94,6 @@ const AdminManageAbout = () => {
     const updatedFiles = [...files.galleryFiles];
     updatedFiles.splice(index, 1);
     setFiles({ ...files, galleryFiles: updatedFiles });
-  };
-
-  const handleEditGalleryItem = (index) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*,video/*";
-
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const updatedGallery = [...aboutData.gallery];
-      updatedGallery[index] = file; // store new file temporarily
-
-      setAboutData((prev) => ({
-        ...prev,
-        gallery: updatedGallery,
-      }));
-    };
-
-    input.click();
   };
 
   const isVideoUrl = (url) => {
@@ -590,15 +569,6 @@ const AdminManageAbout = () => {
                     title="Delete"
                   >
                     <FaTrash size={12} />
-                  </button>
-
-                  {/* Edit Button */}
-                  <button
-                    type="button"
-                    onClick={() => handleEditGalleryItem(idx)}
-                    className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white text-[#0d203a] px-4 py-1.5 rounded-full text-xs font-medium shadow opacity-0 group-hover:opacity-100 transition"
-                  >
-                    <FaEdit className="inline mr-1" /> Edit
                   </button>
                 </div>
               ))}

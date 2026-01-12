@@ -135,8 +135,10 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Tour Type:</strong> ${inquiry.tourType}</p>
       <p><strong>Pickup Location:</strong> ${inquiry.pickupLocation}</p>
       <p><strong>Drop Location:</strong> ${inquiry.dropLocation}</p>
-      <p><strong>Start Date:</strong> ${inquiry.startDate}</p>
-      <p><strong>End Date:</strong> ${inquiry.endDate}</p>
+      <p><strong>Start Date:</strong> ${inquiry.startDate ? new Date(inquiry.startDate).toISOString().slice(0, 10) : "N/A"}
+      </p>
+      <p><strong>End Date:</strong>${inquiry.endDate ? new Date(inquiry.endDate).toISOString().slice(0, 10) : "N/A"}
+      </p>
       <p><strong>Adults:</strong> ${inquiry.adults}</p>
       <p><strong>Children:</strong> ${inquiry.children}</p>
       <p><strong>Selected Destinations:</strong> ${
