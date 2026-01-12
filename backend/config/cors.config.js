@@ -1,10 +1,12 @@
 const allowedOrigins = [
-  'https://netlankatravels.com'
+  'http://localhost:3000',
+  'https://netlankatravels.com',
+  'https://www.netlankatravels.com',
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow non-browser tools or same origin
+    if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }

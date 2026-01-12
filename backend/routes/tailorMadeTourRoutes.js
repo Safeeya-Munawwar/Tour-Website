@@ -105,6 +105,7 @@ router.post("/inquiry", async (req, res) => {
       country: req.body.country,
       email: req.body.email,
       phone: req.body.phone,
+      tourType: req.body.tourType || "Budget",
       pickupLocation: req.body.pickupLocation,
       dropLocation: req.body.dropLocation,
       startDate: req.body.startDate,
@@ -128,6 +129,7 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Email:</strong> ${inquiry.email}</p>
       <p><strong>Phone:</strong> ${inquiry.phone}</p>
       <p><strong>Country:</strong> ${inquiry.country}</p>
+      <p><strong>Tour Type:</strong> ${inquiry.tourType}</p>
       <p><strong>Pickup Location:</strong> ${inquiry.pickupLocation}</p>
       <p><strong>Drop Location:</strong> ${inquiry.dropLocation}</p>
       <p><strong>Start Date:</strong> ${inquiry.startDate}</p>
@@ -154,6 +156,12 @@ router.post("/inquiry", async (req, res) => {
 
         <h3 style="color: #0d203a;">Your Inquiry Details</h3>
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour Type</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              inquiry.tourType
+            }</td>
+          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${

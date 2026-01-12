@@ -7,6 +7,13 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   email: { type: String, required: true },
   phone: { type: String, required: true },
 
+  tourType: {
+    type: String,
+    enum: ["Budget", "Luxury"],
+    default: "Budget",
+    required: true,
+  },  
+
   pickupLocation: { type: String, required: true },
   dropLocation: { type: String, required: true },
 
