@@ -98,9 +98,18 @@ export default function Events() {
                   <p className="text-xs uppercase tracking-widest text-gray-300 mb-1">
                     {new Date(event.date).toLocaleDateString()}
                   </p>
-                  <h3 className="text-lg font-bold text-white leading-snug mb-1 group-hover:text-[#D4AF37] transition-colors hover:underline">
-                    {event.title}
-                  </h3>
+                <h3 className="text-lg font-bold text-white leading-snug mb-1 group-hover:text-[#D4AF37] transition-colors hover:underline">
+  {event.title ? (
+    <>
+      {event.title.split(" ").slice(0, Math.ceil(event.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {event.title.split(" ").slice(Math.ceil(event.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    "Event Title"
+  )}
+</h3>
+
                   <p className="text-gray-200 text-sm leading-relaxed mb-2 line-clamp-2">
                     {event.desc}
                   </p>
