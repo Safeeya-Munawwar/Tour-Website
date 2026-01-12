@@ -498,14 +498,12 @@ const TailorMadeForm = () => {
       <p className="text-xs text-gray-500 mt-1">
         Approx. per person:{" "}
         <strong>
-          {(
-            Number(formData.budget) /
-            (Number(formData.adults) + Number(formData.children))
-          ).toFixed(2)}{" "}
-          {formData.currency === "Other"
-            ? formData.customCurrency
-            : formData.currency}
-        </strong>
+  {Number(formData.budget).toFixed(2)}{" "}
+  {formData.currency === "Other"
+    ? formData.customCurrency
+    : formData.currency}
+</strong>
+
       </p>
     )}
 
