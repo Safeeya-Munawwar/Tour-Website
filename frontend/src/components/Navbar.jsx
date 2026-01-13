@@ -231,17 +231,17 @@ export default function Navbar() {
 
         {/* NAVBAR (desktop) */}
         <nav
-          className={`hidden md:flex items-center justify-center relative text-white font-semibold text-[14px] tracking-widest ${
+          className={`hidden md:flex items-center justify-center relative text-white font-semibold text-[14px] tracking-widest transition-all duration-300 ${
             scrolled ? "mt-2 px-4" : "mt-6"
           }`}
         >
           {/* LOGO WHEN SCROLLED */}
           <div
-            className={`absolute flex items-center ${
+            className={`absolute flex items-center transition-all duration-300 ${
               scrolled
                 ? "left-[2%] opacity-100"
                 : "opacity-0 pointer-events-none"
-            } transition-all duration-300`}
+            }`}
           >
             <Link to="/">
               <img
@@ -261,12 +261,11 @@ export default function Navbar() {
                 {!item.dropdown ? (
                   <Link
                     to={getPath(item.name)}
-                    className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap focus:outline-none"
-                    style={{
-                      WebkitFontSmoothing: "antialiased",
-                      MozOsxFontSmoothing: "grayscale",
-                      fontSize: "14px",
-                    }}
+                    className={`nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap transition-transform duration-300 hover:scale-100 ${
+                      window.location.pathname === getPath(item.name)
+                        ? "active"
+                        : ""
+                    }`}
                   >
                     {item.name}
                   </Link>
@@ -274,27 +273,18 @@ export default function Navbar() {
                   <>
                     <button
                       onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
-                      className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap focus:outline-none"
-                      style={{
-                        WebkitFontSmoothing: "antialiased",
-                        MozOsxFontSmoothing: "grayscale",
-                      }}
+                      className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap transition-transform duration-300 hover:scale-100"
                     >
                       {item.name}
                       <IoChevronDown className="text-[13px] mt-[1px]" />
                     </button>
-
                     {openMenu === idx && (
-                      <div className="dropdown absolute top-full left-0 bg-white text-black rounded-md w-48 py-2 z-50">
+                      <div className="dropdown absolute top-full left-0 bg-white text-black rounded-md shadow-lg w-48 py-2 z-50">
                         {item.dropdown.map((d, i) => (
                           <Link
                             key={i}
                             to={getPath(d)}
-                            className="block px-4 py-2 cursor-pointer text-sm whitespace-nowrap active:scale-105 focus:outline-none"
-                            style={{
-                              WebkitFontSmoothing: "antialiased",
-                              MozOsxFontSmoothing: "grayscale",
-                            }}
+                            className="block px-4 py-2 hover:bg-gray-200 cursor-pointer text-sm whitespace-nowrap"
                           >
                             {d}
                           </Link>
