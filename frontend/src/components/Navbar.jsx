@@ -129,8 +129,8 @@ export default function Navbar() {
     : "https://wa.me/94705325512";
 
   const emailLink = contact?.emails?.[0]
-    ? `mailto:${contact.emails[0]}`
-    : "mailto:inquiries@netlankatravels.com"; // fallback
+    ? `mailto:${contact.emails[0]}?subject=Tour Enquiry`
+    : "mailto:inquiries@netlankatravels.com?subject=Tour Enquiry";
 
   return (
     <div className="w-full fixed top-0 left-0 z-[9999] font-[Poppins]">
@@ -153,34 +153,29 @@ export default function Navbar() {
           {/* SOCIAL ICONS – LEFT OF LOGO */}
           <div className="hidden md:flex items-center gap-4">
             {contact?.socialMedia?.map((sm, i) => {
-              const Icon = socialIcons[sm.platform?.toLowerCase()];
+              const platform = sm.platform?.toLowerCase();
+              const Icon = socialIcons[platform];
               if (!Icon) return null;
 
-              let url = sm.url;
+              let href = sm.url;
 
-              // Fix email links
-              if (sm.platform?.toLowerCase() === "email") {
-                url = `mailto:${sm.url}`;
-              }
-
-              // Fix WhatsApp links
-              if (sm.platform?.toLowerCase() === "whatsapp") {
-                const whatsapp = sm.url.replace(/\D/g, "");
-                url = `https://wa.me/${whatsapp}`;
-              }
-
-              // Ensure URL starts with http for browser
-              if (!url.startsWith("http") && !url.startsWith("mailto")) {
-                url = "https://" + url;
+              if (platform === "email") {
+                href = `mailto:${sm.url}`;
+              } else if (platform === "whatsapp") {
+                const phone = sm.url.replace(/\D/g, "");
+                href = `https://wa.me/${phone}`;
+              } else if (!href.startsWith("http")) {
+                href = `https://${href}`;
               }
 
               return (
                 <a
                   key={i}
-                  href={url}
-                  target="_blank"
+                  href={href}
+                  target={platform === "email" ? "_self" : "_blank"}
                   rel="noopener noreferrer"
-                  className="text-white hover:scale-110 transition-transform"
+                  aria-label={`Contact us via ${sm.platform}`}
+                  className="hover:scale-110 transition-transform"
                 >
                   <Icon size={20} />
                 </a>
@@ -209,15 +204,15 @@ export default function Navbar() {
                 className="flex items-center gap-2 text-[15px] hover:text-green-400 transition"
               >
                 <FaWhatsapp className="text-xl" />
-                {contact?.whatsapp || "(+94) 77 730 0852"}
+                {contact?.whatsapp || "(+94) 705 325 512"}
               </a>
             </div>
-            <button
-              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
-              onClick={() => (window.location.href = emailLink)}
+            <a
+              href={emailLink}
+              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition inline-block"
             >
               ENQUIRE NOW
-            </button>
+            </a>
           </div>
 
           {/* MOBILE HAMBURGER (FORCED RIGHT) */}
@@ -383,36 +378,8 @@ export default function Navbar() {
               className="flex items-center gap-2 mb-4 text-white hover:text-green-400 transition"
             >
               <FaWhatsapp className="text-2xl text-green-400" />
-              {contact?.whatsapp || "(+94) 77 730 0852"}
+              {contact?.whatsapp || "+94 705 325 512"}
             </a>
-          </div>
-          <button
-            className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
-            onClick={() => {
-              setSidebar(false);
-              window.location.href = emailLink;
-            }}
-          >
-            ENQUIRE NOW
-          </button>
-
-          <div className="flex items-center gap-4 mb-6 mt-6 text-white">
-            {contact?.socialMedia?.map((sm, i) => {
-              const Icon = socialIcons[sm.platform?.toLowerCase()];
-              if (!Icon) return null;
-
-              return (
-                <a
-                  key={i}
-                  href={sm.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white hover:scale-110 transition-transform"
-                >
-                  <Icon size={20} />
-                </a>
-              );
-            })}
           </div>
         </div>
       </div>

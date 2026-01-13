@@ -34,7 +34,6 @@ export default function Footer() {
   }, []);
 
   // ------------------- Newsletter Subscription -------------------
-  // ------------------- Newsletter Subscription -------------------
   const subscribeNewsletter = async (e) => {
     e.preventDefault();
     if (!email.trim()) {
@@ -116,22 +115,38 @@ export default function Footer() {
             experiences.
           </p>
           <div className="flex gap-4 mt-2" aria-label="Social Media Links">
-            {contact?.socialMedia?.map((sm, i) => {
-              const Icon = socialIcons[sm.platform?.toLowerCase()];
-              if (!Icon) return null;
-              return (
-                <a
-                  key={i}
-                  href={sm.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit our ${sm.platform} page`}
-                  className="hover:scale-110 transition-transform"
-                >
-                  <Icon size={20} />
-                </a>
-              );
-            })}
+          {contact?.socialMedia?.map((sm, i) => {
+  const platform = sm.platform?.toLowerCase();
+  const Icon = socialIcons[platform];
+  if (!Icon) return null;
+
+  let href = sm.url;
+
+  if (platform === "email") {
+    href = `mailto:${sm.url}`;
+  }
+  else if (platform === "whatsapp") {
+    const phone = sm.url.replace(/\D/g, "");
+    href = `https://wa.me/${phone}`;
+  }
+  else if (!href.startsWith("http")) {
+    href = `https://${href}`;
+  }
+
+  return (
+    <a
+      key={i}
+      href={href}
+      target={platform === "email" ? "_self" : "_blank"}
+      rel="noopener noreferrer"
+      aria-label={`Contact us via ${sm.platform}`}
+      className="hover:scale-110 transition-transform"
+    >
+      <Icon size={20} />
+    </a>
+  );
+})}
+
           </div>
         </div>
         {/* ---------------- CONTACT INFO ---------------- */}

@@ -5,7 +5,7 @@ const ContactSchema = new mongoose.Schema(
     phone: { type: String, default: "+94 776 301 329" },
     whatsapp: { type: String, default: "+94 776 301 329" },
 
-    emails: { type: [String], default: ["example@gmail.com"] },
+    emails: { type: [String], default: ["inquiries@netlankatravels.com"] },
 
     offices: [
       {
