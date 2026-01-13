@@ -84,7 +84,9 @@ export default function Footer() {
     { name: "DAY TOURS", path: "/day-tours" },
     { name: "ROUND TOURS", path: "/round-tours" },
     { name: "ABOUT US", path: "/about" },
+    { name: "COMMUNITY IMPACTS", path: "/community-impact" },
     { name: "BLOG", path: "/blog" },
+    { name: "EVENT", path: "/events" },
     { name: "EXPERIENCE", path: "/experience" },
     { name: "CONTACT US", path: "/contact" },
   ];

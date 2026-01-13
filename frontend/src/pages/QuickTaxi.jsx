@@ -41,9 +41,7 @@ const QuickTaxi = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl font-semibold text-gray-700">
-          Loading vehicles...
-        </p>
+        <p className="text-xl font-semibold text-gray-700"></p>
       </div>
     );
   }
@@ -71,19 +69,22 @@ const QuickTaxi = () => {
       </div>
 
       {/* INTRO SECTION */}
-      <section className="w-full mt-10 py-10 bg-white text-center">
-        <p className="text-sm md:text-lg text-gray-500 tracking-widest font-semibold mb-3">
-          QUICK TAXI BOOKING
-        </p>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
-          Get Your Ride Instantly Across Sri Lanka
-        </h2>
-        <p className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-          Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy reliable
-          drop & pickup services, airport transfers, and private drivers for a
-          safe, comfortable, and hassle-free journey anywhere in Sri Lanka.
-        </p>
-        <div className="w-20 h-[3px] bg-yellow-500 mx-auto mt-6 rounded-full"></div>
+      <section className="w-full py-20">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
+            QUICK TAXI BOOKING
+          </p>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5">
+            Get Your Ride Instantly Across Sri Lanka
+          </h2>
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            Book your Sri Lanka taxi quickly with NetLanka Travels. Enjoy
+            reliable drop & pickup services, airport transfers, and private
+            drivers for a safe, comfortable, and hassle-free journey anywhere in
+            Sri Lanka.
+          </p>
+          <div className="w-20 h-[3px] bg-yellow-500 mx-auto mt-6 rounded-full"></div>
+        </div>
       </section>
 
       {/* VEHICLES GRID */}

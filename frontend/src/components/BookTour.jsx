@@ -248,8 +248,8 @@ Net Lanka Travel
         ))}
 
         {/* PARTICIPANTS */}
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-1 flex-1">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-1 w-full">
             <label className="font-medium text-[#0B2545] text-left">
               Adults <span className="text-red-500">*</span>
             </label>
@@ -259,11 +259,11 @@ Net Lanka Travel
               name="adults"
               value={formData.adults}
               onChange={handleChange}
-              className="px-4 py-3 border rounded"
+              className="px-4 py-3 border rounded w-full"
             />
           </div>
 
-          <div className="flex flex-col gap-1 flex-1">
+          <div className="flex flex-col gap-1 w-full">
             <label className="font-medium text-[#0B2545] text-left">
               Children
             </label>
@@ -273,14 +273,14 @@ Net Lanka Travel
               name="children"
               value={formData.children}
               onChange={handleChange}
-              className="px-4 py-3 border rounded"
+              className="px-4 py-3 border rounded w-full"
             />
           </div>
         </div>
 
         {/* DATE & TIME */}
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-1 flex-1">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-1 w-full">
             <label className="font-medium text-[#0B2545] text-left">
               Start Date <span className="text-red-500">*</span>
             </label>
@@ -289,11 +289,11 @@ Net Lanka Travel
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
-              className="px-4 py-3 border rounded"
+              className="px-4 py-3 border rounded w-full"
             />
           </div>
 
-          <div className="flex flex-col gap-1 flex-1">
+          <div className="flex flex-col gap-1 w-full">
             <label className="font-medium text-[#0B2545] text-left">
               Start Time <span className="text-red-500">*</span>
             </label>
@@ -302,7 +302,7 @@ Net Lanka Travel
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
-              className="px-4 py-3 border rounded"
+              className="px-4 py-3 border rounded w-full"
             />
           </div>
         </div>

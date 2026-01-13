@@ -82,7 +82,7 @@ export default function Destination() {
       </div>
 
       {/* DESTINATIONS GRID */}
-      <section className="w-full py-20">
+      <section className="w-full py-20"> 
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
             HIDDEN MAGICAL PLACES

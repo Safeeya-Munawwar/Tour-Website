@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { axiosInstance } from "../../lib/axios";
 
 const ContactForm = () => {
@@ -32,13 +31,21 @@ const ContactForm = () => {
       const res = await axiosInstance.post("/contact-form", formData);
       if (res.data.success) {
         toast.success("Form submitted successfully!");
-        setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" });
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
       } else {
         toast.error("Failed to submit form. Please try again.");
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Server error: could not submit form");
+      toast.error(
+        err.response?.data?.message || "Server error: could not submit form"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -46,7 +53,6 @@ const ContactForm = () => {
 
   return (
     <div>
-      <ToastContainer position="top-right" autoClose={3000} />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Name */}
         <div className="flex flex-col space-y-1">
