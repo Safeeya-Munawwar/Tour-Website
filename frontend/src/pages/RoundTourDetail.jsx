@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 import BookRoundTour from "../components/BookRoundTour";
-import { FiMapPin, FiPhone, FiMail, FiCalendar } from "react-icons/fi";
+import { FiMapPin, FiPhone, FiMail} from "react-icons/fi";
+import { FaMapMarkedAlt } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller } from "swiper/modules";
@@ -161,7 +162,7 @@ export default function RoundTourDetail() {
                           <div className="flex flex-wrap gap-x-6 gap-y-4 text-sm text-gray-700">
                             {(day.activities || []).map((activity, i) => (
                               <div key={i} className="flex items-center gap-2">
-                                <FiCalendar className="text-green-500" />
+                               <FaMapMarkedAlt className="text-green-500" size={16} />
                                 <span>{activity}</span>
                               </div>
                             ))}

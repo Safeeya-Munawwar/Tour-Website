@@ -123,15 +123,14 @@ export default function Navbar() {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-const whatsappNumber = contact?.whatsapp?.replace(/\D/g, "");
-const whatsappLink = whatsappNumber
-  ? `https://wa.me/${whatsappNumber}`
-  : "https://wa.me/94705325512";
+  const whatsappNumber = contact?.whatsapp?.replace(/\D/g, "");
+  const whatsappLink = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}`
+    : "https://wa.me/94705325512";
 
   const emailLink = contact?.emails?.[0]
-  ? `mailto:${contact.emails[0]}`
-  : "mailto:inquiries@netlankatravels.com"; // fallback
-
+    ? `mailto:${contact.emails[0]}`
+    : "mailto:inquiries@netlankatravels.com"; // fallback
 
   return (
     <div className="w-full fixed top-0 left-0 z-[9999] font-[Poppins]">
@@ -153,41 +152,40 @@ const whatsappLink = whatsappNumber
         >
           {/* SOCIAL ICONS – LEFT OF LOGO */}
           <div className="hidden md:flex items-center gap-4">
-          {contact?.socialMedia?.map((sm, i) => {
-  const Icon = socialIcons[sm.platform?.toLowerCase()];
-  if (!Icon) return null;
+            {contact?.socialMedia?.map((sm, i) => {
+              const Icon = socialIcons[sm.platform?.toLowerCase()];
+              if (!Icon) return null;
 
-  let url = sm.url;
+              let url = sm.url;
 
-  // Fix email links
-  if (sm.platform?.toLowerCase() === "email") {
-    url = `mailto:${sm.url}`;
-  }
+              // Fix email links
+              if (sm.platform?.toLowerCase() === "email") {
+                url = `mailto:${sm.url}`;
+              }
 
-  // Fix WhatsApp links
-  if (sm.platform?.toLowerCase() === "whatsapp") {
-    const whatsapp = sm.url.replace(/\D/g, "");
-    url = `https://wa.me/${whatsapp}`;
-  }
+              // Fix WhatsApp links
+              if (sm.platform?.toLowerCase() === "whatsapp") {
+                const whatsapp = sm.url.replace(/\D/g, "");
+                url = `https://wa.me/${whatsapp}`;
+              }
 
-  // Ensure URL starts with http for browser
-  if (!url.startsWith("http") && !url.startsWith("mailto")) {
-    url = "https://" + url;
-  }
+              // Ensure URL starts with http for browser
+              if (!url.startsWith("http") && !url.startsWith("mailto")) {
+                url = "https://" + url;
+              }
 
-  return (
-    <a
-      key={i}
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-white hover:scale-110 transition-transform"
-    >
-      <Icon size={20} />
-    </a>
-  );
-})}
-
+              return (
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:scale-110 transition-transform"
+                >
+                  <Icon size={20} />
+                </a>
+              );
+            })}
           </div>
 
           {/* LOGO (SPACE BELOW ADDED) */}
@@ -205,23 +203,21 @@ const whatsappLink = whatsappNumber
           <div className="hidden md:flex items-center gap-8 text-white ml-auto">
             <div className="flex items-center gap-2 text-[15px]">
               <a
-  href={whatsappLink}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center gap-2 text-[15px] hover:text-green-400 transition"
->
-  <FaWhatsapp className="text-xl" />
-  {contact?.whatsapp || "(+94) 77 730 0852"}
-</a>
-
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[15px] hover:text-green-400 transition"
+              >
+                <FaWhatsapp className="text-xl" />
+                {contact?.whatsapp || "(+94) 77 730 0852"}
+              </a>
             </div>
-           <button
-  className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
-  onClick={() => window.location.href = emailLink}
->
-  ENQUIRE NOW
-</button>
-
+            <button
+              className="px-6 py-[9px] border border-white rounded-full text-[14px] hover:bg-blue-950 hover:text-white transition"
+              onClick={() => (window.location.href = emailLink)}
+            >
+              ENQUIRE NOW
+            </button>
           </div>
 
           {/* MOBILE HAMBURGER (FORCED RIGHT) */}
@@ -235,17 +231,17 @@ const whatsappLink = whatsappNumber
 
         {/* NAVBAR (desktop) */}
         <nav
-          className={`hidden md:flex items-center justify-center relative text-white font-semibold text-[14px] tracking-widest transition-all duration-300 ${
+          className={`hidden md:flex items-center justify-center relative text-white font-semibold text-[14px] tracking-widest ${
             scrolled ? "mt-2 px-4" : "mt-6"
           }`}
         >
           {/* LOGO WHEN SCROLLED */}
           <div
-            className={`absolute flex items-center transition-all duration-300 ${
+            className={`absolute flex items-center ${
               scrolled
                 ? "left-[2%] opacity-100"
                 : "opacity-0 pointer-events-none"
-            }`}
+            } transition-all duration-300`}
           >
             <Link to="/">
               <img
@@ -265,11 +261,12 @@ const whatsappLink = whatsappNumber
                 {!item.dropdown ? (
                   <Link
                     to={getPath(item.name)}
-                    className={`nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap transition-transform duration-300 hover:scale-110 ${
-                      window.location.pathname === getPath(item.name)
-                        ? "active"
-                        : ""
-                    }`}
+                    className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap focus:outline-none"
+                    style={{
+                      WebkitFontSmoothing: "antialiased",
+                      MozOsxFontSmoothing: "grayscale",
+                      fontSize: "14px",
+                    }}
                   >
                     {item.name}
                   </Link>
@@ -277,18 +274,27 @@ const whatsappLink = whatsappNumber
                   <>
                     <button
                       onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
-                      className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap transition-transform duration-300 hover:scale-110"
+                      className="nav-link flex items-center gap-1 py-0 px-1 whitespace-nowrap focus:outline-none"
+                      style={{
+                        WebkitFontSmoothing: "antialiased",
+                        MozOsxFontSmoothing: "grayscale",
+                      }}
                     >
                       {item.name}
                       <IoChevronDown className="text-[13px] mt-[1px]" />
                     </button>
+
                     {openMenu === idx && (
-                      <div className="dropdown absolute top-full left-0 bg-white text-black rounded-md shadow-lg w-48 py-2 z-50">
+                      <div className="dropdown absolute top-full left-0 bg-white text-black rounded-md w-48 py-2 z-50">
                         {item.dropdown.map((d, i) => (
                           <Link
                             key={i}
                             to={getPath(d)}
-                            className="block px-4 py-2 hover:bg-gray-200 cursor-pointer text-sm"
+                            className="block px-4 py-2 cursor-pointer text-sm whitespace-nowrap active:scale-105 focus:outline-none"
+                            style={{
+                              WebkitFontSmoothing: "antialiased",
+                              MozOsxFontSmoothing: "grayscale",
+                            }}
                           >
                             {d}
                           </Link>
@@ -380,26 +386,25 @@ const whatsappLink = whatsappNumber
         {/* Footer */}
         <div className="px-6 mt-10 text-white">
           <div className="flex items-center gap-2 mb-4 text-white">
-           <a
-  href={whatsappLink}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center gap-2 mb-4 text-white hover:text-green-400 transition"
->
-  <FaWhatsapp className="text-2xl text-green-400" />
-  {contact?.whatsapp || "(+94) 77 730 0852"}
-</a>
-
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 mb-4 text-white hover:text-green-400 transition"
+            >
+              <FaWhatsapp className="text-2xl text-green-400" />
+              {contact?.whatsapp || "(+94) 77 730 0852"}
+            </a>
           </div>
-         <button
-  className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
-  onClick={() => {
-    setSidebar(false);
-    window.location.href = emailLink;
-  }}
->
-  ENQUIRE NOW
-</button>
+          <button
+            className="w-full py-2 border border-white/40 bg-white/10 rounded-full"
+            onClick={() => {
+              setSidebar(false);
+              window.location.href = emailLink;
+            }}
+          >
+            ENQUIRE NOW
+          </button>
 
           <div className="flex items-center gap-4 mb-6 mt-6 text-white">
             {contact?.socialMedia?.map((sm, i) => {
