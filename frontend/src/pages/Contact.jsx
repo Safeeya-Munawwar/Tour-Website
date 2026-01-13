@@ -11,7 +11,7 @@ import Testimonials from "../components/Testimonials";
 import ContactForm from "../components/admin/ContactForm";
 import { axiosInstance } from "../lib/axios";
 import L from "leaflet";
-import "leaflet-routing-machine"; 
+import "leaflet-routing-machine";
 
 // Make Leaflet global for routing machine
 window.L = L;
@@ -29,8 +29,8 @@ const Contact = () => {
   });
   const [userLocation, setUserLocation] = useState(null);
   const [showText, setShowText] = useState(false);
-const [currentPage] = useState(1);
-// Scroll to top on page change
+  const [currentPage] = useState(1);
+  // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -58,10 +58,11 @@ const [currentPage] = useState(1);
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/contact-header.webp')",
-        backgroundPosition: "center 20%",
-        backgroundRepeat: "no-repeat",
-         }}
+        style={{
+          backgroundImage: "url('/images/contact-header.webp')",
+          backgroundPosition: "center 20%",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
         <div
@@ -69,8 +70,8 @@ const [currentPage] = useState(1);
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-         <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
-           Contact Us Anytime
+          <h2 className="text-xl md:text-3xl leading-snug text-right mr-4">
+            Contact Us Anytime
           </h2>
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
@@ -113,9 +114,7 @@ const [currentPage] = useState(1);
             <h4 className="font-bold text-lg sm:text-xl text-[#122453] mb-2 flex items-center gap-2">
               <FaPhoneAlt /> Phone
             </h4>
-            <p className="pl-6 mb-1 text-sm sm:text-base">
-            {contact.phone}
-            </p>
+            <p className="pl-6 mb-1 text-sm sm:text-base">{contact.phone}</p>
           </div>
 
           {/* WHATSAPP */}
@@ -123,9 +122,7 @@ const [currentPage] = useState(1);
             <h4 className="font-bold text-lg sm:text-xl text-[#122453] mb-2 flex items-center gap-2">
               <FaWhatsapp /> WhatsApp
             </h4>
-            <p className="pl-6 mb-1 text-sm sm:text-base">
-            {contact.whatsapp}
-            </p>
+            <p className="pl-6 mb-1 text-sm sm:text-base">{contact.whatsapp}</p>
           </div>
 
           {/* EMAIL */}
@@ -146,7 +143,8 @@ const [currentPage] = useState(1);
               <FaClock /> Working Hours
             </h4>
             <p className="pl-6 mb-1 text-sm sm:text-base">
-              {contact.workingHours.start} – {contact.workingHours.end} (UTC+5:30)
+              {contact.workingHours.start} – {contact.workingHours.end}{" "}
+              (UTC+5:30)
             </p>
           </div>
 
@@ -156,25 +154,40 @@ const [currentPage] = useState(1);
               <FaShareAlt /> Connect With Us Online
             </h4>
             <div className="flex gap-3 sm:gap-4 items-center flex-wrap max-md:pl-1">
-              {contact.socialMedia.map((s, i) => (
-                <a
-                  key={i}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80 transition"
-                >
-                  {s.icon ? (
-                    <img
-                      src={s.icon}
-                      alt={s.platform}
-                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                    />
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </a>
-              ))}
+              {contact?.socialMedia?.map((s, i) => {
+                const platform = s.platform?.toLowerCase();
+                let href = s.url;
+
+                if (platform === "email") {
+                  href = `mailto:${s.url}`;
+                } else if (platform === "whatsapp") {
+                  const phone = s.url.replace(/\D/g, "");
+                  href = `https://wa.me/${phone}`;
+                } else if (!href.startsWith("http")) {
+                  href = `https://${href}`;
+                }
+
+                return (
+                  <a
+                    key={i}
+                    href={href}
+                    target={platform === "email" ? "_self" : "_blank"}
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition"
+                    aria-label={`Contact via ${s.platform}`}
+                  >
+                    {s.icon ? (
+                      <img
+                        src={s.icon}
+                        alt={s.platform}
+                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                      />
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -187,18 +200,22 @@ const [currentPage] = useState(1);
 
       {/* MAP */}
       <section className="w-full px-4 sm:px-6 mt-8">
-  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
-    Our Locations at a Glance
-  </h2>
-  <div className="w-16 h-[3px] bg-yellow-500 mx-auto mb-6 rounded"></div>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
+          Our Locations at a Glance
+        </h2>
+        <div className="w-16 h-[3px] bg-yellow-500 mx-auto mb-6 rounded"></div>
 
-  <div className="relative rounded-xl shadow-lg border border-gray-200 overflow-hidden" style={{ height: 350 }}>
-    <React.Suspense fallback={<div className="text-center py-10">Loading map...</div>}>
-      <ContactMap offices={contact.offices} userLocation={userLocation} />
-    </React.Suspense>
-  </div>
-</section>
-
+        <div
+          className="relative rounded-xl shadow-lg border border-gray-200 overflow-hidden"
+          style={{ height: 350 }}
+        >
+          <React.Suspense
+            fallback={<div className="text-center py-10">Loading map...</div>}
+          >
+            <ContactMap offices={contact.offices} userLocation={userLocation} />
+          </React.Suspense>
+        </div>
+      </section>
 
       {/* TESTIMONIALS */}
       <Testimonials />
