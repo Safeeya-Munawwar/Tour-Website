@@ -208,7 +208,7 @@ router.post("/", async (req, res) => {
               <!-- CTA -->
               <tr>
                 <td align="center" style="padding:30px;">
-                  <a href="https://lankatrav.space/"
+                  <a href="https://netlankatravels.com/"
                      style="background:#0d203a; color:#ffffff; padding:14px 30px;
                             text-decoration:none; border-radius:30px; font-weight:bold;">
                     Explore More Tours
