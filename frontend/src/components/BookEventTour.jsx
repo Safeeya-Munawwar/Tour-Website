@@ -168,35 +168,51 @@ ${formData.message || "–"}
   if (!eventId) return null;
 
   return (
-    <div className=" ">
-      <div className="bg-white border border-blue-900 rounded-2xl shadow-xl p-8 w-full max-w-[650px] relative">
-        {/* Close Button */}
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 font-bold text-xl"
-          >
-            &times;
-          </button>
-        )}
+    <section className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto">
+      <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold text-[#0B2545] leading-tight">
+        {eventTitle}
+        <br />
+        <span className="text-base sm:text-lg md:text-xl font-medium">
+          Event Tour
+        </span>
+      </h2>
 
-        <h2 className="text-center text-2xl md:text-3xl font-extrabold text-[#0B2545]">
-          {eventTitle}
-          <span className="block">{eventLocation} - Event Tour</span>
-        </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
+        {/* Name, Email, Phone */}
+        {["name", "email", "phone"].map((field) => (
+          <div key={field}>
+            <label className="font-medium mb-1">
+              {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type={field === "email" ? "email" : "text"}
+              name={field}
+              placeholder={`Enter ${field}`}
+              value={formData[field]}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 rounded border ${
+                errors[field] ? "border-red-500" : "border-gray-300"
+              } focus:ring-2 focus:ring-blue-500 outline-none`}
+            />
+            {errors[field] && (
+              <span className="text-red-500 text-sm">{errors[field]}</span>
+            )}
+          </div>
+        ))}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Name, Email, Phone */}
-          {["name", "email", "phone"].map((field) => (
+        {/* Adults & Children */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {["adults", "children"].map((field) => (
             <div key={field}>
               <label className="font-medium mb-1">
                 {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
-                <span className="text-red-500">*</span>
+                {field === "adults" && <span className="text-red-500">*</span>}
               </label>
               <input
-                type={field === "email" ? "email" : "text"}
+                type="number"
                 name={field}
-                placeholder={`Enter ${field}`}
+                min={field === "adults" ? 1 : 0}
                 value={formData[field]}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 rounded border ${
@@ -208,113 +224,86 @@ ${formData.message || "–"}
               )}
             </div>
           ))}
+        </div>
 
-          {/* Adults & Children */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {["adults", "children"].map((field) => (
-              <div key={field}>
-                <label className="font-medium mb-1">
-                  {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
-                  {field === "adults" && (
-                    <span className="text-red-500">*</span>
-                  )}
-                </label>
-                <input
-                  type="number"
-                  name={field}
-                  min={field === "adults" ? 1 : 0}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded border ${
-                    errors[field] ? "border-red-500" : "border-gray-300"
-                  } focus:ring-2 focus:ring-blue-500 outline-none`}
-                />
-                {errors[field] && (
-                  <span className="text-red-500 text-sm">{errors[field]}</span>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Date & Time */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="font-medium mb-1">
-                Event Date <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 rounded border ${
-                  errors.startDate ? "border-red-500" : "border-gray-300"
-                } focus:ring-2 focus:ring-blue-500 outline-none`}
-              />
-              {errors.startDate && (
-                <span className="text-red-500 text-sm">{errors.startDate}</span>
-              )}
-            </div>
-            <div>
-              <label className="font-medium mb-1">
-                Event Time <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="time"
-                name="startTime"
-                value={formData.startTime}
-                onChange={handleChange}
-                step="60"
-                className={`w-full px-4 py-3 rounded border ${
-                  errors.startTime ? "border-red-500" : "border-gray-300"
-                } focus:ring-2 focus:ring-blue-500 outline-none`}
-              />
-              {errors.startTime && (
-                <span className="text-red-500 text-sm">{errors.startTime}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Message */}
+        {/* Date & Time */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="font-medium mb-1">Additional Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
+            <label className="font-medium mb-1">
+              Event Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
               onChange={handleChange}
-              placeholder="Any additional requests"
-              className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
+              className={`w-full px-4 py-3 rounded border ${
+                errors.startDate ? "border-red-500" : "border-gray-300"
+              } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
+            {errors.startDate && (
+              <span className="text-red-500 text-sm">{errors.startDate}</span>
+            )}
           </div>
+          <div>
+            <label className="font-medium mb-1">
+              Event Time <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="time"
+              name="startTime"
+              value={formData.startTime}
+              onChange={handleChange}
+              step="60"
+              className={`w-full px-4 py-3 rounded border ${
+                errors.startTime ? "border-red-500" : "border-gray-300"
+              } focus:ring-2 focus:ring-blue-500 outline-none`}
+            />
+            {errors.startTime && (
+              <span className="text-red-500 text-sm">{errors.startTime}</span>
+            )}
+          </div>
+        </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+        {/* Message */}
+        <div>
+          <label className="font-medium mb-1">Additional Message</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Any additional requests"
+            className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+        >
+          {loading ? "Submitting..." : "Book Event"}
+        </button>
+
+        <button
+          type="button"
+          onClick={sendBookingViaWhatsApp}
+          className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
+        >
+          Book via WhatsApp
+        </button>
+
+        {responseMsg && (
+          <p
+            className={`mt-2 text-center font-medium ${
+              isError ? "text-red-600" : "text-green-600"
+            }`}
           >
-            {loading ? "Submitting..." : "Book Event"}
-          </button>
-
-          <button
-            type="button"
-            onClick={sendBookingViaWhatsApp}
-            className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded transition-colors duration-200"
-          >
-            Book via WhatsApp
-          </button>
-
-          {responseMsg && (
-            <p
-              className={`mt-2 text-center font-medium ${
-                isError ? "text-red-600" : "text-green-600"
-              }`}
-            >
-              {responseMsg}
-            </p>
-          )}
-        </form>
-      </div>
-    </div>
+            {responseMsg}
+          </p>
+        )}
+      </form>
+    </section>
   );
 }

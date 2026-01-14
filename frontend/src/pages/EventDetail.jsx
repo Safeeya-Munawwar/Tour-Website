@@ -235,28 +235,30 @@ export default function EventDetail() {
 
         {/* BOOKING FORM MODAL */}
         {showBookingModal && (
-          <div
-            className="fixed inset-0 z-10 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-            onClick={() => setShowBookingModal(false)}
-          >
             <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[88vh] mt-[76px]"
-            >
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Event booking form"
+          onClick={() => setShowBookingModal(false)}
+        >
+            <div
+            className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
               {/* Header */}
               <div className="relative px-6 py-4 border-b">
                 <button
                   onClick={() => setShowBookingModal(false)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2
-                     text-xl font-bold text-gray-500 hover:text-gray-900"
-                  aria-label="Close booking form"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-gray-600 hover:text-black"
+                aria-label="Close booking form"
                 >
                   &times;
                 </button>
               </div>
 
               {/* Content */}
-              <div className="p-6 overflow-y-auto scroll-smooth max-h-[calc(88vh-64px)]">
+              <div className="flex-1 overflow-auto p-6">
                 <BookEventTour
                   eventId={event._id}
                   eventTitle={event.title}
