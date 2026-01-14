@@ -175,7 +175,7 @@ export default function Navbar() {
                   target={platform === "email" ? "_self" : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={`Contact us via ${sm.platform}`}
-                  className="hover:scale-110 transition-transform"
+                  className="text-white hover:text-gray-300 hover:scale-110 transition-transform"
                 >
                   <Icon size={20} />
                 </a>

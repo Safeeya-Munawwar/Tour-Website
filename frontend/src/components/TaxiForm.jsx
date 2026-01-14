@@ -162,9 +162,13 @@ ${formData.message || "—"}
     window.open(url, "_blank");
   };
 
+  const inputBase =
+  "w-full px-4 py-3 min-h-[48px] rounded border focus:ring-2 focus:ring-[#0B2545] outline-none";
+
   return (
-    <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
-      <ToastContainer position="top-right" autoClose={3000} />
+    <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl
+    p-6 sm:p-8 pb-10 w-full max-w-[650px] mx-auto text-left">
+<ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-2xl font-bold text-center text-[#0B2545] mb-2">
         Quick Taxi Booking
         <span className="block text-base font-medium text-gray-600">
@@ -172,7 +176,7 @@ ${formData.message || "—"}
         </span>
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 sm:gap-4">
         {/* Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -312,9 +316,9 @@ ${formData.message || "—"}
               name="pickupDate"
               value={formData.pickupDate}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
+              className={`${inputBase} ${
                 errors.pickupDate ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-[#0B2545] outline-none`}
+              }`}
             />
           </div>
 
@@ -327,9 +331,9 @@ ${formData.message || "—"}
               name="dropDate"
               value={formData.dropDate}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded border ${
+              className={`${inputBase} ${
                 errors.dropDate ? "border-red-500" : "border-gray-300"
-              } focus:ring-2 focus:ring-[#0B2545] outline-none`}
+              }`}
             />
           </div>
         </div>
@@ -344,9 +348,9 @@ ${formData.message || "—"}
             name="pickupTime"
             value={formData.pickupTime}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded border ${
+            className={`${inputBase} ${
               errors.pickupTime ? "border-red-500" : "border-gray-300"
-            } focus:ring-2 focus:ring-[#0B2545] outline-none`}
+            }`}
           />
         </div>
 

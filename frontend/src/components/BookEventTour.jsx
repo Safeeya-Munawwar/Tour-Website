@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
 
-export default function BookEventTour({ eventId, eventTitle, eventLocation, onClose }) {
+export default function BookEventTour({
+  eventId,
+  eventTitle,
+  eventLocation,
+  onClose,
+}) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,8 +56,10 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = "Invalid email";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    if (Number(formData.adults) < 1) newErrors.adults = "At least 1 adult required";
-    if (Number(formData.children) < 0) newErrors.children = "Cannot be negative";
+    if (Number(formData.adults) < 1)
+      newErrors.adults = "At least 1 adult required";
+    if (Number(formData.children) < 0)
+      newErrors.children = "Cannot be negative";
     if (!formData.startDate) newErrors.startDate = "Event date is required";
     else if (new Date(formData.startDate) < new Date().setHours(0, 0, 0, 0))
       newErrors.startDate = "Date cannot be in the past";
@@ -64,7 +71,7 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
     e.preventDefault();
     setResponseMsg("");
     setIsError(false);
-  
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -72,10 +79,10 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
       setIsError(true);
       return;
     }
-  
+
     setLoading(true);
     setErrors({});
-  
+
     try {
       const res = await axiosInstance.post("/event-tour-booking", {
         eventId,
@@ -88,7 +95,7 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
         startTime: formData.startTime,
         message: formData.message,
       });
-  
+
       if (res.data.success) {
         setResponseMsg("Booking submitted successfully!");
         setIsError(false);
@@ -108,13 +115,14 @@ export default function BookEventTour({ eventId, eventTitle, eventLocation, onCl
       }
     } catch (err) {
       console.error("Booking submission error:", err.response || err);
-      setResponseMsg(err.response?.data?.message || "Server error. Please try again later.");
+      setResponseMsg(
+        err.response?.data?.message || "Server error. Please try again later."
+      );
       setIsError(true);
     } finally {
       setLoading(false);
     }
   };
-  
 
   const sendBookingViaWhatsApp = () => {
     const validationErrors = validate();
@@ -151,7 +159,10 @@ ${formData.message || "–"}
 *We will contact you soon*
     `;
 
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+    window.open(
+      `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
   };
 
   if (!eventId) return null;
@@ -169,7 +180,7 @@ ${formData.message || "–"}
           </button>
         )}
 
-        <h2 className="text-2xl font-bold text-center text-blue-900 mb-4">
+        <h2 className="text-center text-2xl md:text-3xl font-extrabold text-[#0B2545]">
           {eventTitle}
           <span className="block">{eventLocation} - Event Tour</span>
         </h2>
@@ -179,7 +190,8 @@ ${formData.message || "–"}
           {["name", "email", "phone"].map((field) => (
             <div key={field}>
               <label className="font-medium mb-1">
-                {field.charAt(0).toUpperCase() + field.slice(1)} <span className="text-red-500">*</span>
+                {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type={field === "email" ? "email" : "text"}
@@ -191,7 +203,9 @@ ${formData.message || "–"}
                   errors[field] ? "border-red-500" : "border-gray-300"
                 } focus:ring-2 focus:ring-blue-500 outline-none`}
               />
-              {errors[field] && <span className="text-red-500 text-sm">{errors[field]}</span>}
+              {errors[field] && (
+                <span className="text-red-500 text-sm">{errors[field]}</span>
+              )}
             </div>
           ))}
 
@@ -200,7 +214,10 @@ ${formData.message || "–"}
             {["adults", "children"].map((field) => (
               <div key={field}>
                 <label className="font-medium mb-1">
-                  {field.charAt(0).toUpperCase() + field.slice(1)} {field === "adults" && <span className="text-red-500">*</span>}
+                  {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
+                  {field === "adults" && (
+                    <span className="text-red-500">*</span>
+                  )}
                 </label>
                 <input
                   type="number"
@@ -212,7 +229,9 @@ ${formData.message || "–"}
                     errors[field] ? "border-red-500" : "border-gray-300"
                   } focus:ring-2 focus:ring-blue-500 outline-none`}
                 />
-                {errors[field] && <span className="text-red-500 text-sm">{errors[field]}</span>}
+                {errors[field] && (
+                  <span className="text-red-500 text-sm">{errors[field]}</span>
+                )}
               </div>
             ))}
           </div>
@@ -220,7 +239,9 @@ ${formData.message || "–"}
           {/* Date & Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-medium mb-1">Event Date <span className="text-red-500">*</span></label>
+              <label className="font-medium mb-1">
+                Event Date <span className="text-red-500">*</span>
+              </label>
               <input
                 type="date"
                 name="startDate"
@@ -230,10 +251,14 @@ ${formData.message || "–"}
                   errors.startDate ? "border-red-500" : "border-gray-300"
                 } focus:ring-2 focus:ring-blue-500 outline-none`}
               />
-              {errors.startDate && <span className="text-red-500 text-sm">{errors.startDate}</span>}
+              {errors.startDate && (
+                <span className="text-red-500 text-sm">{errors.startDate}</span>
+              )}
             </div>
             <div>
-              <label className="font-medium mb-1">Event Time <span className="text-red-500">*</span></label>
+              <label className="font-medium mb-1">
+                Event Time <span className="text-red-500">*</span>
+              </label>
               <input
                 type="time"
                 name="startTime"
@@ -244,7 +269,9 @@ ${formData.message || "–"}
                   errors.startTime ? "border-red-500" : "border-gray-300"
                 } focus:ring-2 focus:ring-blue-500 outline-none`}
               />
-              {errors.startTime && <span className="text-red-500 text-sm">{errors.startTime}</span>}
+              {errors.startTime && (
+                <span className="text-red-500 text-sm">{errors.startTime}</span>
+              )}
             </div>
           </div>
 
@@ -278,12 +305,16 @@ ${formData.message || "–"}
           </button>
 
           {responseMsg && (
-            <p className={`mt-2 text-center font-medium ${isError ? "text-red-600" : "text-green-600"}`}>
+            <p
+              className={`mt-2 text-center font-medium ${
+                isError ? "text-red-600" : "text-green-600"
+              }`}
+            >
               {responseMsg}
             </p>
           )}
         </form>
-      </div> 
+      </div>
     </div>
   );
 }

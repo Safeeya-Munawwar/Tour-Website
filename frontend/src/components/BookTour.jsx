@@ -182,7 +182,7 @@ Net Lanka Travel
   /* ---------------- UI ---------------- */
   return (
     <section className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto">
-      <h2 className="text-3xl font-extrabold text-center text-[#0B2545]">
+      <h2 className="text-center text-2xl md:text-3xl font-extrabold text-[#0B2545]">
         Book Your Sri Lanka Tour
       </h2>
 

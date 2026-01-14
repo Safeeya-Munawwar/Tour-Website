@@ -35,7 +35,8 @@ export default function WhyChooseUs() {
         {/* Main SEO Heading */}
         <h2
           id="why-choose-us-title"
-          className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14">
+          className="text-center text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-14"
+        >
           Why Travelers Choose Our Tour Packages
         </h2>
 
@@ -57,7 +58,9 @@ export default function WhyChooseUs() {
                     loading="lazy"
                   />
                 ) : (
-                  <span className="text-2xl" aria-hidden="true">🎯</span>
+                  <span className="text-2xl" aria-hidden="true">
+                    🎯
+                  </span>
                 )}
               </div>
 
@@ -86,24 +89,30 @@ export default function WhyChooseUs() {
         {/* Booking Modal */}
         {showForm && (
           <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
-          role="dialog"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
+            role="dialog"
             aria-modal="true"
             aria-label="Tour booking form"
+            onClick={() => setShowForm(false)}
           >
-            <div className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden">
-            {/* Close */}
-              <button
-                onClick={() => setShowForm(false)}
-                className="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-black z-10"
-                aria-label="Close booking form"
-              >
-                &times;
-              </button>
+            <div
+              className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl rounded-2xl relative flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="relative px-6 py-6 border-b">
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-gray-600 hover:text-black"
+                  aria-label="Close booking form"
+                >
+                  &times;
+                </button>
+              </div>
 
               {/* Content */}
-              <div className="flex-1 overflow-auto p-6 relative rounded-2xl">
-              <BookTour />
+              <div className="flex-1 overflow-auto p-6">
+                <BookTour />
               </div>
             </div>
           </div>
