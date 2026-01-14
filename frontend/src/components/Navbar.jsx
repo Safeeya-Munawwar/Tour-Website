@@ -183,7 +183,7 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* LOGO (SPACE BELOW ADDED) */}
+          {/* LOGO */}
           <div className="absolute left-1/2 -translate-x-1/2 mb-4">
             <Link to="/" onClick={() => setSidebar(false)}>
               <img

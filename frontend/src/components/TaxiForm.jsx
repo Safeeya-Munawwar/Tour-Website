@@ -163,12 +163,14 @@ ${formData.message || "—"}
   };
 
   const inputBase =
-  "w-full px-4 py-3 min-h-[48px] rounded border focus:ring-2 focus:ring-[#0B2545] outline-none";
+    "w-full px-4 py-3 min-h-[48px] rounded border focus:ring-2 focus:ring-[#0B2545] outline-none";
 
   return (
-    <div className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl
-    p-6 sm:p-8 pb-10 w-full max-w-[650px] mx-auto text-left">
-<ToastContainer position="top-right" autoClose={3000} />
+    <div
+      className="flex flex-col gap-6 bg-white border border-[#2E5B84] rounded-2xl shadow-xl
+    p-6 sm:p-8 pb-10 w-full max-w-[650px] mx-auto text-left"
+    >
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-2xl font-bold text-center text-[#0B2545] mb-2">
         Quick Taxi Booking
         <span className="block text-base font-medium text-gray-600">
