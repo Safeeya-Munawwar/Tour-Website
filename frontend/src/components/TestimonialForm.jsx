@@ -66,7 +66,7 @@ const TestimonialForm = () => {
 
   return (
     <div className="flex flex-col gap-6 bg-white rounded-xl shadow-xl p-8 w-full max-w-[650px] mx-auto text-left">
-      <h2 className="text-center text-2xl md:text-3xl font-extrabold text-[#0B2545]">
+      <h2 className="text-center text-3xl font-extrabold text-[#0B2545]">
         Share Your Experience With Us
       </h2>
 

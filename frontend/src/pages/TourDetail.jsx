@@ -42,9 +42,7 @@ export default function DayTourDetail() {
         if (res.data?.success) {
           setTour(res.data.tour || {});
           setDetails(res.data.details || {});
-          res.data.details?.gallerySlides?.forEach(
-            (slide) => (new Image().src = slide.image)
-          );
+          res.data.details?.gallerySlides?.forEach((slide) => new Image().src = slide.image);
         }
       } catch (err) {
         console.error("Error fetching day tour detail:", err);
@@ -52,6 +50,7 @@ export default function DayTourDetail() {
     }
     fetchTour();
   }, [slug]);
+  
 
   const slides =
     details.gallerySlides?.length > 0
@@ -89,7 +88,7 @@ export default function DayTourDetail() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <a
+            <a
                 href="/destinations"
                 aria-label="View curated travel itineraries in Sri Lanka"
                 className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold"
@@ -213,9 +212,7 @@ export default function DayTourDetail() {
                     <div className="flex gap-3 items-center text-gray-600 mb-3">
                       <FaWhatsapp className="text-green-600" />
                       <a
-                        href={`https://wa.me/${
-                          contact.whatsapp?.replace(/\D/g, "") || ""
-                        }`}
+                        href={`https://wa.me/${contact.whatsapp?.replace(/\D/g, "") || ""}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-green-600"
@@ -274,9 +271,7 @@ export default function DayTourDetail() {
                     <h2 className="text-2xl sm:text-3xl md:text-5xl font-playfair font-bold">
                       {title}
                     </h2>
-                    <p className="text-sm sm:text-base mt-2 break-words">
-                      {desc}
-                    </p>
+                    <p className="text-sm sm:text-base mt-2 break-words">{desc}</p>
                   </div>
                 </div>
               </SwiperSlide>
