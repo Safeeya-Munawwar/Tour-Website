@@ -82,7 +82,7 @@ export default function Testimonials() {
           <Swiper
             modules={[Navigation, Autoplay]}
             navigation={{ prevEl: ".g-prev", nextEl: ".g-next" }}
-            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            autoplay={{ delay: 1500, disableOnInteraction: false }}
             loop={true}
             slidesPerView={1}
             className="bg-[#f7f7f7] rounded-2xl shadow-lg"
@@ -180,7 +180,7 @@ export default function Testimonials() {
             <Swiper
               modules={[Navigation, Autoplay]}
               loop={messages.length > 1}
-              autoplay={{ delay: 2500, disableOnInteraction: false }}
+              autoplay={{ delay: 1500, disableOnInteraction: false }}
               slidesPerView={1}
               spaceBetween={28}
               centeredSlides={true} // center on mobile

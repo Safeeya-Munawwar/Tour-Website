@@ -72,7 +72,7 @@ export default function Testimonials() {
               slidesPerView={1}
               centeredSlides={true} // Center on mobile
               spaceBetween={28}
-              autoplay={{ delay: 2500, disableOnInteraction: false }}
+              autoplay={{ delay: 1500, disableOnInteraction: false }}
               breakpoints={{
                 640: { slidesPerView: 1.5, centeredSlides: true },
                 768: { slidesPerView: 2, centeredSlides: false },
