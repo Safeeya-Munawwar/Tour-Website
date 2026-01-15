@@ -10,7 +10,7 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import OurTeam from "./pages/OurTeam";
+import OurTeam from "./pages/OurTeam"; 
 import OurJourney from "./pages/OurJourney";
 import CommunityImpact from "./pages/CommunityImpact";
 import Contact from "./pages/Contact";
@@ -32,6 +32,8 @@ import BookEventTour from "./components/BookEventTour";
 import QuickTaxiButton from "./components/QuickTaxiButton";
 import QuickTaxi from "./pages/QuickTaxi";
 import { FloatingButtonsProvider } from "./context/FloatingButtonsContext";
+import TermsConditions from "./pages/TermsConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Common Pages (Admin & Super Admin)
 import AdminLogin from "./pages/admin/Login";
@@ -78,7 +80,6 @@ import EditTaxi from "./pages/quickTaxi/EditTaxi";
 import AdminLayout from "./components/layouts/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminNotifications from "./pages/admin/AdminNotifications";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 //Super Admin Pages
 import SuperAdminLayout from "./components/layouts/SuperAdminLayout";
@@ -91,7 +92,7 @@ import CustomizeTourBookingAdmin from "./pages/admin/CustomizeTourBooking";
 import EventTourBookingAdmin from "./pages/admin/EventTourBookingAdmin";
 import AddAdmin from "./pages/admin/AddAdmin";
 import AdminList from "./pages/admin/AdminList";
-import TermsConditions from "./pages/TermsConditions";
+import ManageTripadvisorReviews from "./pages/admin/ManageTripadvisorReviews";
 
 function App() {
   const location = useLocation();
@@ -359,6 +360,10 @@ function App() {
                 <Route path="blog-comments" element={<BlogComments />} />
                 <Route path="tour-reviews" element={<TourReviews />} />
                 <Route path="tailor-comments" element={<TailorComments />} />
+                <Route
+  path="tripadvisor-reviews"
+  element={<ManageTripadvisorReviews />}
+/>
 
                 {/* Bookings */}
                 <Route

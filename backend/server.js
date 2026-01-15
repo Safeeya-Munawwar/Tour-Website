@@ -53,6 +53,7 @@ const adminRoute = require("./routes/admin");
 const superAdminRoute = require("./routes/superAdmin");
 const superAdminRoutes = require("./routes/superAdminRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const tripadvisorReview = require("./routes/tripadvisorReviews");
 
 // Other routes
 const aboutRoute = require("./routes/about");
@@ -91,6 +92,7 @@ app.use("/api/admin", adminRoute);
 app.use("/api/admin", adminRoutes);
 app.use("/api/super-admin", superAdminRoute);
 app.use("/api/super-admin", superAdminRoutes);
+app.use("/api/tripadvisor-reviews", tripadvisorReview);
 
 // -------------------- OTHER ROUTES --------------------
 app.use("/api/event-tour-booking", eventTourBookingRoutes);

@@ -5,7 +5,7 @@ const adminAuth = require("../middleware/adminAuth");
 
 // Create a new testimonial
 router.post("/", async (req, res) => {
-  try {
+  try { 
     const { title, text, name, email, rating } = req.body;
     const testimonial = new Testimonial({ title, text, name, email, rating });
     await testimonial.save();

@@ -47,7 +47,7 @@ export default function AdminContactList() {
     const fetchMessages = async () => {
       try {
         const res = await axiosInstance.get("/contact-form");
-        setMessages(res.data);
+        setMessages(res.data.forms || []);
       } catch (err) {
         console.error("Failed to fetch form messages", err);
         toast.error("Failed to load form messages");

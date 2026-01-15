@@ -8,7 +8,7 @@ import {
   Users,
   Compass,
   Star,
-  Plane, 
+  Plane,
   Map,
   PenTool,
   MessageSquare,
@@ -19,7 +19,7 @@ import {
   Car,
   Bell,
 } from "lucide-react";
-import { FaTripadvisor, FaStarHalfAlt, FaCarSide } from "react-icons/fa";
+import { FaStarHalfAlt, FaCarSide } from "react-icons/fa";
 import { axiosInstance } from "../../lib/axios";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -381,17 +381,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 }
               >
                 <Star size={16} /> Tailor Reviews
-              </NavLink>
-
-              <NavLink
-                to="/admin/tripadvisor-reviews"
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-2 py-2 rounded transition ${
-                    isActive ? activeClass : defaultClass
-                  }`
-                }
-              >
-                <FaTripadvisor size={16} /> TripAdvisor
               </NavLink>
             </div>
           )}

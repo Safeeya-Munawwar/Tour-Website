@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import {
@@ -13,12 +13,14 @@ import "swiper/css/navigation";
 
 export default function Testimonials() {
   const [messages, setMessages] = useState([]);
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
 
-  // Fetch contact form messages
+  // Fetch TripAdvisor reviews
   const fetchMessages = async () => {
     try {
-      const res = await axiosInstance.get("/contact-form");
-      setMessages(Array.isArray(res.data) ? res.data : []);
+      const res = await axiosInstance.get("/tripadvisor-reviews");
+      setMessages(res.data?.reviews || []);
     } catch (err) {
       console.error("Error fetching messages:", err);
     }
@@ -45,18 +47,14 @@ export default function Testimonials() {
             </h2>
 
             {/* STAR RATING */}
-            <div
-              className="flex gap-1 mt-3 text-green-600"
-              aria-label="5 star TripAdvisor rating"
-            >
+            <div className="flex gap-1 mt-3 text-green-600" aria-label="5 star TripAdvisor rating">
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} size={28} />
               ))}
             </div>
 
             <p className="mt-2 text-gray-700 text-sm">
-              Based on <span className="font-bold">{messages.length}</span>{" "}
-              verified TripAdvisor reviews
+              Based on <span className="font-bold">{messages.length}</span> verified TripAdvisor reviews
             </p>
 
             {/* TRIPADVISOR BRAND */}
@@ -70,15 +68,27 @@ export default function Testimonials() {
           <div className="relative lg:col-span-3">
             <Swiper
               modules={[Navigation, Autoplay]}
-              navigation={{ prevEl: ".trip-prev", nextEl: ".trip-next" }}
               loop={messages.length > 1}
-              slidesPerView={1.1}
-              autoplay={{ delay: 2500, disableOnInteraction: false }}
+              slidesPerView={1}
+              centeredSlides={true} // Center on mobile
               spaceBetween={28}
+              autoplay={{ delay: 2500, disableOnInteraction: false }}
               breakpoints={{
-                640: { slidesPerView: 1.5 },
-                1024: { slidesPerView: 2.5 },
-                1280: { slidesPerView: 3 },
+                640: { slidesPerView: 1.5, centeredSlides: true },
+                768: { slidesPerView: 2, centeredSlides: false },
+                1024: { slidesPerView: 2.5, centeredSlides: false },
+                1280: { slidesPerView: 3, centeredSlides: false },
+              }}
+              navigation={{
+                prevEl: prevRef.current,
+                nextEl: nextRef.current,
+              }}
+              onInit={(swiper) => {
+                // Attach navigation buttons after Swiper init
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
+                swiper.navigation.init();
+                swiper.navigation.update();
               }}
             >
               {messages.map((item, i) => (
@@ -94,7 +104,7 @@ export default function Testimonials() {
                         className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold"
                         aria-hidden="true"
                       >
-                        {item.firstName?.[0]}
+                        {item.name?.[0]}
                       </div>
 
                       <div>
@@ -102,7 +112,7 @@ export default function Testimonials() {
                           className="font-semibold text-lg text-gray-900"
                           itemProp="author"
                         >
-                          {item.firstName} {item.lastName}
+                          {item.name}
                         </h3>
                         <p className="text-gray-400 text-sm">
                           {new Date(item.createdAt).toLocaleDateString()}
@@ -125,9 +135,7 @@ export default function Testimonials() {
                       {[1, 2, 3, 4, 5].map((n) => (
                         <FaStar
                           key={n}
-                          className={
-                            n <= (item.rating || 5) ? "" : "text-gray-300"
-                          }
+                          className={n <= (item.rating || 5) ? "" : "text-gray-300"}
                         />
                       ))}
                     </div>
@@ -144,16 +152,18 @@ export default function Testimonials() {
               ))}
             </Swiper>
 
-            {/* NAVIGATION */}
+            {/* NAVIGATION - Desktop Only */}
             <button
-              className="trip-prev absolute left-[-20px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full flex items-center justify-center"
+              ref={prevRef}
+              className="hidden md:flex absolute left-[-50px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full items-center justify-center z-10"
               aria-label="Previous reviews"
             >
               <FaChevronLeft />
             </button>
 
             <button
-              className="trip-next absolute right-[-20px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full flex items-center justify-center"
+              ref={nextRef}
+              className="hidden md:flex absolute right-[-50px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full items-center justify-center z-10"
               aria-label="Next reviews"
             >
               <FaChevronRight />

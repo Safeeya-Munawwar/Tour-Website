@@ -128,7 +128,7 @@ export default function Dashboard() {
         events: eventsRes.data.events?.length || 0,
         tailorMade: tailorMadeRes.data?.length || 0,
         blog: blogRes.data?.blogs?.length || 0,
-        inquiries: inquiriesRes.data?.length || 0,
+        inquiries: inquiriesRes.data?.forms?.length || 0,
         totalAdmins: adminStatsRes.data.totalAdmins,
         destinations: destinationsRes.data?.destinations?.length || 0,
         experiences: experiencesRes.data?.length || 0,
