@@ -120,28 +120,33 @@ const AdminManageTailorMadeTour = () => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (acceptedFiles) => handleDrop(acceptedFiles, section, idx),
       accept: { "image/*": [] },
-      multiple: section === "gallery",
+      multiple: section === "gallery", // only gallery allows multiple
     });
+  
     const isGalleryFull =
       section === "gallery" &&
       tourData.gallery.length + files.gallery.length >= MAX_GALLERY_IMAGES;
-
+  
+    // Correct label text
+    const labelText =
+      section === "gallery"
+        ? isGalleryFull
+          ? "Gallery limit reached"
+          : `Drag & drop ${MAX_GALLERY_IMAGES} images or click`
+        : "Drag & drop 1 image or click"; // for How It Works
+  
     return (
       <div
         {...(!isGalleryFull ? getRootProps() : {})}
         className={`border-2 border-dashed p-4 text-center rounded cursor-pointer
-    ${isGalleryFull ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-50"}
-  `}
+          ${isGalleryFull ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-50"}
+        `}
       >
         <input {...getInputProps()} />
-        <p className="text-[#2E5B84] font-medium">
-          {isGalleryFull
-            ? "Gallery limit reached"
-            : "Drag & drop 6 images or click"}
-        </p>
+        <p className="text-[#2E5B84] font-medium">{labelText}</p>
       </div>
     );
-  };
+  };  
 
   // -------------------- Save Tour --------------------
   const handleSubmit = async () => {

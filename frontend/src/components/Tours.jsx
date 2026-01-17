@@ -129,13 +129,13 @@ export default function PopularTours() {
                   <Link
                     to={
                       tour.type === "round"
-                        ? `/round-tours/${tour._id}`
-                        : `/day-tour-detail/${tour._id}`
+                        ? `/round-tours/${tour.slug}`
+                        : `/day-tour-detail/${tour.slug}`
                     }
                     className="mt-5 w-200px bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] hover:from-[#82B3D2] hover:to-[#254A6A] text-white font-semibold rounded-full px-6 py-2 mx-auto transition"
                     aria-label={`View details of ${tour.title}`}
                   >
-                    Read More →
+                    Read More → 
                   </Link>
                 </div>
               </article>
