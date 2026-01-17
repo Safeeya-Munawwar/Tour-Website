@@ -16,7 +16,7 @@ export default function Events() {
         const res = await axiosInstance.get("/events");
         if (res.data.success) setEvents(res.data.events || []);
       } catch (err) {
-        console.error("Error fetching events:", err);
+        console.error("", err);
       }
     }
     fetchEvents();

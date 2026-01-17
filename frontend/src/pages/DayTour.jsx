@@ -15,7 +15,7 @@ export default function DayTour() {
         const res = await axiosInstance.get("/day-tours");
         if (res.data.success) setTours(res.data.tours || []);
       } catch (err) {
-        console.error("Error fetching tours:", err);
+        console.error("", err);
       }
     };
     fetchTours();

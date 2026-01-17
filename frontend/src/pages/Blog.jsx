@@ -25,7 +25,7 @@ export default function Blog() {
         const res = await axiosInstance.get("/blog");
         setStories(res.data.blogs || []);
       } catch (err) {
-        console.error("Failed to fetch blogs:", err);
+        console.error("", err);
       } finally {
         setLoading(false);
       }

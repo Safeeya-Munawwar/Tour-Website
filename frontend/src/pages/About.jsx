@@ -29,7 +29,7 @@ const About = () => {
         const res = await axiosInstance.get("/about");
         setAbout(res.data || {});
       } catch (err) {
-        console.error("Failed to load About page", err);
+        console.error("", err);
       }
     };
     fetchAbout();
