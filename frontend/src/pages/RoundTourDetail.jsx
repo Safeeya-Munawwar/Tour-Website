@@ -60,48 +60,68 @@ export default function RoundTourDetail() {
   return (
     <>
       <div className=" flex flex-col min-h-screen font-poppins">
-        {/* ================= HERO ================= */}
-        <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white min-h-[260px] md:min-h-screen">
-          <div className="w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto overflow-hidden md:rounded-r-[45%] relative">
-            <img
-              src={details.heroImage || tour.img}
-              alt={tour.title}
-              className="absolute inset-0 w-full h-full object-cover"
-              fetchpriority="high" // ensures immediate fetch
-              loading="eager" // loads immediately without lazy delay
-            />
-          </div>
+    {/* ================= HERO ================= */}
+<section className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white overflow-hidden">
+  {/* Background image */}
+  <img
+    src={details.heroImage || tour.img}
+    alt={tour.title}
+    className="absolute inset-0 w-full h-full object-cover"
+    loading="eager"
+  />
 
-          <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-20 mt-4 md:mt-0 text-center md:text-left space-y-4 sm:space-y-6">
-            <h1 className="font-playfair text-2xl sm:text-3xl md:text-6xl font-bold leading-tight tracking-tight max-w-xl">
-              {details.heroTitle || tour.title}
-              <span className="block text-lg md:text-2xl text-[#D4AF37] mt-1">
-                {tour.days}
-              </span>
-            </h1>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/30" />
 
-            <p className="text-base sm:text-lg md:text-3xl text-gray-700 break-words">
-              {details.heroSubtitle || tour.desc}
-            </p>
+  {/* Floating heading box */}
+  <div
+    className={`
+      absolute bottom-6 md:bottom-10 right-4 md:right-10
+      max-w-[90%] md:w-[420px]
+      bg-black/80 text-white
+      p-4 md:p-6
+      backdrop-blur-sm
+      shadow-xl
+      flex items-center justify-end
+      transition-all duration-700 ease-out
+    `}
+  >
+    <h1 className="text-xl md:text-3xl leading-snug text-right mr-4 font-playfair">
+      {details.heroTitle || tour.title}
+      <span className="block text-sm md:text-lg text-[#D4AF37] mt-1">
+        {tour.days}
+      </span>
+    </h1>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <a
-                href="/destinations"
-                aria-label="View curated travel itineraries in Sri Lanka"
-                className="bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white px-6 py-3 rounded-full font-semibold"
-              >
-                EXPLORE DESTINATIONS
-              </a>
+    {/* Vertical line */}
+    <div className="w-[2px] bg-white h-10 md:h-12" />
+  </div>
+</section>
 
-              <button
-                onClick={() => setShowForm(true)}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-full text-sm font-semibold"
-              >
-                BOOK THIS TOUR
-              </button>
-            </div>
-          </div>
-        </section>
+{/* ================= HERO INTRO ================= */}
+<section className="bg-white py-14 md:py-20">
+  <div className="max-w-[1100px] mx-auto px-6 text-center">
+    {/* Small label */}
+    <span className="text-sm md:text-base tracking-widest font-semibold text-gray-500 uppercase">
+      Round Tour
+    </span>
+
+    {/* Main title */}
+    <h2 className="mt-3 text-3xl md:text-5xl font-extrabold text-gray-900 leading-snug max-w-4xl mx-auto">
+  {details.heroTitle || tour.title}
+</h2>
+
+
+    {/* Gold divider */}
+    <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6" />
+
+    {/* Description */}
+    <p className="mt-6 text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+      {details.heroSubtitle || tour.desc}
+    </p>
+  </div>
+</section>
+
 
         {/* ================= CONTENT ================= */}
         <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
