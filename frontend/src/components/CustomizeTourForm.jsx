@@ -3,14 +3,6 @@ import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 import DestinationSelector from "./DestinationSelector";
 import ExperienceSelector from "./ExperienceSelector";
-import {
-  FaUser,
-  FaCar,
-  FaUsers,
-  FaHotel,
-  FaMapMarkedAlt,
-  FaTaxi,
-} from "react-icons/fa";
 
 const TailorMadeForm = () => {
   const [step, setStep] = useState(1);
@@ -47,6 +39,46 @@ const TailorMadeForm = () => {
     notes: "",
     hearAboutUs: "",
   });
+
+  const travelStyles = [
+    {
+      title: "Budget tour",
+      tooltip: "Affordable travel with essential services and shared options.",
+    },
+    {
+      title: "Premium tour",
+      tooltip: "Comfortable travel with upgraded hotels and private transport.",
+    },
+    {
+      title: "Luxury tour",
+      tooltip:
+        "High-end experience with luxury hotels, private guide, and VIP services.",
+    },
+    {
+      title: "Private tour, permanent guide",
+      tooltip: "A guide will accompany you throughout your tour.",
+    },
+    {
+      title: "Private transfer, guide on excursions",
+      tooltip: "Private transportation with a guide only during excursions.",
+    },
+    {
+      title: "Join a group tour",
+      tooltip: "Travel with other tourists in a group.",
+    },
+    {
+      title: "Organized hotels/transfer, no guide",
+      tooltip: "Hotels and transfers are arranged, but no guide included.",
+    },
+    {
+      title: "Self-organized",
+      tooltip: "Plan and manage the trip entirely yourself.",
+    },
+    {
+      title: "Transport only with chauffeur guide",
+      tooltip: "Only transportation is provided with a chauffeur guide.",
+    },
+  ];
 
   // Update formData whenever destinations change
   React.useEffect(() => {
@@ -100,7 +132,6 @@ const TailorMadeForm = () => {
 
     if (!formData.phone.trim()) errors.push("Phone number is required");
     if (!captchaChecked) errors.push("Please confirm you are not a robot");
-    if (!formData.tourType.trim()) errors.push("Tour Type is required");
     if (!formData.pickupLocation.trim())
       errors.push("Pickup location is required");
     if (!formData.dropLocation.trim()) errors.push("Drop location is required");
@@ -149,7 +180,6 @@ const TailorMadeForm = () => {
         country: "",
         email: "",
         phone: "",
-        tourType: "Budget",
         pickupLocation: "",
         dropLocation: "",
         startDate: "",
@@ -307,34 +337,6 @@ const TailorMadeForm = () => {
               Step 2: Your Trip Details
             </h2>
 
-            {/* Tour Type */}
-<div className="mt-4 w-full">
-<label className="block text-gray-700 font-semibold mb-1">
-    Tour Type *
-  </label>
-
-  <div className="relative">
-    <select
-      name="tourType"
-      value={formData.tourType}
-      onChange={handleChange}
-      className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
-    >
-      <option value="" disabled>
-        Select a tour type
-      </option>
-      <option value="Budget">Budget</option>
-      <option value="Luxury">Luxury</option>
-    </select>
-
-    {/* Dropdown arrow */}
-    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-      ▼
-    </div>
-  </div>
-</div>
-
-
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
                 Pickup Location *
@@ -419,100 +421,99 @@ const TailorMadeForm = () => {
               </div>
             </div>
 
-{/* ---------------- Budget & Currency ---------------- */}
-<div className="mt-4 w-full sm:w-full">
-<label className="block text-gray-700 font-semibold mb-1">
-    Estimated Budget (Per Person)
-  </label>
+            {/* ---------------- Budget & Currency ---------------- */}
+            <div className="mt-4 w-full sm:w-full">
+              <label className="block text-gray-700 font-semibold mb-1">
+                Estimated Budget (Per Person)
+              </label>
 
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-    {/* Currency Dropdown */}
-    <div className="relative">
-      <select
-        name="currency"
-        value={formData.currency}
-        onChange={handleChange}
-        className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
-      >
-        <option value="" disabled>
-          Select currency
-        </option>
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="LKR">LKR</option>
-        <option value="No Idea">No Idea</option>
-        <option value="Other">Other</option>
-      </select>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Currency Dropdown */}
+                <div className="relative">
+                  <select
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
+                  >
+                    <option value="" disabled>
+                      Select currency
+                    </option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="LKR">LKR</option>
+                    <option value="No Idea">No Idea</option>
+                    <option value="Other">Other</option>
+                  </select>
 
-      {/* Dropdown arrow */}
-      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-        ▼
-      </div>
-    </div>
+                  {/* Dropdown arrow */}
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                    ▼
+                  </div>
+                </div>
 
-    {/* Budget Input */}
-    {formData.currency !== "Other" ? (
-      <input
-        type="number"
-        name="budget"
-        value={formData.budget}
-        onChange={handleChange}
-        placeholder="Total Amount"
-        disabled={formData.currency === "No Idea"}
-        className={`p-4 rounded-lg border border-gray-300 w-full col-span-2 transition-all duration-300 ${
-          formData.currency === "No Idea"
-            ? "bg-gray-100 cursor-not-allowed"
-            : "hover:border-blue-200"
-        }`}
-      />
-    ) : (
-      <>
-        {/* Custom Currency */}
-        <input
-          type="text"
-          name="customCurrency"
-          value={formData.customCurrency || ""}
-          onChange={handleChange}
-          placeholder="Enter Currency (e.g., INR)"
-          className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
-        />
+                {/* Budget Input */}
+                {formData.currency !== "Other" ? (
+                  <input
+                    type="number"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="Total Amount"
+                    disabled={formData.currency === "No Idea"}
+                    className={`p-4 rounded-lg border border-gray-300 w-full col-span-2 transition-all duration-300 ${
+                      formData.currency === "No Idea"
+                        ? "bg-gray-100 cursor-not-allowed"
+                        : "hover:border-blue-200"
+                    }`}
+                  />
+                ) : (
+                  <>
+                    {/* Custom Currency */}
+                    <input
+                      type="text"
+                      name="customCurrency"
+                      value={formData.customCurrency || ""}
+                      onChange={handleChange}
+                      placeholder="Enter Currency (e.g., INR)"
+                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
+                    />
 
-        {/* Custom Budget */}
-        <input
-          type="number"
-          name="budget"
-          value={formData.budget}
-          onChange={handleChange}
-          placeholder="Total Amount"
-          className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
-        />
-      </>
-    )}
-  </div>
+                    {/* Custom Budget */}
+                    <input
+                      type="number"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      placeholder="Total Amount"
+                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
+                    />
+                  </>
+                )}
+              </div>
 
-  {/* Display per person */}
-  {formData.currency !== "No Idea" &&
-    formData.budget &&
-    (formData.currency !== "Other" || formData.customCurrency) && (
-      <p className="text-xs text-gray-500 mt-1">
-        Approx. per person:{" "}
-        <strong>
-  {Number(formData.budget).toFixed(2)}{" "}
-  {formData.currency === "Other"
-    ? formData.customCurrency
-    : formData.currency}
-</strong>
+              {/* Display per person */}
+              {formData.currency !== "No Idea" &&
+                formData.budget &&
+                (formData.currency !== "Other" || formData.customCurrency) && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Approx. per person:{" "}
+                    <strong>
+                      {Number(formData.budget).toFixed(2)}{" "}
+                      {formData.currency === "Other"
+                        ? formData.customCurrency
+                        : formData.currency}
+                    </strong>
+                  </p>
+                )}
 
-      </p>
-    )}
-
-  {formData.currency === "No Idea" && (
-    <p className="text-xs text-gray-500 mt-1">
-      Don’t worry - we’ll suggest the best options for your trip.
-    </p>
-  )}
-</div>
+              {formData.currency === "No Idea" && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Don’t worry - we’ll suggest the best options for your trip.
+                </p>
+              )}
+            </div>
 
             {/* Destination Selection */}
             <div>
@@ -627,42 +628,11 @@ const TailorMadeForm = () => {
                   }
                   className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
                 >
-                  {[
-                    {
-                      title: "Private tour, permanent guide",
-                      icon: <FaUser />,
-                      tooltip:
-                        "A guide will accompany you throughout your tour.",
-                    },
-                    {
-                      title: "Private transfer, guide on excursions",
-                      icon: <FaCar />,
-                      tooltip:
-                        "Private transportation with a guide only during excursions.",
-                    },
-                    {
-                      title: "Join a group tour",
-                      icon: <FaUsers />,
-                      tooltip: "Travel with other tourists in a group.",
-                    },
-                    {
-                      title: "Organized hotels/transfer, no guide",
-                      icon: <FaHotel />,
-                      tooltip:
-                        "Hotels and transfers are arranged, but no guide included.",
-                    },
-                    {
-                      title: "Self-organized",
-                      icon: <FaMapMarkedAlt />,
-                      tooltip: "Plan and manage the trip entirely yourself.",
-                    },
-                    {
-                      title: "Transport only with chauffeur guide",
-                      icon: <FaTaxi />,
-                      tooltip:
-                        "Only transportation is provided with a chauffeur guide.",
-                    },
-                  ].map((style) => (
+                  <option value="" disabled>
+                    Select travel style
+                  </option>
+
+                  {travelStyles.map((style) => (
                     <option key={style.title} value={style.title}>
                       {style.title}
                     </option>
@@ -678,36 +648,8 @@ const TailorMadeForm = () => {
               {/* Tooltip for selected item */}
               <div className="mt-1 text-gray-500 text-sm">
                 {
-                  [
-                    {
-                      title: "Private tour, permanent guide",
-                      tooltip:
-                        "A guide will accompany you throughout your tour.",
-                    },
-                    {
-                      title: "Private transfer, guide on excursions",
-                      tooltip:
-                        "Private transportation with a guide only during excursions.",
-                    },
-                    {
-                      title: "Join a group tour",
-                      tooltip: "Travel with other tourists in a group.",
-                    },
-                    {
-                      title: "Organized hotels/transfer, no guide",
-                      tooltip:
-                        "Hotels and transfers are arranged, but no guide included.",
-                    },
-                    {
-                      title: "Self-organized",
-                      tooltip: "Plan and manage the trip entirely yourself.",
-                    },
-                    {
-                      title: "Transport only with chauffeur guide",
-                      tooltip:
-                        "Only transportation is provided with a chauffeur guide.",
-                    },
-                  ].find((s) => s.title === formData.travelStyle)?.tooltip
+                  travelStyles.find((s) => s.title === formData.travelStyle)
+                    ?.tooltip
                 }
               </div>
             </div>
@@ -797,44 +739,49 @@ const TailorMadeForm = () => {
             </div>
 
             {/* ---------------- How Did You Hear About Us ---------------- */}
-<div className="mt-6 w-full">
-  <label className="block text-gray-700 font-semibold mb-2 text-lg">
-    How did you hear about us?
-    <span className="text-gray-400 text-sm block">Please select one option</span>
-  </label>
+            <div className="mt-6 w-full">
+              <label className="block text-gray-700 font-semibold mb-2 text-lg">
+                How did you hear about us?
+                <span className="text-gray-400 text-sm block">
+                  Please select one option
+                </span>
+              </label>
 
-  <div className="relative">
-    <select
-      value={formData.hearAboutUs || ""}
-      onChange={(e) =>
-        setFormData((prev) => ({ ...prev, hearAboutUs: e.target.value }))
-      }
-      className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
-    >
-      <option value="" disabled>
-        Select an option
-      </option>
-      {[
-        "Friend/Family",
-        "Social Media",
-        "Google",
-        "Search Engine",
-        "Advertisement",
-        "Travel Blog/Website",
-        "Other",
-      ].map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+              <div className="relative">
+                <select
+                  value={formData.hearAboutUs || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      hearAboutUs: e.target.value,
+                    }))
+                  }
+                  className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  {[
+                    "Friend/Family",
+                    "Social Media",
+                    "Google",
+                    "Search Engine",
+                    "Advertisement",
+                    "Travel Blog/Website",
+                    "Other",
+                  ].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
-    {/* Dropdown arrow */}
-    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-      ▼
-    </div>
-  </div>
-</div>
+                {/* Dropdown arrow */}
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                  ▼
+                </div>
+              </div>
+            </div>
 
             {/* ---------------- Navigation ---------------- */}
             <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">

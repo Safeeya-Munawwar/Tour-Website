@@ -48,6 +48,7 @@ router.post("/", async (req, res) => {
       startDate,
       startTime,
       message,
+      taxiId,
     } = req.body;
 
     if (!tourId) {
@@ -57,11 +58,17 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const booking = new RoundTourBooking(req.body);
-    await booking.save();
+    // Save booking
+    const booking = await RoundTourBooking.create({
+      ...req.body,
+      startDate: new Date(startDate),
+    });
 
-    // Populate tourId to get title and location
-    await booking.populate("tourId");
+    // Populate both tourId and taxiId
+    await booking.populate([
+      { path: "tourId", select: "title location" },
+      { path: "taxiId", select: "name seats ac transmission" },
+    ]);
 
     // ---------------- SEND EMAIL TO ADMIN ----------------
     const adminEmail = process.env.EMAIL_USER;
@@ -91,12 +98,28 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.location || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.location || "—"
+            }</td>
           </tr>
+          <tr>
+          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+          <td style="border: 1px solid #1a354e; padding: 8px;">
+          ${
+            booking.taxiId
+              ? `${booking.taxiId.name} – 
+              Seats: ${booking.taxiId.seats} - 
+              ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+              : "—"
+          }
+          </td>
+        </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
@@ -115,7 +138,9 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
     
@@ -124,7 +149,7 @@ router.post("/", async (req, res) => {
         <p>Best Regards,<br/>
         <strong>Net Lanka Travels</strong></p>
       </div>
-    `;    
+    `;
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
     // ---------------- SEND EMAIL TO USER ----------------
@@ -142,6 +167,18 @@ router.post("/", async (req, res) => {
             <td style="border: 1px solid #1a354e; padding: 8px;">${
               booking.tourId?.title || "—"
             }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">
+            ${
+              booking.taxiId
+                ? `${booking.taxiId.name} – 
+                Seats: ${booking.taxiId.seats} - 
+                ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+                : "—"
+            }
+            </td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
@@ -191,6 +228,7 @@ router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await RoundTourBooking.find()
       .populate("tourId", "title location")
+      .populate("taxiId", "name seats ac transmission")
       .sort({ createdAt: -1 });
 
     res.json({ success: true, bookings });

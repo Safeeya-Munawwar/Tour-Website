@@ -1,7 +1,18 @@
 const mongoose = require("mongoose");
 
 const RoundTourBookingSchema = new mongoose.Schema({
-  tourId: { type: mongoose.Schema.Types.ObjectId, ref: "RoundTour", required: true },
+  tourId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "RoundTour",
+    required: true,
+  },
+
+  taxiId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "QuickTaxi",
+    required: false,
+  },
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
@@ -15,7 +26,11 @@ const RoundTourBookingSchema = new mongoose.Schema({
 
   startTime: { type: String },
   message: String,
-  status: { type: String, enum: ["Pending", "Approved", "Cancelled", "Completed"], default: "Pending" },
+  status: {
+    type: String,
+    enum: ["Pending", "Approved", "Cancelled", "Completed"],
+    default: "Pending",
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

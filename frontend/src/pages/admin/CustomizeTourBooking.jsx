@@ -193,9 +193,6 @@ const CustomizeTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">
                   Location
                 </th>
-                <th className="p-3 border border-[#1a354e] text-sm">
-                  Tour Type
-                </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
@@ -228,9 +225,6 @@ const CustomizeTourBookingAdmin = () => {
                         {inq.pickupLocation || "Not Specified"}{" "}
                         <span className="text-red-600 font-semibold">🡆</span>{" "}
                         {inq.dropLocation || "Not Specified"}
-                      </td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">
-                        {inq.tourType}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {Number(inq.adults || 0) + Number(inq.children || 0)}
@@ -393,14 +387,6 @@ const CustomizeTourBookingAdmin = () => {
                     {selectedInquiry.phone}
                   </p>
 
-                  {/* Tour Type */}
-                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
-                    Tour Type:
-                  </p>
-                  <p className="p-2 border-b border-blue-950">
-                    {selectedInquiry.tourType}
-                  </p>
-
                   {/* Pickup */}
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Pickup Location:
@@ -488,14 +474,12 @@ const CustomizeTourBookingAdmin = () => {
                   </p>
 
                   {/* Notes */}
-                  {selectedInquiry.notes && (
-                    <>
-                      <p className="p-2 border-r border-blue-950 font-semibold bg-gray-50">
-                        Note:
-                      </p>
-                      <p className="p-2 break-words">{selectedInquiry.notes}</p>
-                    </>
-                  )}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Note:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.notes || "—"}
+                  </p>
 
                   {/* How Did You Hear About Us */}
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">

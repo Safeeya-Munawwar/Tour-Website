@@ -12,6 +12,7 @@ const RoundTourBookingAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("");
+  const [, setTaxis] = useState([]);
 
   // ---------------- FETCH BOOKINGS ----------------
   const fetchRoundTourBookings = async () => {
@@ -41,6 +42,12 @@ const RoundTourBookingAdmin = () => {
 
   useEffect(() => {
     fetchRoundTourBookings();
+  }, []);
+
+  useEffect(() => {
+    axiosInstance.get("/quick-taxi/taxis").then((res) => {
+      if (res.data.success) setTaxis(res.data.taxis);
+    });
   }, []);
 
   // ---------------- UPDATE STATUS ----------------
@@ -227,10 +234,10 @@ const RoundTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">Tour</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Name</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
-                <th className="p-3 border border-[#1a354e] text-sm">Members</th>
                 <th className="p-3 border border-[#1a354e] text-sm">
                   Pickup Location
                 </th>
+                <th className="p-3 border border-[#1a354e] text-sm">Vehicle</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
@@ -262,11 +269,9 @@ const RoundTourBookingAdmin = () => {
                         {b.phone}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-                        {Number(b.adults || 0) + Number(b.children || 0)}
-                      </td>
-                      <td className="p-3 border border-[#2E5B84] text-sm">
                         {b.pickupLocation || "—"}
                       </td>
+                      <td>{b.taxiId ? b.taxiId.name : "—"}</td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {b.startDate
                           ? new Date(b.startDate).toISOString().split("T")[0]
@@ -407,6 +412,17 @@ const RoundTourBookingAdmin = () => {
                   </p>
                   <p className="p-2 border-b border-blue-950">
                     {selectedBooking.tourId?.location || "—"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Vehicle:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.taxiId
+                      ? `${selectedBooking.taxiId.name} - Seats: ${
+                          selectedBooking.taxiId.seats
+                        } - ${selectedBooking.taxiId.ac ? "AC" : "Non-AC"}`
+                      : "—"}
                   </p>
 
                   {/* Name */}

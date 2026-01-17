@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
       startTime,
       message,
       tourType,
+      taxiId,
     } = req.body;
 
     if (!tourId) {
@@ -36,22 +37,29 @@ router.post("/", async (req, res) => {
         .json({ success: false, error: "tourId is required" });
     }
 
-    const booking = new TourBooking({
+    const booking = await TourBooking.create({
       ...req.body,
       startDate: new Date(startDate),
     });
 
-    await booking.save();
-    await booking.populate("tourId");
+    // Populate both tourId and taxiId
+    await booking.populate([
+      { path: "tourId", select: "title location" },
+      { path: "taxiId", select: "name seats ac transmission" },
+    ]);
 
     // ---------------- SEND EMAIL TO ADMIN ----------------
     const adminEmail = process.env.EMAIL_USER;
     const adminSubject = `New ${tourType || "Tour"} Tour Booking`;
     const adminHtml = `
       <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
-        <h2 style="color: #0d203a;">New ${tourType || "Tour"} Booking Received</h2>
+        <h2 style="color: #0d203a;">New ${
+          tourType || "Tour"
+        } Booking Received</h2>
         <p>Dear Admin,</p>
-        <p>A new ${tourType || "tour"} booking has been submitted. Details are below:</p>
+        <p>A new ${
+          tourType || "tour"
+        } booking has been submitted. Details are below:</p>
     
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px; max-width: 600px;">
           <tr style="background-color: #f2f2f2;">
@@ -72,12 +80,28 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.location || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.tourId?.location || "—"
+            }</td>
           </tr>
+          <tr>
+  <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+  <td style="border: 1px solid #1a354e; padding: 8px;">
+  ${
+    booking.taxiId
+      ? `${booking.taxiId.name} – 
+      Seats: ${booking.taxiId.seats} - 
+      ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+      : "—"
+  }
+  </td>
+</tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
@@ -92,11 +116,15 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date & Time</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)} at ${startTime}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(
+              startDate
+            )} at ${startTime}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
     
@@ -106,7 +134,6 @@ router.post("/", async (req, res) => {
         <strong>Net Lanka Travels</strong></p>
       </div>
     `;
-    
 
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
@@ -129,8 +156,20 @@ router.post("/", async (req, res) => {
             }</td>
           </tr>
           <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">
+            ${
+              booking.taxiId
+                ? `${booking.taxiId.name} – 
+                Seats: ${booking.taxiId.seats} - 
+                ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+                : "—"
+            }
+            </td>
+          </tr>
+          <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${adults} </td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Children</td>
@@ -138,7 +177,7 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${pickupLocation}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${pickupLocation} </td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Date & Time</td>
@@ -183,7 +222,8 @@ router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await TourBooking.find()
       .sort({ createdAt: -1 })
-      .populate("tourId", "title location days itinerary");
+      .populate("tourId", "title location days itinerary")
+      .populate("taxiId", "name transmission seats luggage ac image"); // <-- add taxi populate
 
     res.json({ success: true, bookings });
   } catch (err) {

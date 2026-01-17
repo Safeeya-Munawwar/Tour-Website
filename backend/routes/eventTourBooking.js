@@ -26,6 +26,7 @@ router.post("/", async (req, res) => {
       startDate,
       startTime,
       message,
+      taxiId,
     } = req.body;
 
     // Validate required fields
@@ -37,7 +38,7 @@ router.post("/", async (req, res) => {
     }
 
     // Save booking
-    const booking = new EventTourBooking({
+    const booking = await EventTourBooking.create({
       eventId,
       name,
       email,
@@ -47,10 +48,14 @@ router.post("/", async (req, res) => {
       startDate: new Date(startDate),
       startTime,
       message,
+      taxiId,
     });
 
-    await booking.save();
-    await booking.populate("eventId", "title location date");
+    // Populate both tourId and taxiId
+    await booking.populate([
+      { path: "eventId", select: "title location" },
+      { path: "taxiId", select: "name seats ac transmission" },
+    ]);
 
     // ---------------- SEND EMAIL TO ADMIN ----------------
     const adminEmail = process.env.EMAIL_USER;
@@ -80,15 +85,30 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Event</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.title || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.eventId?.title || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.eventId?.location || "—"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.eventId?.location || "—"
+            }</td>
           </tr>
+          <td style="border: 1px solid #1a354e; padding: 8px;">
+          ${
+            booking.taxiId
+              ? `${booking.taxiId.name} – 
+              Seats: ${booking.taxiId.seats} - 
+              ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+              : "—"
+          }
+          </td>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(
+              startDate
+            )}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Time</td>
@@ -104,7 +124,9 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              message || "N/A"
+            }</td>
           </tr>
         </table>
     
@@ -113,7 +135,7 @@ router.post("/", async (req, res) => {
         <p>Best Regards,<br/>
         <strong>Net Lanka Travels</strong></p>
       </div>
-    `;    
+    `;
     await sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
     // ---------------- SEND EMAIL TO USER ----------------
@@ -137,6 +159,18 @@ router.post("/", async (req, res) => {
             <td style="border: 1px solid #1a354e; padding: 8px;">${
               booking.eventId?.location || "—"
             }</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">
+            ${
+              booking.taxiId
+                ? `${booking.taxiId.name} – 
+                Seats: ${booking.taxiId.seats} - 
+                ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+                : "—"
+            }
+            </td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date & Time</td>
@@ -191,12 +225,14 @@ router.post("/", async (req, res) => {
 router.get("/", adminAuth, async (req, res) => {
   try {
     const bookings = await EventTourBooking.find()
-      .populate("eventId", "title location date")
+      .populate("eventId", "title location")
+      .populate("taxiId", "name seats ac transmission")
       .sort({ createdAt: -1 });
 
     res.json({ success: true, bookings });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Server error" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 });
 

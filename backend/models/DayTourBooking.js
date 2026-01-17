@@ -1,7 +1,18 @@
 const mongoose = require("mongoose");
 
 const DayTourBookingSchema = new mongoose.Schema({
-  tourId: { type: mongoose.Schema.Types.ObjectId, ref: "DayTour", required: true },
+  tourId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "DayTour",
+    required: true,
+  },
+
+  taxiId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "QuickTaxi",
+    required: false,
+  },
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
@@ -15,7 +26,11 @@ const DayTourBookingSchema = new mongoose.Schema({
 
   startTime: { type: String },
   message: String,
-  status: { type: String, enum: ["Pending", "Approved", "Cancelled", "Completed"], default: "Pending" },
+  status: {
+    type: String,
+    enum: ["Pending", "Approved", "Cancelled", "Completed"],
+    default: "Pending",
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

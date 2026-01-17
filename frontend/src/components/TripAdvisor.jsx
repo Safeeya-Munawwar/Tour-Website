@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import {
-  FaStar,
-  FaChevronLeft,
-  FaChevronRight,
-  FaTripadvisor,
-} from "react-icons/fa";
+import { FaStar, FaTripadvisor } from "react-icons/fa";
 import { axiosInstance } from "../lib/axios";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -47,14 +42,18 @@ export default function Testimonials() {
             </h2>
 
             {/* STAR RATING */}
-            <div className="flex gap-1 mt-3 text-green-600" aria-label="5 star TripAdvisor rating">
+            <div
+              className="flex gap-1 mt-3 text-green-600"
+              aria-label="5 star TripAdvisor rating"
+            >
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} size={28} />
               ))}
             </div>
 
             <p className="mt-2 text-gray-700 text-sm">
-              Based on <span className="font-bold">{messages.length}</span> verified TripAdvisor reviews
+              Based on <span className="font-bold">{messages.length}</span>{" "}
+              verified TripAdvisor reviews
             </p>
 
             {/* TRIPADVISOR BRAND */}
@@ -135,7 +134,9 @@ export default function Testimonials() {
                       {[1, 2, 3, 4, 5].map((n) => (
                         <FaStar
                           key={n}
-                          className={n <= (item.rating || 5) ? "" : "text-gray-300"}
+                          className={
+                            n <= (item.rating || 5) ? "" : "text-gray-300"
+                          }
                         />
                       ))}
                     </div>
@@ -151,23 +152,6 @@ export default function Testimonials() {
                 </SwiperSlide>
               ))}
             </Swiper>
-
-            {/* NAVIGATION - Desktop Only */}
-            <button
-              ref={prevRef}
-              className="hidden md:flex absolute left-[-50px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full items-center justify-center z-10"
-              aria-label="Previous reviews"
-            >
-              <FaChevronLeft />
-            </button>
-
-            <button
-              ref={nextRef}
-              className="hidden md:flex absolute right-[-50px] top-1/2 -translate-y-1/2 bg-white shadow-lg w-10 h-10 rounded-full items-center justify-center z-10"
-              aria-label="Next reviews"
-            >
-              <FaChevronRight />
-            </button>
           </div>
         </div>
       </div>

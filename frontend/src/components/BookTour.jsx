@@ -5,7 +5,9 @@ export default function BookTour() {
   const [tourType, setTourType] = useState("");
   const [dayTours, setDayTours] = useState([]);
   const [roundTours, setRoundTours] = useState([]);
+  const [taxis, setTaxis] = useState([]);
   const [selectedTour, setSelectedTour] = useState(null);
+  const [selectedTaxi, setSelectedTaxi] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +28,7 @@ export default function BookTour() {
 
   const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
 
-  /* ---------------- FETCH TOURS ---------------- */
+  // ---------------- FETCH TOURS ----------------
   useEffect(() => {
     const fetchTours = async () => {
       try {
@@ -43,7 +45,20 @@ export default function BookTour() {
     fetchTours();
   }, []);
 
-  /* ---------------- FETCH WHATSAPP NUMBER ---------------- */
+  // ---------------- FETCH TAXIS ----------------
+  useEffect(() => {
+    const fetchTaxis = async () => {
+      try {
+        const res = await axiosInstance.get("/quick-taxi/taxis"); // correct endpoint
+        if (res.data.success) setTaxis(res.data.taxis); // check response
+      } catch (err) {
+        console.error("Error fetching taxis:", err);
+      }
+    };
+    fetchTaxis();
+  }, []);
+
+  // ---------------- FETCH WHATSAPP NUMBER ----------------
   useEffect(() => {
     axiosInstance
       .get("/contact")
@@ -64,11 +79,12 @@ export default function BookTour() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  /* ---------------- VALIDATION ---------------- */
+  // ---------------- VALIDATION ----------------
   const validate = () => {
     const err = {};
     if (!tourType) err.tourType = "Select tour type";
     if (!selectedTour) err.selectedTour = "Select a tour";
+    if (!selectedTaxi) err.selectedTaxi = "Select a vehicle";
     if (!formData.name.trim()) err.name = "Name required";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
       err.email = "Valid email required";
@@ -82,7 +98,7 @@ export default function BookTour() {
     return err;
   };
 
-  /* ---------------- SUBMIT TO BACKEND ---------------- */
+  // ---------------- SUBMIT TO BACKEND ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -104,7 +120,9 @@ export default function BookTour() {
         tourType,
         tourId: selectedTour._id,
         tourRef: tourType === "day" ? "DayTour" : "RoundTour",
-        startDate: new Date(formData.startDate), // ✅ FIX
+        taxiId: selectedTaxi,
+        taxi: taxis.find((t) => t._id === selectedTaxi)?.name || "", // ✅ save taxi name too
+        startDate: new Date(formData.startDate),
       });
 
       setIsError(false);
@@ -124,6 +142,7 @@ export default function BookTour() {
 
       setSelectedTour(null);
       setTourType("");
+      setSelectedTaxi("");
     } catch (err) {
       console.error("BOOK TOUR ERROR:", err.response?.data || err);
       setIsError(true);
@@ -133,7 +152,7 @@ export default function BookTour() {
     }
   };
 
-  /* ---------------- WHATSAPP BOOKING ---------------- */
+  // ---------------- WHATSAPP BOOKING ----------------
   const sendBookingViaWhatsApp = () => {
     const err = validate();
     if (Object.keys(err).length) {
@@ -143,12 +162,15 @@ export default function BookTour() {
       return;
     }
 
+    const taxi = taxis.find((t) => t._id === selectedTaxi);
+
     const message = `
 * Net Lanka Travels - Tour Booking *
 
 *Tour Type:* ${tourType === "day" ? "Day Tour" : "Round Tour"}
 *Tour:* ${selectedTour.title}
 *Location:* ${selectedTour.location}
+*Vehicle:* ${taxi?.name || "-"}
 
 *Customer Details*
 - Name: ${formData.name}
@@ -179,7 +201,6 @@ Net Lanka Travel
     window.open(url, "_blank");
   };
 
-  /* ---------------- UI ---------------- */
   return (
     <section className="bg-white border border-[#2E5B84] rounded-2xl shadow-xl p-8 max-w-[650px] mx-auto">
       <h2 className="text-center text-2xl md:text-3xl font-extrabold text-[#0B2545]">
@@ -221,6 +242,27 @@ Net Lanka Travel
               {(tourType === "day" ? dayTours : roundTours).map((t) => (
                 <option key={t._id} value={t._id}>
                   {t.title} – {t.location}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* TAXI LIST */}
+        {taxis.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Select Vehicle <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedTaxi}
+              onChange={(e) => setSelectedTaxi(e.target.value)}
+              className="px-4 py-3 border rounded"
+            >
+              <option value="">Select Vehicle</option>
+              {taxis.map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.name} – Seats: {t.seats} - {t.ac ? "AC" : "Non-AC"}
                 </option>
               ))}
             </select>

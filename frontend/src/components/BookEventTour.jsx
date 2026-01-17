@@ -24,6 +24,8 @@ export default function BookEventTour({
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
+  const [taxis, setTaxis] = useState([]);
+  const [selectedTaxi, setSelectedTaxi] = useState("");
 
   // Fetch WhatsApp number
   useEffect(() => {
@@ -34,6 +36,19 @@ export default function BookEventTour({
         if (p) setWhatsappNumber(p.replace(/\D/g, ""));
       })
       .catch(() => {});
+  }, []);
+
+  // ---------------- FETCH TAXIS ----------------
+  useEffect(() => {
+    const fetchTaxis = async () => {
+      try {
+        const res = await axiosInstance.get("/quick-taxi/taxis"); // correct endpoint
+        if (res.data.success) setTaxis(res.data.taxis); // check response
+      } catch (err) {
+        console.error("Error fetching taxis:", err);
+      }
+    };
+    fetchTaxis();
   }, []);
 
   // Update total members dynamically
@@ -56,6 +71,7 @@ export default function BookEventTour({
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = "Invalid email";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    if (!selectedTaxi) newErrors.selectedTaxi = "Select a vehicle";
     if (Number(formData.adults) < 1)
       newErrors.adults = "At least 1 adult required";
     if (Number(formData.children) < 0)
@@ -94,6 +110,7 @@ export default function BookEventTour({
         startDate: formData.startDate,
         startTime: formData.startTime,
         message: formData.message,
+        taxiId: selectedTaxi,
       });
 
       if (res.data.success) {
@@ -109,6 +126,7 @@ export default function BookEventTour({
           startTime: "00:00",
           message: "",
         });
+        setSelectedTaxi("");
       } else {
         setResponseMsg(res.data.message || "Failed to submit booking.");
         setIsError(true);
@@ -133,12 +151,21 @@ export default function BookEventTour({
       return;
     }
 
+    const selectedTaxiObj = taxis.find((t) => t._id === selectedTaxi);
+
     const message = `
 *Event Tour Booking - Net Lanka Travels*
 
 *Event:* ${eventTitle}
 *Location:* ${eventLocation}
-
+*Vehicle:* ${
+      selectedTaxiObj
+        ? `${selectedTaxiObj.name} – Seats: ${selectedTaxiObj.seats} - ${
+            selectedTaxiObj.ac ? "AC" : "Non-AC"
+          }`
+        : "-"
+    }
+  
 *Customer Details:*
 - Name: ${formData.name}
 - Email: ${formData.email}
@@ -200,6 +227,27 @@ ${formData.message || "–"}
             )}
           </div>
         ))}
+
+        {/* TAXI LIST */}
+        {taxis.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Select Vehicle <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedTaxi}
+              onChange={(e) => setSelectedTaxi(e.target.value)}
+              className="px-4 py-3 border rounded"
+            >
+              <option value="">Select Vehicle</option>
+              {taxis.map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.name} – Seats: {t.seats} - {t.ac ? "AC" : "Non-AC"}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Adults & Children */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

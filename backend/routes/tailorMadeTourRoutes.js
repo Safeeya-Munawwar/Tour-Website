@@ -113,8 +113,8 @@ router.post("/inquiry", async (req, res) => {
       adults: req.body.adults,
       children: req.body.children,
       selectedDestinations: req.body.selectedDestinations || [],
-      selectedExperiences: req.body.selectedExperiences || [],   
-      travelStyle: req.body.travelStyle || null,     
+      selectedExperiences: req.body.selectedExperiences || [],
+      travelStyle: req.body.travelStyle || null,
       budget: req.body.currency === "No Idea" ? null : req.body.budget || null,
       currency: req.body.currency || "No Idea",
       notes: req.body.notes || "",
@@ -132,12 +132,19 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Email:</strong> ${inquiry.email}</p>
       <p><strong>Phone:</strong> ${inquiry.phone}</p>
       <p><strong>Country:</strong> ${inquiry.country}</p>
-      <p><strong>Tour Type:</strong> ${inquiry.tourType}</p>
       <p><strong>Pickup Location:</strong> ${inquiry.pickupLocation}</p>
       <p><strong>Drop Location:</strong> ${inquiry.dropLocation}</p>
-      <p><strong>Start Date:</strong> ${inquiry.startDate ? new Date(inquiry.startDate).toISOString().slice(0, 10) : "N/A"}
+      <p><strong>Start Date:</strong> ${
+        inquiry.startDate
+          ? new Date(inquiry.startDate).toISOString().slice(0, 10)
+          : "N/A"
+      }
       </p>
-      <p><strong>End Date:</strong>${inquiry.endDate ? new Date(inquiry.endDate).toISOString().slice(0, 10) : "N/A"}
+      <p><strong>End Date:</strong>${
+        inquiry.endDate
+          ? new Date(inquiry.endDate).toISOString().slice(0, 10)
+          : "N/A"
+      }
       </p>
       <p><strong>Adults:</strong> ${inquiry.adults}</p>
       <p><strong>Children:</strong> ${inquiry.children}</p>
@@ -156,7 +163,9 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Budget:</strong> ${
         inquiry.budget ? inquiry.budget + " " + inquiry.currency : "No Idea"
       }</p>
-      <p><strong>How Did You Hear About Us:</strong> ${inquiry.hearAboutUs || "Not Provided"}</p>
+      <p><strong>How Did You Hear About Us:</strong> ${
+        inquiry.hearAboutUs || "Not Provided"
+      }</p>
       <p><strong>Notes:</strong> ${inquiry.notes || "N/A"}</p>
     `;
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
@@ -171,12 +180,6 @@ router.post("/inquiry", async (req, res) => {
 
         <h3 style="color: #0d203a;">Your Inquiry Details</h3>
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <tr>
-            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour Type</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              inquiry.tourType
-            }</td>
-          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${

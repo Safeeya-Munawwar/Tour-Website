@@ -19,7 +19,9 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [isError, setIsError] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("94771234567"); 
+  const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
+  const [taxis, setTaxis] = useState([]);
+  const [selectedTaxi, setSelectedTaxi] = useState("");
 
   // Fetch WhatsApp number from backend
   useEffect(() => {
@@ -32,6 +34,19 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       .catch(() => {
         // fallback already set
       });
+  }, []);
+
+  // ---------------- FETCH TAXIS ----------------
+  useEffect(() => {
+    const fetchTaxis = async () => {
+      try {
+        const res = await axiosInstance.get("/quick-taxi/taxis"); // correct endpoint
+        if (res.data.success) setTaxis(res.data.taxis); // check response
+      } catch (err) {
+        console.error("Error fetching taxis:", err);
+      }
+    };
+    fetchTaxis();
   }, []);
 
   // Update members dynamically
@@ -55,10 +70,14 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) newErrors.email = "Invalid email";
     }
+    if (!selectedTaxi) newErrors.selectedTaxi = "Select a vehicle";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    if (Number(formData.adults) < 1) newErrors.adults = "At least 1 adult is required";
-    if (Number(formData.children) < 0) newErrors.children = "Children cannot be negative";
-    if (!formData.pickupLocation.trim()) newErrors.pickupLocation = "Pickup location is required";
+    if (Number(formData.adults) < 1)
+      newErrors.adults = "At least 1 adult is required";
+    if (Number(formData.children) < 0)
+      newErrors.children = "Children cannot be negative";
+    if (!formData.pickupLocation.trim())
+      newErrors.pickupLocation = "Pickup location is required";
     if (!formData.startDate) newErrors.startDate = "Pickup date is required";
     else {
       const today = new Date();
@@ -90,6 +109,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       const res = await axiosInstance.post("/day-tour-booking", {
         ...formData,
         tourId,
+        taxiId: selectedTaxi,
       });
 
       if (res.data.success) {
@@ -107,6 +127,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
           startTime: "",
           message: "",
         });
+        setSelectedTaxi("");
       } else {
         setResponseMsg("Failed to submit booking. Please try again.");
         setIsError(true);
@@ -130,36 +151,47 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       return;
     }
 
+    const selectedTaxiObj = taxis.find((t) => t._id === selectedTaxi);
+
     const message = `
-* Net Lanka Travels - Day Tour Booking *
-
-*Tour:* ${tourTitle}
-*Location:* ${tourLocation}
-
-*Customer Details:*
- -Name: ${formData.name}
- -Email: ${formData.email}
- -Phone: ${formData.phone}
-
-*Participants:*
- -Adults: ${formData.adults}
- -Children: ${formData.children}
- -Total Members: ${formData.members}
-
-*Pickup & Schedule:*
- -Pickup Location: ${formData.pickupLocation}
- -Pickup Date: ${formData.startDate}
- -Pickup Time: ${formData.startTime}
-
-*Additional Message:*
-${formData.message || "–"}
-
-*We will contact you soon*
-
-*Thank you for booking with Net Lanka Travel!*
+  * Net Lanka Travels - Day Tour Booking *
+  
+  *Tour:* ${tourTitle}
+  *Location:* ${tourLocation}
+  *Vehicle:* ${
+    selectedTaxiObj
+      ? `${selectedTaxiObj.name} – Seats: ${selectedTaxiObj.seats} - ${
+          selectedTaxiObj.ac ? "AC" : "Non-AC"
+        }`
+      : "-"
+  }
+  
+  *Customer Details:*
+   -Name: ${formData.name}
+   -Email: ${formData.email}
+   -Phone: ${formData.phone}
+  
+  *Participants:*
+   -Adults: ${formData.adults}
+   -Children: ${formData.children}
+   -Total Members: ${formData.members}
+  
+  *Pickup & Schedule:*
+   -Pickup Location: ${formData.pickupLocation}
+   -Pickup Date: ${formData.startDate}
+   -Pickup Time: ${formData.startTime}
+  
+  *Additional Message:*
+  ${formData.message || "–"}
+  
+  *We will contact you soon*
+  
+  *Thank you for booking with Net Lanka Travel!*
     `;
 
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      message
+    )}`;
     window.open(url, "_blank");
   };
 
@@ -187,7 +219,9 @@ ${formData.message || "–"}
               errors.name ? "border-red-500" : "border-gray-300"
             } focus:ring-2 focus:ring-blue-500 outline-none`}
           />
-          {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+          {errors.name && (
+            <span className="text-red-500 text-sm">{errors.name}</span>
+          )}
         </div>
 
         {/* Email */}
@@ -206,7 +240,9 @@ ${formData.message || "–"}
               errors.email ? "border-red-500" : "border-gray-300"
             } focus:ring-2 focus:ring-blue-500 outline-none`}
           />
-          {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+          {errors.email && (
+            <span className="text-red-500 text-sm">{errors.email}</span>
+          )}
         </div>
 
         {/* Phone */}
@@ -225,8 +261,31 @@ ${formData.message || "–"}
               errors.phone ? "border-red-500" : "border-gray-300"
             } focus:ring-2 focus:ring-blue-500 outline-none`}
           />
-          {errors.phone && <span className="text-red-500 text-sm">{errors.phone}</span>}
+          {errors.phone && (
+            <span className="text-red-500 text-sm">{errors.phone}</span>
+          )}
         </div>
+
+        {/* TAXI LIST */}
+        {taxis.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Select Vehicle <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedTaxi}
+              onChange={(e) => setSelectedTaxi(e.target.value)}
+              className="px-4 py-3 border rounded"
+            >
+              <option value="">Select Vehicle</option>
+              {taxis.map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.name} – Seats: {t.seats} - {t.ac ? "AC" : "Non-AC"}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Adults & Children */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -245,7 +304,9 @@ ${formData.message || "–"}
                 errors.adults ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.adults && <span className="text-red-500 text-sm">{errors.adults}</span>}
+            {errors.adults && (
+              <span className="text-red-500 text-sm">{errors.adults}</span>
+            )}
           </div>
           <div>
             <label htmlFor="children" className="font-medium mb-1">
@@ -262,7 +323,9 @@ ${formData.message || "–"}
                 errors.children ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.children && <span className="text-red-500 text-sm">{errors.children}</span>}
+            {errors.children && (
+              <span className="text-red-500 text-sm">{errors.children}</span>
+            )}
           </div>
         </div>
 
@@ -283,7 +346,9 @@ ${formData.message || "–"}
             } focus:ring-2 focus:ring-blue-500 outline-none`}
           />
           {errors.pickupLocation && (
-            <span className="text-red-500 text-sm">{errors.pickupLocation}</span>
+            <span className="text-red-500 text-sm">
+              {errors.pickupLocation}
+            </span>
           )}
         </div>
 
@@ -303,24 +368,28 @@ ${formData.message || "–"}
                 errors.startDate ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
             />
-            {errors.startDate && <span className="text-red-500 text-sm">{errors.startDate}</span>}
+            {errors.startDate && (
+              <span className="text-red-500 text-sm">{errors.startDate}</span>
+            )}
           </div>
           <div>
             <label htmlFor="startTime" className="font-medium mb-1">
               Pickup Time <span className="text-red-500">*</span>
             </label>
             <input
-  id="startTime"
-  type="time"
-  name="startTime"
-  value={formData.startTime}
-  onChange={handleChange}
-  step="60"        // minutes
-  className={`w-full px-4 py-3 rounded border ${
-    errors.startTime ? "border-red-500" : "border-gray-300"
-  } focus:ring-2 focus:ring-blue-500 outline-none`}
-/>
-            {errors.startTime && <span className="text-red-500 text-sm">{errors.startTime}</span>}
+              id="startTime"
+              type="time"
+              name="startTime"
+              value={formData.startTime}
+              onChange={handleChange}
+              step="60" // minutes
+              className={`w-full px-4 py-3 rounded border ${
+                errors.startTime ? "border-red-500" : "border-gray-300"
+              } focus:ring-2 focus:ring-blue-500 outline-none`}
+            />
+            {errors.startTime && (
+              <span className="text-red-500 text-sm">{errors.startTime}</span>
+            )}
           </div>
         </div>
 
@@ -364,7 +433,11 @@ ${formData.message || "–"}
         </button>
 
         {responseMsg && (
-          <p className={`mt-2 text-center font-medium ${isError ? "text-red-600" : "text-green-600"}`}>
+          <p
+            className={`mt-2 text-center font-medium ${
+              isError ? "text-red-600" : "text-green-600"
+            }`}
+          >
             {responseMsg}
           </p>
         )}

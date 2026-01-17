@@ -20,6 +20,12 @@ const TourBookingSchema = new mongoose.Schema(
       enum: ["DayTour", "RoundTour"],
     },
 
+    taxiId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "QuickTaxi",
+      required: false,
+    },
+
     name: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
@@ -29,7 +35,7 @@ const TourBookingSchema = new mongoose.Schema(
     members: { type: Number },
 
     pickupLocation: { type: String },
-   startDate: { type: Date, required: true },
+    startDate: { type: Date, required: true },
 
     startTime: { type: String },
     message: { type: String },

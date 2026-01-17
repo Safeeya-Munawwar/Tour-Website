@@ -8,7 +8,6 @@ export default function Header() {
     () => [
       { src: "/images/d2.webp", alt: "Sri Lanka destination" },
       { src: "/images/destination.webp", alt: "Beautiful destination in Sri Lanka" },
-      { src: "/images/sigiriya.webp", alt: "Sigiriya Rock Fortress" },
       { src: "/images/blog.webp", alt: "Sri Lanka travel inspiration" },
     ],
     []

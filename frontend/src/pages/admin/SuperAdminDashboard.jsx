@@ -55,6 +55,8 @@ export default function Dashboard() {
   const [allEventBookings, setAllEventBookings] = useState([]);
   const [allTailorMade, setAllTailorMade] = useState([]);
   const itemsPerPage = 10;
+  const [taxiPage, setTaxiPage] = useState(1);
+  const rowsPerPageTaxi = 5;
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -99,10 +101,10 @@ export default function Dashboard() {
         inquiriesRes,
         adminStatsRes,
         destinationsRes,
-        experiencesRes, 
+        experiencesRes,
         taxiRes,
         taxiBookingRes,
-        commonBookingRes,       
+        commonBookingRes,
       ] = await Promise.all([
         axiosInstance.get("/day-tours"),
         axiosInstance.get("/round-tours"),
@@ -329,7 +331,7 @@ export default function Dashboard() {
                 title: "Admins",
                 value: stats.totalAdmins,
                 icon: <Users size={36} className="text-blue-700" />,
-              },             
+              },
               {
                 title: "Destinations",
                 value: stats.destinations,
@@ -365,40 +367,51 @@ export default function Dashboard() {
           </div>
 
           {/* ---------------- CHARTS ---------------- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Line Chart */}
-          <div className="bg-white p-5 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><Plane size={20} /> Monthly Bookings</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={monthlyBookings}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line dataKey="day" stroke="#2563eb" name="Day Tours" />
-                <Line dataKey="round" stroke="#16a34a" name="Round Tours" />
-                <Line dataKey="event" stroke="#f59e0b" name="Event Tours" />
-                <Line dataKey="tailor" stroke="#a855f7" name="Tailor Made" />
-                <Line dataKey="taxi" stroke="#f87171" name="Taxi Bookings" dot={{ r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Line Chart */}
+            <div className="bg-white p-5 rounded-lg shadow">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Plane size={20} /> Monthly Bookings
+              </h2>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={monthlyBookings}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line dataKey="day" stroke="#2563eb" name="Day Tours" />
+                  <Line dataKey="round" stroke="#16a34a" name="Round Tours" />
+                  <Line dataKey="event" stroke="#f59e0b" name="Event Tours" />
+                  <Line dataKey="tailor" stroke="#a855f7" name="Tailor Made" />
+                  <Line
+                    dataKey="taxi"
+                    stroke="#f87171"
+                    name="Taxi Bookings"
+                    dot={{ r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
 
-          {/* Pie Chart */}
-          <div className="bg-white p-5 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><Map size={20} /> Tours Breakdown</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie data={pieData} dataKey="value" outerRadius={100} label>
-                  {pieData.map((_, i) => <Cell key={i} fill={pieColors[i]} />)}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            {/* Pie Chart */}
+            <div className="bg-white p-5 rounded-lg shadow">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Map size={20} /> Tours Breakdown
+              </h2>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie data={pieData} dataKey="value" outerRadius={100} label>
+                    {pieData.map((_, i) => (
+                      <Cell key={i} fill={pieColors[i]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
 
           {/* ---------------- RECENT BOOKINGS TABLE ---------------- */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
@@ -511,6 +524,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <CarFront size={20} /> Recent Taxi Bookings
             </h2>
+
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -522,28 +536,86 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {taxiBookings.slice(0, 10).map((b) => (
-                    <tr key={b._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-2">
-                        {b.firstName} {b.lastName}
-                      </td>
-                      <td className="px-4 py-2">{b.taxiId?.name || "—"}</td>
-                      <td className="px-4 py-2">
-                        {new Date(b.createdAt).toLocaleDateString("en-GB")}
-                      </td>
-                      <td className="px-4 py-2">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
-                            b.status
-                          )}`}
-                        >
-                          {b.status || "Pending"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {taxiBookings
+                    .slice(
+                      (taxiPage - 1) * rowsPerPageTaxi,
+                      taxiPage * rowsPerPageTaxi
+                    )
+                    .map((b) => (
+                      <tr key={b._id} className="hover:bg-gray-50">
+                        <td className="px-4 py-2">
+                          {b.firstName} {b.lastName}
+                        </td>
+                        <td className="px-4 py-2">{b.taxiId?.name || "—"}</td>
+                        <td className="px-4 py-2">
+                          {new Date(b.createdAt).toLocaleDateString("en-GB")}
+                        </td>
+                        <td className="px-4 py-2">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(
+                              b.status
+                            )}`}
+                          >
+                            {b.status || "Pending"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setTaxiPage((prev) => Math.max(prev - 1, 1))}
+                disabled={taxiPage === 1}
+                className={`px-3 py-1 rounded ${
+                  taxiPage === 1
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-300"
+                }`}
+              >
+                Prev
+              </button>
+
+              {Array.from(
+                { length: Math.ceil(taxiBookings.length / rowsPerPageTaxi) },
+                (_, i) => i + 1
+              ).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setTaxiPage(page)}
+                  className={`px-3 py-1 rounded ${
+                    taxiPage === page
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 hover:bg-gray-300"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                onClick={() =>
+                  setTaxiPage((prev) =>
+                    Math.min(
+                      prev + 1,
+                      Math.ceil(taxiBookings.length / rowsPerPageTaxi)
+                    )
+                  )
+                }
+                disabled={
+                  taxiPage === Math.ceil(taxiBookings.length / rowsPerPageTaxi)
+                }
+                className={`px-3 py-1 rounded ${
+                  taxiPage === Math.ceil(taxiBookings.length / rowsPerPageTaxi)
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-300"
+                }`}
+              >
+                Next
+              </button>
             </div>
           </div>
         </main>

@@ -7,6 +7,12 @@ const EventTourBookingSchema = new mongoose.Schema({
     required: true,
   },
 
+  taxiId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "QuickTaxi",
+    required: false,
+  },
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
@@ -16,7 +22,7 @@ const EventTourBookingSchema = new mongoose.Schema({
 
   members: { type: Number, default: 1 },
 
- startDate: { type: Date, required: true },
+  startDate: { type: Date, required: true },
 
   startTime: { type: String, required: true },
 

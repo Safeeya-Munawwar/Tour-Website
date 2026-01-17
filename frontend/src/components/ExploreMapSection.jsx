@@ -3,7 +3,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -66,7 +65,7 @@ export default function ExploreSriLankaSection() {
         <div className="lg:col-span-5 relative z-10">
           <Swiper
             modules={[Autoplay]}
-            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            autoplay={{ delay: 2500, disableOnInteraction: false }}
             loop
             slidesPerView={1}
           >
@@ -100,24 +99,9 @@ export default function ExploreSriLankaSection() {
             </p>
           ) : (
             <>
-              {/* Navigation */}
-              <button
-                className="exp-prev absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition"
-                aria-label="Previous experience"
-              >
-                <FaChevronLeft />
-              </button>
-
-              <button
-                className="exp-next absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg w-11 h-11 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition"
-                aria-label="Next experience"
-              >
-                <FaChevronRight />
-              </button>
-
               <Swiper
                 modules={[Autoplay, Navigation]}
-                autoplay={{ delay: 4500, disableOnInteraction: false }}
+                autoplay={{ delay: 2500, disableOnInteraction: false }}
                 loop={experiences.length > 1}
                 slidesPerView={1}
                 navigation={{ nextEl: ".exp-next", prevEl: ".exp-prev" }}
