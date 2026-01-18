@@ -37,7 +37,7 @@ export default function RoundTourDetail() {
           res.data.details?.gallerySlides?.forEach(slide => new Image().src = slide.image);
         }
       })
-      .catch(err => console.error("", err));
+      .catch(err => console.error("Error fetching round tour:", err));
   }, [slug]);
 
   useEffect(() => {

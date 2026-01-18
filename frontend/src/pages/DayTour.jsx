@@ -15,7 +15,7 @@ export default function DayTour() {
         const res = await axiosInstance.get("/day-tours");
         if (res.data.success) setTours(res.data.tours || []);
       } catch (err) {
-        console.error("", err);
+        console.error("Error fetching tours:", err);
       }
     };
     fetchTours();
@@ -29,8 +29,12 @@ export default function DayTour() {
 
   // Scroll to top on page change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
+    if (currentPage === 1) return; // skip initial load
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 50); // small delay to let layout render
+    return () => clearTimeout(t);
+  }, [currentPage]);  
 
   const totalPages = Math.ceil(tours.length / perPage);
 

@@ -5,11 +5,7 @@ function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    }, 50); // delay to allow page content to render
-
-    return () => clearTimeout(timer);
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   return null;

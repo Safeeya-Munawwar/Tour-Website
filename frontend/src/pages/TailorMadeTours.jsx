@@ -59,7 +59,7 @@ const TailorMadeTours = () => {
         res.data?.gallery?.forEach((img) => (new Image().src = img));
         res.data?.howItWorks?.forEach((step) => (new Image().src = step.image));
       } catch (err) {
-        console.error("", err);
+        console.error("Failed to fetch Tailor Made Tour data", err);
       }
     };
     fetchTour();
