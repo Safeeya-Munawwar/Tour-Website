@@ -7,6 +7,6 @@ const EventSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   desc: { type: String },
   img: { type: String, required: true },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Event", EventSchema);

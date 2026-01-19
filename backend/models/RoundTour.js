@@ -7,6 +7,6 @@ const RoundTourSchema = new mongoose.Schema({
   location: { type: String },
   desc: { type: String, required: true },
   img: { type: String, required: true },
-}, { timestamps: true });
+}, { timestamps: true }); 
 
 module.exports = mongoose.model("RoundTour", RoundTourSchema);

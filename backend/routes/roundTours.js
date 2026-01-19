@@ -7,7 +7,7 @@ const slugify = require("slugify");
 const RoundTour = require("../models/RoundTour");
 const RoundTourDetail = require("../models/RoundTourDetail");
 const adminAuth = require("../middleware/adminAuth");
-
+ 
 // Cloudinary setup
 const storage = new CloudinaryStorage({ cloudinary, params: { folder: "round-tours" } });
 const upload = multer({ storage });
@@ -15,7 +15,7 @@ const upload = multer({ storage });
 // ------------------------ GET ALL TOURS (cards) ------------------------
 router.get("/", async (req, res) => {
   try {
-    const tours = await RoundTour.find().sort({ createdAt: -1 });
+    const tours = await RoundTour.find().sort({ createdAt: 1 }); // oldest first
     res.json({ success: true, tours });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

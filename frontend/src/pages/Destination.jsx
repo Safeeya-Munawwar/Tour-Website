@@ -5,6 +5,7 @@ export default function Destination() {
   const [showText, setShowText] = useState(false);
   const [destinations, setDestinations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState("oldest"); // default oldest first
   const perPage = 12;
 
   useEffect(() => {
@@ -37,10 +38,23 @@ export default function Destination() {
 
   const totalPages = Math.ceil(destinations.length / perPage);
 
+  // Sort + paginate destinations
   const currentDestinations = useMemo(() => {
+    if (!destinations || destinations.length === 0) return [];
+
+    const sorted = [...destinations].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      if (sortType === "oldest") return dateA - dateB;
+      if (sortType === "latest") return dateB - dateA;
+      if (sortType === "random") return Math.random() - 0.5;
+      return 0;
+    });
+
     const start = (currentPage - 1) * perPage;
-    return destinations.slice(start, start + perPage);
-  }, [currentPage, destinations]);
+    return sorted.slice(start, start + perPage);
+  }, [currentPage, destinations, sortType]);
 
   const SkeletonCard = () => (
     <div className="animate-pulse">
@@ -54,7 +68,6 @@ export default function Destination() {
     <div className="font-poppins bg-white text-[#222]">
       {/* HERO HEADER */}
       <div className="w-full h-[360px] md:h-[560px] relative flex items-center justify-center text-white">
-        {/* Hero Image */}
         <img
           src="/images/pll.webp"
           alt="Explore Sri Lanka Destinations"
@@ -64,11 +77,7 @@ export default function Destination() {
           fetchpriority="high"
           style={{ objectPosition: "45% 33%" }}
         />
-
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/20"></div>
-
-        {/* Hero Text */}
         <div
           className={`absolute bottom-6 md:bottom-10 right-4 md:right-10 max-w-[90%] md:w-[360px] bg-black/80 text-white p-4 md:p-6 backdrop-blur-sm shadow-lg border-none flex items-center justify-end transition-all duration-700 ease-out ${
             showText ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
@@ -82,7 +91,7 @@ export default function Destination() {
       </div>
 
       {/* DESTINATIONS GRID */}
-      <section className="w-full py-20"> 
+      <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm md:text-lg text-gray-600 tracking-widest font-semibold mb-3">
             HIDDEN MAGICAL PLACES
@@ -101,7 +110,30 @@ export default function Destination() {
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
-          {/* DESTINATIONS GRID */}
+          {/* SORT BUTTONS */}
+          <div className="flex justify-center gap-4 mt-10 flex-wrap">
+            {["oldest", "latest", "random"].map((type) => (
+              <button
+                key={type}
+                onClick={() => {
+                  setSortType(type);
+                  setCurrentPage(1);
+                }}
+                className={`px-6 py-2 rounded-full font-semibold transition ${
+                  sortType === type
+                    ? "bg-black text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                {type === "oldest"
+                  ? "Oldest"
+                  : type === "latest"
+                  ? "Latest"
+                  : "Random"}
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mt-12">
             {destinations.length === 0
               ? Array.from({ length: perPage }).map((_, i) => (

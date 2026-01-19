@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 import Footer from "../components/Footer";
+import { useMemo } from "react";
 
 export default function Experiences() {
   const [showText, setShowText] = useState(false);
   const [experiences, setExperiences] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState("oldest");
+  const [randomSeed, setRandomSeed] = useState(0);
 
   const perPage = 6;
 
@@ -42,10 +45,29 @@ export default function Experiences() {
   }, [currentPage]);
 
   /* Pagination logic */
-  const totalPages = Math.ceil(experiences.length / perPage);
+  /* SORT + PAGINATION */
+  const sortedExperiences = useMemo(() => {
+    let list = [...experiences];
+
+    if (sortType === "oldest") {
+      list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    }
+
+    if (sortType === "latest") {
+      list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    if (sortType === "random") {
+      list.sort(() => randomSeed - Math.random());
+    }
+
+    return list;
+  }, [experiences, sortType, randomSeed]);
+
+  const totalPages = Math.ceil(sortedExperiences.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
-  const currentExperiences = experiences.slice(indexOfFirst, indexOfLast);
+  const currentExperiences = sortedExperiences.slice(indexOfFirst, indexOfLast);
 
   return (
     <>
@@ -102,6 +124,32 @@ export default function Experiences() {
             <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6" />
           </div>
 
+          {/* ================= SORT BUTTONS ================= */}
+          <div className="flex justify-center gap-4 mt-10 flex-wrap">
+            {["oldest", "latest", "random"].map((type) => (
+              <button
+                key={type}
+                onClick={() => {
+                  setSortType(type);
+                  setCurrentPage(1);
+
+                  if (type === "random") {
+                    setRandomSeed(Math.random());
+                  }
+                }}
+                className={`px-6 py-2 rounded-full font-semibold transition ${
+                  sortType === type
+                    ? "bg-black text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                {type === "oldest" && "Oldest"}
+                {type === "latest" && "Latest"}
+                {type === "random" && "Random"}
+              </button>
+            ))}
+          </div>
+
           {/* ================= CARD GRID ================= */}
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mt-12">
             {currentExperiences.length > 0 ? (
@@ -129,11 +177,11 @@ export default function Experiences() {
                     >
                       {item.title}
                     </h3>
-<br></br>
+                    <br></br>
                     <p className="text-gray-600 text-sm mt-3 leading-relaxed line-clamp-3">
                       {item.description}
                     </p>
-                <Link to={`/experience/${item.slug}`}>
+                    <Link to={`/experience/${item.slug}`}>
                       <span
                         className="inline-block mt-4 text-[#8C1F28] 
                         font-semibold text-sm hover:underline"

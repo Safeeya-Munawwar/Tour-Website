@@ -6,6 +6,7 @@ export default function DayTour() {
   const [tours, setTours] = useState([]);
   const [showText, setShowText] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState("oldest"); // default oldest first
   const perPage = 8;
 
   // Fetch tours
@@ -39,10 +40,22 @@ export default function DayTour() {
   const totalPages = Math.ceil(tours.length / perPage);
 
   const currentTours = useMemo(() => {
+    if (!tours || tours.length === 0) return [];
+  
+    const sortedTours = [...tours].sort((a, b) => {
+      const dateA = new Date(a.date || a.createdAt).getTime(); // use 'date' or fallback 'createdAt'
+      const dateB = new Date(b.date || b.createdAt).getTime();
+  
+      if (sortType === "oldest") return dateA - dateB;
+      if (sortType === "latest") return dateB - dateA;
+      if (sortType === "random") return Math.random() - 0.5;
+      return 0;
+    });
+  
     const start = (currentPage - 1) * perPage;
-    return tours.slice(start, start + perPage);
-  }, [currentPage, tours]);
-
+    return sortedTours.slice(start, start + perPage);
+  }, [currentPage, tours, sortType]);  
+  
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
       {/* HERO HEADER */}
@@ -91,6 +104,24 @@ export default function DayTour() {
 
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </div>
+
+      <div className="flex justify-center gap-4 mt-10 flex-wrap">
+  {["oldest", "latest", "random"].map((type) => (
+    <button
+      key={type}
+      onClick={() => { setSortType(type); setCurrentPage(1); }}
+      className={`px-6 py-2 rounded-full font-semibold transition ${
+        sortType === type
+          ? "bg-black text-white"
+          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+      }`}
+    >
+      {type === "oldest" ? "Oldest" : type === "latest" ? "Latest" : "Random"}
+    </button>
+  ))}
+</div>
+
+
 
       {/* TOURS GRID */}
       <div className="space-y-10 px-6 sm:px-10 md:px-32 mt-16">

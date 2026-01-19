@@ -6,6 +6,7 @@ export default function RoundTour() {
   const [tours, setTours] = useState([]);
   const [showText, setShowText] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState("oldest"); // default: oldest first
 
   const perPage = 9; // ✅ 9 cards per page
 
@@ -30,9 +31,20 @@ export default function RoundTour() {
   }, [currentPage]);
   // Pagination logic
   const totalPages = Math.ceil(tours.length / perPage);
+
+  let sortedTours = [...tours];
+
+  if (sortType === "oldest") {
+    sortedTours.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  } else if (sortType === "latest") {
+    sortedTours.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } else if (sortType === "random") {
+    sortedTours.sort(() => Math.random() - 0.5);
+  }
+
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
-  const currentTours = tours.slice(indexOfFirst, indexOfLast);
+  const currentTours = sortedTours.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
@@ -77,6 +89,30 @@ export default function RoundTour() {
         <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
       </div>
 
+      <div className="flex justify-center gap-4 mt-10 flex-wrap">
+        {["oldest", "latest", "random"].map((type) => (
+          <button
+            key={type}
+            onClick={() => {
+              setSortType(type);
+              setCurrentPage(1);
+            }}
+            className={`px-6 py-2 rounded-full font-semibold transition
+        ${
+          sortType === type
+            ? "bg-black text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        }`}
+          >
+            {type === "oldest"
+              ? "Oldest"
+              : type === "latest"
+              ? "Latest"
+              : "Random"}
+          </button>
+        ))}
+      </div>
+
       {/* CARD GRID */}
       <div className="max-w-[1350px] mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
         {currentTours.length > 0 ? (
@@ -95,22 +131,28 @@ export default function RoundTour() {
                 />
               </div>
               <div className="px-8 py-10 flex flex-col flex-grow">
- <h3 className="text-2xl font-serif font-semibold mb-2 text-center">
-  {t.title ? (
-    <>
-      {t.title.split(" ").slice(0, Math.ceil(t.title.split(" ").length / 2)).join(" ")}
-      <br />
-      {t.title.split(" ").slice(Math.ceil(t.title.split(" ").length / 2)).join(" ")}
-    </>
-  ) : (
-    " Title"
-  )}
-</h3>
-
-
+                <h3 className="text-2xl font-serif font-semibold mb-2 text-center">
+                  {t.title ? (
+                    <>
+                      {t.title
+                        .split(" ")
+                        .slice(0, Math.ceil(t.title.split(" ").length / 2))
+                        .join(" ")}
+                      <br />
+                      {t.title
+                        .split(" ")
+                        .slice(Math.ceil(t.title.split(" ").length / 2))
+                        .join(" ")}
+                    </>
+                  ) : (
+                    " Title"
+                  )}
+                </h3>
 
                 {t.location && (
-                  <div className="text-gray-500 italic mb-2 text-center">{t.location}</div>
+                  <div className="text-gray-500 italic mb-2 text-center">
+                    {t.location}
+                  </div>
                 )}
                 {t.days && (
                   <div className="font-semibold text-gray-700 mb-4 text-center ">
@@ -121,13 +163,10 @@ export default function RoundTour() {
                   {t.desc}
                 </p>
                 <Link to={`/round-tours/${t.slug}`} className="mx-auto">
-  <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white rounded-full px-6 py-2">
-    READ MORE →
-  </button>
-</Link>
-
-
-
+                  <button className="mt-5 bg-gradient-to-r from-[#73A5C6] to-[#2E5B84] text-white rounded-full px-6 py-2">
+                    READ MORE →
+                  </button>
+                </Link>
               </div>
             </article>
           ))
