@@ -10,6 +10,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Footer from "../components/Footer";
+import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -18,6 +20,7 @@ export default function BlogDetail() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
+  const [contact, setContact] = useState({});
 
   const [comment, setComment] = useState({
     name: "",
@@ -53,9 +56,16 @@ export default function BlogDetail() {
     fetchBlog();
   }, [slug]);
 
-  if (loading) ;
-  if (!blog)
-    return ;
+  // Fetch contact info
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
+
+  if (loading);
+  if (!blog) return;
 
   // --- USE BACKEND PARAGRAPHS AS-IS ---
   const paragraphs = blog.content
@@ -130,53 +140,158 @@ export default function BlogDetail() {
         </div>
 
         {/* MAIN CONTENT */}
-        {/* ---------------------------- BLOG MAIN SECTION ---------------------------- */}
-        <section className="relative flex flex-col md:flex-row w-full bg-white pt-10 md:pt-0">
-          {/* LEFT IMAGE */}
-          <div
-            className="
-      w-full md:w-1/2
-      overflow-hidden
-      rounded-br-[40%] md:rounded-r-[45%]
-      relative
-    "
-          >
-            <img
-              src={
-                blog.galleryImgs && blog.galleryImgs[2]
-                  ? blog.galleryImgs[2]
-                  : blog.heroImg
-              }
-              alt={blog.title}
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
+        <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-16">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+                  {blog.title}
+                </h2>
 
-          {/* RIGHT CONTENT */}
-          <div
-            className="
-      w-full md:w-1/2
-      flex flex-col
-      justify-center
-      px-6 sm:px-10 md:px-20
-      mt-6 sm:mt-10 md:mt-20
-      pb-10
-      space-y-6
-      text-left
-    "
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
-              {blog.title}
-            </h2>
+                {paragraphs.map((para, idx) => (
+                  <p key={idx} className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </div>
+            {/* SIDEBAR */}
+            <div className="relative lg:sticky lg:top-24 h-fit">
+              <div className="bg-white rounded-3xl p-8 shadow-lg space-y-8">
+                {/* BLOG META */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Blog Details</h4>
 
-            {paragraphs.map((para, idx) => (
-              <p
-                key={idx}
-                className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed"
-              >
-                {para}
-              </p>
-            ))}
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiCalendar className="text-blue-600" />
+                    <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiClock className="text-blue-600" />
+                    <span>
+                      {Math.ceil(paragraphs.join(" ").split(" ").length / 200)}{" "}
+                      min read
+                    </span>
+                  </div>
+                </div>
+
+                {/* AUTHOR */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Author</h4>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                      {blog.author?.name?.[0] || "T"}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {blog.author?.name || "Travel Content Writer"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TAGS */}
+                {blog.tags?.length > 0 && (
+                  <div className="border-t pt-6 space-y-3">
+                    <h4 className="font-semibold">Tags</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {blog.tags.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* SHARE */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Share</h4>
+                  <div className="flex gap-4 text-xl">
+                    {contact?.socialMedia?.map((s, i) => {
+                      const platform = s.platform?.toLowerCase();
+                      let href = s.url;
+
+                      if (platform === "email") {
+                        href = `mailto:${s.url}`;
+                      } else if (platform === "whatsapp") {
+                        const phone = s.url.replace(/\D/g, "");
+                        href = `https://wa.me/${phone}`;
+                      } else if (!href.startsWith("http")) {
+                        href = `https://${href}`;
+                      }
+
+                      return (
+                        <a
+                          key={i}
+                          href={href}
+                          target={platform === "email" ? "_self" : "_blank"}
+                          rel="noopener noreferrer"
+                          className="hover:opacity-80 transition"
+                          aria-label={`Contact via ${s.platform}`}
+                        >
+                          {s.icon ? (
+                            <img
+                              src={s.icon}
+                              alt={s.platform}
+                              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                            />
+                          ) : (
+                            <span className="text-gray-400">—</span>
+                          )}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* NEED HELP */}
+                {contact && (
+                  <div className="border-t pt-6 space-y-4">
+                    <h4 className="font-semibold">Need Help?</h4>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiPhone className="text-blue-600" />
+                      <a
+                        href={`tel:${contact.phone}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.phone}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FaWhatsapp className="text-green-600" />
+                      <a
+                        href={`https://wa.me/${contact.whatsapp?.replace(
+                          /\D/g,
+                          ""
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-green-600"
+                      >
+                        {contact.whatsapp}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiMail className="text-blue-600" />
+                      <a
+                        href={`mailto:${contact.emails?.[0]}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.emails?.[0]}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 

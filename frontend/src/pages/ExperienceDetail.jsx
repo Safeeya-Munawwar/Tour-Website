@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import { useNavigate } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import Footer from "../components/Footer";
+import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function ExperienceDetail() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export default function ExperienceDetail() {
   const [otherExperiences, setOtherExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
-
+  const [contact, setContact] = useState({});
   const { slug } = useParams();
 
   // Scroll to top on page change
@@ -45,12 +47,20 @@ export default function ExperienceDetail() {
     fetchExperience();
   }, [slug]);
 
+  // Fetch contact info
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
+
   if (loading) {
-    return ;
+    return;
   }
 
   if (!experience) {
-    return ;
+    return;
   }
   return (
     <>
@@ -77,70 +87,40 @@ export default function ExperienceDetail() {
         </div>
 
         {/* ---------------------------- MAIN SECTION ---------------------------- */}
-        <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white pt-10 md:pt-0">
-          {/* LEFT IMAGE WRAPPER */}
-          <div
-            className="
-    w-full md:w-1/2 
-    h-auto            /* Let it grow with content */
-    overflow-hidden 
-    rounded-br-[40%] md:rounded-r-[45%] 
-    relative
-  "
-          >
-            <img
-              src={experience.mainImg}
-              alt={experience.title}
-              className="
-      w-full h-full 
-      object-cover object-center
-    "
-            />
-          </div>
+        <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-16">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+                  {experience.title}
+                </h2>
 
-          {/* RIGHT TEXT SECTION */}
-          <div
-            className="
-      w-full md:w-1/2 
-      flex flex-col 
-      text-center 
-      space-y-4 sm:space-y-6 
-      justify-center 
-      px-6 sm:px-10 md:px-20 
-      mt-6 sm:mt-10 md:mt-20 
-      pb-10
-    "
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
-              {experience.title}
-            </h2>
+                <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                  {experience.mainDesc}
+                </p>
 
-            <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-              {experience.mainDesc}
-            </p>
+                <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                  {experience.subDesc}
+                </p>
 
-            <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-              {experience.subDesc}
-            </p>
-
-            {/* BUTTONS */}
-            <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4">
-              <button
-                onClick={() => navigate(`/experience`)}
-                className="
+                {/* BUTTONS */}
+                <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4">
+                  <button
+                    onClick={() => navigate(`/experience`)}
+                    className="
           bg-blue-600 hover:bg-blue-700 
           text-white font-semibold 
           px-6 py-3 rounded-lg 
           transition flex items-center gap-2
         "
-              >
-                Explore More
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                  >
+                    Explore More
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
 
-              <button
-                onClick={() => navigate("/tailor-made-tours")}
-                className="
+                  <button
+                    onClick={() => navigate("/tailor-made-tours")}
+                    className="
           bg-[#ce2a40] hover:bg-[#ef0530] 
           text-white uppercase px-6 py-3 
           rounded-lg font-semibold 
@@ -148,10 +128,155 @@ export default function ExperienceDetail() {
           shadow-lg transition-colors duration-300 
           justify-center
         "
-              >
-                Tailor-make a Tour
-                <Calendar className="w-4 h-4" />
-              </button>
+                  >
+                    Tailor-make a Tour
+                    <Calendar className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            {/* SIDEBAR */}
+            <div className="relative lg:sticky lg:top-24 h-fit">
+              <div className="bg-white rounded-3xl p-8 shadow-lg space-y-8">
+                {/* BLOG META */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Experience Details</h4>
+
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiCalendar className="text-blue-600" />
+                    <span>
+                      {new Date(experience.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiClock className="text-blue-600" />
+                    <span>
+                      {Math.ceil(
+                        `${experience.mainDesc || ""} ${
+                          experience.subDesc || ""
+                        }`.split(" ").length / 200
+                      )}{" "}
+                      min read
+                    </span>
+                  </div>
+                </div>
+
+                {/* AUTHOR */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Curated by</h4>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                      {experience.author?.name?.[0] || "N"}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {experience.author?.name || "Net Lanka Travels Team"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TAGS */}
+                {experience.tags?.length > 0 && (
+                  <div className="border-t pt-6 space-y-3">
+                    <h4 className="font-semibold">Tags</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {experience.tags.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* SHARE */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Share</h4>
+                  <div className="flex gap-4 text-xl">
+                    {contact?.socialMedia?.map((s, i) => {
+                      const platform = s.platform?.toLowerCase();
+                      let href = s.url;
+
+                      if (platform === "email") {
+                        href = `mailto:${s.url}`;
+                      } else if (platform === "whatsapp") {
+                        const phone = s.url.replace(/\D/g, "");
+                        href = `https://wa.me/${phone}`;
+                      } else if (!href.startsWith("http")) {
+                        href = `https://${href}`;
+                      }
+
+                      return (
+                        <a
+                          key={i}
+                          href={href}
+                          target={platform === "email" ? "_self" : "_blank"}
+                          rel="noopener noreferrer"
+                          className="hover:opacity-80 transition"
+                          aria-label={`Contact via ${s.platform}`}
+                        >
+                          {s.icon ? (
+                            <img
+                              src={s.icon}
+                              alt={s.platform}
+                              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                            />
+                          ) : (
+                            <span className="text-gray-400">—</span>
+                          )}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* NEED HELP */}
+                {contact && (
+                  <div className="border-t pt-6 space-y-4">
+                    <h4 className="font-semibold">Need Help?</h4>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiPhone className="text-blue-600" />
+                      <a
+                        href={`tel:${contact.phone}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.phone}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FaWhatsapp className="text-green-600" />
+                      <a
+                        href={`https://wa.me/${contact.whatsapp?.replace(
+                          /\D/g,
+                          ""
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-green-600"
+                      >
+                        {contact.whatsapp}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiMail className="text-blue-600" />
+                      <a
+                        href={`mailto:${contact.emails?.[0]}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.emails?.[0]}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
