@@ -1,5 +1,6 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import SubExperienceItem from "./SubExperienceItem";
 
 export default function ExperienceForm({
   formData,
@@ -46,38 +47,37 @@ export default function ExperienceForm({
     });
 
   // Sub Experiences Handlers
-  const addSubExperience = () => {
-    const subs = [...(formData.subExperiences || [])];
-    subs.push({ location: "", place: "", image: "", desc: "" });
-    setFormData({ ...formData, subExperiences: subs });
-  };
+  const addSubExperience = React.useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      subExperiences: [
+        ...(prev.subExperiences || []),
+        { location: "", place: "", image: "", desc: "" },
+      ],
+    }));
+  }, [setFormData]);  
 
-  const updateSubExperience = (index, key, value) => {
-    const updated = [...(formData.subExperiences || [])];
-    updated[index] = { ...updated[index], [key]: value };
-    setFormData({ ...formData, subExperiences: updated });
-  };
-
-  const removeSubExperience = (index) => {
-    const updated = [...(formData.subExperiences || [])];
-    updated.splice(index, 1);
-
-    const files = [...(formData.subExperienceFiles || [])];
-    files.splice(index, 1);
-
-    const previews = { ...(formData.subPreviews || {}) };
-    const newPreviews = {};
-    for (let i = 0; i < files.length; i++) {
-      if (previews[i]) newPreviews[i] = previews[i];
-    }
-
-    setFormData({
-      ...formData,
-      subExperiences: updated,
-      subExperienceFiles: files,
-      subPreviews: newPreviews,
-    });
-  };
+  const updateSubExperience = React.useCallback(
+    (index, key, value) => {
+      setFormData((prev) => {
+        const updated = [...(prev.subExperiences || [])];
+        updated[index] = { ...updated[index], [key]: value };
+        return { ...prev, subExperiences: updated };
+      });
+    },
+    [setFormData]
+  );
+  
+  const removeSubExperience = React.useCallback(
+    (index) => {
+      setFormData((prev) => {
+        const updated = [...(prev.subExperiences || [])];
+        updated.splice(index, 1);
+        return { ...prev, subExperiences: updated };
+      });
+    },
+    [setFormData]
+  );  
 
   // Tips Handlers
   const addTip = () =>
@@ -104,88 +104,6 @@ export default function ExperienceForm({
     updated.splice(i, 1);
     setFormData({ ...formData, galleryFiles: updated });
   };
-
-  function SubExperienceItem({
-    sub,
-    idx,
-    updateSubExperience,
-    removeSubExperience,
-    formData,
-    setFormData,
-  }) {
-    const { getRootProps, getInputProps } = useDropzone({
-      accept: { "image/*": [] },
-      multiple: false,
-      onDrop: (files) => {
-        const f = files[0];
-        const filesArr = [...(formData.subExperienceFiles || [])];
-        filesArr[idx] = f;
-
-        const previews = { ...(formData.subPreviews || {}) };
-        previews[idx] = URL.createObjectURL(f);
-
-        setFormData({
-          ...formData,
-          subExperienceFiles: filesArr,
-          subPreviews: previews,
-        });
-      },
-    });
-
-    return (
-      <div className="mb-3 border p-3 rounded">
-        <input
-          placeholder="Location"
-          value={sub.location || ""}
-          onChange={(e) => updateSubExperience(idx, "location", e.target.value)}
-          className="border p-2 rounded w-full mb-2"
-        />
-        <input
-          placeholder="Place"
-          value={sub.place || ""}
-          onChange={(e) => updateSubExperience(idx, "place", e.target.value)}
-          className="border p-2 rounded w-full mb-2"
-        />
-
-        <div
-          {...getRootProps()}
-          className="border-2 border-dashed p-4 mb-2 cursor-pointer text-center"
-        >
-          <input {...getInputProps()} />
-          <p>Click or drag & drop sub experience image here</p>
-        </div>
-
-        {formData.subPreviews && formData.subPreviews[idx] ? (
-          <img
-            src={formData.subPreviews[idx]}
-            alt="sub preview"
-            className="w-48 h-28 object-cover rounded mt-2"
-          />
-        ) : sub.image ? (
-          <img
-            src={sub.image}
-            alt="sub existing"
-            className="w-48 h-28 object-cover rounded mt-2"
-          />
-        ) : null}
-
-        <input
-          placeholder="Short desc"
-          value={sub.desc || ""}
-          onChange={(e) => updateSubExperience(idx, "desc", e.target.value)}
-          className="border p-2 rounded w-full mt-2 mb-2"
-        />
-
-        <button
-          type="button"
-          onClick={() => removeSubExperience(idx)}
-          className="bg-red-600 text-white px-3 py-1 rounded"
-        >
-          Remove
-        </button>
-      </div>
-    );
-  }
 
   return (
     <form
@@ -356,13 +274,26 @@ export default function ExperienceForm({
         <h3 className="text-[#2E5B84] font-semibold mb-2">Sub Experiences</h3>
         {(formData.subExperiences || []).map((sub, idx) => (
           <SubExperienceItem
-            key={idx}
             sub={sub}
             idx={idx}
             updateSubExperience={updateSubExperience}
             removeSubExperience={removeSubExperience}
-            formData={formData}
-            setFormData={setFormData}
+            preview={formData.subPreviews?.[idx]}
+            onImageDrop={(file, preview) => {
+              setFormData((prev) => {
+                const files = [...(prev.subExperienceFiles || [])];
+                files[idx] = file;
+
+                return {
+                  ...prev,
+                  subExperienceFiles: files,
+                  subPreviews: {
+                    ...(prev.subPreviews || {}),
+                    [idx]: preview,
+                  },
+                };
+              });
+            }}
           />
         ))}
         <button
