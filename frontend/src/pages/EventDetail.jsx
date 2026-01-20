@@ -41,7 +41,7 @@ export default function EventDetail() {
           });
         }
       } catch (err) {
-        console.error("Error fetching event:", err);
+        console.error("", err);
       }
     }
     fetchEvent();

@@ -46,15 +46,15 @@ export default function ExperienceDetail() {
   }, [slug]);
 
   if (loading) {
+<<<<<<< HEAD
     return <div className="text-center py-20"></div>;
+=======
+    return ;
+>>>>>>> e56d83cfea1bd93a4b0ba9841c815f837fe44045
   }
 
   if (!experience) {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold">Experience Not Found</h2>
-      </div>
-    );
+    return ;
   }
   return (
     <>

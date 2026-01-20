@@ -46,20 +46,20 @@ export default function BlogDetail() {
 
         setTimeout(() => setShowText(true), 500);
       } catch (err) {
-        console.error("Error fetching blog or comments:", err);
+        console.error("", err);
         setLoading(false);
       }
     };
     fetchBlog();
   }, [slug]);
 
+<<<<<<< HEAD
   if (loading) return <div className="text-center py-20"></div>;
+=======
+  if (loading) ;
+>>>>>>> e56d83cfea1bd93a4b0ba9841c815f837fe44045
   if (!blog)
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold">Blog Not Found</h2>
-      </div>
-    );
+    return ;
 
   // --- USE BACKEND PARAGRAPHS AS-IS ---
   const paragraphs = blog.content
