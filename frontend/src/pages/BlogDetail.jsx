@@ -53,7 +53,7 @@ export default function BlogDetail() {
     fetchBlog();
   }, [slug]);
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (loading) return <div className="text-center py-20"></div>;
   if (!blog)
     return (
       <div className="text-center py-20">
@@ -113,7 +113,6 @@ export default function BlogDetail() {
   return (
     <>
       <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222] overflow-x-hidden">
-
         {/* HERO */}
         <div
           className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
@@ -188,21 +187,21 @@ export default function BlogDetail() {
         {/* ---------------------------- BLOG GALLERY ---------------------------- */}
         {blog.galleryImgs && blog.galleryImgs.length > 0 && (
           <section className="w-full py-12 bg-white">
-            <div className="max-w-6xl mx-auto px-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
+            <div className="max-w-7xl mx-auto px-6">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 text-center">
                 Blog Gallery
               </h2>
 
-              <div className="grid place-items-center gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+              <div className="flex flex-wrap justify-center">
                 {blog.galleryImgs.slice(0, 5).map((img, idx) => (
                   <div
                     key={idx}
-                    className="w-full max-w-[220px] overflow-hidden rounded-xl shadow-md"
+                    className="w-1/2 sm:w-1/3 lg:w-1/6 overflow-hidden"
                   >
                     <img
                       src={img}
                       alt={`Blog Gallery ${idx + 1}`}
-                      className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
+                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                   </div>
