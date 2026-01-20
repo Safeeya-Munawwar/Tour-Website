@@ -67,7 +67,7 @@ export default function BlogDetail() {
   if (loading);
   if (!blog) return;
 
-  // --- USE BACKEND PARAGRAPHS AS-IS ---
+  // --- USE BACKEND PARAGRAPHS AS-IS ----
   const paragraphs = blog.content
     ? blog.content.split(/\n\s*\n/).filter((p) => p.trim() !== "")
     : [];
@@ -121,7 +121,7 @@ export default function BlogDetail() {
       <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222] overflow-x-hidden">
         {/* HERO */}
         <div
-          className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+          className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white mb-5"
           style={{
             backgroundImage: `url(${blog.heroImg || "/images/blog.webp"})`,
           }}

@@ -21,7 +21,7 @@ export default function ExperienceDetail() {
   const [contact, setContact] = useState({});
   const { slug } = useParams();
 
-  // Scroll to top on page change
+  // Scroll to top on page change 
   useEffect(() => {
     if (!loading) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
