@@ -46,11 +46,7 @@ export default function ExperienceDetail() {
   }, [slug]);
 
   if (loading) {
-<<<<<<< HEAD
-    return <div className="text-center py-20"></div>;
-=======
     return ;
->>>>>>> e56d83cfea1bd93a4b0ba9841c815f837fe44045
   }
 
   if (!experience) {

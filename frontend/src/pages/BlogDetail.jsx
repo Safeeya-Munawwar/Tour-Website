@@ -53,11 +53,7 @@ export default function BlogDetail() {
     fetchBlog();
   }, [slug]);
 
-<<<<<<< HEAD
-  if (loading) return <div className="text-center py-20"></div>;
-=======
   if (loading) ;
->>>>>>> e56d83cfea1bd93a4b0ba9841c815f837fe44045
   if (!blog)
     return ;
 
