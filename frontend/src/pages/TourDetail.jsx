@@ -45,7 +45,7 @@ export default function DayTourDetail() {
           res.data.details?.gallerySlides?.forEach((slide) => new Image().src = slide.image);
         }
       } catch (err) {
-        console.error("Error fetching day tour detail:", err);
+        console.error("", err);
       }
     }
     fetchTour();

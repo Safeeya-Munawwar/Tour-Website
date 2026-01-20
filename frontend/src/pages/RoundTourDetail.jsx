@@ -37,14 +37,14 @@ export default function RoundTourDetail() {
           res.data.details?.gallerySlides?.forEach(slide => new Image().src = slide.image);
         }
       })
-      .catch(err => console.error("Error fetching round tour:", err));
+      .catch(err => console.error("", err));
   }, [slug]);
 
   useEffect(() => {
     axiosInstance.get("/contact").then(res => setContact(res.data || {})).catch(() => setContact({}));
   }, []);
 
-  if (!tour) return <div className="p-8 text-center">Loading...</div>;
+  if (!tour) return;
 
   const slides =
     details.gallerySlides?.length > 0

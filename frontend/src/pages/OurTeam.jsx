@@ -25,7 +25,7 @@ const [currentPage] = useState(1);
           setTeamData(res.data);
         }
       } catch (err) {
-        console.error("Failed to fetch team data:", err);
+        console.error("", err);
       }
     };
 

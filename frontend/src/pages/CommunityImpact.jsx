@@ -23,7 +23,7 @@ const OurCommunity = () => {
         if (res.data) setCommunityData(res.data);
       })
       .catch((err) =>
-        console.error("Failed to fetch community impact:", err)
+        console.error("", err)
       );
   }, []);
 

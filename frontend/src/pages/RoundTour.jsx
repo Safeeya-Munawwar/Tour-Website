@@ -20,7 +20,7 @@ export default function RoundTour() {
         const res = await axiosInstance.get("/round-tours");
         if (res.data.success) setTours(res.data.tours || []);
       } catch (err) {
-        console.error("Error fetching round tours:", err);
+        console.error("", err);
       }
     }
     fetchTours();

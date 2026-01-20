@@ -33,7 +33,7 @@ useEffect(() => {
         });
       }
     } catch (err) {
-      console.error("Failed to fetch journey data:", err);
+      console.error("", err);
     } finally {
       setLoading(false);
     }
@@ -44,11 +44,7 @@ useEffect(() => {
 
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-gray-500">
-        Loading Journey...
-      </div>
-    );
+    return ;
   }
 
   return (

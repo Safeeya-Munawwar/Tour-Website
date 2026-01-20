@@ -26,7 +26,7 @@ export default function Experiences() {
       .then((res) => {
         setExperiences(res.data || []);
       })
-      .catch((err) => console.error("Failed to fetch experiences:", err));
+      .catch((err) => console.error("", err));
   }, []);
 
   /* Preload experience images */

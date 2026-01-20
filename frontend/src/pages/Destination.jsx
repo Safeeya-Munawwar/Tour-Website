@@ -19,7 +19,7 @@ export default function Destination() {
         const res = await axiosInstance.get("/destination");
         setDestinations(res.data.destinations || []);
       } catch (err) {
-        console.error("Error fetching destinations:", err);
+        console.error("", err);
       }
     };
     fetchDestinations();

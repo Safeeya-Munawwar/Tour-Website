@@ -46,15 +46,11 @@ export default function ExperienceDetail() {
   }, [slug]);
 
   if (loading) {
-    return <div className="text-center py-20">Loading...</div>;
+    return ;
   }
 
   if (!experience) {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold">Experience Not Found</h2>
-      </div>
-    );
+    return ;
   }
   return (
    <>

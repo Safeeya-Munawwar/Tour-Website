@@ -1,59 +1,37 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
-import { axiosInstance } from "../lib/axios";
+import { axiosInstance } from ".././lib/axios";
 import { Link } from "react-router-dom";
 
 export default function Blog() {
   const [showText, setShowText] = useState(false);
-  const [stories, setStories] = useState([]);
+  const [stories, setStories] = useState([]); // fetched blogs
   const [loading, setLoading] = useState(true);
+  const [currentPage] = useState(1);
+  const [expandedId] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortType, setSortType] = useState("oldest");
-
-  const perPage = 6;
-
+  // Scroll to top on page change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [currentPage]);
-
   useEffect(() => {
-    const t = setTimeout(() => setShowText(true), 200);
-    return () => clearTimeout(t);
+    setTimeout(() => setShowText(true), 200);
   }, []);
 
-  // Fetch blogs
+  // Fetch blogs from backend
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const res = await axiosInstance.get("/blog");
         setStories(res.data.blogs || []);
       } catch (err) {
-        console.error("Failed to fetch blogs:", err);
+        console.error("", err);
       } finally {
         setLoading(false);
       }
     };
     fetchBlogs();
   }, []);
-
-  // SORT + PAGINATE
-  const currentBlogs = useMemo(() => {
-    let sorted = [...stories];
-
-    if (sortType === "oldest") {
-      sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
-    } else if (sortType === "latest") {
-      sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-    } else if (sortType === "random") {
-      sorted.sort(() => Math.random() - 0.5);
-    }
-
-    const start = (currentPage - 1) * perPage;
-    return sorted.slice(start, start + perPage);
-  }, [stories, currentPage, sortType]);
-
-  const totalPages = Math.ceil(stories.length / perPage);
 
   return (
     <div className="font-poppins bg-white text-[#222]">
@@ -76,7 +54,7 @@ export default function Blog() {
           <div className="w-[2px] bg-white h-10 md:h-12"></div>
         </div>
       </div>
-
+ 
       {/* BLOG PAGE */}
       <section className="w-full py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
@@ -96,108 +74,68 @@ export default function Blog() {
 
           <div className="w-16 h-[2px] bg-[#D4AF37] mx-auto mt-6"></div>
 
-          {/* SORT BUTTONS */}
-          <div className="flex justify-center gap-4 mt-10 flex-wrap">
-            {["oldest", "latest", "random"].map((type) => (
-              <button
-                key={type}
-                onClick={() => {
-                  setSortType(type);
-                  setCurrentPage(1);
-                }}
-                className={`px-6 py-2 rounded-full font-semibold transition ${
-                  sortType === type
-                    ? "bg-black text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {type === "oldest"
-                  ? "Oldest"
-                  : type === "latest"
-                  ? "Latest"
-                  : "Random"}
-              </button>
-            ))}
-          </div>
-
-          {/* BLOG GRID */}
+          {/* ---------------------------- STORIES GRID ---------------------------- */}
           {loading ? (
-            <p className="mt-10 text-gray-500">Loading blogs...</p>
+            <p className="mt-10 text-center text-gray-500">Loading blogs...</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-12">
-              {currentBlogs.map((story) => (
-                <div
-                  key={story._id}
-                  className="bg-white rounded-xl shadow-md hover:shadow-xl transition"
-                >
-                  <img
-                    src={story.heroImg || "/images/BlogSrilanka.webp"}
-                    alt={story.title}
-                    className="w-full h-[330px] object-cover rounded-t-xl"
-                  />
-
-                  <div className="p-6">
-                    <h3 className="text-2xl font-semibold text-gray-900">
-                      {story.title}
-                    </h3>
-
-                    <p className="text-gray-500 text-sm mt-1">
-                      {new Date(story.date).toLocaleDateString()}
-                    </p>
-
-                    <p className="text-gray-600 text-sm mt-3 line-clamp-3 text-justify">
-                      {story.description}
-                    </p>
-
-                    <Link
-                      to={`/blog/${story.slug}`}
-                      className="mt-4 inline-flex items-center gap-2 text-[#8C1F28] font-medium hover:underline"
-                    >
-                      Read More <IoIosArrowForward />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* PAGINATION */}
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-16 flex-wrap">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-2 border rounded-lg disabled:opacity-40"
-              >
-                Prev
-              </button>
-
-              {[...Array(totalPages)].map((_, i) => {
-                const page = i + 1;
-                return (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-4 py-2 rounded-lg border ${
-                      currentPage === page
-                        ? "bg-black text-white"
-                        : "bg-white hover:bg-gray-100"
-                    }`}
+            <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-5 mt-12">
+              {stories.length > 0 ? (
+                stories.map((story) => (
+                  <div
+                    key={story._id}
+                    className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col"
                   >
-                    {page}
-                  </button>
-                );
-              })}
+                    {/* Blog Image */}
+                    <img
+                      src={story.heroImg || "/images/BlogSrilanka.webp"}
+                      alt={story.title || "Blog"}
+                      className="w-full h-[330px] object-cover rounded-t-xl"
+                    />
 
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(p + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="px-3 py-2 border rounded-lg disabled:opacity-40"
-              >
-                Next
-              </button>
+                    {/* Blog Content */}
+                    <div className="p-6 flex flex-col flex-1">
+ <h3 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-[#8C1F28] transition-colors">
+  {story.title ? (
+    <>
+      {story.title.split(" ").slice(0, Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+      <br />
+      {story.title.split(" ").slice(Math.ceil(story.title.split(" ").length / 2)).join(" ")}
+    </>
+  ) : (
+    "Blog Title"
+  )}
+</h3>
+
+
+                      <p className="text-gray-500 text-sm mt-1">
+                        {story.date
+                          ? new Date(story.date).toLocaleDateString()
+                          : "Date"}
+                      </p>
+                     <p
+  className={`text-gray-600 text-sm mt-3 leading-relaxed text-justify transition-all duration-300 ${
+    expandedId === story._id ? "" : "line-clamp-3"
+  }`}
+>
+  
+  {story.description ||
+    "Short description of the blog goes here."}
+</p>
+
+                      <Link
+                        to={`/blog/${story.slug || "#"}`}
+                        className="mt-4 flex items-center gap-2 font-medium text-[#8C1F28] hover:underline"
+                      >
+                        Read More <IoIosArrowForward size={20} />
+                      </Link>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-3 text-center text-gray-500 mt-10">
+                  No stories available yet.
+                </p>
+              )}
             </div>
           )}
         </div>

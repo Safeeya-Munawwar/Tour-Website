@@ -27,10 +27,10 @@ const QuickTaxi = () => {
         if (res.data.success) {
           setVehicles(res.data.taxis);
         } else {
-          console.error("Failed to fetch vehicles:", res.data.error);
+          console.error("", res.data.error);
         }
       } catch (err) {
-        console.error("Error fetching vehicles:", err);
+        console.error("", err);
       } finally {
         setLoading(false);
       }
@@ -39,11 +39,7 @@ const QuickTaxi = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl font-semibold text-gray-700"></p>
-      </div>
-    );
+    return;
   }
 
   return (
