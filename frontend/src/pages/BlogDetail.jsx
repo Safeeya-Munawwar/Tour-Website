@@ -112,7 +112,7 @@ export default function BlogDetail() {
 
         {/* HERO */}
         <div
-          className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"
+          className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white mb-5"
           style={{
             backgroundImage: `url(${blog.heroImg || "/images/blog.webp"})`,
           }}
@@ -130,32 +130,32 @@ export default function BlogDetail() {
           </div>
         </div>
 
-        {/* MAIN CONTENT */}
-        {/* ---------------------------- BLOG MAIN SECTION ---------------------------- */}
-        <section className="relative flex flex-col md:flex-row w-full bg-white pt-10 md:pt-0">
-          {/* LEFT IMAGE */}
-          <div
-            className="
-      w-full md:w-1/2
-      overflow-hidden
-      rounded-br-[40%] md:rounded-r-[45%]
-      relative
-    "
-          >
-            <img
-              src={
-                blog.galleryImgs && blog.galleryImgs[2]
-                  ? blog.galleryImgs[2]
-                  : blog.heroImg
-              }
-              alt={blog.title}
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
+    <section className="relative flex flex-col md:flex-row w-full bg-white pt-10 md:pt-0 px-5">
+{/* LEFT IMAGE */}
+<div
+  className="
+    hidden md:flex  /* hide on mobile, show on md+ */
+    w-full md:w-1/2
+    justify-center items-center  /* centers horizontally and vertically */
+    overflow-hidden
+    rounded-[20px] 
+    relative
+  "
+>
+  <img
+    src={
+      blog.galleryImgs && blog.galleryImgs[2]
+        ? blog.galleryImgs[2]
+        : blog.heroImg
+    }
+    alt={blog.title}
+    className="max-w-[600px] max-h-[500px] w-full h-full object-cover object-center rounded-[20px]"
+  />
+</div>
 
-          {/* RIGHT CONTENT */}
-          <div
-            className="
+  {/* RIGHT CONTENT */}
+  <div
+    className="
       w-full md:w-1/2
       flex flex-col
       justify-center
@@ -165,21 +165,21 @@ export default function BlogDetail() {
       space-y-6
       text-left
     "
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
-              {blog.title}
-            </h2>
+  >
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
+      {blog.title}
+    </h2>
 
-            {paragraphs.map((para, idx) => (
-              <p
-                key={idx}
-                className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed"
-              >
-                {para}
-              </p>
-            ))}
-          </div>
-        </section>
+    {paragraphs.map((para, idx) => (
+      <p
+        key={idx}
+        className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed"
+      >
+        {para}
+      </p>
+    ))}
+  </div>
+</section>
 
         {/* ---------------------------- BLOG GALLERY ---------------------------- */}
         {blog.galleryImgs && blog.galleryImgs.length > 0 && (

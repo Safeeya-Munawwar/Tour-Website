@@ -78,85 +78,79 @@ export default function ExperienceDetail() {
         </div>
       </div>
 
-      {/* ---------------------------- MAIN SECTION ---------------------------- */}
-      <section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white pt-10 md:pt-0">
-        {/* LEFT IMAGE WRAPPER */}
-        <div
-          className="
-    w-full md:w-1/2 
-    h-auto            /* Let it grow with content */
-    overflow-hidden 
-    rounded-br-[40%] md:rounded-r-[45%] 
-    relative
-  "
-        >
-          <img
-            src={experience.mainImg}
-            alt={experience.title}
-            className="
-      w-full h-full 
-      object-cover object-center
+{/* ---------------------------- MAIN SECTION ---------------------------- */}
+<section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white pt-10 md:pt-0">
+  {/* LEFT IMAGE WRAPPER */}
+  <div
+    className="
+      hidden md:block           /* hide on mobile */
+      md:w-1/2
+      relative                 /* for absolute positioning */
+      px-5 mt-5
+      min-h-[500px]            /* ensure enough space */
     "
-          />
-        </div>
+  >
+    <img
+      src={experience.mainImg}
+      alt={experience.title}
+      className="
+        w-[500px] h-[500px]
+        rounded-[20px]          /* Rounded corners */
+        object-cover object-center
+        shadow-lg
+        transition-transform duration-500 hover:scale-105
+        absolute bottom-0 left-1/2 transform -translate-x-1/2
+      "
+    />
+  </div>
 
-        {/* RIGHT TEXT SECTION */}
-        <div
-          className="
+  {/* RIGHT TEXT SECTION */}
+  <div
+    className="
       w-full md:w-1/2 
       flex flex-col 
-      text-center 
-      space-y-4 sm:space-y-6 
-      justify-center 
-      px-6 sm:px-10 md:px-20 
-      mt-6 sm:mt-10 md:mt-20 
+      justify-center
+      text-center md:text-left
+      space-y-4 sm:space-y-6
+      px-6 sm:px-10 md:px-20
+      mt-6 sm:mt-10 md:mt-20
       pb-10
     "
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
-            {experience.title}
-          </h2>
+  >
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
+      {experience.title}
+    </h2>
 
-          <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-            {experience.mainDesc}
-          </p>
+    <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
+      {experience.mainDesc}
+    </p>
 
-          <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-            {experience.subDesc}
-          </p>
+    <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
+      {experience.subDesc}
+    </p>
 
-          {/* BUTTONS */}
-          <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4">
-            <button
-              onClick={() => navigate(`/experience`)}
-              className="
-          bg-blue-600 hover:bg-blue-700 
-          text-white font-semibold 
-          px-6 py-3 rounded-lg 
-          transition flex items-center gap-2
-        "
-            >
-              Explore More
-              <ArrowRight className="w-4 h-4" />
-            </button>
+    {/* BUTTONS */}
+    <div className="mt-6 sm:mt-8 flex flex-wrap justify-center md:justify-start gap-4">
+      <button
+        onClick={() => navigate(`/experience`)}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2 transition"
+      >
+        Explore More
+        <ArrowRight className="w-4 h-4" />
+      </button>
 
-            <button
-              onClick={() => navigate("/tailor-made-tours")}
-              className="
-          bg-[#ce2a40] hover:bg-[#ef0530] 
-          text-white uppercase px-6 py-3 
-          rounded-lg font-semibold 
-          flex items-center gap-2 
-          shadow-lg transition-colors duration-300 
-          justify-center
-        "
-            >
-              Tailor-make a Tour
-              <Calendar className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
+      <button
+        onClick={() => navigate("/tailor-made-tours")}
+        className="bg-[#ce2a40] hover:bg-[#ef0530] text-white uppercase px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg transition-colors duration-300 justify-center"
+      >
+        Tailor-make a Tour
+        <Calendar className="w-4 h-4" />
+      </button>
+    </div>
+  </div>
+</section>
+
+
 
       {/* ---------------------------- SUB EXPERIENCES ---------------------------- */}
       <section className="max-w-7xl mx-auto px-6 py-16">
