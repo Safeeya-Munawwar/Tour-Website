@@ -7,11 +7,17 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { IoIosArrowForward } from "react-icons/io";
-import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaFacebookF,
+  FaXTwitter,
+  FaLink,
+  FaLinkedinIn,
+} from "react-icons/fa6";
+import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
 import { toast } from "react-toastify";
 import Footer from "../components/Footer";
-import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa";
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -21,6 +27,8 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
   const [contact, setContact] = useState({});
+  const [pageUrl, setPageUrl] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const [comment, setComment] = useState({
     name: "",
@@ -30,8 +38,13 @@ export default function BlogDetail() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const shareIcon =
+    "w-8 h-8 sm:w-9 sm:h-9 text-sm sm:text-base rounded-full flex items-center justify-center text-white hover:scale-110 transition";
+
+  /* ================= FETCH BLOG ================= */
   useEffect(() => {
     setShowText(false);
+
     const fetchBlog = async () => {
       try {
         const res = await axiosInstance.get(`/blog/slug/${slug}`);
@@ -43,79 +56,103 @@ export default function BlogDetail() {
         const commentsRes = await axiosInstance.get(
           `/blog-comments/${res.data._id}`
         );
-        if (commentsRes.data.success) setComments(commentsRes.data.comments);
+        if (commentsRes.data.success) {
+          setComments(commentsRes.data.comments);
+        }
 
         setLoading(false);
-
         setTimeout(() => setShowText(true), 500);
       } catch (err) {
-        console.error("", err);
+        console.error(err);
         setLoading(false);
       }
     };
+
     fetchBlog();
   }, [slug]);
 
-  // Fetch contact info
+  /* ================= CONTACT ================= */
   useEffect(() => {
     axiosInstance
       .get("/contact")
       .then((res) => setContact(res.data || {}))
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }, []);
 
-  if (loading);
-  if (!blog) return;
+  /* ================= SHARE URL ================= */
+  useEffect(() => {
+    setPageUrl(window.location.href);
+  }, []);
 
-  // --- USE BACKEND PARAGRAPHS AS-IS ----
+  /* ================= SHARE HANDLER ================= */
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setShowToast(true);
+
+      setTimeout(() => setShowToast(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
+
+  /* ================= EARLY RETURNS ================= */
+  if (loading) {
+    return;
+  }
+
+  if (!blog) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Blog not found
+      </div>
+    );
+  }
+
+  /* ================= SAFE DATA ================= */
   const paragraphs = blog.content
-    ? blog.content.split(/\n\s*\n/).filter((p) => p.trim() !== "")
+    ? blog.content.split(/\n\s*\n/).filter(Boolean)
     : [];
 
+  /* ================= COMMENT HANDLERS ================= */
   const handleCommentChange = (e) => {
     const { name, value } = e.target;
-    setComment((prev) => ({ ...prev, [name]: value }));
+    setComment((p) => ({ ...p, [name]: value }));
   };
 
   const handleRating = (rate) => {
-    setComment((prev) => ({ ...prev, rating: rate }));
+    setComment((p) => ({ ...p, rating: rate }));
   };
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+
     if (!comment.name || !comment.email || !comment.message) {
       toast.warning("Please fill in all required fields!");
       return;
     }
+
     setSubmitting(true);
     try {
       const res = await axiosInstance.post(
         `/blog-comments/${blog._id}`,
         comment
       );
-      if (res.data.success) {
-        toast.success("Comment submitted successfully!");
-        setComment({ name: "", email: "", rating: 0, message: "" });
-        setComments((prev) => [
-          { ...comment, createdAt: new Date().toISOString() },
-          ...prev,
-        ]);
-      } else {
-        toast.error("Failed to submit comment. Try again!");
-      }
-    } catch (err) {
-      console.error(err);
 
-      if (!toast.isActive("comment-error")) {
-        toast.error("Server error: could not submit comment", {
-          toastId: "comment-error",
-        });
+      if (res.data.success) {
+        toast.success("Comment submitted!");
+        setComments((p) => [
+          { ...comment, createdAt: new Date(), rating: comment.rating },
+          ...p,
+        ]);
+        setComment({ name: "", email: "", rating: 0, message: "" });
       }
+    } catch {
+      toast.error("Failed to submit comment");
     } finally {
       setSubmitting(false);
     }
   };
-
   return (
     <>
       <div className=" flex flex-col min-h-screen font-poppins bg-white text-[#222] overflow-x-hidden">
@@ -142,19 +179,24 @@ export default function BlogDetail() {
         {/* MAIN CONTENT */}
         <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            {/* LEFT CONTENT */}
             <div className="lg:col-span-2 space-y-16">
               <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
                   {blog.title}
                 </h2>
 
                 {paragraphs.map((para, idx) => (
-                  <p key={idx} className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                  <p
+                    key={idx}
+                    className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words"
+                  >
                     {para}
                   </p>
                 ))}
               </div>
             </div>
+
             {/* SIDEBAR */}
             <div className="relative lg:sticky lg:top-24 h-fit">
               <div className="bg-white rounded-3xl p-8 shadow-lg space-y-8">
@@ -211,41 +253,79 @@ export default function BlogDetail() {
                 {/* SHARE */}
                 <div className="border-t pt-6 space-y-4">
                   <h4 className="font-semibold">Share</h4>
-                  <div className="flex gap-4 text-xl">
-                    {contact?.socialMedia?.map((s, i) => {
-                      const platform = s.platform?.toLowerCase();
-                      let href = s.url;
 
-                      if (platform === "email") {
-                        href = `mailto:${s.url}`;
-                      } else if (platform === "whatsapp") {
-                        const phone = s.url.replace(/\D/g, "");
-                        href = `https://wa.me/${phone}`;
-                      } else if (!href.startsWith("http")) {
-                        href = `https://${href}`;
-                      }
+                  <div className="flex flex-wrap items-center gap-3 text-lg">
+                    {/* WhatsApp */}
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-green-500`}
+                      title="Share on WhatsApp"
+                    >
+                      <FaWhatsapp />
+                    </a>
 
-                      return (
-                        <a
-                          key={i}
-                          href={href}
-                          target={platform === "email" ? "_self" : "_blank"}
-                          rel="noopener noreferrer"
-                          className="hover:opacity-80 transition"
-                          aria-label={`Contact via ${s.platform}`}
-                        >
-                          {s.icon ? (
-                            <img
-                              src={s.icon}
-                              alt={s.platform}
-                              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                            />
-                          ) : (
-                            <span className="text-gray-400">—</span>
-                          )}
-                        </a>
-                      );
-                    })}
+                    {/* Facebook */}
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-blue-600`}
+                      title="Share on Facebook"
+                    >
+                      <FaFacebookF />
+                    </a>
+
+                    {/* X (Twitter) */}
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-black`}
+                      title="Share on X"
+                    >
+                      <FaXTwitter />
+                    </a>
+
+                    {/* LinkedIn */}
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-[#0077b5]`}
+                      title="Share on LinkedIn"
+                    >
+                      <FaLinkedinIn />
+                    </a>
+
+                    {/* Email */}
+                    <a
+                      href={`mailto:?subject=${encodeURIComponent(
+                        blog.title
+                      )}&body=${encodeURIComponent(pageUrl)}`}
+                      className={`${shareIcon} bg-gray-700`}
+                      title="Share via Email"
+                    >
+                      <FiMail />
+                    </a>
+
+                    {/* Copy */}
+                    <button
+                      onClick={handleCopyLink}
+                      className={`${shareIcon} bg-gray-900`}
+                      title="Copy link"
+                    >
+                      <FaLink />
+                    </button>
                   </div>
                 </div>
 
@@ -293,6 +373,13 @@ export default function BlogDetail() {
               </div>
             </div>
           </div>
+
+          {/* TOAST */}
+          {showToast && (
+            <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-lg">
+              Link copied ✅
+            </div>
+          )}
         </section>
 
         {/* ---------------------------- BLOG GALLERY ---------------------------- */}
@@ -405,7 +492,7 @@ export default function BlogDetail() {
                 <Swiper
                   modules={[Autoplay, Navigation]}
                   navigation={{ prevEl: ".c-prev", nextEl: ".c-next" }}
-                  autoplay={{ delay: 4000, disableOnInteraction: false }}
+                  autoplay={{ delay: 2500, disableOnInteraction: false }}
                   loop={true}
                   slidesPerView={1}
                   className="rounded-2xl"
@@ -444,13 +531,6 @@ export default function BlogDetail() {
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                <button className="c-prev absolute left-1 sm:left-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center z-10">
-                  <FaChevronLeft />
-                </button>
-
-                <button className="c-next absolute right-1 sm:right-[-22px] top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center z-10">
-                  <FaChevronRight />
-                </button>
               </div>
             )}
           </div>
@@ -466,7 +546,7 @@ export default function BlogDetail() {
             slidesPerView={1}
             spaceBetween={16}
             loop
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            autoplay={{ delay: 2500, disableOnInteraction: false }}
             breakpoints={{
               640: { slidesPerView: 1 },
               768: { slidesPerView: 2 },

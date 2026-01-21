@@ -10,7 +10,13 @@ import { useNavigate } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import Footer from "../components/Footer";
 import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaFacebookF,
+  FaXTwitter,
+  FaLink,
+  FaLinkedinIn,
+} from "react-icons/fa6";
 
 export default function ExperienceDetail() {
   const navigate = useNavigate();
@@ -20,14 +26,19 @@ export default function ExperienceDetail() {
   const [showText, setShowText] = useState(false);
   const [contact, setContact] = useState({});
   const { slug } = useParams();
+  const [pageUrl, setPageUrl] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const shareIcon =
+    "w-8 h-8 sm:w-9 sm:h-9 text-sm sm:text-base rounded-full flex items-center justify-center text-white hover:scale-110 transition";
 
-  // Scroll to top on page change 
+  /* ================= Scroll to Top ================= */
   useEffect(() => {
     if (!loading) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
   }, [loading]);
 
+  /* ================= Fetch Experience ================= */
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
     const fetchExperience = async () => {
@@ -47,13 +58,30 @@ export default function ExperienceDetail() {
     fetchExperience();
   }, [slug]);
 
-  // Fetch contact info
+  /* ================= Fetch Contact ================= */
   useEffect(() => {
     axiosInstance
       .get("/contact")
       .then((res) => setContact(res.data || {}))
       .catch((err) => console.error(err));
   }, []);
+
+  /* ================= Share URL ================= */
+  useEffect(() => {
+    setPageUrl(window.location.href);
+  }, []);
+
+  /* ================= Share Handler ================= */
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setShowToast(true);
+
+      setTimeout(() => setShowToast(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
 
   if (loading) {
     return;
@@ -135,6 +163,7 @@ export default function ExperienceDetail() {
                 </div>
               </div>
             </div>
+
             {/* SIDEBAR */}
             <div className="relative lg:sticky lg:top-24 h-fit">
               <div className="bg-white rounded-3xl p-8 shadow-lg space-y-8">
@@ -197,41 +226,79 @@ export default function ExperienceDetail() {
                 {/* SHARE */}
                 <div className="border-t pt-6 space-y-4">
                   <h4 className="font-semibold">Share</h4>
-                  <div className="flex gap-4 text-xl">
-                    {contact?.socialMedia?.map((s, i) => {
-                      const platform = s.platform?.toLowerCase();
-                      let href = s.url;
 
-                      if (platform === "email") {
-                        href = `mailto:${s.url}`;
-                      } else if (platform === "whatsapp") {
-                        const phone = s.url.replace(/\D/g, "");
-                        href = `https://wa.me/${phone}`;
-                      } else if (!href.startsWith("http")) {
-                        href = `https://${href}`;
-                      }
+                  <div className="flex flex-wrap items-center gap-3 text-lg">
+                    {/* WhatsApp */}
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-green-500`}
+                      title="Share on WhatsApp"
+                    >
+                      <FaWhatsapp />
+                    </a>
 
-                      return (
-                        <a
-                          key={i}
-                          href={href}
-                          target={platform === "email" ? "_self" : "_blank"}
-                          rel="noopener noreferrer"
-                          className="hover:opacity-80 transition"
-                          aria-label={`Contact via ${s.platform}`}
-                        >
-                          {s.icon ? (
-                            <img
-                              src={s.icon}
-                              alt={s.platform}
-                              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                            />
-                          ) : (
-                            <span className="text-gray-400">—</span>
-                          )}
-                        </a>
-                      );
-                    })}
+                    {/* Facebook */}
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-blue-600`}
+                      title="Share on Facebook"
+                    >
+                      <FaFacebookF />
+                    </a>
+
+                    {/* X (Twitter) */}
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-black`}
+                      title="Share on X"
+                    >
+                      <FaXTwitter />
+                    </a>
+
+                    {/* LinkedIn */}
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-[#0077b5]`}
+                      title="Share on LinkedIn"
+                    >
+                      <FaLinkedinIn />
+                    </a>
+
+                    {/* Email */}
+                    <a
+                      href={`mailto:?subject=${encodeURIComponent(
+                        experience.title
+                      )}&body=${encodeURIComponent(pageUrl)}`}
+                      className={`${shareIcon} bg-gray-700`}
+                      title="Share via Email"
+                    >
+                      <FiMail />
+                    </a>
+
+                    {/* Copy */}
+                    <button
+                      onClick={handleCopyLink}
+                      className={`${shareIcon} bg-gray-900`}
+                      title="Copy link"
+                    >
+                      <FaLink />
+                    </button>
                   </div>
                 </div>
 
@@ -279,6 +346,13 @@ export default function ExperienceDetail() {
               </div>
             </div>
           </div>
+
+          {/* TOAST */}
+          {showToast && (
+            <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-lg">
+              Link copied ✅
+            </div>
+          )}
         </section>
 
         {/* ---------------------------- SUB EXPERIENCES ---------------------------- */}
