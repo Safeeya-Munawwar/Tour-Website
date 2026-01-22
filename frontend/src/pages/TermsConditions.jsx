@@ -131,6 +131,39 @@ export default function TermsConditions() {
             Net Lanka Travels and Net Lanka Groups Private Limited will not be responsible for funds transferred to any unofficial accounts. 
           </p>
         </PolicySection>
+    <PolicySection title="Accommodation – Terms & Conditions">
+  <p>
+    Accommodation bookings are arranged based on the guest’s selected tour
+    package and personal preferences.
+  </p>
+  <p>
+    After the guest selects a tour package, Net Lanka Travels will provide a
+    quotation including accommodation details such as hotel names, room category,
+    meal plan, and stay duration.
+  </p>
+  <p>
+    Guests may select hotels listed on our website or request any other hotel of
+    their choice.
+  </p>
+  <p>
+    Full payment for accommodation must be paid directly to the selected hotel by
+    the guest.
+  </p>
+  <p>
+    Net Lanka Travels acts only as a facilitator in arranging accommodation and
+    does not collect hotel payments.
+  </p>
+  <p>
+    Once the guest checks in to the selected hotel, Net Lanka Travels will not be
+    responsible or liable for hotel services, including but not limited to room
+    quality, facilities, staff behavior, hygiene standards, food, or any issues
+    arising during the stay.
+  </p>
+  <p>
+    Any complaints, damages, losses, or disputes related to accommodation must be
+    resolved directly between the guest and the hotel.
+  </p>
+</PolicySection>
 
         <PolicySection title="Price Policy">
           <p>

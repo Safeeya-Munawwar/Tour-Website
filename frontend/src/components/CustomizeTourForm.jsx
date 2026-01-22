@@ -27,6 +27,10 @@ const TailorMadeForm = () => {
     dropLocation: "",
     startDate: "",
     endDate: "",
+    // Step 2
+accommodation: "",        // with / without
+hotelCategory: "",        // 2*, 3*, 4*, 5*, comfortable
+
     adults: 1,
     children: 0,
     budget: "",
@@ -137,6 +141,15 @@ const TailorMadeForm = () => {
     if (!formData.dropLocation.trim()) errors.push("Drop location is required");
     if (!formData.startDate) errors.push("Start date is required");
     if (!formData.endDate) errors.push("End date is required");
+if (!formData.accommodation)
+  errors.push("Accommodation selection is required");
+
+if (
+  formData.accommodation === "with" &&
+  !formData.hotelCategory
+) {
+  errors.push("Please select a hotel category");
+}
 
     if (formData.startDate && formData.endDate) {
       const start = new Date(formData.startDate);
@@ -173,27 +186,29 @@ const TailorMadeForm = () => {
       await axiosInstance.post("/tailor-made-tours/inquiry", formData);
       toast.success("Your trip plan has been submitted!");
 
-      // Reset
       setFormData({
-        title: "",
-        fullName: "",
-        country: "",
-        email: "",
-        phone: "",
-        pickupLocation: "",
-        dropLocation: "",
-        startDate: "",
-        endDate: "",
-        adults: 1,
-        children: 0,
-        budget: "",
-        currency: "USD",
-        notes: "",
-        selectedDestinations: [],
-        travelStyle: "",
-        selectedExperiences: [],
-        hearAboutUs: "",
-      });
+  title: "",
+  fullName: "",
+  country: "",
+  email: "",
+  phone: "",
+  pickupLocation: "",
+  dropLocation: "",
+  startDate: "",
+  endDate: "",
+  adults: 1,
+  children: 0,
+  budget: "",
+  currency: "USD",
+  accommodation: "",
+  hotelCategory: "",
+  notes: "",
+  selectedDestinations: [],
+  travelStyle: "",
+  selectedExperiences: [],
+  hearAboutUs: "",
+});
+
       setSelectedDestinations([]);
       setStep(1);
       setCaptchaChecked(false);
@@ -391,6 +406,63 @@ const TailorMadeForm = () => {
                 />
               </div>
             </div>
+            {/* ---------------- Accommodation ---------------- */}
+<div>
+  <label className="block text-gray-700 font-semibold mb-1">
+    Accommodation *
+  </label>
+
+  <div className="relative">
+    <select
+      name="accommodation"
+      value={formData.accommodation}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          accommodation: e.target.value,
+          hotelCategory: "", // reset when changed
+        }))
+      }
+      className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
+    >
+      <option value="">Select accommodation</option>
+      <option value="with">With accommodation</option>
+      <option value="without">Without accommodation</option>
+    </select>
+
+    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+      ▼
+    </div>
+  </div>
+</div>
+{formData.accommodation === "with" && (
+  <div>
+    <label className="block text-gray-700 font-semibold mb-1">
+      Hotel Category *
+    </label>
+
+    <div className="relative">
+      <select
+        name="hotelCategory"
+        value={formData.hotelCategory}
+        onChange={handleChange}
+        className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
+      >
+        <option value="">Select hotel category</option>
+        <option value="2_star">2 Star Hotel</option>
+        <option value="3_star">3 Star Hotel</option>
+        <option value="4_star">4 Star Hotel</option>
+        <option value="5_star">5 Star Hotel</option>
+        <option value="comfortable">Comfortable Hotel</option>
+      </select>
+
+      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+        ▼
+      </div>
+    </div>
+  </div>
+)}
+
 
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -840,6 +912,19 @@ const TailorMadeForm = () => {
                     </p>
                   );
                 }
+                if (key === "accommodation") {
+  return (
+    <p key={key}>
+      <strong>Accommodation:</strong>{" "}
+      {value === "with"
+        ? `With accommodation (${formData.hotelCategory.replace("_", " ")})`
+        : "Without accommodation"}
+    </p>
+  );
+}
+
+if (key === "hotelCategory") return null;
+
                 if (["currency"].includes(key)) return null;
                 return (
                   <p key={key}>
