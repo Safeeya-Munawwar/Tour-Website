@@ -348,10 +348,10 @@ Net Lanka Travel
         )}
 
         {/* ---------------- Travel Style ---------------- */}
-        <div>
-          <label className="font-medium mb-1 block">
-            Travel Style <span className="text-red-500">*</span>
-          </label>
+        <div className="flex flex-col gap-1">
+            <label className="font-medium text-[#0B2545] text-left">
+              Select Vehicle <span className="text-red-500">*</span>
+            </label>
 
           <button
             type="button"
@@ -393,7 +393,7 @@ Net Lanka Travel
         {/* ---------------- Travel Style Modal ---------------- */}
         {showTravelStyleModal && (
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center text-left p-4"
             onClick={(e) =>
               e.target === e.currentTarget && setShowTravelStyleModal(false)
             }

@@ -40,31 +40,31 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     {
       title: "Budget Tour",
       tooltip:
-        "Transportation & private guide (optional - accommodation & chauffeur guide). ",
+        "Transportation & private guide. ",
       icon: <FaMoneyBillWave className="text-blue-500" />,
     },
     {
       title: "Premium Tour",
       tooltip:
-        "Transportation with private guide and driver, 4 Star accommodation.",
+        "Transportation with private guide and driver.",
       icon: <FaStar className="text-yellow-500" />,
     },
     {
       title: "Luxury Tour",
       tooltip:
-        "Transportation with private guide and driver, 4 Star or 5 Star accommodation.",
+        "Transportation with private guide and driver.",
       icon: <FaHotel className="text-purple-500" />,
     },
     {
       title: "Family Tour",
       tooltip:
-        "Fun travel experiences suitable for the whole family (optional - chauffeur guide).",
+        "Fun travel experiences suitable for the whole family.",
       icon: <FaUsers className="text-green-600" />,
     },
     {
       title: "Honeymoon Tour",
       tooltip:
-        "Romantic trips specially designed for couples (optional - chauffeur guide).",
+        "Romantic trips specially designed for couples.",
       icon: <FaHeart className="text-pink-600" />,
     },
     {
