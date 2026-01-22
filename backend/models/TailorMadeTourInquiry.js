@@ -12,7 +12,7 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
     enum: ["Budget", "Luxury"],
     default: "Budget",
     required: true,
-  },  
+  },
 
   pickupLocation: { type: String, required: true },
   dropLocation: { type: String, required: true },
@@ -23,6 +23,18 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   adults: { type: Number, required: true },
   children: { type: Number },
 
+  // --- UPDATED FIELDS ---
+  accommodation: { 
+    type: String, 
+    enum: ["with", "without"], 
+    required: true 
+  },
+  hotelCategory: { 
+    type: String, 
+    enum: ["2_star","3_star","4_star","5_star","comfortable"], 
+    required: function() { return this.accommodation === "with"; }, 
+    default: null 
+  },
   selectedDestinations: {
     type: [String],
     default: [],
@@ -30,14 +42,14 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
 
   selectedExperiences: {
     type: [String],
-    default: []
+    default: [],
   },
-  
+
   travelStyle: {
     type: String,
-    default: null
+    default: null,
   },
-  
+
   budget: {
     type: Number,
     default: null,

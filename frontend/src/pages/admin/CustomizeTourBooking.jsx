@@ -195,6 +195,10 @@ const CustomizeTourBookingAdmin = () => {
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
+               <th className="p-3 border border-[#1a354e] text-sm w-[160px]">
+  Accommodation
+</th>
+
                 <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Actions</th>
@@ -203,7 +207,7 @@ const CustomizeTourBookingAdmin = () => {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-4 text-gray-500">
+                  <td colSpan={8} className="p-4 text-gray-500">
                     No bookings found
                   </td>
                 </tr>
@@ -234,6 +238,12 @@ const CustomizeTourBookingAdmin = () => {
                           ? new Date(inq.startDate).toLocaleDateString("en-GB")
                           : "Not Specified"}
                       </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+  {inq.accommodation === "with"
+    ? `With (${inq.hotelCategory?.replace("_", " ") || "Hotel"})`
+    : "Without"}
+</td>
+
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {inq.currency && inq.budget
                           ? `${inq.currency} ${Number(
@@ -415,11 +425,22 @@ const CustomizeTourBookingAdmin = () => {
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Drop Date:
                   </p>
+
                   <p className="p-2 border-b border-blue-950">
                     {selectedInquiry.endDate
                       ? new Date(selectedInquiry.endDate).toLocaleDateString()
                       : "Not Specified"}
                   </p>
+                  {/* Accommodation */}
+<p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+  Accommodation:
+</p>
+<p className="p-2 border-b border-blue-950">
+  {selectedInquiry.accommodation === "with"
+    ? `With accommodation (${selectedInquiry.hotelCategory?.replace("_", " ")})`
+    : "Without accommodation"}
+</p>
+
 
                   {/* Adults */}
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
