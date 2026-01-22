@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import { Helmet } from "react-helmet-async";
 
 export default function RoundTour() {
   const [tours, setTours] = useState([]);
@@ -48,6 +49,15 @@ export default function RoundTour() {
 
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
+      <Helmet>
+        <title>Sri Lanka Round Tours | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Experience complete Sri Lanka round tours covering culture, nature, wildlife and beaches with Net Lanka Travels."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/round-tours" />
+      </Helmet>
+
       {/* HERO HEADER */}
       <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white">
         <img

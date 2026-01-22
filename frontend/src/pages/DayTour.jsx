@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import { Helmet } from "react-helmet-async";
 
 export default function DayTour() {
   const [tours, setTours] = useState([]);
   const [showText, setShowText] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortType, setSortType] = useState("oldest"); // default oldest first
+  const [sortType, setSortType] = useState("oldest"); 
   const perPage = 8;
 
   // Fetch tours
@@ -35,29 +36,38 @@ export default function DayTour() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 50); // small delay to let layout render
     return () => clearTimeout(t);
-  }, [currentPage]);  
+  }, [currentPage]);
 
   const totalPages = Math.ceil(tours.length / perPage);
 
   const currentTours = useMemo(() => {
     if (!tours || tours.length === 0) return [];
-  
+
     const sortedTours = [...tours].sort((a, b) => {
       const dateA = new Date(a.date || a.createdAt).getTime(); // use 'date' or fallback 'createdAt'
       const dateB = new Date(b.date || b.createdAt).getTime();
-  
+
       if (sortType === "oldest") return dateA - dateB;
       if (sortType === "latest") return dateB - dateA;
       if (sortType === "random") return Math.random() - 0.5;
       return 0;
     });
-  
+
     const start = (currentPage - 1) * perPage;
     return sortedTours.slice(start, start + perPage);
-  }, [currentPage, tours, sortType]);  
-  
+  }, [currentPage, tours, sortType]);
+
   return (
     <div className="font-poppins bg-white text-[#222] pb-16">
+      <Helmet>
+        <title>Day Tours in Sri Lanka | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Discover Sri Lanka in a day with our private day tours. Visit cultural landmarks, scenic spots and hidden gems with expert guides."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/day-tours" />
+      </Helmet>
+
       {/* HERO HEADER */}
       <div className="w-full h-[360px] md:h-[560px] relative flex items-center justify-center text-white">
         {/* Hero Image */}
@@ -106,22 +116,27 @@ export default function DayTour() {
       </div>
 
       <div className="flex justify-center gap-4 mt-10 flex-wrap">
-  {["oldest", "latest", "random"].map((type) => (
-    <button
-      key={type}
-      onClick={() => { setSortType(type); setCurrentPage(1); }}
-      className={`px-6 py-2 rounded-full font-semibold transition ${
-        sortType === type
-          ? "bg-black text-white"
-          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-      }`}
-    >
-      {type === "oldest" ? "Oldest" : type === "latest" ? "Latest" : "Random"}
-    </button>
-  ))}
-</div>
-
-
+        {["oldest", "latest", "random"].map((type) => (
+          <button
+            key={type}
+            onClick={() => {
+              setSortType(type);
+              setCurrentPage(1);
+            }}
+            className={`px-6 py-2 rounded-full font-semibold transition ${
+              sortType === type
+                ? "bg-black text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {type === "oldest"
+              ? "Oldest"
+              : type === "latest"
+              ? "Latest"
+              : "Random"}
+          </button>
+        ))}
+      </div>
 
       {/* TOURS GRID */}
       <div className="space-y-10 px-6 sm:px-10 md:px-32 mt-16">

@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import TestimonialForm from "../components/TestimonialForm";
 import TailorMadeForm from "../components/CustomizeTourForm";
 import Footer from "../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 const TailorMadeTours = () => {
   const Why = lazy(() => import("../components/Why"));
@@ -72,6 +73,18 @@ const TailorMadeTours = () => {
 
   return (
     <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
+      <Helmet>
+        <title>Tailor Made Tours | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Create your own tailor-made Sri Lanka tour with Net Lanka Travels. Fully customized itineraries, private transport and expert planning."
+        />
+        <link
+          rel="canonical"
+          href="https://netlankatravels.com/tailor-made-tours"
+        />
+      </Helmet>
+
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* HERO HEADER */}

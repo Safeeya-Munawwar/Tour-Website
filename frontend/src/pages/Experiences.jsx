@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
 import Footer from "../components/Footer";
 import { useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 
 export default function Experiences() {
   const [showText, setShowText] = useState(false);
@@ -71,6 +72,15 @@ export default function Experiences() {
 
   return (
     <>
+      <Helmet>
+        <title>Sri Lanka Experiences | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Enjoy authentic Sri Lanka experiences including safaris, cultural tours, hill country trips and beach adventures."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/experience" />
+      </Helmet>
+
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
         {/* ================= HERO ================= */}
         <header className="relative w-full h-[360px] md:h-[560px] overflow-hidden">
