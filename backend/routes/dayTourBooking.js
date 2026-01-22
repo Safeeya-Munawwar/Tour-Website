@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
       startTime,
       message,
       taxiId,
+      travelStyle,
     } = req.body;
 
     if (!tourId) {
@@ -98,6 +99,12 @@ router.post("/", async (req, res) => {
           }
           </td>
         </tr>
+        <tr>
+        <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+        <td style="border: 1px solid #1a354e; padding: 8px;">${
+          booking.travelStyle || "—"
+        }</td>
+      </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
@@ -149,6 +156,12 @@ router.post("/", async (req, res) => {
               booking.tourId?.title || "—"
             }</td>
           </tr>
+          <tr>
+          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+          <td style="border: 1px solid #1a354e; padding: 8px;">${
+            booking.travelStyle || "—"
+          }</td>
+        </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">
