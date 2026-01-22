@@ -162,6 +162,14 @@ export default function TermsConditions() {
   <p>
     Any complaints, damages, losses, or disputes related to accommodation must be
     resolved directly between the guest and the hotel.
+    <br />
+    <br/>
+    <strong className="text-black">Special Note</strong><br />
+Accommodation rates and availability are subject to change until confirmed by the hotel.
+Hotel names, room categories, meal plans, and stay duration provided in the quotation are indicative and may vary due to hotel policies or seasonal demand.
+Any upgrades, extra services, or special requests requested by the guest at the hotel will be charged directly by the hotel.
+Net Lanka Travels shall not be held responsible for any changes, issues, or additional charges imposed by the hotel after check-in.
+Guests are advised to review hotel policies and services prior to arrival to avoid misunderstandings.
   </p>
 </PolicySection>
 
