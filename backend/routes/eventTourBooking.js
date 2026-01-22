@@ -27,6 +27,7 @@ router.post("/", async (req, res) => {
       startTime,
       message,
       taxiId,
+      travelStyle,
     } = req.body;
 
     // Validate required fields
@@ -49,6 +50,7 @@ router.post("/", async (req, res) => {
       startTime,
       message,
       taxiId,
+      travelStyle,
     });
 
     // Populate both tourId and taxiId
@@ -89,6 +91,12 @@ router.post("/", async (req, res) => {
               booking.eventId?.title || "—"
             }</td>
           </tr>
+          <tr>
+        <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+        <td style="border: 1px solid #1a354e; padding: 8px;">${
+          booking.travelStyle || "—"
+        }</td>
+      </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${
@@ -160,6 +168,12 @@ router.post("/", async (req, res) => {
               booking.eventId?.location || "—"
             }</td>
           </tr>
+          <tr>
+        <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+        <td style="border: 1px solid #1a354e; padding: 8px;">${
+          booking.travelStyle || "—"
+        }</td>
+      </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">

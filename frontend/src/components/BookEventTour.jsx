@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
+import {
+  FaMoneyBillWave,
+  FaStar,
+  FaHotel,
+  FaUsers,
+  FaHeart,
+  FaTaxi,
+  FaRoute,
+  FaCar,
+  FaPlane,
+} from "react-icons/fa";
 
 export default function BookEventTour({
   eventId,
@@ -17,6 +28,7 @@ export default function BookEventTour({
     startDate: "",
     startTime: "00:00",
     message: "",
+    travelStyle: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -26,6 +38,70 @@ export default function BookEventTour({
   const [whatsappNumber, setWhatsappNumber] = useState("94771234567");
   const [taxis, setTaxis] = useState([]);
   const [selectedTaxi, setSelectedTaxi] = useState("");
+  const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
+
+  const travelStyles = [
+    {
+      title: "Budget Tour",
+      tooltip:
+        "Transportation & private guide (optional - accommodation & chauffeur guide). ",
+      icon: <FaMoneyBillWave className="text-blue-500" />,
+    },
+    {
+      title: "Premium Tour",
+      tooltip:
+        "Transportation with private guide and driver, 4 Star accommodation.",
+      icon: <FaStar className="text-yellow-500" />,
+    },
+    {
+      title: "Luxury Tour",
+      tooltip:
+        "Transportation with private guide and driver, 4 Star or 5 Star accommodation.",
+      icon: <FaHotel className="text-purple-500" />,
+    },
+    {
+      title: "Family Tour",
+      tooltip:
+        "Fun travel experiences suitable for the whole family (optional - chauffeur guide).",
+      icon: <FaUsers className="text-green-600" />,
+    },
+    {
+      title: "Honeymoon Tour",
+      tooltip:
+        "Romantic trips specially designed for couples (optional - chauffeur guide).",
+      icon: <FaHeart className="text-pink-600" />,
+    },
+    {
+      title: "Transportation Only",
+      tooltip: "Only transportation is provided with English-speaking driver.",
+      icon: <FaTaxi className="text-gray-700" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip: "Only transportation is provided with a chauffeur guide.",
+      icon: <FaCar className="text-gray-700" />,
+    },
+    {
+      title: "Join a Group Tour",
+      tooltip: "Travel with other tourists in a group.",
+      icon: <FaUsers className="text-pink-500" />,
+    },
+    {
+      title: "Self-Organized",
+      tooltip: "Plan and manage the trip entirely yourself.",
+      icon: <FaRoute className="text-orange-500" />,
+    },
+    {
+      title: "Private Tour, Permanent Guide",
+      tooltip: "A guide will accompany you throughout your tour.",
+      icon: <FaUsers className="text-green-500" />,
+    },
+    {
+      title: "Organized Hotels/Transfer, No Guide",
+      tooltip: "Hotels and transfers are arranged, but no guide included.",
+      icon: <FaPlane className="text-indigo-500" />,
+    },
+  ];
 
   // Fetch WhatsApp number
   useEffect(() => {
@@ -80,6 +156,7 @@ export default function BookEventTour({
     else if (new Date(formData.startDate) < new Date().setHours(0, 0, 0, 0))
       newErrors.startDate = "Date cannot be in the past";
     if (!formData.startTime) newErrors.startTime = "Event time is required";
+    if (!formData.travelStyle) newErrors.travelStyle = "Select a travel style";
     return newErrors;
   };
 
@@ -111,6 +188,7 @@ export default function BookEventTour({
         startTime: formData.startTime,
         message: formData.message,
         taxiId: selectedTaxi,
+        travelStyle: formData.travelStyle,
       });
 
       if (res.data.success) {
@@ -125,6 +203,7 @@ export default function BookEventTour({
           startDate: "",
           startTime: "00:00",
           message: "",
+          travelStyle: "",
         });
         setSelectedTaxi("");
       } else {
@@ -165,7 +244,8 @@ export default function BookEventTour({
           }`
         : "-"
     }
-  
+    *Travel Style:* ${formData.travelStyle || "-"}
+
 *Customer Details:*
 - Name: ${formData.name}
 - Email: ${formData.email}
@@ -246,6 +326,104 @@ ${formData.message || "–"}
                 </option>
               ))}
             </select>
+          </div>
+        )}
+
+                {/* ---------------- Travel Style ---------------- */}
+                <div>
+          <label className="font-medium mb-1 block">
+            Travel Style <span className="text-red-500">*</span>
+          </label>
+
+          <button
+            type="button"
+            onClick={() => setShowTravelStyleModal(true)}
+            className={`w-full flex justify-between items-center px-4 py-3 border rounded ${
+              errors.travelStyle ? "border-red-500" : "border-gray-300"
+            } bg-white text-gray-800 hover:bg-gray-100 transition font-semibold focus:ring-2 focus:ring-blue-500 outline-none`}
+          >
+            {formData.travelStyle || "Select Travel Style"}
+            <svg
+              className="w-5 h-5 ml-2 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+
+          {errors.travelStyle && (
+            <span className="text-red-500 text-sm mt-1 block">
+              {errors.travelStyle}
+            </span>
+          )}
+
+          <div className="mt-2 text-gray-500 text-sm">
+            {formData.travelStyle
+              ? travelStyles.find((s) => s.title === formData.travelStyle)
+                  ?.tooltip
+              : "No travel style selected"}
+          </div>
+        </div>
+
+        {/* ---------------- Travel Style Modal ---------------- */}
+        {showTravelStyleModal && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center p-4"
+            onClick={(e) =>
+              e.target === e.currentTarget && setShowTravelStyleModal(false)
+            }
+          >
+            <div className="w-full max-w-[800px] h-[90vh] bg-white shadow-2xl flex flex-col overflow-hidden rounded-2xl relative p-6">
+              <h3 className="text-xl font-bold mb-4">Select Travel Style</h3>
+
+              <div className="flex flex-col gap-3 overflow-y-auto">
+                {travelStyles.map((style) => (
+                  <label
+                    key={style.title}
+                    className="flex items-center justify-between bg-gray-50 p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+                  >
+                    {/* Left: Icon + Title & Tooltip */}
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{style.icon}</span>
+                      <div>
+                        <p className="font-semibold">{style.title}</p>
+                        <p className="text-gray-500 text-sm">{style.tooltip}</p>
+                      </div>
+                    </div>
+
+                    {/* Right: Radio for single selection */}
+                    <input
+                      type="radio"
+                      name="travelStyle"
+                      checked={formData.travelStyle === style.title}
+                      onChange={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          travelStyle: style.title,
+                        }))
+                      }
+                      className="w-5 h-5"
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => setShowTravelStyleModal(false)}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-[#283d9e] transition"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

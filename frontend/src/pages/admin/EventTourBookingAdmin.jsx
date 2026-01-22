@@ -221,6 +221,9 @@ const EventTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">Event</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Name</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Phone</th>
+                <th className="p-3 border border-[#1a354e] text-sm">
+                  Travel Style
+                </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Vehicle</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
@@ -250,6 +253,9 @@ const EventTourBookingAdmin = () => {
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {b.phone}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {b.travelStyle || "—"}
                       </td>
                       <td>{b.taxiId ? b.taxiId.name : "—"}</td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
@@ -389,6 +395,14 @@ const EventTourBookingAdmin = () => {
                   </p>
                   <p className="p-2 border-b border-blue-950">
                     {selectedBooking.eventId?.location || "—"}
+                  </p>
+
+                  {/* Travel Style */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Travel Style:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.travelStyle || "—"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
