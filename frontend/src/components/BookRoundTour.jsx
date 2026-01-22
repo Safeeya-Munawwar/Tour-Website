@@ -25,6 +25,9 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    // ✅ ADD
+  accommodation: "",
+  hotelCategory: "",
   });
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
   const [errors, setErrors] = useState({});
@@ -165,6 +168,15 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
 
     if (!formData.startTime) newErrors.startTime = "Start time is required";
     if (!formData.travelStyle) newErrors.travelStyle = "Select a travel style";
+if (!formData.accommodation)
+  newErrors.accommodation = "Accommodation selection is required";
+
+if (
+  formData.accommodation === "with" &&
+  !formData.hotelCategory
+) {
+  newErrors.hotelCategory = "Hotel category is required";
+}
 
     return newErrors;
   };
@@ -207,6 +219,8 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
           startTime: "",
           message: "",
           travelStyle: "",
+          accommodation: "",     // ✅ ADD
+  hotelCategory: "",  
         });
         setSelectedTaxi("");
       } else {
@@ -247,6 +261,17 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
         : "-"
     }
 *Travel Style:* ${formData.travelStyle || "-"}
+*Accommodation:*
+ -Type: ${
+   formData.accommodation === "with"
+     ? "With Accommodation"
+     : "Without Accommodation"
+ }
+${
+  formData.accommodation === "with"
+    ? ` -Hotel Category: ${formData.hotelCategory.replace("_", " ")}`
+    : ""
+}
 
 *Customer Details:*
  -Name: ${formData.name}
@@ -530,6 +555,68 @@ ${formData.message || "–"}
             </div>
           </div>
         )}
+{/* ---------------- Accommodation ---------------- */}
+<div>
+  <label className="font-medium mb-1 block">
+    Accommodation <span className="text-red-500">*</span>
+  </label>
+
+  <select
+    name="accommodation"
+    value={formData.accommodation}
+    onChange={(e) =>
+      setFormData((prev) => ({
+        ...prev,
+        accommodation: e.target.value,
+        hotelCategory: "",
+      }))
+    }
+    className={`w-full px-4 py-3 rounded border ${
+      errors.accommodation ? "border-red-500" : "border-gray-300"
+    } focus:ring-2 focus:ring-blue-500 outline-none`}
+  >
+    <option value="">Select Accommodation</option>
+    <option value="with">With Accommodation</option>
+    <option value="without">Without Accommodation</option>
+  </select>
+
+  {errors.accommodation && (
+    <span className="text-red-500 text-sm">
+      {errors.accommodation}
+    </span>
+  )}
+</div>
+
+{/* Hotel Category */}
+{formData.accommodation === "with" && (
+  <div>
+    <label className="font-medium mb-1 block">
+      Hotel Category <span className="text-red-500">*</span>
+    </label>
+
+    <select
+      name="hotelCategory"
+      value={formData.hotelCategory}
+      onChange={handleChange}
+      className={`w-full px-4 py-3 rounded border ${
+        errors.hotelCategory ? "border-red-500" : "border-gray-300"
+      } focus:ring-2 focus:ring-blue-500 outline-none`}
+    >
+      <option value="">Select Hotel Category</option>
+      <option value="2_star">2 Star Hotel</option>
+      <option value="3_star">3 Star Hotel</option>
+      <option value="4_star">4 Star Hotel</option>
+      <option value="5_star">5 Star Hotel</option>
+      <option value="comfortable">Comfortable Hotel</option>
+    </select>
+
+    {errors.hotelCategory && (
+      <span className="text-red-500 text-sm">
+        {errors.hotelCategory}
+      </span>
+    )}
+  </div>
+)}
 
         {/* Start Date & Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -625,3 +712,5 @@ ${formData.message || "–"}
     </div>
   );
 }
+
+

@@ -240,6 +240,10 @@ const RoundTourBookingAdmin = () => {
                 <th className="p-3 border border-[#1a354e] text-sm">
                   Travel Style
                 </th>
+                <th className="p-3 border border-[#1a354e] text-sm">
+  Accommodation
+</th>
+
                 <th className="p-3 border border-[#1a354e] text-sm">Vehicle</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
@@ -277,6 +281,12 @@ const RoundTourBookingAdmin = () => {
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {b.travelStyle || "—"}
                       </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+  {b.accommodation === "with"
+    ? `With (${b.hotelCategory?.replace("_", " ")})`
+    : "Without"}
+</td>
+
                       <td>{b.taxiId ? b.taxiId.name : "—"}</td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {b.startDate
@@ -424,9 +434,20 @@ const RoundTourBookingAdmin = () => {
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Travel Style:
                   </p>
+                  
                   <p className="p-2 border-b border-blue-950">
                     {selectedBooking.travelStyle || "—"}
                   </p>
+                  {/* Accommodation */}
+<p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+  Accommodation:
+</p>
+<p className="p-2 border-b border-blue-950">
+  {selectedBooking.accommodation === "with"
+    ? `With Accommodation (${selectedBooking.hotelCategory?.replace("_", " ")})`
+    : "Without Accommodation"}
+</p>
+
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Vehicle:
