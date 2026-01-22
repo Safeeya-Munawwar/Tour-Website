@@ -11,7 +11,7 @@ const TailorMadeForm = () => {
   const [selectedDestinations, setSelectedDestinations] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [showExperienceModal, setShowExperienceModal] = useState(false);
-  const [selectedExperiences, setSelectedExperiences] = useState([]);
+  const [, setSelectedExperiences] = useState([]);
 
   const [formData, setFormData] = useState({
     // Step 1
@@ -195,6 +195,7 @@ const TailorMadeForm = () => {
         hearAboutUs: "",
       });
       setSelectedDestinations([]);
+      setSelectedExperiences([]);
       setStep(1);
       setCaptchaChecked(false);
     } catch (err) {
@@ -679,8 +680,8 @@ const TailorMadeForm = () => {
               </button>
 
               <div className="flex flex-wrap gap-2 mt-2">
-                {selectedExperiences.length > 0 ? (
-                  selectedExperiences.map((e, idx) => (
+                {formData.selectedExperiences.length > 0 ? (
+                  formData.selectedExperiences.map((e, idx) => (
                     <span
                       key={idx}
                       className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm"
@@ -707,7 +708,7 @@ const TailorMadeForm = () => {
                 >
                   <ExperienceSelector
                     experiences={experiences}
-                    initialSelected={selectedExperiences}
+                    initialSelected={formData.selectedExperiences}
                     onConfirm={(newSelection) => {
                       setSelectedExperiences(newSelection);
                       setFormData((prev) => ({
