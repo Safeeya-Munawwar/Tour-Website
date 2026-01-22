@@ -13,6 +13,11 @@ const RoundTourBookingSchema = new mongoose.Schema({
     required: false,
   },
 
+  travelStyle: {
+    type: String,
+    default: null,
+  },
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
