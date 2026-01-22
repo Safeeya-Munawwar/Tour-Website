@@ -44,7 +44,7 @@ const About = () => {
           name="description"
           content="Learn about Net Lanka Travels, our story, mission, and vision. Private Sri Lanka tours and custom travel packages."
         />
-        <link rel="canonical" href="https://netlankatravels.com/about" />
+        <link rel="canonical" href="https://www.netlankatravels.com/about" />
       </Helmet>
       
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">

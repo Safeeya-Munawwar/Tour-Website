@@ -26,7 +26,7 @@ export default function Home() {
           name="description"
           content="Net Lanka Travels offers private Sri Lanka tours, day trips, taxi services and custom travel packages with experienced local guides."
         />
-        <link rel="canonical" href="https://netlankatravels.com/" />
+        <link rel="canonical" href="https://www.netlankatravels.com/" />
       </Helmet>
 
       <div className="">

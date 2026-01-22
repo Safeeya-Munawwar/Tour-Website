@@ -18,14 +18,12 @@ const RoundTourBookingSchema = new mongoose.Schema({
     default: null,
   },
 
-  // ✅ NEW
   accommodation: {
     type: String,
     enum: ["with", "without"],
     required: true,
   },
 
-  // ✅ NEW
   hotelCategory: {
     type: String,
     enum: ["2_star", "3_star", "4_star", "5_star", "comfortable"],

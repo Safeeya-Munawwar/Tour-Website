@@ -73,7 +73,7 @@ export default function Destination() {
           name="description"
           content="Explore top Sri Lanka destinations including beaches, hill country, cultural sites and wildlife parks with Net Lanka Travels."
         />
-        <link rel="canonical" href="https://netlankatravels.com/destinations" />
+        <link rel="canonical" href="https://www.netlankatravels.com/destinations" />
       </Helmet>
 
       {/* HERO HEADER */}

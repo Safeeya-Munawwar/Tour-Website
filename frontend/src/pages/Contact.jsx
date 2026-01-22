@@ -62,7 +62,7 @@ const Contact = () => {
           name="description"
           content="Contact Net Lanka Travels to plan your Sri Lanka tour. Get expert advice, custom itineraries and reliable travel services."
         />
-        <link rel="canonical" href="https://netlankatravels.com/contact" />
+        <link rel="canonical" href="https://www.netlankatravels.com/contact" />
       </Helmet>
 
       {/* HERO HEADER */}

@@ -78,7 +78,7 @@ export default function Experiences() {
           name="description"
           content="Enjoy authentic Sri Lanka experiences including safaris, cultural tours, hill country trips and beach adventures."
         />
-        <link rel="canonical" href="https://netlankatravels.com/experience" />
+        <link rel="canonical" href="https://www.netlankatravels.com/experience" />
       </Helmet>
 
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">

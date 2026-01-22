@@ -65,7 +65,7 @@ export default function DayTour() {
           name="description"
           content="Discover Sri Lanka in a day with our private day tours. Visit cultural landmarks, scenic spots and hidden gems with expert guides."
         />
-        <link rel="canonical" href="https://netlankatravels.com/day-tours" />
+        <link rel="canonical" href="https://www.netlankatravels.com/day-tours" />
       </Helmet>
 
       {/* HERO HEADER */}

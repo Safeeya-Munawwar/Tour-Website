@@ -81,7 +81,7 @@ const TailorMadeTours = () => {
         />
         <link
           rel="canonical"
-          href="https://netlankatravels.com/tailor-made-tours"
+          href="https://www.netlankatravels.com/tailor-made-tours"
         />
       </Helmet>
 

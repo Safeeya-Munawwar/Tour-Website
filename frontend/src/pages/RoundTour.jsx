@@ -55,7 +55,7 @@ export default function RoundTour() {
           name="description"
           content="Experience complete Sri Lanka round tours covering culture, nature, wildlife and beaches with Net Lanka Travels."
         />
-        <link rel="canonical" href="https://netlankatravels.com/round-tours" />
+        <link rel="canonical" href="https://www.netlankatravels.com/round-tours" />
       </Helmet>
 
       {/* HERO HEADER */}
