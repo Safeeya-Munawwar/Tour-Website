@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../lib/axios";
+import { Helmet } from "react-helmet-async";
 
 export default function Destination() {
   const [showText, setShowText] = useState(false);
@@ -66,6 +67,15 @@ export default function Destination() {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
+      <Helmet>
+        <title>Sri Lanka Destinations | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Explore top Sri Lanka destinations including beaches, hill country, cultural sites and wildlife parks with Net Lanka Travels."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/destinations" />
+      </Helmet>
+
       {/* HERO HEADER */}
       <div className="w-full h-[360px] md:h-[560px] relative flex items-center justify-center text-white">
         <img

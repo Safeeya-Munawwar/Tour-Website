@@ -5,6 +5,7 @@ import Testimonials from "../components/Testimonials";
 import { ArrowRight, Calendar } from "lucide-react";
 import { axiosInstance } from ".././lib/axios";
 import Footer from "../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 const About = () => {
   const [showFull, setShowFull] = useState(false);
@@ -37,6 +38,15 @@ const About = () => {
 
   return (
     <>
+      <Helmet>
+        <title>About Us | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Learn about Net Lanka Travels, our story, mission, and vision. Private Sri Lanka tours and custom travel packages."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/about" />
+      </Helmet>
+      
       <div className="flex flex-col min-h-screen font-poppins bg-white text-[#222]">
         {/* ---------------------------- HERO HEADER ---------------------------- */}
         <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white overflow-hidden">

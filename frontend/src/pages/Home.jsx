@@ -10,6 +10,7 @@ import Stats from "../components/Stats";
 import Video1 from "../components/Video1";
 import Stories from "../components/Stories";
 import ExploreMapSection from "../components/ExploreMapSection";
+import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const [currentPage] = useState(1);
@@ -19,6 +20,15 @@ export default function Home() {
   }, [currentPage]);
   return (
     <div>
+      <Helmet>
+        <title>Net Lanka Travels | Sri Lanka Tours & Taxi Services</title>
+        <meta
+          name="description"
+          content="Net Lanka Travels offers private Sri Lanka tours, day trips, taxi services and custom travel packages with experienced local guides."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/" />
+      </Helmet>
+
       <div className="">
         <Header />
       </div>

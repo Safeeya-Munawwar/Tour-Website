@@ -12,6 +12,7 @@ import ContactForm from "../components/admin/ContactForm";
 import { axiosInstance } from "../lib/axios";
 import L from "leaflet";
 import "leaflet-routing-machine";
+import { Helmet } from "react-helmet-async";
 
 // Make Leaflet global for routing machine
 window.L = L;
@@ -55,6 +56,15 @@ const Contact = () => {
 
   return (
     <div className="font-poppins bg-white text-[#222]">
+      <Helmet>
+        <title>Contact Us | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Contact Net Lanka Travels to plan your Sri Lanka tour. Get expert advice, custom itineraries and reliable travel services."
+        />
+        <link rel="canonical" href="https://netlankatravels.com/contact" />
+      </Helmet>
+
       {/* HERO HEADER */}
       <div
         className="w-full h-[360px] md:h-[560px] bg-cover bg-center relative flex items-center justify-center text-white"

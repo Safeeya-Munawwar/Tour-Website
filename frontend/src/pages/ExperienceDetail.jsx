@@ -9,6 +9,14 @@ import "swiper/css/pagination";
 import { useNavigate } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import Footer from "../components/Footer";
+import { FiPhone, FiMail, FiCalendar, FiClock } from "react-icons/fi";
+import {
+  FaWhatsapp,
+  FaFacebookF,
+  FaXTwitter,
+  FaLink,
+  FaLinkedinIn,
+} from "react-icons/fa6";
 
 export default function ExperienceDetail() {
   const navigate = useNavigate();
@@ -16,16 +24,21 @@ export default function ExperienceDetail() {
   const [otherExperiences, setOtherExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
-
+  const [contact, setContact] = useState({});
   const { slug } = useParams();
+  const [pageUrl, setPageUrl] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const shareIcon =
+    "w-8 h-8 sm:w-9 sm:h-9 text-sm sm:text-base rounded-full flex items-center justify-center text-white hover:scale-110 transition";
 
-  // Scroll to top on page change
+  /* ================= Scroll to Top ================= */
   useEffect(() => {
     if (!loading) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
   }, [loading]);
 
+  /* ================= Fetch Experience ================= */
   useEffect(() => {
     setTimeout(() => setShowText(true), 200);
     const fetchExperience = async () => {
@@ -45,12 +58,37 @@ export default function ExperienceDetail() {
     fetchExperience();
   }, [slug]);
 
+  /* ================= Fetch Contact ================= */
+  useEffect(() => {
+    axiosInstance
+      .get("/contact")
+      .then((res) => setContact(res.data || {}))
+      .catch((err) => console.error(err));
+  }, []);
+
+  /* ================= Share URL ================= */
+  useEffect(() => {
+    setPageUrl(window.location.href);
+  }, []);
+
+  /* ================= Share Handler ================= */
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setShowToast(true);
+
+      setTimeout(() => setShowToast(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
+
   if (loading) {
-    return ;
+    return;
   }
 
   if (!experience) {
-    return ;
+    return;
   }
   return (
     <>
@@ -76,79 +114,246 @@ export default function ExperienceDetail() {
           </div>
         </div>
 
-{/* ---------------------------- MAIN SECTION ---------------------------- */}
-<section className="relative flex flex-col md:flex-row w-full overflow-hidden bg-white pt-10 md:pt-0">
-  {/* LEFT IMAGE WRAPPER */}
-  <div
-    className="
-      hidden md:block           /* hide on mobile */
-      md:w-1/2
-      relative                 /* for absolute positioning */
-      px-5 mt-5
-      min-h-[500px]            /* ensure enough space */
-    "
-  >
-    <img
-      src={experience.mainImg}
-      alt={experience.title}
-      className="
-        w-[500px] h-[500px]
-        rounded-[20px]          /* Rounded corners */
-        object-cover object-center
-        shadow-lg
-        transition-transform duration-500 hover:scale-105
-        absolute bottom-0 left-1/2 transform -translate-x-1/2
-      "
-    />
-  </div>
+        {/* ---------------------------- MAIN SECTION ---------------------------- */}
+        <section className="w-full bg-[#F7FAFC] py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-16">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-5">
+                  {experience.title}
+                </h2>
 
-  {/* RIGHT TEXT SECTION */}
-  <div
-    className="
-      w-full md:w-1/2 
-      flex flex-col 
-      justify-center
-      text-center md:text-left
-      space-y-4 sm:space-y-6
-      px-6 sm:px-10 md:px-20
-      mt-6 sm:mt-10 md:mt-20
-      pb-10
-    "
-  >
-    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900">
-      {experience.title}
-    </h2>
+                <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                  {experience.mainDesc}
+                </p>
 
-    <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-      {experience.mainDesc}
-    </p>
+                <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4 break-words">
+                  {experience.subDesc}
+                </p>
 
-    <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-      {experience.subDesc}
-    </p>
+                {/* BUTTONS */}
+                <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4">
+                  <button
+                    onClick={() => navigate(`/experience`)}
+                    className="
+          bg-blue-600 hover:bg-blue-700 
+          text-white font-semibold 
+          px-6 py-3 rounded-lg 
+          transition flex items-center gap-2
+        "
+                  >
+                    Explore More
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
 
-    {/* BUTTONS */}
-    <div className="mt-6 sm:mt-8 flex flex-wrap justify-center md:justify-start gap-4">
-      <button
-        onClick={() => navigate(`/experience`)}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2 transition"
-      >
-        Explore More
-        <ArrowRight className="w-4 h-4" />
-      </button>
+                  <button
+                    onClick={() => navigate("/tailor-made-tours")}
+                    className="
+          bg-[#ce2a40] hover:bg-[#ef0530] 
+          text-white uppercase px-6 py-3 
+          rounded-lg font-semibold 
+          flex items-center gap-2 
+          shadow-lg transition-colors duration-300 
+          justify-center
+        "
+                  >
+                    Tailor-make a Tour
+                    <Calendar className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
 
-      <button
-        onClick={() => navigate("/tailor-made-tours")}
-        className="bg-[#ce2a40] hover:bg-[#ef0530] text-white uppercase px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg transition-colors duration-300 justify-center"
-      >
-        Tailor-make a Tour
-        <Calendar className="w-4 h-4" />
-      </button>
-    </div>
-  </div>
-</section>
+            {/* SIDEBAR */}
+            <div className="relative lg:sticky lg:top-24 h-fit">
+              <div className="bg-white rounded-3xl p-8 shadow-lg space-y-8">
+                {/* BLOG META */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Experience Details</h4>
 
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiCalendar className="text-blue-600" />
+                    <span>
+                      {new Date(experience.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
 
+                  <div className="flex items-center gap-3 text-gray-600 text-sm">
+                    <FiClock className="text-blue-600" />
+                    <span>
+                      {Math.ceil(
+                        `${experience.mainDesc || ""} ${
+                          experience.subDesc || ""
+                        }`.split(" ").length / 200
+                      )}{" "}
+                      min read
+                    </span>
+                  </div>
+                </div>
+
+                {/* AUTHOR */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Curated by</h4>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                      {experience.author?.name?.[0] || "N"}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {experience.author?.name || "Net Lanka Travels Team"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TAGS */}
+                {experience.tags?.length > 0 && (
+                  <div className="border-t pt-6 space-y-3">
+                    <h4 className="font-semibold">Tags</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {experience.tags.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* SHARE */}
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="font-semibold">Share</h4>
+
+                  <div className="flex flex-wrap items-center gap-3 text-lg">
+                    {/* WhatsApp */}
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-green-500`}
+                      title="Share on WhatsApp"
+                    >
+                      <FaWhatsapp />
+                    </a>
+
+                    {/* Facebook */}
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-blue-600`}
+                      title="Share on Facebook"
+                    >
+                      <FaFacebookF />
+                    </a>
+
+                    {/* X (Twitter) */}
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-black`}
+                      title="Share on X"
+                    >
+                      <FaXTwitter />
+                    </a>
+
+                    {/* LinkedIn */}
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        pageUrl
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`${shareIcon} bg-[#0077b5]`}
+                      title="Share on LinkedIn"
+                    >
+                      <FaLinkedinIn />
+                    </a>
+
+                    {/* Email */}
+                    <a
+                      href={`mailto:?subject=${encodeURIComponent(
+                        experience.title
+                      )}&body=${encodeURIComponent(pageUrl)}`}
+                      className={`${shareIcon} bg-gray-700`}
+                      title="Share via Email"
+                    >
+                      <FiMail />
+                    </a>
+
+                    {/* Copy */}
+                    <button
+                      onClick={handleCopyLink}
+                      className={`${shareIcon} bg-gray-900`}
+                      title="Copy link"
+                    >
+                      <FaLink />
+                    </button>
+                  </div>
+                </div>
+
+                {/* NEED HELP */}
+                {contact && (
+                  <div className="border-t pt-6 space-y-4">
+                    <h4 className="font-semibold">Need Help?</h4>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiPhone className="text-blue-600" />
+                      <a
+                        href={`tel:${contact.phone}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.phone}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FaWhatsapp className="text-green-600" />
+                      <a
+                        href={`https://wa.me/${contact.whatsapp?.replace(
+                          /\D/g,
+                          ""
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-green-600"
+                      >
+                        {contact.whatsapp}
+                      </a>
+                    </div>
+
+                    <div className="flex gap-3 items-center text-gray-600">
+                      <FiMail className="text-blue-600" />
+                      <a
+                        href={`mailto:${contact.emails?.[0]}`}
+                        className="hover:text-blue-600"
+                      >
+                        {contact.emails?.[0]}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* TOAST */}
+          {showToast && (
+            <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-lg">
+              Link copied ✅
+            </div>
+          )}
+        </section>
 
         {/* ---------------------------- SUB EXPERIENCES ---------------------------- */}
         <section className="max-w-7xl mx-auto px-6 py-16">
