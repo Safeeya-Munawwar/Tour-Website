@@ -8,23 +8,27 @@ export default function Stories() {
   const [loading, setLoading] = useState(true);
   const [expandedId] = useState(null);
   
-  useEffect(() => {
-    const fetchLatestBlogs = async () => {
-      try {
-        const res = await axiosInstance.get("/blog");
-        const blogs = Array.isArray(res.data?.blogs) ? res.data.blogs : [];
-        const sortedBlogs = blogs
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 3);
-        setStories(sortedBlogs);
-      } catch (err) {
-        console.error("Failed to fetch blogs:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLatestBlogs();
-  }, []);
+ useEffect(() => {
+  const fetchOldestBlogs = async () => {
+    try {
+      const res = await axiosInstance.get("/blog");
+      const blogs = Array.isArray(res.data?.blogs) ? res.data.blogs : [];
+
+      // First added (oldest) 3 blogs
+      const firstAddedBlogs = blogs
+        .sort((a, b) => new Date(a.date) - new Date(b.date)) // oldest first
+        .slice(0, 3);
+
+      setStories(firstAddedBlogs);
+    } catch (err) {
+      console.error("Failed to fetch blogs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchOldestBlogs();
+}, []);
 
   return (
     <section
