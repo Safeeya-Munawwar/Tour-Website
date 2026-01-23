@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import { FaWhatsapp, FaEnvelope, FaEye, FaTrash } from "react-icons/fa";
 
 const CustomizeTourBookingAdmin = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -299,19 +299,21 @@ const CustomizeTourBookingAdmin = () => {
                             </a>
                           )}
                         </div>
-                      </td>
+                      </td>                      
                       <td className="flex justify-center items-center gap-2 mt-3 py-4">
                         <button
-                          className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] transition text-sm"
+                          className="bg-[#2E5B84] text-white p-2 rounded hover:bg-[#1E3A60] transition"
                           onClick={() => setSelectedInquiry(inq)}
+                          title="View"
                         >
-                          View
+                          <FaEye size={16} />
                         </button>
                         <button
+                          className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition"
                           onClick={() => deleteInquiry(inq._id)}
-                          className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-sm"
+                          title="Delete"
                         >
-                          Delete
+                          <FaTrash size={16} />
                         </button>
                       </td>
                     </tr>

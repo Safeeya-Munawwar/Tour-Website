@@ -31,6 +31,20 @@ const TourBookingSchema = new mongoose.Schema(
       default: null,
     },
 
+    accommodation: {
+      type: String,
+      enum: ["with", "without"],
+      required: function () {
+        return this.tourType === "round";
+      },
+    },    
+
+    hotelCategory: {
+      type: String,
+      enum: ["", "2_star", "3_star", "4_star", "5_star", "comfortable"],
+      default: "",
+    },    
+
     name: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
