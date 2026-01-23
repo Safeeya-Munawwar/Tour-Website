@@ -10,13 +10,13 @@ export default function DestinationHome() {
       try {
         const res = await axiosInstance.get("/destination");
         const allDestinations = res.data?.destinations || [];
+// First added (oldest) destinations first
+const firstAddedDestinations = allDestinations
+  .sort((a, b) => (a._id > b._id ? 1 : -1))
+  .slice(0, 8);
 
-        // Newest destinations first
-        const latestDestinations = allDestinations
-          .sort((a, b) => (b._id > a._id ? 1 : -1))
-          .slice(0, 8);
+setDestinations(firstAddedDestinations);
 
-        setDestinations(latestDestinations);
       } catch (err) {
         console.error("Error fetching destinations:", err);
       }
