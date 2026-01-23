@@ -7,38 +7,39 @@ export default function PopularTours() {
   const [dayTours, setDayTours] = useState([]);
   const [roundTours, setRoundTours] = useState([]);
 
-  useEffect(() => {
-    const fetchTours = async () => {
-      try {
-        // Day tours
-        const dayRes = await axiosInstance.get("/day-tours");
-        const lastTwoDayTours = dayRes.data.tours
-          ?.sort((a, b) => (b._id > a._id ? 1 : -1))
+ useEffect(() => {
+  const fetchTours = async () => {
+    try {
+      // Day tours – first added 2
+      const dayRes = await axiosInstance.get("/day-tours");
+      const firstTwoDayTours = dayRes.data.tours
+        ?.sort((a, b) => (a._id > b._id ? 1 : -1)) // oldest first
+        .slice(0, 2);
+      setDayTours(firstTwoDayTours || []);
+
+      // Round tours – first added 2
+      const roundRes = await axiosInstance.get("/round-tours");
+      if (roundRes.data?.success) {
+        const firstTwoRoundTours = roundRes.data.tours
+          ?.sort((a, b) => (a._id > b._id ? 1 : -1)) // oldest first
           .slice(0, 2);
-        setDayTours(lastTwoDayTours || []);
-
-        // Round tours
-        const roundRes = await axiosInstance.get("/round-tours");
-        if (roundRes.data?.success) {
-          const lastTwoRoundTours = roundRes.data.tours
-            ?.sort((a, b) => (b._id > a._id ? 1 : -1))
-            .slice(0, 2);
-          setRoundTours(lastTwoRoundTours || []);
-        }
-      } catch (err) {
-        console.error("Failed to fetch tours:", err);
+        setRoundTours(firstTwoRoundTours || []);
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch tours:", err);
+    }
+  };
 
-    fetchTours();
-  }, []);
+  fetchTours();
+}, []);
 
-  // Interleave tours
-  const allTours = [];
-  for (let i = 0; i < 2; i++) {
-    if (roundTours[i]) allTours.push({ ...roundTours[i], type: "round" });
-    if (dayTours[i]) allTours.push({ ...dayTours[i], type: "day" });
-  }
+ // Interleave tours – keeps round-day-round-day
+const allTours = [];
+for (let i = 0; i < 2; i++) {
+  if (roundTours[i]) allTours.push({ ...roundTours[i], type: "round" });
+  if (dayTours[i]) allTours.push({ ...dayTours[i], type: "day" });
+}
+
 
   return (
     <section
