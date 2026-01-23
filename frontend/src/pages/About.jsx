@@ -185,7 +185,7 @@ const About = () => {
         {/* ------------------- WHY NETLANKA TOURS ------------------- */}
         <section className="mt-16 mb-20 max-w-7xl mx-auto px-6 text-center relative z-10">
           <h1 className="text-3xl md:text-5xl font-bold text-[#1a1a1a] mb-12">
-            Why NetLanka Tours
+            Why Net Lanka Tours
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

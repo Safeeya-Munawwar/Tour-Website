@@ -61,7 +61,7 @@ export default function Video1() {
           </h1>
 
           <p className="text-gray-200 max-w-3xl text-sm md:text-lg mb-10">
-            NetLanka Travels is a trusted Sri Lanka travel agency offering
+            Net Lanka Travels is a trusted Sri Lanka travel agency offering
             tailor-made tour packages, private drivers, day tours, and
             unforgettable island experiences for foreign travelers.
           </p>

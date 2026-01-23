@@ -126,7 +126,7 @@ export default function Experiences() {
             </h2>
 
             <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-              Ne tLanka Travels offers authentic Sri Lanka travel experiences,
+              Net Lanka Travels offers authentic Sri Lanka travel experiences,
               including cultural tours, hill country journeys, beach
               experiences, and wildlife safaris for international travelers.
             </p>
