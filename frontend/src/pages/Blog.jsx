@@ -89,7 +89,7 @@ export default function Blog() {
           </h2>
 
           <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-            Read the NetLanka Travels Blog & News for expert Sri Lanka travel
+            Read the Net Lanka Travels Blog & News for expert Sri Lanka travel
             guides, itineraries, best places to visit, and tourism updates for
             international travelers
           </p>

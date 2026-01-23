@@ -110,7 +110,7 @@ export default function Footer() {
             className="w-40 mb-5 opacity-95"
           />
           <p className="text-gray-200 text-[15px] leading-relaxed mb-4 max-w-sm">
-            NetLanka Travels is your trusted travel partner in Sri Lanka,
+            Net Lanka Travels is your trusted travel partner in Sri Lanka,
             offering tailor-made tours, adventures, and premium travel
             experiences.
           </p>
