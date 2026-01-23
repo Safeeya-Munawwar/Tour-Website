@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function TermsConditions() {
   const [showText, setShowText] = useState(false);
@@ -11,6 +12,15 @@ export default function TermsConditions() {
 
   return (
     <div className="min-h-screen">
+       <Helmet>
+        <title>Terms & Conditions | Net Lanka Travels</title>
+        <meta
+          name="description"
+          content="Read the terms and conditions for using Net Lanka Travels services and booking Sri Lanka tours."
+        />
+        <link rel="canonical" href="https://www.netlankatravels.com/terms-and-conditions" />
+      </Helmet>
+
       {/* HERO HEADER */}
       <div className="relative w-full h-[360px] md:h-[560px] flex items-center justify-center text-white overflow-hidden">
         <img
