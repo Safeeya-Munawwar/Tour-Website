@@ -34,6 +34,7 @@ export default function BookTour() {
     travelStyle: "",
     accommodation: "",
     hotelCategory: "",
+    acceptTerms: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -174,7 +175,9 @@ export default function BookTour() {
     if (formData.adults < 1) err.adults = "Min 1 adult";
     if (formData.children < 0) err.children = "Invalid number";
     if (!formData.travelStyle) err.travelStyle = "Select a travel style";
-
+    if (!formData.acceptTerms) {
+      err.acceptTerms = "You must accept Terms & Privacy Policy";
+    }
     // Round tour only
     if (tourType === "round") {
       if (!formData.accommodation)
@@ -629,6 +632,43 @@ Net Lanka Travel
             rows="3"
             className="px-4 py-3 border rounded"
           />
+        </div>
+
+        {/* ---------------- Accept Terms ---------------- */}
+        <div className="mt-4">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  acceptTerms: e.target.checked,
+                }))
+              }
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 text-sm">
+              I accept the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Terms and Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Privacy Policy
+              </a>
+            </span>
+          </label>
         </div>
 
         {/* BUTTONS */}

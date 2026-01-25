@@ -27,7 +27,10 @@ const RoundTourBookingSchema = new mongoose.Schema({
   hotelCategory: {
     type: String,
     enum: ["2_star", "3_star", "4_star", "5_star", "comfortable"],
-    default: null,
+    required: function () {
+      return this.accommodation === "with";
+    },
+    default: undefined,
   },
 
   name: { type: String, required: true },
@@ -63,9 +66,9 @@ RoundTourBookingSchema.pre("save", function (next) {
 
 /**
  * Conditional validation
- * Hotel category required ONLY if accommodation = with
  */
 RoundTourBookingSchema.pre("validate", function (next) {
+  // If accommodation is "with", hotelCategory must be set
   if (this.accommodation === "with" && !this.hotelCategory) {
     this.invalidate(
       "hotelCategory",
@@ -73,8 +76,9 @@ RoundTourBookingSchema.pre("validate", function (next) {
     );
   }
 
+  // If accommodation is "without", unset hotelCategory
   if (this.accommodation === "without") {
-    this.hotelCategory = null;
+    this.hotelCategory = undefined; // ✅ use undefined, not null
   }
 
   next();

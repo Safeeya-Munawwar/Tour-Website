@@ -17,24 +17,31 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
   pickupLocation: { type: String, required: true },
   dropLocation: { type: String, required: true },
 
+  vehicle: {
+    type: String,
+    default: null,
+  },  
+
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
 
   adults: { type: Number, required: true },
   children: { type: Number },
 
-  // --- UPDATED FIELDS ---
   accommodation: { 
     type: String, 
     enum: ["with", "without"], 
     required: true 
   },
+
   hotelCategory: { 
     type: String, 
     enum: ["2_star","3_star","4_star","5_star","comfortable"], 
-    required: function() { return this.accommodation === "with"; }, 
-    default: null 
+    required: function () {
+      return this.accommodation === "with";
+    }
   },
+  
   selectedDestinations: {
     type: [String],
     default: [],

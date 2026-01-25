@@ -195,9 +195,10 @@ const CustomizeTourBookingAdmin = () => {
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm">Members</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
-               <th className="p-3 border border-[#1a354e] text-sm w-[160px]">
-  Accommodation
-</th>
+                <th className="p-3 border border-[#1a354e] text-sm">Vehicle</th>
+                <th className="p-3 border border-[#1a354e] text-sm w-[160px]">
+                  Accommodation
+                </th>
 
                 <th className="p-3 border border-[#1a354e] text-sm">Budget</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Status</th>
@@ -239,10 +240,15 @@ const CustomizeTourBookingAdmin = () => {
                           : "Not Specified"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-  {inq.accommodation === "with"
-    ? `With (${inq.hotelCategory?.replace("_", " ") || "Hotel"})`
-    : "Without"}
-</td>
+                        {inq.vehicle}
+                      </td>
+                      <td className="p-3 border border-[#2E5B84] text-sm">
+                        {inq.accommodation === "with"
+                          ? `With (${
+                              inq.hotelCategory?.replace("_", " ") || "Hotel"
+                            })`
+                          : "Without"}
+                      </td>
 
                       <td className="p-3 border border-[#2E5B84] text-sm">
                         {inq.currency && inq.budget
@@ -299,7 +305,7 @@ const CustomizeTourBookingAdmin = () => {
                             </a>
                           )}
                         </div>
-                      </td>                      
+                      </td>
                       <td className="flex justify-center items-center gap-2 mt-3 py-4">
                         <button
                           className="bg-[#2E5B84] text-white p-2 rounded hover:bg-[#1E3A60] transition"
@@ -433,16 +439,27 @@ const CustomizeTourBookingAdmin = () => {
                       ? new Date(selectedInquiry.endDate).toLocaleDateString()
                       : "Not Specified"}
                   </p>
-                  {/* Accommodation */}
-<p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
-  Accommodation:
-</p>
-<p className="p-2 border-b border-blue-950">
-  {selectedInquiry.accommodation === "with"
-    ? `With accommodation (${selectedInquiry.hotelCategory?.replace("_", " ")})`
-    : "Without accommodation"}
-</p>
 
+                  {/* Vehicle */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Vehicle:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.vehicle || "Not Specified"}
+                  </p>
+
+                  {/* Accommodation */}
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Accommodation:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.accommodation === "with"
+                      ? `With accommodation (${selectedInquiry.hotelCategory?.replace(
+                          "_",
+                          " "
+                        )})`
+                      : "Without accommodation"}
+                  </p>
 
                   {/* Adults */}
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">

@@ -24,7 +24,7 @@ const TailorMadeForm = () => {
   const [showExperienceModal, setShowExperienceModal] = useState(false);
   const [, setSelectedExperiences] = useState([]);
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
-
+  const [vehicles, setVehicles] = useState([]);
   const [formData, setFormData] = useState({
     // Step 1
     title: "",
@@ -39,10 +39,8 @@ const TailorMadeForm = () => {
     dropLocation: "",
     startDate: "",
     endDate: "",
-    // Step 2
     accommodation: "", // with / without
     hotelCategory: "", // 2*, 3*, 4*, 5*, comfortable
-
     adults: 1,
     children: 0,
     budget: "",
@@ -51,9 +49,11 @@ const TailorMadeForm = () => {
 
     // Step 3
     travelStyle: "",
+    vehicle: "",
     selectedExperiences: [],
     notes: "",
     hearAboutUs: "",
+    acceptTerms: false,
   });
 
   const travelStyles = [
@@ -139,6 +139,15 @@ const TailorMadeForm = () => {
       });
   }, []);
 
+  React.useEffect(() => {
+    axiosInstance
+      .get("/quick-taxi/taxis")
+      .then((res) => {
+        if (res.data.success) setVehicles(res.data.taxis);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   const handleNext = (e) => {
     e.preventDefault();
     if (step === 1 && !captchaChecked) {
@@ -178,10 +187,10 @@ const TailorMadeForm = () => {
     if (!formData.endDate) errors.push("End date is required");
     if (!formData.accommodation)
       errors.push("Accommodation selection is required");
-
     if (formData.accommodation === "with" && !formData.hotelCategory) {
       errors.push("Please select a hotel category");
     }
+    if (!formData.vehicle.trim()) errors.push("Vehicle Selection is required");
 
     if (formData.startDate && formData.endDate) {
       const start = new Date(formData.startDate);
@@ -190,6 +199,10 @@ const TailorMadeForm = () => {
       if (start < today) errors.push("Start date cannot be in the past");
       if (end < today) errors.push("End date cannot be in the past");
     }
+
+    if (!formData.acceptTerms) {
+      errors.push("You must accept Terms & Privacy Policy");
+    }    
 
     if (!formData.adults || Number(formData.adults) < 1)
       errors.push("At least 1 adult is required");
@@ -237,6 +250,7 @@ const TailorMadeForm = () => {
         notes: "",
         selectedDestinations: [],
         travelStyle: "",
+        vehicle: "",
         selectedExperiences: [],
         hearAboutUs: "",
       });
@@ -804,6 +818,27 @@ const TailorMadeForm = () => {
               </div>
             )}
 
+            {/* ---------------- Vehicle Selection ---------------- */}
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Select Preferred Vehicle *
+              </label>
+
+              <select
+                name="vehicle"
+                value={formData.vehicle}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select a vehicle</option>
+                {vehicles.map((v) => (
+                  <option key={v._id} value={v.name}>
+                    {v.name} • {v.seats} Seats
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* ---------------- Experiences ---------------- */}
             <div>
               <button
@@ -1036,6 +1071,15 @@ const TailorMadeForm = () => {
                             " "
                           )})`
                         : "Without accommodation"}
+                    </p>
+                  );
+                }
+
+                if (key === "acceptTerms") {
+                  return (
+                    <p key={key}>
+                      <strong>Terms & Privacy:</strong>{" "}
+                      {value ? "Accepted" : "Not Accepted"}
                     </p>
                   );
                 }
