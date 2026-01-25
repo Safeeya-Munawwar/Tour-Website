@@ -202,7 +202,7 @@ const TailorMadeForm = () => {
 
     if (!formData.acceptTerms) {
       errors.push("You must accept Terms & Privacy Policy");
-    }    
+    }
 
     if (!formData.adults || Number(formData.adults) < 1)
       errors.push("At least 1 adult is required");
@@ -542,7 +542,7 @@ const TailorMadeForm = () => {
             {/* ---------------- Budget & Currency ---------------- */}
             <div className="mt-4 w-full sm:w-full">
               <label className="block text-gray-700 font-semibold mb-1">
-                Estimated Budget (Per Person)
+                Estimated Budget (Per Person / Per Day)
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
