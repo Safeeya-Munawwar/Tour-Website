@@ -168,6 +168,7 @@ export default function BookEventTour({
         message: formData.message,
         taxiId: selectedTaxi,
         travelStyle: formData.travelStyle,
+        travelPurpose: formData.travelPurpose,
       });
 
       if (res.data.success) {
@@ -183,6 +184,7 @@ export default function BookEventTour({
           startTime: "00:00",
           message: "",
           travelStyle: "",
+          travelPurpose: "",
         });
         setSelectedTaxi("");
       } else {

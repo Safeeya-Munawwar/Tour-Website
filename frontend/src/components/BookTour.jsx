@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
-import {
-  FaUserTie,
-  FaHotel,
-  FaUsers,
-  FaCar,
-  FaPlane,
-} from "react-icons/fa";
+import { FaUserTie, FaHotel, FaUsers, FaCar, FaPlane } from "react-icons/fa";
 
 export default function BookTour() {
   const [tourType, setTourType] = useState("");
@@ -80,7 +74,6 @@ export default function BookTour() {
       icon: <FaPlane className="text-red-500" />,
     },
   ];
-
 
   // ---------------- FETCH TOURS ----------------
   useEffect(() => {
@@ -357,7 +350,7 @@ Net Lanka Travel
         {/* ---------------- Travel Style ---------------- */}
         <div className="flex flex-col gap-1">
           <label className="font-medium text-[#0B2545] text-left">
-            Select Vehicle <span className="text-red-500">*</span>
+            Travel Style<span className="text-red-500">*</span>
           </label>
 
           <button
@@ -450,51 +443,51 @@ Net Lanka Travel
           </div>
         )}
 
-        <div className="mt-4">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Travel Purpose *
-              </label>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-[#0B2545] text-left">
+            Travel Purpose <span className="text-red-500">*</span>
+          </label>
 
-              <select
-                name="travelPurpose"
-                value={formData.travelPurpose}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    travelPurpose: e.target.value,
-                    customTravelPurpose: "", // reset custom if changed
-                  }));
-                }}
-                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
-              >
-                <option value="">Select purpose</option>
-                {[
-                  "Family Tour",
-                  "Honeymoon",
-                  "Group",
-                  "Solo",
-                  "With Chauffeur",
-                  "Photography",
-                  "Other",
-                ].map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+          <select
+            name="travelPurpose"
+            value={formData.travelPurpose}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                travelPurpose: e.target.value,
+                customTravelPurpose: "", // reset custom if changed
+              }));
+            }}
+            className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+          >
+            <option value="">Select purpose</option>
+            {[
+              "Family Tour",
+              "Honeymoon",
+              "Group",
+              "Solo",
+              "With Chauffeur",
+              "Photography",
+              "Other",
+            ].map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
 
-              {/* Show custom text input if 'Other' selected */}
-              {formData.travelPurpose === "Other" && (
-                <input
-                  type="text"
-                  name="customTravelPurpose"
-                  value={formData.customTravelPurpose}
-                  onChange={handleChange}
-                  placeholder="Specify your purpose"
-                  className="w-full mt-2 p-3 rounded-lg border border-gray-300"
-                />
-              )}
-            </div>
+          {/* Show custom text input if 'Other' selected */}
+          {formData.travelPurpose === "Other" && (
+            <input
+              type="text"
+              name="customTravelPurpose"
+              value={formData.customTravelPurpose}
+              onChange={handleChange}
+              placeholder="Specify your purpose"
+              className="w-full mt-2 p-3 rounded-lg border border-gray-300"
+            />
+          )}
+        </div>
 
         {/* ---------------- Accommodation (Only for Round Tours) ---------------- */}
         {tourType === "round" && (

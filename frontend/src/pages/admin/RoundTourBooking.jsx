@@ -440,6 +440,14 @@ const RoundTourBookingAdmin = () => {
                   <p className="p-2 border-b border-blue-950">
                     {selectedBooking.travelStyle || "—"}
                   </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Travel Purpose:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.purpose || "Not Selected"}
+                  </p>
+                  
                   {/* Accommodation */}
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Accommodation:
