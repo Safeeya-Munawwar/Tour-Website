@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import { FaWhatsapp, FaEnvelope, FaEye, FaTrash } from "react-icons/fa";
 
 const RoundTourBookingAdmin = () => {
   const [bookings, setBookings] = useState([]);
@@ -241,8 +241,8 @@ const RoundTourBookingAdmin = () => {
                   Travel Style
                 </th>
                 <th className="p-3 border border-[#1a354e] text-sm">
-  Accommodation
-</th>
+                  Accommodation
+                </th>
 
                 <th className="p-3 border border-[#1a354e] text-sm">Vehicle</th>
                 <th className="p-3 border border-[#1a354e] text-sm">Date</th>
@@ -282,10 +282,10 @@ const RoundTourBookingAdmin = () => {
                         {b.travelStyle || "—"}
                       </td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
-  {b.accommodation === "with"
-    ? `With (${b.hotelCategory?.replace("_", " ")})`
-    : "Without"}
-</td>
+                        {b.accommodation === "with"
+                          ? `With (${b.hotelCategory?.replace("_", " ")})`
+                          : "Without"}
+                      </td>
 
                       <td>{b.taxiId ? b.taxiId.name : "—"}</td>
                       <td className="p-3 border border-[#2E5B84] text-sm">
@@ -352,16 +352,18 @@ const RoundTourBookingAdmin = () => {
 
                       <td className="flex justify-center items-center gap-2 mt-3 py-4">
                         <button
-                          className="bg-[#2E5B84] text-white px-3 py-1 rounded hover:bg-[#1E3A60] transition text-sm"
+                          className="bg-[#2E5B84] text-white p-2 rounded hover:bg-[#1E3A60] transition"
                           onClick={() => setSelectedBooking(b)}
+                          title="View"
                         >
-                          View
+                          <FaEye size={16} />
                         </button>
                         <button
-                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm"
+                          className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition"
                           onClick={() => handleDelete(b._id, b.source)}
+                          title="Delete"
                         >
-                          Delete
+                          <FaTrash size={16} />
                         </button>
                       </td>
                     </tr>
@@ -434,20 +436,22 @@ const RoundTourBookingAdmin = () => {
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Travel Style:
                   </p>
-                  
+
                   <p className="p-2 border-b border-blue-950">
                     {selectedBooking.travelStyle || "—"}
                   </p>
                   {/* Accommodation */}
-<p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
-  Accommodation:
-</p>
-<p className="p-2 border-b border-blue-950">
-  {selectedBooking.accommodation === "with"
-    ? `With Accommodation (${selectedBooking.hotelCategory?.replace("_", " ")})`
-    : "Without Accommodation"}
-</p>
-
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Accommodation:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedBooking.accommodation === "with"
+                      ? `With Accommodation (${selectedBooking.hotelCategory?.replace(
+                          "_",
+                          " "
+                        )})`
+                      : "Without Accommodation"}
+                  </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Vehicle:

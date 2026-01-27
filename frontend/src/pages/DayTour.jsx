@@ -107,7 +107,7 @@ export default function DayTour() {
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          NetLanka Travels offers Sri Lanka day tours with private drivers and
+          Net Lanka Travels offers Sri Lanka day tours with private drivers and
           local guides, covering popular tourist attractions, cultural
           highlights, and nature experiences across the island.
         </p>

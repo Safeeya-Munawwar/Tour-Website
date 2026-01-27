@@ -9,11 +9,12 @@ const QuickTaxi = () => {
   const [showText, setShowText] = useState(false);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage] = useState(1);
+
   // Scroll to top on page change
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [currentPage]);
+    window.scrollTo(0, 0);
+  }, []);
+  
   useEffect(() => {
     const timer = setTimeout(() => setShowText(true), 200);
     return () => clearTimeout(timer);
@@ -39,8 +40,12 @@ const QuickTaxi = () => {
   }, []);
 
   if (loading) {
-    return;
-  }
+    return (
+      <div className="min-h-[100vh] flex items-center justify-center bg-white">
+        <p className="text-gray-500 text-lg"></p>
+      </div>
+    );
+  }  
 
   return (
     <div className="font-poppins bg-white text-[#222]">

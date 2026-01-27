@@ -25,9 +25,9 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     startTime: "00:00",
     message: "",
     travelStyle: "",
-    // ✅ ADD
   accommodation: "",
   hotelCategory: "",
+  acceptTerms: false,
   });
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
   const [errors, setErrors] = useState({});
@@ -156,7 +156,9 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
       newErrors.adults = "At least 1 adult is required";
     if (Number(formData.children) < 0)
       newErrors.children = "Children cannot be negative";
-
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "You must accept Terms & Privacy Policy";
+    }
     if (!formData.startDate) newErrors.startDate = "Start date is required";
     else {
       const today = new Date();
@@ -680,6 +682,43 @@ ${formData.message || "–"}
           <br />
           Final total is confirmed upon booking.
         </p>
+
+                {/* ---------------- Accept Terms ---------------- */}
+                <div className="mt-4">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  acceptTerms: e.target.checked,
+                }))
+              }
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 text-sm">
+              I accept the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Terms and Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Privacy Policy
+              </a>
+            </span>
+          </label>
+        </div>
 
         {/* Submit to Backend */}
         <button

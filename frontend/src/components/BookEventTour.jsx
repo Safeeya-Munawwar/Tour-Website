@@ -29,6 +29,7 @@ export default function BookEventTour({
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    acceptTerms: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -157,6 +158,9 @@ export default function BookEventTour({
       newErrors.startDate = "Date cannot be in the past";
     if (!formData.startTime) newErrors.startTime = "Event time is required";
     if (!formData.travelStyle) newErrors.travelStyle = "Select a travel style";
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "You must accept Terms & Privacy Policy";
+    }
     return newErrors;
   };
 
@@ -329,8 +333,8 @@ ${formData.message || "–"}
           </div>
         )}
 
-                {/* ---------------- Travel Style ---------------- */}
-                <div>
+        {/* ---------------- Travel Style ---------------- */}
+        <div>
           <label className="font-medium mb-1 block">
             Travel Style <span className="text-red-500">*</span>
           </label>
@@ -501,6 +505,43 @@ ${formData.message || "–"}
             placeholder="Any additional requests"
             className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-28"
           />
+        </div>
+
+        {/* ---------------- Accept Terms ---------------- */}
+        <div className="mt-4">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  acceptTerms: e.target.checked,
+                }))
+              }
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 text-sm">
+              I accept the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Terms and Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Privacy Policy
+              </a>
+            </span>
+          </label>
         </div>
 
         {/* Submit */}

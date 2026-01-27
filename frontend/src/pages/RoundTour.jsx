@@ -91,7 +91,7 @@ export default function RoundTour() {
         </h2>
 
         <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-          NetLanka Travels provides Sri Lanka round tours and multi-day tour
+          Net Lanka Travels provides Sri Lanka round tours and multi-day tour
           packages, featuring private transport, guided sightseeing, and
           tailor-made itineraries for foreign travelers.
         </p>

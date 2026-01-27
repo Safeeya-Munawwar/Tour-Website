@@ -25,6 +25,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    acceptTerms: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -39,32 +40,27 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const travelStyles = [
     {
       title: "Budget Tour",
-      tooltip:
-        "Transportation & private guide. ",
+      tooltip: "Transportation & private guide. ",
       icon: <FaMoneyBillWave className="text-blue-500" />,
     },
     {
       title: "Premium Tour",
-      tooltip:
-        "Transportation with private guide and driver.",
+      tooltip: "Transportation with private guide and driver.",
       icon: <FaStar className="text-yellow-500" />,
     },
     {
       title: "Luxury Tour",
-      tooltip:
-        "Transportation with private guide and driver.",
+      tooltip: "Transportation with private guide and driver.",
       icon: <FaHotel className="text-purple-500" />,
     },
     {
       title: "Family Tour",
-      tooltip:
-        "Fun travel experiences suitable for the whole family.",
+      tooltip: "Fun travel experiences suitable for the whole family.",
       icon: <FaUsers className="text-green-600" />,
     },
     {
       title: "Honeymoon Tour",
-      tooltip:
-        "Romantic trips specially designed for couples.",
+      tooltip: "Romantic trips specially designed for couples.",
       icon: <FaHeart className="text-pink-600" />,
     },
     {
@@ -162,10 +158,15 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
       if (selected < today) newErrors.startDate = "Date cannot be in the past";
     }
     if (!formData.startTime) newErrors.startTime = "Pickup time is required";
-
+  
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "You must accept Terms & Privacy Policy";
+    }
+  
     if (!formData.travelStyle) newErrors.travelStyle = "Select a travel style";
+  
     return newErrors;
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -590,6 +591,43 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
           <br />
           Final total is confirmed upon booking.
         </p>
+
+        {/* ---------------- Accept Terms ---------------- */}
+        <div className="mt-4">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  acceptTerms: e.target.checked,
+                }))
+              }
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 text-sm">
+              I accept the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Terms and Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Privacy Policy
+              </a>
+            </span>
+          </label>
+        </div>
 
         {/* Submit to Backend */}
         <button

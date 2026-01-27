@@ -3,17 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 import DestinationSelector from "./DestinationSelector";
 import ExperienceSelector from "./ExperienceSelector";
-import {
-  FaMoneyBillWave,
-  FaStar,
-  FaHotel,
-  FaUsers,
-  FaHeart,
-  FaTaxi,
-  FaRoute,
-  FaCar,
-  FaPlane,
-} from "react-icons/fa";
+import { FaUserTie, FaHotel, FaUsers, FaCar, FaPlane } from "react-icons/fa";
 
 const TailorMadeForm = () => {
   const [step, setStep] = useState(1);
@@ -24,7 +14,8 @@ const TailorMadeForm = () => {
   const [showExperienceModal, setShowExperienceModal] = useState(false);
   const [, setSelectedExperiences] = useState([]);
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
-
+  const [vehicles, setVehicles] = useState([]);
+  const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
     // Step 1
     title: "",
@@ -39,10 +30,9 @@ const TailorMadeForm = () => {
     dropLocation: "",
     startDate: "",
     endDate: "",
-    // Step 2
-    accommodation: "", // with / without
-    hotelCategory: "", // 2*, 3*, 4*, 5*, comfortable
-
+    travelStyle: "",
+    accommodation: "",
+    hotelCategory: "",
     adults: 1,
     children: 0,
     budget: "",
@@ -50,72 +40,52 @@ const TailorMadeForm = () => {
     selectedDestinations: [],
 
     // Step 3
-    travelStyle: "",
+    entranceFee: "",
+    travelPurpose: "",
+    customTravelPurpose: "",
+    vehicle: "",
     selectedExperiences: [],
     notes: "",
     hearAboutUs: "",
+    acceptTerms: false,
   });
 
   const travelStyles = [
     {
-      title: "Budget Tour",
+      title: "Private Tour, Permanent Guide",
       tooltip:
-        "Transportation & private guide (optional - accommodation & chauffeur guide). ",
-      icon: <FaMoneyBillWave className="text-blue-500" />,
+        "Enjoy a fully private tour with a certified SL National tourist guide or lecturer.",
+      icon: <FaUserTie className="text-blue-500" />,
     },
     {
-      title: "Premium Tour",
+      title: "Private Transfer, Area Guide",
       tooltip:
-        "Transportation with private guide and driver, 4 Star accommodation.",
-      icon: <FaStar className="text-yellow-500" />,
-    },
-    {
-      title: "Luxury Tour",
-      tooltip:
-        "Transportation with private guide and driver, 4 Star or 5 Star accommodation.",
-      icon: <FaHotel className="text-purple-500" />,
-    },
-    {
-      title: "Family Tour",
-      tooltip:
-        "Fun travel experiences suitable for the whole family (optional - chauffeur guide).",
-      icon: <FaUsers className="text-green-600" />,
-    },
-    {
-      title: "Honeymoon Tour",
-      tooltip:
-        "Romantic trips specially designed for couples (optional - chauffeur guide).",
-      icon: <FaHeart className="text-pink-600" />,
-    },
-    {
-      title: "Transportation Only",
-      tooltip: "Only transportation is provided with English-speaking driver.",
-      icon: <FaTaxi className="text-gray-700" />,
-    },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip: "Only transportation is provided with a chauffeur guide.",
-      icon: <FaCar className="text-gray-700" />,
+        "Get private transportation and a local guide for specific areas during your trip.",
+      icon: <FaCar className="text-green-500" />,
     },
     {
       title: "Join a Group Tour",
-      tooltip: "Travel with other tourists in a group.",
-      icon: <FaUsers className="text-pink-500" />,
-    },
-    {
-      title: "Self-Organized",
-      tooltip: "Plan and manage the trip entirely yourself.",
-      icon: <FaRoute className="text-orange-500" />,
-    },
-    {
-      title: "Private Tour, Permanent Guide",
-      tooltip: "A guide will accompany you throughout your tour.",
-      icon: <FaUsers className="text-green-500" />,
+      tooltip:
+        "Travel with a group of like-minded travelers with shared itinerary and guide.",
+      icon: <FaUsers className="text-purple-500" />,
     },
     {
       title: "Organized Hotels/Transfer, No Guide",
-      tooltip: "Hotels and transfers are arranged, but no guide included.",
-      icon: <FaPlane className="text-indigo-500" />,
+      tooltip:
+        "Accommodation and transfers are arranged, but no guide is included.",
+      icon: <FaHotel className="text-orange-500" />,
+    },
+    {
+      title: "Self-Organized - Transport Only, Without Guide",
+      tooltip:
+        "Plan your own trip and manage transportation independently, without a guide.",
+      icon: <FaPlane className="text-red-500" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
     },
   ];
 
@@ -137,6 +107,15 @@ const TailorMadeForm = () => {
         console.error("Failed to fetch experiences:", err);
         toast.error("Failed to load experiences");
       });
+  }, []);
+
+  React.useEffect(() => {
+    axiosInstance
+      .get("/quick-taxi/taxis")
+      .then((res) => {
+        if (res.data.success) setVehicles(res.data.taxis);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   const handleNext = (e) => {
@@ -178,10 +157,10 @@ const TailorMadeForm = () => {
     if (!formData.endDate) errors.push("End date is required");
     if (!formData.accommodation)
       errors.push("Accommodation selection is required");
-
     if (formData.accommodation === "with" && !formData.hotelCategory) {
       errors.push("Please select a hotel category");
     }
+    if (!formData.vehicle.trim()) errors.push("Vehicle Selection is required");
 
     if (formData.startDate && formData.endDate) {
       const start = new Date(formData.startDate);
@@ -189,6 +168,27 @@ const TailorMadeForm = () => {
       if (start > end) errors.push("Start date cannot be after end date");
       if (start < today) errors.push("Start date cannot be in the past");
       if (end < today) errors.push("End date cannot be in the past");
+    }
+
+    if (
+      formData.currency !== "No Idea" &&
+      formData.budget &&
+      Number(formData.budget) < 100
+    ) {
+      errors.push("Budget must be at least 100");
+    }
+
+    if (!formData.entranceFee)
+      errors.push("Entrance Fee selection is required");
+    if (!formData.travelPurpose) errors.push("Travel Purpose is required");
+    if (
+      formData.travelPurpose === "Other" &&
+      !formData.customTravelPurpose.trim()
+    )
+      errors.push("Please specify your Travel Purpose");
+
+    if (!formData.acceptTerms) {
+      errors.push("You must accept Terms & Privacy Policy");
     }
 
     if (!formData.adults || Number(formData.adults) < 1)
@@ -237,6 +237,7 @@ const TailorMadeForm = () => {
         notes: "",
         selectedDestinations: [],
         travelStyle: "",
+        vehicle: "",
         selectedExperiences: [],
         hearAboutUs: "",
       });
@@ -423,6 +424,7 @@ const TailorMadeForm = () => {
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
+                  min={today}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
@@ -435,282 +437,11 @@ const TailorMadeForm = () => {
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleChange}
+                  min={formData.startDate || today}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
             </div>
-            {/* ---------------- Accommodation ---------------- */}
-            <div>
-              <label className="block text-gray-700 font-semibold mb-1">
-                Accommodation *
-              </label>
-
-              <div className="relative">
-                <select
-                  name="accommodation"
-                  value={formData.accommodation}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      accommodation: e.target.value,
-                      hotelCategory: "", // reset when changed
-                    }))
-                  }
-                  className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
-                >
-                  <option value="">Select accommodation</option>
-                  <option value="with">With accommodation</option>
-                  <option value="without">Without accommodation</option>
-                </select>
-
-                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  ▼
-                </div>
-              </div>
-            </div>
-            {formData.accommodation === "with" && (
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Hotel Category *
-                </label>
-
-                <div className="relative">
-                  <select
-                    name="hotelCategory"
-                    value={formData.hotelCategory}
-                    onChange={handleChange}
-                    className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
-                  >
-                    <option value="">Select hotel category</option>
-                    <option value="2_star">2 Star Hotel</option>
-                    <option value="3_star">3 Star Hotel</option>
-                    <option value="4_star">4 Star Hotel</option>
-                    <option value="5_star">5 Star Hotel</option>
-                    <option value="comfortable">Comfortable Hotel</option>
-                  </select>
-
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-                    ▼
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Adults *
-                </label>
-                <input
-                  type="number"
-                  name="adults"
-                  value={formData.adults}
-                  min={1}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Children
-                </label>
-                <input
-                  type="number"
-                  name="children"
-                  value={formData.children}
-                  min={0}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
-              </div>
-            </div>
-
-            {/* ---------------- Budget & Currency ---------------- */}
-            <div className="mt-4 w-full sm:w-full">
-              <label className="block text-gray-700 font-semibold mb-1">
-                Estimated Budget (Per Person)
-              </label>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Currency Dropdown */}
-                <div className="relative">
-                  <select
-                    name="currency"
-                    value={formData.currency}
-                    onChange={handleChange}
-                    className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
-                  >
-                    <option value="" disabled>
-                      Select currency
-                    </option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="LKR">LKR</option>
-                    <option value="No Idea">No Idea</option>
-                    <option value="Other">Other</option>
-                  </select>
-
-                  {/* Dropdown arrow */}
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-                    ▼
-                  </div>
-                </div>
-
-                {/* Budget Input */}
-                {formData.currency !== "Other" ? (
-                  <input
-                    type="number"
-                    name="budget"
-                    value={formData.budget}
-                    onChange={handleChange}
-                    placeholder="Total Amount"
-                    disabled={formData.currency === "No Idea"}
-                    className={`p-4 rounded-lg border border-gray-300 w-full col-span-2 transition-all duration-300 ${
-                      formData.currency === "No Idea"
-                        ? "bg-gray-100 cursor-not-allowed"
-                        : "hover:border-blue-200"
-                    }`}
-                  />
-                ) : (
-                  <>
-                    {/* Custom Currency */}
-                    <input
-                      type="text"
-                      name="customCurrency"
-                      value={formData.customCurrency || ""}
-                      onChange={handleChange}
-                      placeholder="Enter Currency (e.g., INR)"
-                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
-                    />
-
-                    {/* Custom Budget */}
-                    <input
-                      type="number"
-                      name="budget"
-                      value={formData.budget}
-                      onChange={handleChange}
-                      placeholder="Total Amount"
-                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
-                    />
-                  </>
-                )}
-              </div>
-
-              {/* Display per person */}
-              {formData.currency !== "No Idea" &&
-                formData.budget &&
-                (formData.currency !== "Other" || formData.customCurrency) && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Approx. per person:{" "}
-                    <strong>
-                      {Number(formData.budget).toFixed(2)}{" "}
-                      {formData.currency === "Other"
-                        ? formData.customCurrency
-                        : formData.currency}
-                    </strong>
-                  </p>
-                )}
-
-              {formData.currency === "No Idea" && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Don’t worry - we’ll suggest the best options for your trip.
-                </p>
-              )}
-            </div>
-
-            {/* Destination Selection */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowDestinationModal(true)}
-                className="w-full flex justify-between items-center bg-white border border-gray-400 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-100 transition font-semibold"
-              >
-                Select Destinations
-                <svg
-                  className="w-5 h-5 ml-2 text-gray-600"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </button>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                {selectedDestinations.length > 0 ? (
-                  selectedDestinations.map((d, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm"
-                    >
-                      {d}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-gray-400">No destination selected</span>
-                )}
-              </div>
-            </div>
-
-            {showDestinationModal && (
-              <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
-                onClick={(e) =>
-                  e.target === e.currentTarget && setShowDestinationModal(false)
-                }
-              >
-                <div
-                  className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl 
-                 flex flex-col overflow-hidden rounded-2xl relative"
-                >
-                  <DestinationSelector
-                    initialSelected={selectedDestinations}
-                    onConfirm={(newSelection) => {
-                      setSelectedDestinations(newSelection);
-                      setShowDestinationModal(false);
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
-              >
-                ← Previous
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
-              >
-                Next Step →
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* Step 3 */}
-        {step === 3 && (
-          <form className="space-y-6">
-            <h2 className="text-xl font-bold mb-2">
-              Step 3: Customize Your Tour
-            </h2>
-
-            <p className="text-sm text-gray-500 mb-4">
-              Tell us how you would like to experience Sri Lanka
-            </p>
 
             {/* ---------------- Travel Style ---------------- */}
             <div>
@@ -800,6 +531,364 @@ const TailorMadeForm = () => {
                       Confirm
                     </button>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* ---------------- Accommodation ---------------- */}
+            <div>
+              <label className="block text-gray-700 font-semibold mb-1">
+                Accommodation *
+              </label>
+
+              <div className="relative">
+                <select
+                  name="accommodation"
+                  value={formData.accommodation}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      accommodation: e.target.value,
+                      hotelCategory: "", // reset when changed
+                    }))
+                  }
+                  className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
+                >
+                  <option value="">Select accommodation</option>
+                  <option value="with">With accommodation</option>
+                  <option value="without">Without accommodation</option>
+                </select>
+
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                  ▼
+                </div>
+              </div>
+            </div>
+            {formData.accommodation === "with" && (
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Hotel Category *
+                </label>
+
+                <div className="relative">
+                  <select
+                    name="hotelCategory"
+                    value={formData.hotelCategory}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-md border border-gray-300 bg-white appearance-none"
+                  >
+                    <option value="">Select hotel category</option>
+                    <option value="2_star">2 Star Hotel</option>
+                    <option value="3_star">3 Star Hotel</option>
+                    <option value="4_star">4 Star Hotel</option>
+                    <option value="5_star">5 Star Hotel</option>
+                    <option value="comfortable">Comfortable Hotel</option>
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                    ▼
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Adults *
+                </label>
+                <input
+                  type="number"
+                  name="adults"
+                  value={formData.adults}
+                  min={1}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Children
+                </label>
+                <input
+                  type="number"
+                  name="children"
+                  value={formData.children}
+                  min={0}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+            </div>
+
+            {/* ---------------- Budget & Currency ---------------- */}
+            <div className="mt-4 w-full sm:w-full">
+              <label className="block text-gray-700 font-semibold mb-1">
+                Estimated Budget (Per Person / Per Day)
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Currency Dropdown */}
+                <div className="relative">
+                  <select
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-lg border border-gray-300 bg-white text-gray-800 cursor-pointer appearance-none pr-10 transition-all duration-300 hover:border-blue-200"
+                  >
+                    <option value="" disabled>
+                      Select currency
+                    </option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="LKR">LKR</option>
+                    <option value="No Idea">No Idea</option>
+                    <option value="Other">Other</option>
+                  </select>
+
+                  {/* Dropdown arrow */}
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                    ▼
+                  </div>
+                </div>
+
+                {/* Budget Input */}
+                {formData.currency !== "Other" ? (
+                  <input
+                    type="number"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="Total Amount"
+                    disabled={formData.currency === "No Idea"}
+                    min={100} // <-- minimum 100
+                    className={`p-4 rounded-lg border border-gray-300 w-full col-span-2 transition-all duration-300 ${
+                      formData.currency === "No Idea"
+                        ? "bg-gray-100 cursor-not-allowed"
+                        : "hover:border-blue-200"
+                    }`}
+                  />
+                ) : (
+                  <>
+                    {/* Custom Currency */}
+                    <input
+                      type="text"
+                      name="customCurrency"
+                      value={formData.customCurrency || ""}
+                      onChange={handleChange}
+                      placeholder="Enter Currency (e.g., INR)"
+                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
+                    />
+
+                    {/* Custom Budget */}
+                    <input
+                      type="number"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      placeholder="Total Amount"
+                      min={100} // <-- minimum 100
+                      className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
+                    />
+                  </>
+                )}
+              </div>
+
+              {/* Display per person */}
+              {formData.currency !== "No Idea" &&
+                formData.budget &&
+                (formData.currency !== "Other" || formData.customCurrency) && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Approx. per person:{" "}
+                    <strong>
+                      {Number(formData.budget).toFixed(2)}{" "}
+                      {formData.currency === "Other"
+                        ? formData.customCurrency
+                        : formData.currency}
+                    </strong>
+                  </p>
+                )}
+
+              {formData.currency === "No Idea" && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Don’t worry - we’ll suggest the best options for your trip.
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
+              >
+                ← Previous
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
+              >
+                Next Step →
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Step 3 */}
+        {step === 3 && (
+          <form className="space-y-6">
+            <h2 className="text-xl font-bold mb-2">
+              Step 3: Customize Your Tour
+            </h2>
+
+            <p className="text-sm text-gray-500 mb-4">
+              Tell us how you would like to experience Sri Lanka
+            </p>
+
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Entrance Fee *
+              </label>
+              <select
+                name="entranceFee"
+                value={formData.entranceFee}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select option</option>
+                <option value="with">With Entrance Fee</option>
+                <option value="without">Without Entrance Fee</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Travel Purpose *
+              </label>
+
+              <select
+                name="travelPurpose"
+                value={formData.travelPurpose}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    travelPurpose: e.target.value,
+                    customTravelPurpose: "", // reset custom if changed
+                  }));
+                }}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select purpose</option>
+                {[
+                  "Family Tour",
+                  "Honeymoon",
+                  "Group",
+                  "Solo",
+                  "With Chauffeur",
+                  "Photography",
+                  "Other",
+                ].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              {/* Show custom text input if 'Other' selected */}
+              {formData.travelPurpose === "Other" && (
+                <input
+                  type="text"
+                  name="customTravelPurpose"
+                  value={formData.customTravelPurpose}
+                  onChange={handleChange}
+                  placeholder="Specify your purpose"
+                  className="w-full mt-2 p-3 rounded-lg border border-gray-300"
+                />
+              )}
+            </div>
+
+            {/* ---------------- Vehicle Selection ---------------- */}
+            <div className="mt-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Select Preferred Vehicle *
+              </label>
+
+              <select
+                name="vehicle"
+                value={formData.vehicle}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select a vehicle</option>
+                {vehicles.map((v) => (
+                  <option key={v._id} value={v.name}>
+                    {v.name} • {v.seats} Seats
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Destination Selection */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowDestinationModal(true)}
+                className="w-full flex justify-between items-center bg-white border border-gray-400 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-100 transition font-semibold"
+              >
+                Select Destinations
+                <svg
+                  className="w-5 h-5 ml-2 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div className="flex flex-wrap gap-2 mt-2">
+                {selectedDestinations.length > 0 ? (
+                  selectedDestinations.map((d, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm"
+                    >
+                      {d}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-gray-400">No destination selected</span>
+                )}
+              </div>
+            </div>
+
+            {showDestinationModal && (
+              <div
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
+                onClick={(e) =>
+                  e.target === e.currentTarget && setShowDestinationModal(false)
+                }
+              >
+                <div
+                  className="w-[95vw] max-w-[700px] h-[90vh] bg-white shadow-2xl 
+                 flex flex-col overflow-hidden rounded-2xl relative"
+                >
+                  <DestinationSelector
+                    initialSelected={selectedDestinations}
+                    onConfirm={(newSelection) => {
+                      setSelectedDestinations(newSelection);
+                      setShowDestinationModal(false);
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -1036,6 +1125,15 @@ const TailorMadeForm = () => {
                             " "
                           )})`
                         : "Without accommodation"}
+                    </p>
+                  );
+                }
+
+                if (key === "acceptTerms") {
+                  return (
+                    <p key={key}>
+                      <strong>Terms & Privacy:</strong>{" "}
+                      {value ? "Accepted" : "Not Accepted"}
                     </p>
                   );
                 }

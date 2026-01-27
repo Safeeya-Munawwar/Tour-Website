@@ -1,6 +1,3 @@
-
-
-
 const express = require("express");
 const router = express.Router();
 const RoundTourBooking = require("../models/RoundTourBooking");
@@ -40,7 +37,41 @@ const createDayBeforeReminder = async (booking, type) => {
 // ---------------- CREATE BOOKING ----------------
 router.post("/", async (req, res) => {
   try {
-    const {
+    let {
+      tourId,
+      name,
+      email,
+      phone,
+      adults = 1,
+      children = 0,
+      pickupLocation,
+      startDate,
+      startTime,
+      message,
+      taxiId,
+      travelStyle,
+      accommodation,
+      hotelCategory,
+    } = req.body;
+
+    // Basic validations
+    if (!tourId)
+      return res.status(400).json({ success: false, error: "tourId is required" });
+
+    if (!accommodation)
+      return res.status(400).json({ success: false, error: "Accommodation is required" });
+
+    if (accommodation === "with" && !hotelCategory)
+      return res.status(400).json({
+        success: false,
+        error: "Hotel category is required when accommodation is selected",
+      });
+
+    // If accommodation is "without", ignore hotelCategory
+    if (accommodation === "without") hotelCategory = undefined;
+
+    // Prepare booking object
+    const bookingData = {
       tourId,
       name,
       email,
@@ -48,45 +79,18 @@ router.post("/", async (req, res) => {
       adults,
       children,
       pickupLocation,
-      startDate,
+      startDate: new Date(startDate),
       startTime,
       message,
       taxiId,
       travelStyle,
-
-      // ✅ NEW
       accommodation,
       hotelCategory,
-    } = req.body;
+    };
 
-    if (!tourId) {
-      return res.status(400).json({
-        success: false,
-        error: "tourId is required",
-      });
-    }
+    const booking = await RoundTourBooking.create(bookingData);
 
-    if (!accommodation) {
-      return res.status(400).json({
-        success: false,
-        error: "Accommodation is required",
-      });
-    }
-
-    if (accommodation === "with" && !hotelCategory) {
-      return res.status(400).json({
-        success: false,
-        error: "Hotel category is required when accommodation is selected",
-      });
-    }
-
-    // Save booking
-    const booking = await RoundTourBooking.create({
-      ...req.body,
-      startDate: new Date(startDate),
-    });
-
-    // Populate tour & taxi
+    // Optional: populate tour & taxi for email or response
     await booking.populate([
       { path: "tourId", select: "title location" },
       { path: "taxiId", select: "name seats ac transmission" },
@@ -97,10 +101,10 @@ router.post("/", async (req, res) => {
         ? `With Accommodation (${booking.hotelCategory.replace("_", " ")})`
         : "Without Accommodation";
 
-   const adminEmail = process.env.EMAIL_USER;
-const adminSubject = `New Round Tour Booking`;
+    const adminEmail = process.env.EMAIL_USER;
+    const adminSubject = `New Round Tour Booking`;
 
-const adminHtml = `
+    const adminHtml = `
 <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
   <h2 style="color: #0d203a;">New Round Tour Booking Received</h2>
   <p>Dear Admin,</p>
@@ -115,9 +119,15 @@ const adminHtml = `
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Name</td><td style="border:1px solid #1a354e; padding:8px;">${name}</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Email</td><td style="border:1px solid #1a354e; padding:8px;">${email}</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Phone</td><td style="border:1px solid #1a354e; padding:8px;">${phone}</td></tr>
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Tour</td><td style="border:1px solid #1a354e; padding:8px;">${booking.tourId?.title || "—"}</td></tr>
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Location</td><td style="border:1px solid #1a354e; padding:8px;">${booking.tourId?.location || "—"}</td></tr>
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${booking.travelStyle || "—"}</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Tour</td><td style="border:1px solid #1a354e; padding:8px;">${
+      booking.tourId?.title || "—"
+    }</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Location</td><td style="border:1px solid #1a354e; padding:8px;">${
+      booking.tourId?.location || "—"
+    }</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${
+      booking.travelStyle || "—"
+    }</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Accommodation</td><td style="border:1px solid #1a354e; padding:8px;">${accommodationText}</td></tr>
 
     <tr>
@@ -125,7 +135,9 @@ const adminHtml = `
       <td style="border:1px solid #1a354e; padding:8px;">
         ${
           booking.taxiId
-            ? `${booking.taxiId.name} – Seats: ${booking.taxiId.seats} - ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+            ? `${booking.taxiId.name} – Seats: ${booking.taxiId.seats} - ${
+                booking.taxiId.ac ? "AC" : "Non-AC"
+              }`
             : "—"
         }
       </td>
@@ -135,18 +147,20 @@ const adminHtml = `
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Children</td><td style="border:1px solid #1a354e; padding:8px;">${children}</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Pickup Location</td><td style="border:1px solid #1a354e; padding:8px;">${pickupLocation}</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Date & Time</td><td style="border:1px solid #1a354e; padding:8px;">${startDate} at ${startTime}</td></tr>
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Message</td><td style="border:1px solid #1a354e; padding:8px;">${message || "N/A"}</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Message</td><td style="border:1px solid #1a354e; padding:8px;">${
+      message || "N/A"
+    }</td></tr>
   </table>
 
   <p style="margin-top: 15px;">Best Regards,<br/><strong>Net Lanka Travels</strong></p>
 </div>
 `;
 
-sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
+    sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
-   const userSubject = `Booking Received - Net Lanka Travels`;
+    const userSubject = `Booking Received - Net Lanka Travels`;
 
-const userHtml = `
+    const userHtml = `
 <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
   <h2 style="color: #0d203a;">Booking Received – Thank You!</h2>
   <p>Dear <strong>${name}</strong>,</p>
@@ -156,8 +170,12 @@ const userHtml = `
   <h3 style="color: #0d203a;">Your Booking Details</h3>
 
   <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Tour</td><td style="border:1px solid #1a354e; padding:8px;">${booking.tourId?.title || "—"}</td></tr>
-    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${booking.travelStyle || "—"}</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Tour</td><td style="border:1px solid #1a354e; padding:8px;">${
+      booking.tourId?.title || "—"
+    }</td></tr>
+    <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${
+      booking.travelStyle || "—"
+    }</td></tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Accommodation</td><td style="border:1px solid #1a354e; padding:8px;">${accommodationText}</td></tr>
 
     <tr>
@@ -176,7 +194,7 @@ const userHtml = `
 </div>
 `;
 
-sendEmail({ to: email, subject: userSubject, html: userHtml });
+    sendEmail({ to: email, subject: userSubject, html: userHtml });
 
     await createDayBeforeReminder(booking, "Round");
 

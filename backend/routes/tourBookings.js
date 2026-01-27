@@ -30,6 +30,8 @@ router.post("/", async (req, res) => {
       tourType,
       taxiId,
       travelStyle,
+      accommodation,
+      hotelCategory,
     } = req.body;
 
     if (!tourId) {
@@ -38,11 +40,27 @@ router.post("/", async (req, res) => {
         .json({ success: false, error: "tourId is required" });
     }
 
+    // Validate accommodation for Round Tours
+    if (tourType === "round" && !accommodation) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Accommodation is required for Round Tours" });
+    }
+
+    // Validate hotel category if accommodation is "with"
+    if (accommodation === "with" && !hotelCategory) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Hotel category is required if accommodation is 'with'" });
+    }
+
     const booking = await TourBooking.create({
       ...req.body,
+      accommodation: req.body.accommodation || undefined, 
+      hotelCategory: req.body.hotelCategory || "",
       startDate: new Date(startDate),
     });
-
+    
     // Populate both tourId and taxiId
     await booking.populate([
       { path: "tourId", select: "title location" },
@@ -54,13 +72,9 @@ router.post("/", async (req, res) => {
     const adminSubject = `New ${tourType || "Tour"} Tour Booking`;
     const adminHtml = `
       <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
-        <h2 style="color: #0d203a;">New ${
-          tourType || "Tour"
-        } Booking Received</h2>
+        <h2 style="color: #0d203a;">New ${tourType || "Tour"} Booking Received</h2>
         <p>Dear Admin,</p>
-        <p>A new ${
-          tourType || "tour"
-        } booking has been submitted. Details are below:</p>
+        <p>A new ${tourType || "tour"} booking has been submitted. Details are below:</p>
     
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px; max-width: 600px;">
           <tr style="background-color: #f2f2f2;">
@@ -81,34 +95,34 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              booking.tourId?.title || "—"
-            }</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              booking.tourId?.location || "—"
-            }</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.location || "—"}</td>
           </tr>
           <tr>
-        <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
-        <td style="border: 1px solid #1a354e; padding: 8px;">${
-          booking.travelStyle || "—"
-        }</td>
-      </tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.travelStyle || "—"}</td>
+          </tr>
           <tr>
-  <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
-  <td style="border: 1px solid #1a354e; padding: 8px;">
-  ${
-    booking.taxiId
-      ? `${booking.taxiId.name} – 
-      Seats: ${booking.taxiId.seats} - 
-      ${booking.taxiId.ac ? "AC" : "Non-AC"}`
-      : "—"
-  }
-  </td>
-</tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Accommodation</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.accommodation || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Hotel Category</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.hotelCategory || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">
+              ${
+                booking.taxiId
+                  ? `${booking.taxiId.name} – Seats: ${booking.taxiId.seats} - ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+                  : "—"
+              }
+            </td>
+          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
@@ -123,15 +137,11 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Date & Time</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(
-              startDate
-            )} at ${startTime}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)} at ${startTime}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              message || "N/A"
-            }</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
           </tr>
         </table>
     
@@ -141,7 +151,6 @@ router.post("/", async (req, res) => {
         <strong>Net Lanka Travels</strong></p>
       </div>
     `;
-
     sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml });
 
     // ---------------- SEND EMAIL TO USER ----------------
@@ -150,39 +159,39 @@ router.post("/", async (req, res) => {
       <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.5;">
         <h2 style="color: #0d203a;">Booking Received – Thank You!</h2>
         <p>Dear <strong>${name}</strong>,</p>
-        <p>Thank you for submitting your ${
-          tourType || "tour"
-        } booking request with <strong>Net Lanka Travels</strong>! We have received your request and will contact you shortly to confirm your booking.</p>
+        <p>Thank you for submitting your ${tourType || "tour"} booking request with <strong>Net Lanka Travels</strong>! We have received your request and will contact you shortly to confirm your booking.</p>
 
         <h3 style="color: #0d203a;">Your Booking Details</h3>
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Tour</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              booking.tourId?.title || "—"
-            }</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.tourId?.title || "—"}</td>
           </tr>
           <tr>
-          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
-          <td style="border: 1px solid #1a354e; padding: 8px;">${
-            booking.travelStyle || "—"
-          }</td>
-        </tr>   
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.travelStyle || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Accommodation</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.accommodation || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Hotel Category</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${booking.hotelCategory || "—"}</td>
+          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">
-            ${
-              booking.taxiId
-                ? `${booking.taxiId.name} – 
-                Seats: ${booking.taxiId.seats} - 
-                ${booking.taxiId.ac ? "AC" : "Non-AC"}`
-                : "—"
-            }
+              ${
+                booking.taxiId
+                  ? `${booking.taxiId.name} – Seats: ${booking.taxiId.seats} - ${booking.taxiId.ac ? "AC" : "Non-AC"}`
+                  : "—"
+              }
             </td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Adults</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${adults} </td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${adults}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Children</td>
@@ -190,26 +199,20 @@ router.post("/", async (req, res) => {
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Location</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${pickupLocation} </td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${pickupLocation}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Pickup Date & Time</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(
-              startDate
-            )} at ${startTime}</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${getDateOnly(startDate)} at ${startTime}</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Additional Message</td>
-            <td style="border: 1px solid #1a354e; padding: 8px;">${
-              message || "N/A"
-            }</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${message || "N/A"}</td>
           </tr>
         </table>
 
         <p style="margin-top: 15px;">If you have any questions, please reply to this email or call us at <strong>+94 705 325 512</strong>.</p>
-        <p>We look forward to making your Sri Lankan ${
-          tourType || "tour"
-        } unforgettable!</p>
+        <p>We look forward to making your Sri Lankan ${tourType || "tour"} unforgettable!</p>
 
         <p>Best Regards,<br/>
         <strong>Net Lanka Travels</strong></p>
@@ -236,7 +239,7 @@ router.get("/", adminAuth, async (req, res) => {
     const bookings = await TourBooking.find()
       .sort({ createdAt: -1 })
       .populate("tourId", "title location days itinerary")
-      .populate("taxiId", "name transmission seats luggage ac image"); // <-- add taxi populate
+      .populate("taxiId", "name transmission seats luggage ac image");
 
     res.json({ success: true, bookings });
   } catch (err) {

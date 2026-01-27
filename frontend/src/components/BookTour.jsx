@@ -32,6 +32,9 @@ export default function BookTour() {
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    accommodation: "",
+    hotelCategory: "",
+    acceptTerms: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -172,6 +175,19 @@ export default function BookTour() {
     if (formData.adults < 1) err.adults = "Min 1 adult";
     if (formData.children < 0) err.children = "Invalid number";
     if (!formData.travelStyle) err.travelStyle = "Select a travel style";
+    if (!formData.acceptTerms) {
+      err.acceptTerms = "You must accept Terms & Privacy Policy";
+    }
+    // Round tour only
+    if (tourType === "round") {
+      if (!formData.accommodation)
+        err.accommodation = "Accommodation selection is required";
+
+      if (formData.accommodation === "with" && !formData.hotelCategory) {
+        err.hotelCategory = "Hotel category is required";
+      }
+    }
+
     return err;
   };
 
@@ -216,6 +232,8 @@ export default function BookTour() {
         startTime: "",
         message: "",
         travelStyle: "",
+        accommodation: "",
+        hotelCategory: "",
       });
 
       setSelectedTour(null);
@@ -250,6 +268,18 @@ export default function BookTour() {
 *Location:* ${selectedTour.location}
 *Vehicle:* ${taxi?.name || "-"}
 *Travel Style:* ${formData.travelStyle || "-"}
+*Accommodation:*
+ -Type: ${
+   formData.accommodation === "with"
+     ? "With Accommodation"
+     : "Without Accommodation"
+ }
+${
+  formData.accommodation === "with"
+    ? ` -Hotel Category: ${formData.hotelCategory.replace("_", " ")}`
+    : ""
+}
+
 *Customer Details*
 - Name: ${formData.name}
 - Email: ${formData.email}
@@ -349,9 +379,9 @@ Net Lanka Travel
 
         {/* ---------------- Travel Style ---------------- */}
         <div className="flex flex-col gap-1">
-            <label className="font-medium text-[#0B2545] text-left">
-              Select Vehicle <span className="text-red-500">*</span>
-            </label>
+          <label className="font-medium text-[#0B2545] text-left">
+            Select Vehicle <span className="text-red-500">*</span>
+          </label>
 
           <button
             type="button"
@@ -441,6 +471,73 @@ Net Lanka Travel
               </div>
             </div>
           </div>
+        )}
+
+        {/* ---------------- Accommodation (Only for Round Tours) ---------------- */}
+        {tourType === "round" && (
+          <>
+            <div className="flex flex-col gap-1">
+              <label className="font-medium text-[#0B2545] text-left">
+                Accommodation <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="accommodation"
+                value={formData.accommodation || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    accommodation: e.target.value,
+                    hotelCategory: "",
+                  }))
+                }
+                className={`w-full px-4 py-3 rounded border ${
+                  errors.accommodation ? "border-red-500" : "border-gray-300"
+                } focus:ring-2 focus:ring-blue-500 outline-none`}
+              >
+                <option value="">Select Accommodation</option>
+                <option value="with">With Accommodation</option>
+                <option value="without">Without Accommodation</option>
+              </select>
+
+              {errors.accommodation && (
+                <span className="text-red-500 text-sm">
+                  {errors.accommodation}
+                </span>
+              )}
+            </div>
+
+            {/* Hotel Category */}
+            {formData.accommodation === "with" && (
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-[#0B2545] text-left">
+                  Hotel Category <span className="text-red-500">*</span>
+                </label>
+
+                <select
+                  name="hotelCategory"
+                  value={formData.hotelCategory || ""}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 rounded border ${
+                    errors.hotelCategory ? "border-red-500" : "border-gray-300"
+                  } focus:ring-2 focus:ring-blue-500 outline-none`}
+                >
+                  <option value="">Select Hotel Category</option>
+                  <option value="2_star">2 Star Hotel</option>
+                  <option value="3_star">3 Star Hotel</option>
+                  <option value="4_star">4 Star Hotel</option>
+                  <option value="5_star">5 Star Hotel</option>
+                  <option value="comfortable">Comfortable Hotel</option>
+                </select>
+
+                {errors.hotelCategory && (
+                  <span className="text-red-500 text-sm">
+                    {errors.hotelCategory}
+                  </span>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {/* TEXT INPUTS */}
@@ -535,6 +632,43 @@ Net Lanka Travel
             rows="3"
             className="px-4 py-3 border rounded"
           />
+        </div>
+
+        {/* ---------------- Accept Terms ---------------- */}
+        <div className="mt-4">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  acceptTerms: e.target.checked,
+                }))
+              }
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 text-sm">
+              I accept the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Terms and Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700"
+              >
+                Privacy Policy
+              </a>
+            </span>
+          </label>
         </div>
 
         {/* BUTTONS */}
