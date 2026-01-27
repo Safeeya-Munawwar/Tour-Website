@@ -42,6 +42,17 @@ const TailorMadeTourInquirySchema = new mongoose.Schema({
     }
   },
   
+  purpose: {
+    type: String,
+    default: "",
+  },
+
+  entranceFee: {
+    type: String,
+    enum: ["with", "without"], 
+    default: "without",
+  },   
+  
   selectedDestinations: {
     type: [String],
     default: [],
