@@ -118,12 +118,17 @@ router.post("/inquiry", async (req, res) => {
       children: req.body.children,
       selectedDestinations: req.body.selectedDestinations || [],
       selectedExperiences: req.body.selectedExperiences || [],
-      travelStyle: req.body.travelStyle || null,
       budget: req.body.currency === "No Idea" ? null : req.body.budget || null,
       currency: req.body.currency || "No Idea",
       notes: req.body.notes || "",
       hearAboutUs: req.body.hearAboutUs,
       accommodation: req.body.accommodation,
+      travelStyle: req.body.travelStyle || null,
+      purpose:
+        req.body.travelPurpose === "Other"
+          ? req.body.customTravelPurpose
+          : req.body.travelPurpose || "",
+      entranceFee: req.body.entranceFee || "Without",
     };
 
     // ✅ ONLY add hotelCategory when accommodation === "with"
@@ -168,9 +173,10 @@ router.post("/inquiry", async (req, res) => {
       <p><strong>Selected Destinations:</strong> ${
         inquiry.selectedDestinations.join(", ") || "N/A"
       }</p>
-      <p><strong>Travel Style:</strong> ${
-        inquiry.travelStyle || "Not Selected"
-      }</p>
+      <p><strong>Travel Style:</strong> ${inquiry.travelStyle}</p>
+<p><strong>Purpose:</strong> ${inquiry.purpose}</p>
+
+      <p><strong>Entrance Fee:</strong> ${inquiry.entranceFee}</p>
       <p><strong>Selected Experiences:</strong> ${
         inquiry.selectedExperiences.length
           ? inquiry.selectedExperiences.join(", ")
@@ -241,6 +247,12 @@ router.post("/inquiry", async (req, res) => {
           }</td></tr>
           <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${
             inquiry.travelStyle || "Not Selected"
+          }</td></tr>
+          <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Purpose</td><td style="border:1px solid #1a354e; padding:8px;">${
+            inquiry.purpose || "Not Selected"
+          }</td></tr>
+          <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Entrance Fee</td><td style="border:1px solid #1a354e; padding:8px;">${
+            inquiry.entranceFee || "Not Selected"
           }</td></tr>
           <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Selected Experiences</td><td style="border:1px solid #1a354e; padding:8px;">${
             inquiry.selectedExperiences.length

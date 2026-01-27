@@ -488,6 +488,13 @@ const CustomizeTourBookingAdmin = () => {
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Entrance Fee:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.entranceFee || "Not Selected"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
                     Destinations:
                   </p>
                   <p className="p-2 border-b border-blue-950">
@@ -502,6 +509,13 @@ const CustomizeTourBookingAdmin = () => {
                   </p>
                   <p className="p-2 border-b border-blue-950">
                     {selectedInquiry.travelStyle || "Not Selected"}
+                  </p>
+
+                  <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
+                    Travel Purpose:
+                  </p>
+                  <p className="p-2 border-b border-blue-950">
+                    {selectedInquiry.purpose || "Not Selected"}
                   </p>
 
                   <p className="p-2 border-b border-r border-blue-950 font-semibold bg-gray-50">
