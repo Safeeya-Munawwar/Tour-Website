@@ -11,6 +11,7 @@ import Video1 from "../components/Video1";
 import Stories from "../components/Stories";
 import ExploreMapSection from "../components/ExploreMapSection";
 import { Helmet } from "react-helmet-async";
+import TailorMadePackages from "../components/TailorMadePackages";
 
 export default function Home() {
   const [currentPage] = useState(1);
@@ -39,6 +40,7 @@ export default function Home() {
       <Why />
       <Destination />
       <Video1 />
+      <TailorMadePackages/>
       <Stories />
       <ExploreMapSection />
       <TripAdvisor />
