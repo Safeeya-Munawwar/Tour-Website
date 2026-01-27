@@ -105,6 +105,8 @@ useEffect(() => {
         : formData.travelPurpose;
 
     const message = `Hello! 👋
+    
+* Net Lanka Travels - Tour Booking *
 
 I am interested in your *${prefill?.packageTitle || "tour package"}*. Here are my details:
 
