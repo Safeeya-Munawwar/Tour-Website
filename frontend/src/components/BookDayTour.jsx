@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
 import {
-  FaMoneyBillWave,
-  FaStar,
+  FaUserTie,
   FaHotel,
   FaUsers,
-  FaHeart,
-  FaTaxi,
-  FaRoute,
   FaCar,
   FaPlane,
 } from "react-icons/fa";
@@ -36,62 +32,44 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
   const [taxis, setTaxis] = useState([]);
   const [selectedTaxi, setSelectedTaxi] = useState("");
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
 
   const travelStyles = [
     {
-      title: "Budget Tour",
-      tooltip: "Transportation & private guide. ",
-      icon: <FaMoneyBillWave className="text-blue-500" />,
+      title: "Private Tour, Permanent Guide",
+      tooltip:
+        "Enjoy a fully private tour with a certified SL National tourist guide or lecturer.",
+      icon: <FaUserTie className="text-blue-500" />,
     },
     {
-      title: "Premium Tour",
-      tooltip: "Transportation with private guide and driver.",
-      icon: <FaStar className="text-yellow-500" />,
-    },
-    {
-      title: "Luxury Tour",
-      tooltip: "Transportation with private guide and driver.",
-      icon: <FaHotel className="text-purple-500" />,
-    },
-    {
-      title: "Family Tour",
-      tooltip: "Fun travel experiences suitable for the whole family.",
-      icon: <FaUsers className="text-green-600" />,
-    },
-    {
-      title: "Honeymoon Tour",
-      tooltip: "Romantic trips specially designed for couples.",
-      icon: <FaHeart className="text-pink-600" />,
-    },
-    {
-      title: "Transportation Only",
-      tooltip: "Only transportation is provided with English-speaking driver.",
-      icon: <FaTaxi className="text-gray-700" />,
-    },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip: "Only transportation is provided with a chauffeur guide.",
-      icon: <FaCar className="text-gray-700" />,
+      title: "Private Transfer, Area Guide",
+      tooltip:
+        "Get private transportation and a local guide for specific areas during your trip.",
+      icon: <FaCar className="text-green-500" />,
     },
     {
       title: "Join a Group Tour",
-      tooltip: "Travel with other tourists in a group.",
-      icon: <FaUsers className="text-pink-500" />,
-    },
-    {
-      title: "Self-Organized",
-      tooltip: "Plan and manage the trip entirely yourself.",
-      icon: <FaRoute className="text-orange-500" />,
-    },
-    {
-      title: "Private Tour, Permanent Guide",
-      tooltip: "A guide will accompany you throughout your tour.",
-      icon: <FaUsers className="text-green-500" />,
+      tooltip:
+        "Travel with a group of like-minded travelers with shared itinerary and guide.",
+      icon: <FaUsers className="text-purple-500" />,
     },
     {
       title: "Organized Hotels/Transfer, No Guide",
-      tooltip: "Hotels and transfers are arranged, but no guide included.",
-      icon: <FaPlane className="text-indigo-500" />,
+      tooltip:
+        "Accommodation and transfers are arranged, but no guide is included.",
+      icon: <FaHotel className="text-orange-500" />,
+    },
+    {
+      title: "Self-Organized - Transport Only, Without Guide",
+      tooltip:
+        "Plan your own trip and manage transportation independently, without a guide.",
+      icon: <FaPlane className="text-red-500" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
     },
   ];
 
@@ -542,6 +520,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
+              min={today}
               className={`w-full px-4 py-3 rounded border ${
                 errors.startDate ? "border-red-500" : "border-gray-300"
               } focus:ring-2 focus:ring-blue-500 outline-none`}
