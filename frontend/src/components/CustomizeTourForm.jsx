@@ -3,17 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
 import DestinationSelector from "./DestinationSelector";
 import ExperienceSelector from "./ExperienceSelector";
-import {
-  FaMoneyBillWave,
-  FaStar,
-  FaHotel,
-  FaUsers,
-  FaHeart,
-  FaTaxi,
-  FaRoute,
-  FaCar,
-  FaPlane,
-} from "react-icons/fa";
+import { FaUserTie, FaHotel, FaUsers, FaCar, FaPlane } from "react-icons/fa";
 
 const TailorMadeForm = () => {
   const [step, setStep] = useState(1);
@@ -25,6 +15,7 @@ const TailorMadeForm = () => {
   const [, setSelectedExperiences] = useState([]);
   const [showTravelStyleModal, setShowTravelStyleModal] = useState(false);
   const [vehicles, setVehicles] = useState([]);
+  const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
     // Step 1
     title: "",
@@ -39,8 +30,9 @@ const TailorMadeForm = () => {
     dropLocation: "",
     startDate: "",
     endDate: "",
-    accommodation: "", // with / without
-    hotelCategory: "", // 2*, 3*, 4*, 5*, comfortable
+    travelStyle: "",
+    accommodation: "",
+    hotelCategory: "",
     adults: 1,
     children: 0,
     budget: "",
@@ -48,7 +40,9 @@ const TailorMadeForm = () => {
     selectedDestinations: [],
 
     // Step 3
-    travelStyle: "",
+    entranceFee: "",
+    travelPurpose: "",
+    customTravelPurpose: "",
     vehicle: "",
     selectedExperiences: [],
     notes: "",
@@ -58,64 +52,40 @@ const TailorMadeForm = () => {
 
   const travelStyles = [
     {
-      title: "Budget Tour",
+      title: "Private Tour, Permanent Guide",
       tooltip:
-        "Transportation & private guide (optional - accommodation & chauffeur guide). ",
-      icon: <FaMoneyBillWave className="text-blue-500" />,
+        "Enjoy a fully private tour with a certified SL National tourist guide or lecturer.",
+      icon: <FaUserTie className="text-blue-500" />,
     },
     {
-      title: "Premium Tour",
+      title: "Private Transfer, Area Guide",
       tooltip:
-        "Transportation with private guide and driver, 4 Star accommodation.",
-      icon: <FaStar className="text-yellow-500" />,
-    },
-    {
-      title: "Luxury Tour",
-      tooltip:
-        "Transportation with private guide and driver, 4 Star or 5 Star accommodation.",
-      icon: <FaHotel className="text-purple-500" />,
-    },
-    {
-      title: "Family Tour",
-      tooltip:
-        "Fun travel experiences suitable for the whole family (optional - chauffeur guide).",
-      icon: <FaUsers className="text-green-600" />,
-    },
-    {
-      title: "Honeymoon Tour",
-      tooltip:
-        "Romantic trips specially designed for couples (optional - chauffeur guide).",
-      icon: <FaHeart className="text-pink-600" />,
-    },
-    {
-      title: "Transportation Only",
-      tooltip: "Only transportation is provided with English-speaking driver.",
-      icon: <FaTaxi className="text-gray-700" />,
-    },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip: "Only transportation is provided with a chauffeur guide.",
-      icon: <FaCar className="text-gray-700" />,
+        "Get private transportation and a local guide for specific areas during your trip.",
+      icon: <FaCar className="text-green-500" />,
     },
     {
       title: "Join a Group Tour",
-      tooltip: "Travel with other tourists in a group.",
-      icon: <FaUsers className="text-pink-500" />,
-    },
-    {
-      title: "Self-Organized",
-      tooltip: "Plan and manage the trip entirely yourself.",
-      icon: <FaRoute className="text-orange-500" />,
-    },
-    {
-      title: "Private Tour, Permanent Guide",
-      tooltip: "A guide will accompany you throughout your tour.",
-      icon: <FaUsers className="text-green-500" />,
+      tooltip:
+        "Travel with a group of like-minded travelers with shared itinerary and guide.",
+      icon: <FaUsers className="text-purple-500" />,
     },
     {
       title: "Organized Hotels/Transfer, No Guide",
-      tooltip: "Hotels and transfers are arranged, but no guide included.",
-      icon: <FaPlane className="text-indigo-500" />,
+      tooltip:
+        "Accommodation and transfers are arranged, but no guide is included.",
+      icon: <FaHotel className="text-orange-500" />,
+    },
+    {
+      title: "Self-Organized - Transport Only, Without Guide",
+      tooltip:
+        "Plan your own trip and manage transportation independently, without a guide.",
+      icon: <FaPlane className="text-red-500" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
     },
   ];
 
@@ -199,6 +169,23 @@ const TailorMadeForm = () => {
       if (start < today) errors.push("Start date cannot be in the past");
       if (end < today) errors.push("End date cannot be in the past");
     }
+
+    if (
+      formData.currency !== "No Idea" &&
+      formData.budget &&
+      Number(formData.budget) < 100
+    ) {
+      errors.push("Budget must be at least 100");
+    }
+
+    if (!formData.entranceFee)
+      errors.push("Entrance Fee selection is required");
+    if (!formData.travelPurpose) errors.push("Travel Purpose is required");
+    if (
+      formData.travelPurpose === "Other" &&
+      !formData.customTravelPurpose.trim()
+    )
+      errors.push("Please specify your Travel Purpose");
 
     if (!formData.acceptTerms) {
       errors.push("You must accept Terms & Privacy Policy");
@@ -437,6 +424,7 @@ const TailorMadeForm = () => {
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
+                  min={today}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
@@ -449,10 +437,104 @@ const TailorMadeForm = () => {
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleChange}
+                  min={formData.startDate || today}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
             </div>
+
+            {/* ---------------- Travel Style ---------------- */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowTravelStyleModal(true)}
+                className="w-full flex justify-between items-center bg-white border border-gray-400 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-100 transition font-semibold"
+              >
+                {formData.travelStyle || "Select Travel Style"}
+                <svg
+                  className="w-5 h-5 ml-2 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+
+              <div className="mt-2 text-gray-500 text-sm">
+                {formData.travelStyle
+                  ? travelStyles.find((s) => s.title === formData.travelStyle)
+                      ?.tooltip
+                  : "No travel style selected"}
+              </div>
+            </div>
+
+            {/* ---------------- Travel Style Modal ---------------- */}
+            {showTravelStyleModal && (
+              <div
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
+                onClick={(e) =>
+                  e.target === e.currentTarget && setShowTravelStyleModal(false)
+                }
+              >
+                <div className="w-[95vw] max-w-[800px] h-[90vh] bg-white shadow-2xl flex flex-col overflow-hidden rounded-2xl relative p-6">
+                  <h3 className="text-xl font-bold mb-4">
+                    Select Travel Style
+                  </h3>
+
+                  <div className="flex flex-col gap-3 overflow-y-auto">
+                    {travelStyles.map((style) => (
+                      <label
+                        key={style.title}
+                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+                      >
+                        {/* Left: Icon + Title & Tooltip */}
+                        <div className="flex items-center gap-3">
+                          {/* Icon */}
+                          <span className="text-2xl">{style.icon}</span>
+
+                          {/* Title & Tooltip */}
+                          <div>
+                            <p className="font-semibold">{style.title}</p>
+                            <p className="text-gray-500 text-sm">
+                              {style.tooltip}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Right: Checkbox */}
+                        <input
+                          type="checkbox"
+                          checked={formData.travelStyle === style.title}
+                          onChange={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              travelStyle: style.title,
+                            }))
+                          }
+                          className="w-5 h-5"
+                        />
+                      </label>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => setShowTravelStyleModal(false)}
+                      className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-[#283d9e] transition"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* ---------------- Accommodation ---------------- */}
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
@@ -580,6 +662,7 @@ const TailorMadeForm = () => {
                     onChange={handleChange}
                     placeholder="Total Amount"
                     disabled={formData.currency === "No Idea"}
+                    min={100} // <-- minimum 100
                     className={`p-4 rounded-lg border border-gray-300 w-full col-span-2 transition-all duration-300 ${
                       formData.currency === "No Idea"
                         ? "bg-gray-100 cursor-not-allowed"
@@ -605,6 +688,7 @@ const TailorMadeForm = () => {
                       value={formData.budget}
                       onChange={handleChange}
                       placeholder="Total Amount"
+                      min={100} // <-- minimum 100
                       className="p-4 rounded-lg border border-gray-300 w-full transition-all duration-300 hover:border-blue-200"
                     />
                   </>
@@ -631,6 +715,120 @@ const TailorMadeForm = () => {
                   Don’t worry - we’ll suggest the best options for your trip.
                 </p>
               )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
+              >
+                ← Previous
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
+              >
+                Next Step →
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Step 3 */}
+        {step === 3 && (
+          <form className="space-y-6">
+            <h2 className="text-xl font-bold mb-2">
+              Step 3: Customize Your Tour
+            </h2>
+
+            <p className="text-sm text-gray-500 mb-4">
+              Tell us how you would like to experience Sri Lanka
+            </p>
+
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Entrance Fee *
+              </label>
+              <select
+                name="entranceFee"
+                value={formData.entranceFee}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select option</option>
+                <option value="with">With Entrance Fee</option>
+                <option value="without">Without Entrance Fee</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Travel Purpose *
+              </label>
+
+              <select
+                name="travelPurpose"
+                value={formData.travelPurpose}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    travelPurpose: e.target.value,
+                    customTravelPurpose: "", // reset custom if changed
+                  }));
+                }}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select purpose</option>
+                {[
+                  "Family Tour",
+                  "Honeymoon",
+                  "Group",
+                  "Solo",
+                  "With Chauffeur",
+                  "Photography",
+                  "Other",
+                ].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              {/* Show custom text input if 'Other' selected */}
+              {formData.travelPurpose === "Other" && (
+                <input
+                  type="text"
+                  name="customTravelPurpose"
+                  value={formData.customTravelPurpose}
+                  onChange={handleChange}
+                  placeholder="Specify your purpose"
+                  className="w-full mt-2 p-3 rounded-lg border border-gray-300"
+                />
+              )}
+            </div>
+
+            {/* ---------------- Vehicle Selection ---------------- */}
+            <div className="mt-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Select Preferred Vehicle *
+              </label>
+
+              <select
+                name="vehicle"
+                value={formData.vehicle}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select a vehicle</option>
+                {vehicles.map((v) => (
+                  <option key={v._id} value={v.name}>
+                    {v.name} • {v.seats} Seats
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Destination Selection */}
@@ -694,150 +892,6 @@ const TailorMadeForm = () => {
                 </div>
               </div>
             )}
-
-            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="w-full bg-gray-300 text-gray-800 font-bold py-3 rounded-md hover:bg-gray-400 transition"
-              >
-                ← Previous
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-[#283d9e] transition"
-              >
-                Next Step →
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* Step 3 */}
-        {step === 3 && (
-          <form className="space-y-6">
-            <h2 className="text-xl font-bold mb-2">
-              Step 3: Customize Your Tour
-            </h2>
-
-            <p className="text-sm text-gray-500 mb-4">
-              Tell us how you would like to experience Sri Lanka
-            </p>
-
-            {/* ---------------- Travel Style ---------------- */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowTravelStyleModal(true)}
-                className="w-full flex justify-between items-center bg-white border border-gray-400 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-100 transition font-semibold"
-              >
-                {formData.travelStyle || "Select Travel Style"}
-                <svg
-                  className="w-5 h-5 ml-2 text-gray-600"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-
-              <div className="mt-2 text-gray-500 text-sm">
-                {formData.travelStyle
-                  ? travelStyles.find((s) => s.title === formData.travelStyle)
-                      ?.tooltip
-                  : "No travel style selected"}
-              </div>
-            </div>
-
-            {/* ---------------- Travel Style Modal ---------------- */}
-            {showTravelStyleModal && (
-              <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[20000] flex items-center justify-center"
-                onClick={(e) =>
-                  e.target === e.currentTarget && setShowTravelStyleModal(false)
-                }
-              >
-                <div className="w-[95vw] max-w-[800px] h-[90vh] bg-white shadow-2xl flex flex-col overflow-hidden rounded-2xl relative p-6">
-                  <h3 className="text-xl font-bold mb-4">
-                    Select Travel Style
-                  </h3>
-
-                  <div className="flex flex-col gap-3 overflow-y-auto">
-                    {travelStyles.map((style) => (
-                      <label
-                        key={style.title}
-                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition"
-                      >
-                        {/* Left: Icon + Title & Tooltip */}
-                        <div className="flex items-center gap-3">
-                          {/* Icon */}
-                          <span className="text-2xl">{style.icon}</span>
-
-                          {/* Title & Tooltip */}
-                          <div>
-                            <p className="font-semibold">{style.title}</p>
-                            <p className="text-gray-500 text-sm">
-                              {style.tooltip}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Right: Checkbox */}
-                        <input
-                          type="checkbox"
-                          checked={formData.travelStyle === style.title}
-                          onChange={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              travelStyle: style.title,
-                            }))
-                          }
-                          className="w-5 h-5"
-                        />
-                      </label>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      onClick={() => setShowTravelStyleModal(false)}
-                      className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-[#283d9e] transition"
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ---------------- Vehicle Selection ---------------- */}
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Select Preferred Vehicle *
-              </label>
-
-              <select
-                name="vehicle"
-                value={formData.vehicle}
-                onChange={handleChange}
-                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
-              >
-                <option value="">Select a vehicle</option>
-                {vehicles.map((v) => (
-                  <option key={v._id} value={v.name}>
-                    {v.name} • {v.seats} Seats
-                  </option>
-                ))}
-              </select>
-            </div>
 
             {/* ---------------- Experiences ---------------- */}
             <div>
