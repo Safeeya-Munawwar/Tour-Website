@@ -18,6 +18,11 @@ const DayTourBookingSchema = new mongoose.Schema({
     default: null,
   },
 
+  purpose: {
+    type: String,
+    default: "",
+  },
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },

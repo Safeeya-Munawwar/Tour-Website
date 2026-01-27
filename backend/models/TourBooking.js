@@ -31,6 +31,11 @@ const TourBookingSchema = new mongoose.Schema(
       default: null,
     },
 
+    purpose: {
+      type: String,
+      default: "",
+    },
+
     accommodation: {
       type: String,
       enum: ["with", "without"],
