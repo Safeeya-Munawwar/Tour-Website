@@ -194,25 +194,28 @@ const PackageForm = ({ prefill }) => {
 </div>
 
 
-     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
   {/* Vehicle */}
   <div>
     <label className="block text-black font-semibold mb-2">
       Select Vehicle *
     </label>
-    <select
-      name="vehicle"
-      value={formData.vehicle}
-      onChange={handleChange}
-      className="w-full p-3 border border-gray-300 rounded-md"
-    >
-      <option value="">Select a vehicle</option>
-      {vehicles.map((v) => (
-        <option key={v._id} value={v.name}>
-          {v.name} • {v.seats} Seats
-        </option>
-      ))}
-    </select>
+    <div className="relative">
+      <select
+        name="vehicle"
+        value={formData.vehicle}
+        onChange={handleChange}
+        className="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option value="">Select a vehicle</option>
+        {vehicles.map((v) => (
+          <option key={v._id} value={v.name}>
+            {v.name} • {v.seats} Seats
+          </option>
+        ))}
+      </select>
+      <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-black pointer-events-none" />
+    </div>
   </div>
 
   {/* Travel Purpose */}
@@ -220,34 +223,36 @@ const PackageForm = ({ prefill }) => {
     <label className="block text-black font-semibold mb-2">
       Travel Purpose *
     </label>
-    <select
-      name="travelPurpose"
-      value={formData.travelPurpose}
-     onChange={(e) =>
-  setFormData((prev) => ({
-    ...prev,
-    travelPurpose: e.target.value,
-    customTravelPurpose: e.target.value === "Other" ? prev.customTravelPurpose : "",
-  }))
-
-      }
-      className="w-full p-3 border border-gray-300 rounded-md"
-    >
-      <option value="">Select purpose</option>
-      {[
-        "Family Tour",
-        "Honeymoon",
-        "Group",
-        "Solo",
-        "With Chauffeur",
-        "Photography",
-        "Other",
-      ].map((p) => (
-        <option key={p} value={p}>
-          {p}
-        </option>
-      ))}
-    </select>
+    <div className="relative">
+      <select
+        name="travelPurpose"
+        value={formData.travelPurpose}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            travelPurpose: e.target.value,
+            customTravelPurpose: e.target.value === "Other" ? prev.customTravelPurpose : "",
+          }))
+        }
+        className="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option value="">Select purpose</option>
+        {[
+          "Family Tour",
+          "Honeymoon",
+          "Group",
+          "Solo",
+          "With Chauffeur",
+          "Photography",
+          "Other",
+        ].map((p) => (
+          <option key={p} value={p}>
+            {p}
+          </option>
+        ))}
+      </select>
+      <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-black pointer-events-none" />
+    </div>
 
     {formData.travelPurpose === "Other" && (
       <input
@@ -255,10 +260,7 @@ const PackageForm = ({ prefill }) => {
         name="customTravelPurpose"
         value={formData.customTravelPurpose}
         onChange={(e) =>
-          setFormData((prev) => ({
-            ...prev,
-            customTravelPurpose: e.target.value,
-          }))
+          setFormData((prev) => ({ ...prev, customTravelPurpose: e.target.value }))
         }
         placeholder="Specify travel purpose"
         className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -268,16 +270,19 @@ const PackageForm = ({ prefill }) => {
 </div>
 
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 ">
   {/* ================= Destination ================= */}
   <div>
+     <label className="block text-black font-semibold mb-2">
+      Destinations *
+    </label>
     <button
       type="button"
       onClick={() => setShowDestinationModal(true)}
-      className="w-full border p-3 rounded-md font-semibold flex justify-between items-center"
+      className="w-full border p-3 rounded-md  flex justify-between items-center"
     >
-      Select Destinations
-      <FaChevronDown className="ml-2 text-gray-500" />
+      Select destinations
+      <FaChevronDown className="ml-2 " />
     </button>
 
     <div className="flex flex-wrap gap-2 mt-2">
@@ -294,13 +299,16 @@ const PackageForm = ({ prefill }) => {
 
   {/* ================= Experience ================= */}
   <div>
+    <label className="block text-black font-semibold mb-2">
+     Experiences *
+    </label>
     <button
       type="button"
       onClick={() => setShowExperienceModal(true)}
-      className="w-full border p-3 rounded-md font-semibold flex justify-between items-center"
+      className="w-full border p-3 rounded-md  flex justify-between items-center"
     >
-      Select Experiences
-      <FaChevronDown className="ml-2 text-gray-500" />
+      Select experiences
+      <FaChevronDown className="ml-2 " />
     </button>
 
     <div className="flex flex-wrap gap-2 mt-2">
