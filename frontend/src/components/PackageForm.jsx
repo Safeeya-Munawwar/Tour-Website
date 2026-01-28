@@ -197,7 +197,7 @@ const PackageForm = ({ prefill }) => {
      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
   {/* Vehicle */}
   <div>
-    <label className="block text-gray-700 font-semibold mb-2">
+    <label className="block text-black font-semibold mb-2">
       Select Vehicle *
     </label>
     <select
@@ -217,7 +217,7 @@ const PackageForm = ({ prefill }) => {
 
   {/* Travel Purpose */}
   <div>
-    <label className="block text-gray-700 font-semibold mb-2">
+    <label className="block text-black font-semibold mb-2">
       Travel Purpose *
     </label>
     <select
