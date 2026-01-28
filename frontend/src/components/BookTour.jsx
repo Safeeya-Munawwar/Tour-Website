@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
-import {
-  FaUserTie,
-  FaHotel,
-  FaUsers,
-  FaCar,
-  FaPlane,
-} from "react-icons/fa";
+import { FaUserTie, FaHotel, FaUsers, FaCar, FaPlane } from "react-icons/fa";
 
 export default function BookTour() {
   const [tourType, setTourType] = useState("");
@@ -28,6 +22,7 @@ export default function BookTour() {
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    travelPurpose: "",
     accommodation: "",
     hotelCategory: "",
     acceptTerms: false,
@@ -47,6 +42,12 @@ export default function BookTour() {
       tooltip:
         "Enjoy a fully private tour with a certified SL National tourist guide or lecturer.",
       icon: <FaUserTie className="text-blue-500" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
     },
     {
       title: "Private Transfer, Area Guide",
@@ -72,14 +73,7 @@ export default function BookTour() {
         "Plan your own trip and manage transportation independently, without a guide.",
       icon: <FaPlane className="text-red-500" />,
     },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip:
-        "Travel independently with private transport and a professional chauffeur guide.",
-      icon: <FaCar className="text-teal-500" />,
-    },
   ];
-
 
   // ---------------- FETCH TOURS ----------------
   useEffect(() => {
@@ -149,6 +143,7 @@ export default function BookTour() {
     if (formData.adults < 1) err.adults = "Min 1 adult";
     if (formData.children < 0) err.children = "Invalid number";
     if (!formData.travelStyle) err.travelStyle = "Select a travel style";
+    if (!formData.travelPurpose) errors.push("Travel Purpose is required");
     if (!formData.acceptTerms) {
       err.acceptTerms = "You must accept Terms & Privacy Policy";
     }
@@ -242,6 +237,7 @@ export default function BookTour() {
 *Location:* ${selectedTour.location}
 *Vehicle:* ${taxi?.name || "-"}
 *Travel Style:* ${formData.travelStyle || "-"}
+*Travel Purpose:* ${formData.travelPurpose || "-"}
 *Accommodation:*
  -Type: ${
    formData.accommodation === "with"
@@ -354,7 +350,7 @@ Net Lanka Travel
         {/* ---------------- Travel Style ---------------- */}
         <div className="flex flex-col gap-1">
           <label className="font-medium text-[#0B2545] text-left">
-            Select Vehicle <span className="text-red-500">*</span>
+            Travel Style<span className="text-red-500">*</span>
           </label>
 
           <button
@@ -446,6 +442,52 @@ Net Lanka Travel
             </div>
           </div>
         )}
+
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-[#0B2545] text-left">
+            Travel Purpose <span className="text-red-500">*</span>
+          </label>
+
+          <select
+            name="travelPurpose"
+            value={formData.travelPurpose}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                travelPurpose: e.target.value,
+                customTravelPurpose: "", // reset custom if changed
+              }));
+            }}
+            className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+          >
+            <option value="">Select purpose</option>
+            {[
+              "Family Tour",
+              "Honeymoon",
+              "Group",
+              "Solo",
+              "With Chauffeur",
+              "Photography",
+              "Other",
+            ].map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
+          {/* Show custom text input if 'Other' selected */}
+          {formData.travelPurpose === "Other" && (
+            <input
+              type="text"
+              name="customTravelPurpose"
+              value={formData.customTravelPurpose}
+              onChange={handleChange}
+              placeholder="Specify your purpose"
+              className="w-full mt-2 p-3 rounded-lg border border-gray-300"
+            />
+          )}
+        </div>
 
         {/* ---------------- Accommodation (Only for Round Tours) ---------------- */}
         {tourType === "round" && (

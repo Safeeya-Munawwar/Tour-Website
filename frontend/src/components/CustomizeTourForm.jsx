@@ -58,6 +58,12 @@ const TailorMadeForm = () => {
       icon: <FaUserTie className="text-blue-500" />,
     },
     {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
+    },
+    {
       title: "Private Transfer, Area Guide",
       tooltip:
         "Get private transportation and a local guide for specific areas during your trip.",
@@ -80,12 +86,6 @@ const TailorMadeForm = () => {
       tooltip:
         "Plan your own trip and manage transportation independently, without a guide.",
       icon: <FaPlane className="text-red-500" />,
-    },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip:
-        "Travel independently with private transport and a professional chauffeur guide.",
-      icon: <FaCar className="text-teal-500" />,
     },
   ];
 

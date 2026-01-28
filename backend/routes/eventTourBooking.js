@@ -28,7 +28,12 @@ router.post("/", async (req, res) => {
       message,
       taxiId,
       travelStyle,
+      travelPurpose,
     } = req.body;
+
+        // Determine purpose
+        const purpose =
+        travelPurpose === "Other" ? customTravelPurpose || "" : travelPurpose || "";
 
     // Validate required fields
     if (!eventId || !name || !email || !phone || !startDate || !startTime) {
@@ -51,6 +56,7 @@ router.post("/", async (req, res) => {
       message,
       taxiId,
       travelStyle,
+      purpose, 
     });
 
     // Populate both tourId and taxiId
@@ -97,6 +103,12 @@ router.post("/", async (req, res) => {
           booking.travelStyle || "—"
         }</td>
       </tr>
+      <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.purpose || "—"
+            }</td>
+          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Location</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${
@@ -174,6 +186,12 @@ router.post("/", async (req, res) => {
           booking.travelStyle || "—"
         }</td>
       </tr>
+      <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.purpose || "—"
+            }</td>
+          </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Vehicle</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">

@@ -21,6 +21,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
     startTime: "00:00",
     message: "",
     travelStyle: "",
+    travelPurpose: "",
   accommodation: "",
   hotelCategory: "",
   acceptTerms: false,
@@ -41,6 +42,12 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
       tooltip:
         "Enjoy a fully private tour with a certified SL National tourist guide or lecturer.",
       icon: <FaUserTie className="text-blue-500" />,
+    },
+    {
+      title: "Transport Only with Chauffeur Guide",
+      tooltip:
+        "Travel independently with private transport and a professional chauffeur guide.",
+      icon: <FaCar className="text-teal-500" />,
     },
     {
       title: "Private Transfer, Area Guide",
@@ -65,12 +72,6 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
       tooltip:
         "Plan your own trip and manage transportation independently, without a guide.",
       icon: <FaPlane className="text-red-500" />,
-    },
-    {
-      title: "Transport Only with Chauffeur Guide",
-      tooltip:
-        "Travel independently with private transport and a professional chauffeur guide.",
-      icon: <FaCar className="text-teal-500" />,
     },
   ];
 
@@ -143,6 +144,7 @@ export default function BookRoundTour({ tourId, tourTitle, tourLocation }) {
 
     if (!formData.startTime) newErrors.startTime = "Start time is required";
     if (!formData.travelStyle) newErrors.travelStyle = "Select a travel style";
+    if (!formData.travelPurpose) errors.push("Travel Purpose is required");
 if (!formData.accommodation)
   newErrors.accommodation = "Accommodation selection is required";
 
@@ -236,6 +238,7 @@ if (
         : "-"
     }
 *Travel Style:* ${formData.travelStyle || "-"}
+*Travel Purpose:* ${formData.travelPurpose || "-"}
 *Accommodation:*
  -Type: ${
    formData.accommodation === "with"
@@ -530,6 +533,53 @@ ${formData.message || "–"}
             </div>
           </div>
         )}
+
+<div className="mt-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Travel Purpose *
+              </label>
+
+              <select
+                name="travelPurpose"
+                value={formData.travelPurpose}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    travelPurpose: e.target.value,
+                    customTravelPurpose: "", // reset custom if changed
+                  }));
+                }}
+                className="w-full p-4 rounded-lg border border-gray-300 bg-white cursor-pointer"
+              >
+                <option value="">Select purpose</option>
+                {[
+                  "Family Tour",
+                  "Honeymoon",
+                  "Group",
+                  "Solo",
+                  "With Chauffeur",
+                  "Photography",
+                  "Other",
+                ].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              {/* Show custom text input if 'Other' selected */}
+              {formData.travelPurpose === "Other" && (
+                <input
+                  type="text"
+                  name="customTravelPurpose"
+                  value={formData.customTravelPurpose}
+                  onChange={handleChange}
+                  placeholder="Specify your purpose"
+                  className="w-full mt-2 p-3 rounded-lg border border-gray-300"
+                />
+              )}
+            </div>
+
 {/* ---------------- Accommodation ---------------- */}
 <div>
   <label className="font-medium mb-1 block">

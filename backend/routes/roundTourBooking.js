@@ -52,7 +52,12 @@ router.post("/", async (req, res) => {
       travelStyle,
       accommodation,
       hotelCategory,
+      travelPurpose,
     } = req.body;
+
+    // Determine purpose
+    const purpose =
+    travelPurpose === "Other" ? customTravelPurpose || "" : travelPurpose || "";
 
     // Basic validations
     if (!tourId)
@@ -86,6 +91,7 @@ router.post("/", async (req, res) => {
       travelStyle,
       accommodation,
       hotelCategory,
+      purpose, 
     };
 
     const booking = await RoundTourBooking.create(bookingData);
@@ -128,6 +134,12 @@ router.post("/", async (req, res) => {
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${
       booking.travelStyle || "—"
     }</td></tr>
+    <tr>
+    <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+    <td style="border: 1px solid #1a354e; padding: 8px;">${
+      booking.purpose || "—"
+    }</td>
+  </tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Accommodation</td><td style="border:1px solid #1a354e; padding:8px;">${accommodationText}</td></tr>
 
     <tr>
@@ -176,6 +188,12 @@ router.post("/", async (req, res) => {
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Travel Style</td><td style="border:1px solid #1a354e; padding:8px;">${
       booking.travelStyle || "—"
     }</td></tr>
+    <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.purpose || "—"
+            }</td>
+          </tr>
     <tr><td style="border:1px solid #1a354e; padding:8px; font-weight:bold;">Accommodation</td><td style="border:1px solid #1a354e; padding:8px;">${accommodationText}</td></tr>
 
     <tr>

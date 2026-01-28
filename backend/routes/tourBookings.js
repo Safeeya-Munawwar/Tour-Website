@@ -32,7 +32,12 @@ router.post("/", async (req, res) => {
       travelStyle,
       accommodation,
       hotelCategory,
+      travelPurpose,
     } = req.body;
+
+     // Determine purpose
+     const purpose =
+     travelPurpose === "Other" ? customTravelPurpose || "" : travelPurpose || "";
 
     if (!tourId) {
       return res
@@ -56,6 +61,7 @@ router.post("/", async (req, res) => {
 
     const booking = await TourBooking.create({
       ...req.body,
+      purpose, 
       accommodation: req.body.accommodation || undefined, 
       hotelCategory: req.body.hotelCategory || "",
       startDate: new Date(startDate),
@@ -105,6 +111,12 @@ router.post("/", async (req, res) => {
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${booking.travelStyle || "—"}</td>
           </tr>
+          <tr>
+          <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+          <td style="border: 1px solid #1a354e; padding: 8px;">${
+            booking.purpose || "—"
+          }</td>
+        </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Accommodation</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${booking.accommodation || "—"}</td>
@@ -170,6 +182,12 @@ router.post("/", async (req, res) => {
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Style</td>
             <td style="border: 1px solid #1a354e; padding: 8px;">${booking.travelStyle || "—"}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Travel Purpose</td>
+            <td style="border: 1px solid #1a354e; padding: 8px;">${
+              booking.purpose || "—"
+            }</td>
           </tr>
           <tr>
             <td style="border: 1px solid #1a354e; padding: 8px; font-weight: bold;">Accommodation</td>
