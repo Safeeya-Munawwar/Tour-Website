@@ -183,7 +183,7 @@ export default function BookTour() {
         tourId: selectedTour._id,
         tourRef: tourType === "day" ? "DayTour" : "RoundTour",
         taxiId: selectedTaxi,
-        taxi: taxis.find((t) => t._id === selectedTaxi)?.name || "", // ✅ save taxi name too
+        taxi: taxis.find((t) => t._id === selectedTaxi)?.name || "", 
         startDate: new Date(formData.startDate),
       });
 
@@ -201,6 +201,7 @@ export default function BookTour() {
         startTime: "",
         message: "",
         travelStyle: "",
+        travelPurpose: "",
         accommodation: "",
         hotelCategory: "",
       });

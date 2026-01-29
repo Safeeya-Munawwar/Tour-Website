@@ -15,7 +15,6 @@ const PackageForm = ({ prefill }) => {
   const [showExperienceModal, setShowExperienceModal] = useState(false);
 
   const [formData, setFormData] = useState({
-    tourType: prefill?.tourType || "Day Tour",
     fullName: prefill?.fullName || "",
     country: prefill?.country || "",
     email: prefill?.email || "",
@@ -76,7 +75,6 @@ const PackageForm = ({ prefill }) => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    if (!formData.tourType) errors.push("Tour type is required");
     if (!formData.fullName.trim()) errors.push("Full name is required");
     if (!formData.country.trim()) errors.push("Country is required");
     if (!formData.email.trim()) errors.push("Email is required");
@@ -91,8 +89,6 @@ const PackageForm = ({ prefill }) => {
     if (!formData.travelPurpose) errors.push("Travel Purpose is required");
     if (formData.travelPurpose === "Other" && !formData.customTravelPurpose.trim())
       errors.push("Please specify your Travel Purpose");
-    if (formData.selectedDestinations.length === 0)
-      errors.push("Please select at least one destination");
 
     return errors;
   };
@@ -116,7 +112,6 @@ const PackageForm = ({ prefill }) => {
       "Hello!\n\n" +
       "* Net Lanka Travels - Tour Booking *\n\n" +
       `I am interested in your *${prefill?.packageTitle || "tour package"}*. Here are my details:\n\n` +
-      `*Tour Type:* ${formData.tourType}\n` +
       `*Name:* ${formData.fullName}\n` +
       `*Country:* ${formData.country}\n` +
       `*Email:* ${formData.email}\n` +
@@ -274,7 +269,7 @@ const PackageForm = ({ prefill }) => {
   {/* ================= Destination ================= */}
   <div>
      <label className="block text-black font-semibold mb-2">
-      Destinations *
+      Destinations
     </label>
     <button
       type="button"
@@ -300,7 +295,7 @@ const PackageForm = ({ prefill }) => {
   {/* ================= Experience ================= */}
   <div>
     <label className="block text-black font-semibold mb-2">
-     Experiences *
+     Experiences
     </label>
     <button
       type="button"

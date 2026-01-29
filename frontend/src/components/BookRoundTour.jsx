@@ -196,7 +196,8 @@ if (
           startTime: "",
           message: "",
           travelStyle: "",
-          accommodation: "",     // ✅ ADD
+          travelPurpose: "",
+          accommodation: "",   
   hotelCategory: "",  
         });
         setSelectedTaxi("");

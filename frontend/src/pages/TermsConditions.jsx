@@ -12,13 +12,16 @@ export default function TermsConditions() {
 
   return (
     <div className="min-h-screen">
-       <Helmet>
+      <Helmet>
         <title>Terms & Conditions | Net Lanka Travels</title>
         <meta
           name="description"
           content="Read the terms and conditions for using Net Lanka Travels services and booking Sri Lanka tours."
         />
-        <link rel="canonical" href="https://www.netlankatravels.com/terms-and-conditions" />
+        <link
+          rel="canonical"
+          href="https://www.netlankatravels.com/terms-and-conditions"
+        />
       </Helmet>
 
       {/* HERO HEADER */}
@@ -45,7 +48,10 @@ export default function TermsConditions() {
 
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 py-4 text-sm text-gray-600">
-        <Link to="/" className="hover:underline text-blue-600">Home</Link> / Terms & Conditions
+        <Link to="/" className="hover:underline text-blue-600">
+          Home
+        </Link>{" "}
+        / Terms & Conditions
       </div>
 
       {/* Page Header */}
@@ -64,37 +70,49 @@ export default function TermsConditions() {
       <div className="max-w-5xl mx-auto px-4 py-16 space-y-12 text-gray-700">
         <PolicySection title="User Agreement">
           <p>
-            Access to and use of the www.netlankatravels.com website is conditional upon your acceptance
-            of these Terms and Conditions. Please read the following terms carefully before using this website.
-            If you do not agree with any part of these Terms and Conditions, you must not use this website.
+            Access to and use of the www.netlankatravels.com website is
+            conditional upon your acceptance of these Terms and Conditions.
+            Please read the following terms carefully before using this website.
+            If you do not agree with any part of these Terms and Conditions, you
+            must not use this website.
           </p>
           <p>
-            Any use of the www.netlankatravels.com website or written communication with Net Lanka
-            Travels for the purpose of travel inquiries or bookings confirms that you are aged 18 or over and
-            that you have read, understood, and accepted these Terms and Conditions. These Terms are
-            designed for the protection of both you and Net Lanka Travels.
+            Any use of the www.netlankatravels.com website or written
+            communication with Net Lanka Travels for the purpose of travel
+            inquiries or bookings confirms that you are aged 18 or over and that
+            you have read, understood, and accepted these Terms and Conditions.
+            These Terms are designed for the protection of both you and Net
+            Lanka Travels.
           </p>
           <p>
-            Net Lanka Travels operates under the Net Lanka Group, a trusted Sri Lankan travel service
-            provider offering professional travel solutions, tour packages, transportation, and guided travel
-            services for international and local travelers.
+            Net Lanka Travels operates under the Net Lanka Group, a trusted Sri
+            Lankan travel service provider offering professional travel
+            solutions, tour packages, transportation, and guided travel services
+            for international and local travelers.
           </p>
         </PolicySection>
 
         <PolicySection title="Booking Conditions">
           <p>
-            Net Lanka Travels functions as a professional Sri Lanka tour operator, partnering with trusted
-            hotels, service providers, transport suppliers, professional drivers, and guides across Sri Lanka.
+            Net Lanka Travels functions as a professional Sri Lanka tour
+            operator, partnering with trusted hotels, service providers,
+            transport suppliers, professional drivers, and guides across Sri
+            Lanka.
           </p>
           <p>When a traveler books a tour package through Net Lanka Travels:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>We arrange and coordinate accommodation, transportation, tours, and travel services.</li>
-            <li>Travelers will be provided with guided assistance, support, and professional tour handling
-            during their trip.</li>
+            <li>
+              We arrange and coordinate accommodation, transportation, tours,
+              and travel services.
+            </li>
+            <li>
+              Travelers will be provided with guided assistance, support, and
+              professional tour handling during their trip.
+            </li>
           </ul>
           <p>
-            By placing a booking, you agree to the relevant Terms & Conditions of Net Lanka Travels and
-            any applicable supplier Terms & Conditions.
+            By placing a booking, you agree to the relevant Terms & Conditions
+            of Net Lanka Travels and any applicable supplier Terms & Conditions.
           </p>
         </PolicySection>
 
@@ -102,91 +120,133 @@ export default function TermsConditions() {
           <p>A booking is confirmed only after we receive:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Your written confirmation</li>
-            <li>Either full payment OR a non-refundable deposit of 30% of the total tour value</li>
+            <li>
+              Either full payment OR a non-refundable deposit of 30% of the
+              total tour value
+            </li>
           </ul>
           <p>
-            Bookings should ideally be made at least 3 days before the tour start date.
-            If the booking is made less than 3 days before the travel date, full payment may be required
-            immediately. Your payment and written confirmation indicate acceptance of these Terms & Conditions.
+            Bookings should ideally be made at least 3 days before the tour
+            start date. If the booking is made less than 3 days before the
+            travel date, full payment may be required immediately. Your payment
+            and written confirmation indicate acceptance of these Terms &
+            Conditions.
           </p>
         </PolicySection>
 
         <PolicySection title="Final Payment">
           <p>
-            Full payment of your tour package must be completed before the tour starts. If full payment is not
-            received within the communicated deadline, Net Lanka Travels reserves the right to cancel the
+            Full payment of your tour package must be completed before the tour
+            starts. If full payment is not received within the communicated
+            deadline, Net Lanka Travels reserves the right to cancel the
             booking.
           </p>
         </PolicySection>
 
         <PolicySection title="Methods of Payment">
           <p>
-            Payments to Net Lanka Travels must be made only to the official company account of Net Lanka
-            Group Private Limited. We accept the following payment methods:
+            Payments to Net Lanka Travels must be made only to the official
+            company account of Net Lanka Group Private Limited. We accept the
+            following payment methods:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Bank Transfer:</strong> Payments can be made via international or local bank transfer.
-              Please note: Any bank charges outside Sri Lanka must be borne by the sender.
+              <strong>Bank Transfer:</strong> Payments can be made via
+              international or local bank transfer. Please note: Any bank
+              charges outside Sri Lanka must be borne by the sender.
             </li>
             <li>
-              <strong>Credit or Debit Card:</strong> Customers may pay using Visa or MasterCard.
-              An additional handling fee of 2.65% will be applied to card payments.
-              All card transactions are processed securely through a payment gateway.
-              Net Lanka Travels does not store or have access to your card details.
+              <strong>Credit or Debit Card:</strong> Customers may pay using
+              Visa or MasterCard. An additional handling fee of 2.65% will be
+              applied to card payments. All card transactions are processed
+              securely through a payment gateway. Net Lanka Travels does not
+              store or have access to your card details.
             </li>
           </ul>
           <p>
-            No payments should be made to any personal accounts, third-party accounts, or unidentified accounts.
-            Net Lanka Travels and Net Lanka Groups Private Limited will not be responsible for funds transferred to any unofficial accounts. 
+            No payments should be made to any personal accounts, third-party
+            accounts, or unidentified accounts. Net Lanka Travels and Net Lanka
+            Groups Private Limited will not be responsible for funds transferred
+            to any unofficial accounts.
           </p>
         </PolicySection>
-    <PolicySection title="Accommodation – Terms & Conditions">
-  <p>
-    Accommodation bookings are arranged based on the guest’s selected tour
-    package and personal preferences.
-  </p>
-  <p>
-    After the guest selects a tour package, Net Lanka Travels will provide a
-    quotation including accommodation details such as hotel names, room category,
-    meal plan, and stay duration.
-  </p>
-  <p>
-    Guests may select hotels listed on our website or request any other hotel of
-    their choice.
-  </p>
-  <p>
-    Full payment for accommodation must be paid directly to the selected hotel by
-    the guest.
-  </p>
-  <p>
-    Net Lanka Travels acts only as a facilitator in arranging accommodation and
-    does not collect hotel payments.
-  </p>
-  <p>
-    Once the guest checks in to the selected hotel, Net Lanka Travels will not be
-    responsible or liable for hotel services, including but not limited to room
-    quality, facilities, staff behavior, hygiene standards, food, or any issues
-    arising during the stay.
-  </p>
-  <p>
-    Any complaints, damages, losses, or disputes related to accommodation must be
-    resolved directly between the guest and the hotel.
-    <br />
-    <br/>
-    <strong className="text-black">Special Note</strong><br />
-Accommodation rates and availability are subject to change until confirmed by the hotel.
-Hotel names, room categories, meal plans, and stay duration provided in the quotation are indicative and may vary due to hotel policies or seasonal demand.
-Any upgrades, extra services, or special requests requested by the guest at the hotel will be charged directly by the hotel.
-Net Lanka Travels shall not be held responsible for any changes, issues, or additional charges imposed by the hotel after check-in.
-Guests are advised to review hotel policies and services prior to arrival to avoid misunderstandings.
-  </p>
-</PolicySection>
+        <PolicySection title="Accommodation – Terms & Conditions">
+          <p>
+            Net Lanka Travels provides accommodation booking services as part of
+            its customized tour packages in Sri Lanka. The following terms apply
+            to all hotel and accommodation bookings made through Net Lanka
+            Travels.
+            <br />
+            <br />
+            <strong className="text-black">Accommodation Booking Policy</strong>
+            <br />
+            Accommodation Booking Policy Accommodation bookings are arranged
+            based on the guest’s selected tour package and personal preferences,
+            including hotel category, location, room type, and meal plan.
+            <br />
+            <br />
+            <strong className="text-black">Hotel Selection & Quotation</strong>
+            <br />
+            After selecting a tour package, Net Lanka Travels will issue a
+            detailed quotation outlining the hotel name(s), room category, meal
+            plan, length of stay, and total accommodation cost. Guests may
+            select hotels listed on our website or request alternative hotels,
+            subject to availability and confirmation.
+            <br />
+            <br />
+            <strong className="text-black">Advance Payment Requirement</strong>
+            <br />
+            To confirm hotel reservations, 50% of the total accommodation cost
+            must be paid at least 14 days before the check-in date.
+            <br />
+            <br />
+            <strong className="text-black">Balance Payment</strong>
+            <br />
+            The remaining balance must be fully settled at least 3 days prior to
+            check-in to ensure smooth confirmation of the accommodation booking.
+            <br />
+            <br />
+            <strong className="text-black">Payment Methods</strong>
+            <br />
+            Accommodation payments may be made directly to the selected hotel or
+            to Net Lanka Travels, as agreed at the time of booking confirmation.
+            <br />
+            <br />
+            <strong className="text-black">Booking Confirmation</strong>
+            <br />
+            Once the required advance payment is received, Net Lanka Travels
+            will proceed with the hotel booking and provide guests with official
+            hotel confirmation details.
+            <br />
+            <br />
+            <strong className="text-black">Role & Responsibility</strong>
+            <br />
+            Net Lanka Travels acts solely as an accommodation booking
+            facilitator and assists guests in arranging hotels according to
+            their travel requirements.
+            <br />
+            <br />
+            <strong className="text-black">Hotel Service Disclaimer</strong>
+            <br />
+            After the guest checks in to the hotel, Net Lanka Travels shall not
+            be held responsible for hotel-related services, including room
+            condition, facilities, cleanliness, staff conduct, food quality, or
+            any issues experienced during the stay.
+            <br />
+            <br />
+            <strong className="text-black">Complaints & Disputes</strong>
+            <br />
+            Any complaints, damages, losses, or disputes related to
+            accommodation services must be resolved directly between the guest
+            and the respective hotel.
+          </p>
+        </PolicySection>
 
         <PolicySection title="Price Policy">
           <p>
-            Net Lanka Travels provides customized travel packages based on selected services.
-            Prices are calculated based on hotels, transport, excursions, guides, and other included items.
+            Net Lanka Travels provides customized travel packages based on
+            selected services. Prices are calculated based on hotels, transport,
+            excursions, guides, and other included items.
           </p>
           <p>If travelers wish to:</p>
           <ul className="list-disc pl-6 space-y-2">
@@ -196,47 +256,63 @@ Guests are advised to review hotel policies and services prior to arrival to avo
             <li>Add extra transport or tours</li>
           </ul>
           <p>
-            They must contact Net Lanka Travels directly, and any additional charges will apply accordingly.
-            All prices are generally quoted in US Dollars, unless otherwise stated.
+            They must contact Net Lanka Travels directly, and any additional
+            charges will apply accordingly. All prices are generally quoted in
+            US Dollars, unless otherwise stated.
           </p>
         </PolicySection>
 
         <PolicySection title="Amendments & Cancellations">
           <p>
-            If you wish to amend or cancel your booking, you must notify us in writing.
+            If you wish to amend or cancel your booking, you must notify us in
+            writing.
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Cancellation or amendment requests must be made at least 3 days prior to the tour start date.</li>
-            <li>An administrative fee of USD 25 will be charged for cancellations or amendments.</li>
             <li>
-              If cancellation is made less than 3 days before travel, refund eligibility will depend on supplier policies,
-              and some components may be non-refundable.
+              Cancellation or amendment requests must be made at least 3 days
+              prior to the tour start date.
+            </li>
+            <li>
+              An administrative fee of USD 25 will be charged for cancellations
+              or amendments.
+            </li>
+            <li>
+              If cancellation is made less than 3 days before travel, refund
+              eligibility will depend on supplier policies, and some components
+              may be non-refundable.
             </li>
           </ul>
-          <p>No refunds are applicable once the tour has commenced, or for unused services.</p>
+          <p>
+            No refunds are applicable once the tour has commenced, or for unused
+            services.
+          </p>
         </PolicySection>
 
         <PolicySection title="Travel Insurance">
           <p>
-            We strongly recommend all travelers to obtain personal travel insurance that covers medical,
-            cancellation, loss of luggage, and other travel risks. If you do not already have travel insurance,
-            you may request assistance from Net Lanka Travels to arrange suitable coverage before arrival in Sri Lanka.
+            We strongly recommend all travelers to obtain personal travel
+            insurance that covers medical, cancellation, loss of luggage, and
+            other travel risks. If you do not already have travel insurance, you
+            may request assistance from Net Lanka Travels to arrange suitable
+            coverage before arrival in Sri Lanka.
           </p>
         </PolicySection>
 
         <PolicySection title="Health, Passport & Visas">
           <p>
-            It is the traveler’s responsibility to ensure they possess valid passports, visas, health requirements,
-            and travel documents. Net Lanka Travels will assist with guidance if needed but will not be
+            It is the traveler’s responsibility to ensure they possess valid
+            passports, visas, health requirements, and travel documents. Net
+            Lanka Travels will assist with guidance if needed but will not be
             responsible for issues caused by incorrect travel documents.
           </p>
         </PolicySection>
 
         <PolicySection title="Responsibility & Liability">
           <p>
-            Net Lanka Travels acts as a coordinator between travelers and service providers. While every effort
-            is made to ensure smooth service delivery, we cannot be held responsible for circumstances beyond
-            our control including but not limited to:
+            Net Lanka Travels acts as a coordinator between travelers and
+            service providers. While every effort is made to ensure smooth
+            service delivery, we cannot be held responsible for circumstances
+            beyond our control including but not limited to:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Natural disasters</li>
@@ -247,58 +323,77 @@ Guests are advised to review hotel policies and services prior to arrival to avo
             <li>Supplier failures</li>
           </ul>
           <p>
-            Where alternative arrangements are required, we will do our best to provide equal or better service replacements.
+            Where alternative arrangements are required, we will do our best to
+            provide equal or better service replacements.
           </p>
         </PolicySection>
 
         <PolicySection title="Behavior">
           <p>
-            Travelers are expected to behave respectfully during their tour. If any traveler behaves in a manner
-            that causes disruption, danger, or damage, Net Lanka Travels reserves the right to terminate
-            services without refund.
+            Travelers are expected to behave respectfully during their tour. If
+            any traveler behaves in a manner that causes disruption, danger, or
+            damage, Net Lanka Travels reserves the right to terminate services
+            without refund.
           </p>
         </PolicySection>
 
         <PolicySection title="Complaints">
-          <p>
-            If you have a complaint during your tour, please:
-          </p>
+          <p>If you have a complaint during your tour, please:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Contact your assigned travel coordinator or guide immediately, OR</li>
+            <li>
+              Contact your assigned travel coordinator or guide immediately, OR
+            </li>
             <li>Email or contact Net Lanka Travels directly</li>
           </ul>
           <p>
-            We will do our best to resolve the issue promptly. If unresolved during the trip, travelers may
-            submit a formal written complaint after completion of the tour.
+            We will do our best to resolve the issue promptly. If unresolved
+            during the trip, travelers may submit a formal written complaint
+            after completion of the tour.
           </p>
           <ul className="mt-3 space-y-1">
-            <li><strong>Email:</strong> <a href="mailto:inquiries@netlankatravels.com" className="text-blue-600 underline">inquiries@netlankatravels.com</a></li>
-            <li><strong>Website:</strong> <a href="https://www.netlankatravels.com" className="text-blue-600 underline">www.netlankatravels.com</a></li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a
+                href="mailto:inquiries@netlankatravels.com"
+                className="text-blue-600 underline"
+              >
+                inquiries@netlankatravels.com
+              </a>
+            </li>
+            <li>
+              <strong>Website:</strong>{" "}
+              <a
+                href="https://www.netlankatravels.com"
+                className="text-blue-600 underline"
+              >
+                www.netlankatravels.com
+              </a>
+            </li>
           </ul>
         </PolicySection>
 
         <PolicySection title="Electronic Communication">
           <p>
-            By using our website or contacting us, you agree to receive communication electronically.
+            By using our website or contacting us, you agree to receive
+            communication electronically.
           </p>
         </PolicySection>
 
         <PolicySection title="Copyright">
           <p>
-            All website content, images, text, and material belong to Net Lanka Travels and cannot be copied
-            or reused without written permission.
+            All website content, images, text, and material belong to Net Lanka
+            Travels and cannot be copied or reused without written permission.
           </p>
         </PolicySection>
 
         <PolicySection title="Governing Law">
-          <p>
-            These Terms & Conditions are governed by the Laws of Sri Lanka.
-          </p>
+          <p>These Terms & Conditions are governed by the Laws of Sri Lanka.</p>
         </PolicySection>
 
         {/* Footer */}
         <div className="mt-16 border-t pt-6 text-sm text-gray-500 text-center">
-          © {new Date().getFullYear()} Net Lanka Travels  <br></br> All rights reserved.
+          © {new Date().getFullYear()} Net Lanka Travels <br></br> All rights
+          reserved.
         </div>
       </div>
     </div>

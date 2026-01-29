@@ -179,6 +179,7 @@ export default function BookDayTour({ tourId, tourTitle, tourLocation }) {
           startTime: "",
           message: "",
           travelStyle: "",
+          travelPurpose: "",
         });
         setSelectedTaxi("");
       } else {
