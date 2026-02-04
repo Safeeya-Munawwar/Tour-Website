@@ -1,32 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+    
 
   <url>
-    <loc>https://netlankatravels.com/day-tour-detail/sigiriya-and-cultural-triangle-day-trips</loc>
-    <lastmod>2026-01-18</lastmod>
+    <loc>https://www.netlankatravels.com/day-tour-detail/sigiriya-and-cultural-triangle-day-trips</loc>
+    <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://netlankatravels.com/day-tour-detail/kandy-city-and-cultural-tour</loc>
-    <lastmod>2026-01-18</lastmod>
+    <loc>https://www.netlankatravels.com/day-tour-detail/kandy-city-and-cultural-tour</loc>
+    <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://netlankatravels.com/day-tour-detail/galle-fort-and-southern-coast-day-tour</loc>
-    <lastmod>2026-01-18</lastmod>
+    <loc>https://www.netlankatravels.com/day-tour-detail/galle-fort-and-southern-coast-day-tour</loc>
+    <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://netlankatravels.com/day-tour-detail/yala-jeep-safari-tour</loc>
-    <lastmod>2026-01-18</lastmod>
+    <loc>https://www.netlankatravels.com/day-tour-detail/yala-jeep-safari-tour</loc>
+    <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/bentota-and-mirissa-coastal-adventure-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
+
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/best-of-colombo-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  
+  
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/minneriya-kaudulla-eco-wildlife-day-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  
+  
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/nuwara-eliya-hill-country-day-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  
+  
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/sinharaja-forest-day-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+
+
+   <url>
+    <loc>https://www.netlankatravels.com/day-tour-detail/wilpattu-national-park-safari-tour</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 
 </urlset>
