@@ -317,7 +317,7 @@ export default function Footer() {
   flex flex-col sm:flex-row justify-between gap-2 
  "
       >
-        <p>© {new Date().getFullYear()} NetLanka Tours. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Net Lanka Travels. All rights reserved.</p>
         <p>Website Design & Development by NetIT Technology</p>
       </div>
     </footer>
